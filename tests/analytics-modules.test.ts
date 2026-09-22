@@ -1,4 +1,4 @@
-// posthogDraft.ts and cloudflareBeacon.ts both run real work at import
+// posthog.ts and cloudflareBeacon.ts both run real work at import
 // time (syncInternalTrafficFlag(), then their own init*() call), so this
 // suite re-imports them fresh per test via vi.resetModules() -- a plain
 // import would only ever exercise whichever state ran first.
@@ -11,7 +11,7 @@
 // module may throw on import, in any of the disabled branches below.
 //
 // A second incident, same shape: once Analytics.ts (src/app/Analytics.ts)
-// started importing posthogDraft.ts to mirror events to PostHog, a plain
+// started importing posthog.ts to mirror events to PostHog, a plain
 // Node-based test importing Analytics.ts -- no `location` global at all,
 // not just a non-production one -- crashed the same way. `location` being
 // entirely absent needs the same "disabled, don't throw" treatment as
@@ -56,7 +56,7 @@ describe("initPosthog", () => {
     });
     vi.stubEnv("VITE_POSTHOG_TOKEN", "test-token");
     const { default: instance, initPosthog } = await import(
-      "../src/analytics/posthogDraft"
+      "../src/analytics/posthog"
     );
     expect(instance).toBeNull();
     expect(initPosthog()).toBeNull();
@@ -66,7 +66,7 @@ describe("initPosthog", () => {
     stubProductionSite();
     vi.stubEnv("VITE_POSTHOG_TOKEN", "");
     const { default: instance, initPosthog } = await import(
-      "../src/analytics/posthogDraft"
+      "../src/analytics/posthog"
     );
     expect(instance).toBeNull();
     expect(initPosthog()).toBeNull();
@@ -75,7 +75,7 @@ describe("initPosthog", () => {
   it("returns null without throwing on a non-production host, even with a token", async () => {
     stubNonProductionSite();
     vi.stubEnv("VITE_POSTHOG_TOKEN", "test-token");
-    const { default: instance } = await import("../src/analytics/posthogDraft");
+    const { default: instance } = await import("../src/analytics/posthog");
     expect(instance).toBeNull();
   });
 
@@ -85,7 +85,7 @@ describe("initPosthog", () => {
     const init = vi.fn();
     vi.doMock("posthog-js", () => ({ default: { init } }));
 
-    const { default: instance } = await import("../src/analytics/posthogDraft");
+    const { default: instance } = await import("../src/analytics/posthog");
 
     expect(init).toHaveBeenCalledOnce();
     const [token, config] = init.mock.calls[0];
@@ -95,6 +95,7 @@ describe("initPosthog", () => {
     // config typo.
     expect(config).toMatchObject({
       person_profiles: "never",
+      persistence: "memory",
       disable_session_recording: true,
       capture_heatmaps: false,
       disable_surveys: true,

@@ -93,7 +93,7 @@ test.describe("Privacy Policy", () => {
 
   test("names every processor it relies on", async ({ page }) => {
     const main = await page.locator("main").innerText();
-    for (const p of ["Cloudflare", "Vercel", "Neon", "Resend"]) {
+    for (const p of ["Cloudflare", "Vercel", "Neon", "Resend", "PostHog"]) {
       expect(main, `${p} not disclosed`).toContain(p);
     }
     // Stripe must be disclosed exactly when donations are open -- naming an

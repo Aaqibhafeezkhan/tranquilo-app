@@ -76,12 +76,12 @@ describe("PostHog mirroring", () => {
   });
 
   afterEach(() => {
-    vi.doUnmock("../src/analytics/posthogDraft");
+    vi.doUnmock("../src/analytics/posthog");
   });
 
   it("mirrors the same event and props to posthog.capture when it's initialized", async () => {
     const capture = vi.fn();
-    vi.doMock("../src/analytics/posthogDraft", () => ({
+    vi.doMock("../src/analytics/posthog", () => ({
       default: { capture },
     }));
     const { Analytics: MockedAnalytics } = await import("../src/app/Analytics");
@@ -97,7 +97,7 @@ describe("PostHog mirroring", () => {
 
   it("skips posthog too once the internal-traffic flag is set", async () => {
     const capture = vi.fn();
-    vi.doMock("../src/analytics/posthogDraft", () => ({
+    vi.doMock("../src/analytics/posthog", () => ({
       default: { capture },
     }));
     const { Analytics: MockedAnalytics } = await import("../src/app/Analytics");
@@ -110,7 +110,7 @@ describe("PostHog mirroring", () => {
   });
 
   it("never throws even when posthog is unavailable (null)", async () => {
-    vi.doMock("../src/analytics/posthogDraft", () => ({ default: null }));
+    vi.doMock("../src/analytics/posthog", () => ({ default: null }));
     const { Analytics: MockedAnalytics } = await import("../src/app/Analytics");
 
     const analytics = new MockedAnalytics(KEY);
