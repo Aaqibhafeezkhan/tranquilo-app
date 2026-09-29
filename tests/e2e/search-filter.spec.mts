@@ -26,7 +26,9 @@ test("Search: narrows the feed to matching items", async ({ page }) => {
 
   // Chosen from the fixture rather than hardcoded, so this can't silently
   // become a no-op if the fixture is recaptured.
-  const term = ITEMS.find((i: any) => i.artist && i.artist.length > 4)
+  const term = ITEMS.find(
+    (i: { artist?: string }) => i.artist && i.artist.length > 4,
+  )
     .artist.split(" ")
     .pop();
   await search(page, term);
@@ -194,7 +196,7 @@ test("Filter: a category chip shows only that category", async ({ page }) => {
   const feed = await gotoFeed(page);
 
   // Skip "All"; take the first real category chip.
-  const chip = page.locator("#chips button").nth(1);
+  const chip = page.locator("#chips button.chip").nth(1);
   const label = (await chip.textContent())!.trim();
   await actAndSettle(page, () => chip.click());
 
@@ -207,7 +209,7 @@ test("Filter: a category chip shows only that category", async ({ page }) => {
 
 test("Filter: switching back to All restores every item", async ({ page }) => {
   const feed = await gotoFeed(page);
-  const chip = page.locator("#chips button").nth(1);
+  const chip = page.locator("#chips button.chip").nth(1);
   const label = (await chip.textContent())!.trim();
 
   await actAndSettle(page, () => chip.click());
@@ -216,7 +218,9 @@ test("Filter: switching back to All restores every item", async ({ page }) => {
     .evaluateAll((els) => [...new Set(els.map((e) => e.dataset.category))]);
   expect(filtered).toEqual([label]);
 
-  await actAndSettle(page, () => page.locator("#chips button").nth(0).click());
+  await actAndSettle(page, () =>
+    page.locator("#chips button.chip").nth(0).click(),
+  );
   const restored = await feed
     .locator(".slide[data-category]")
     .evaluateAll((els) => [...new Set(els.map((e) => e.dataset.category))]);
@@ -232,7 +236,9 @@ test("Filter: the recycling window still bounds a filtered feed", async ({
   // resetRecycleWindow() were missed, the stale hydrated band would leak
   // across the re-render.
   const _feed = await gotoFeed(page);
-  await actAndSettle(page, () => page.locator("#chips button").nth(1).click());
+  await actAndSettle(page, () =>
+    page.locator("#chips button.chip").nth(1).click(),
+  );
   // Waits for the window to have built something first, since it fills on
   // requestAnimationFrame after the render settles.
   await expect
