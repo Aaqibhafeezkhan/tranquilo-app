@@ -1,6 +1,6 @@
 // Sends custom analytics events to api/track.js, which stores them in the
 // `analytics_events` table (see sql/002_analytics_events.sql), and mirrors
-// the same event to PostHog (see analytics/posthogDraft.ts) when it's
+// the same event to PostHog (see analytics/posthog.ts) when it's
 // initialized -- PostHog's own real-external-traffic gate already returns
 // null instead of an instance otherwise, so this needs no separate check.
 // Cloudflare's page-view beacon covers pageviews. Every send is
@@ -8,7 +8,7 @@
 // a failed send fails silently. A device with the internal-traffic
 // localStorage key set (a team member's own browser) skips sending
 // entirely, to both destinations.
-import posthog from "../analytics/posthogDraft";
+import posthog from "../analytics/posthog";
 
 export class Analytics {
   // A nonce regenerated per page load, attached only to image-failure

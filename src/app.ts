@@ -51,7 +51,7 @@ import "./components/TranquiloUpsellToast";
 import "./components/TranquiloFeed";
 
 import "./analytics/cloudflareBeacon";
-import "./analytics/posthogDraft";
+import "./analytics/posthog";
 
 class TranquiloApp {
   async start() {

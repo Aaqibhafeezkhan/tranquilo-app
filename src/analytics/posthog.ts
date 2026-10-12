@@ -1,15 +1,12 @@
 // PostHog Analytics -- live in production (VITE_POSTHOG_TOKEN is set,
-// loaded on index.html). File name/module path are pre-launch leftovers --
-// promoting this out of "draft" status for real (rename, confirm the two
-// checklist items below actually landed) is still open.
-// Outstanding from before this shipped, unconfirmed:
-//   1. "Discard client IP data" in the PostHog project settings --
-//      posthog-js's own `ip` init option is deprecated and has no effect
-//      (confirmed against its source), so raw IPs otherwise reach PostHog
-//      regardless of anything set here, which pages/privacy.html does not permit.
-//   2. pages/privacy.html has no PostHog disclosure at all as of 22 Sep
-//      2026 -- this was supposed to be updated before shipping and looks
-//      like it got missed.
+// loaded on index.html).
+//
+// "Discard client IP data" is confirmed enabled in the PostHog project
+// settings (anonymize_ips) -- posthog-js's own `ip` init option is
+// deprecated and has no effect (confirmed against its source), so this
+// file can't enforce it either way; the dashboard setting is what
+// actually governs it, and pages/privacy.html's PostHog disclosure is
+// written to stay accurate regardless of which one is doing the work.
 //
 // Mirrors trackEvent()'s named product events too now (src/app/Analytics.ts
 // imports this module's default export and calls .capture() alongside its
@@ -20,7 +17,11 @@
 //
 // Configured for the strictest anonymous mode posthog-js supports: no
 // person profiles ever created, autocapture scoped to clicks only (no form
-// input content), no session recording/heatmaps, no on-page surveys.
+// input content), no session recording/heatmaps, no on-page surveys, and
+// (persistence: "memory") no distinct_id written to any cookie or
+// localStorage -- posthog-js's default ("localStorage+cookie") would
+// otherwise persist an anonymous id across visits, which is exactly the
+// cross-visit tracking pages/privacy.html promises this site doesn't do.
 // Same real-site/not-opted-out gate as the Cloudflare beacon; calls
 // syncInternalTrafficFlag() itself so it's correct regardless of script order.
 
@@ -51,6 +52,7 @@ export function initPosthog() {
       autocapture: { dom_event_allowlist: ["click"] },
       capture_pageview: true,
       capture_pageleave: true,
+      persistence: "memory",
       disable_session_recording: true,
       capture_heatmaps: false,
       disable_surveys: true,
