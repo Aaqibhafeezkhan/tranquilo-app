@@ -1,12 +1,12 @@
 // PostHog Analytics -- live in production (VITE_POSTHOG_TOKEN is set,
 // loaded on index.html).
 //
-// Outstanding, unconfirmed: "Discard client IP data" in the PostHog
-// project settings -- posthog-js's own `ip` init option is deprecated
-// and has no effect (confirmed against its source), so raw IPs otherwise
-// reach PostHog regardless of anything set here. This is a dashboard
-// setting, not something this file can enforce; pages/privacy.html's
-// PostHog disclosure is written to stay accurate either way.
+// "Discard client IP data" is confirmed enabled in the PostHog project
+// settings (anonymize_ips) -- posthog-js's own `ip` init option is
+// deprecated and has no effect (confirmed against its source), so this
+// file can't enforce it either way; the dashboard setting is what
+// actually governs it, and pages/privacy.html's PostHog disclosure is
+// written to stay accurate regardless of which one is doing the work.
 //
 // Mirrors trackEvent()'s named product events too now (src/app/Analytics.ts
 // imports this module's default export and calls .capture() alongside its
