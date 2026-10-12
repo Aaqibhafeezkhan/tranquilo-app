@@ -5,6 +5,16 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    ignore:
+      # Deliberately pinned below latest -- 1.0.x pulls in satori 0.33.x,
+      # which added harfbuzzjs for text shaping. Its wasm loader does a
+      # dynamic require("fs") that Vercel's Node function bundler can't
+      # support, crashing every og/[slug] request in production. Verified
+      # against a real `vercel build` output before pinning. Re-evaluate
+      # once satori drops the harfbuzzjs dependency or @vercel/og bundles
+      # it differently, not on a routine version-bump PR.
+      - dependency-name: "@vercel/og"
+        versions: [">=1.0.0"]
 
   # The GitHub Actions themselves (actions/checkout, astral-sh/setup-uv,
   # oven-sh/setup-bun, etc.) -- pinned versions in .github/workflows/*.yml
