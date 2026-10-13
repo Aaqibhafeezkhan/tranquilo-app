@@ -2221,5 +2221,60 @@
     "name": "André-Adolphe-Eugène Disdéri",
     "found": false,
     "fetched_at": "2026-08-24T15:02:39.641Z"
+  },
+  "Léon Davent": {
+    "name": "Léon Davent",
+    "wikidata": "http://www.wikidata.org/entity/Q19569526",
+    "description": "16th-century French printmaker",
+    "birth": null,
+    "death": null,
+    "nationality": [
+      "France"
+    ],
+    "movement": [],
+    "article": "https://en.wikipedia.org/wiki/L%C3%A9on_Davent",
+    "found": true,
+    "fetched_at": "2026-10-13T11:46:17.699Z"
+  },
+  "Victor Petit": {
+    "name": "Victor Petit",
+    "found": true,
+    "ambiguous": true,
+    "candidates": [
+      {
+        "wikidata": "http://www.wikidata.org/entity/Q3557496",
+        "description": "1817?-1871 French lithographer, architectural draftsman, writer (1817–1871)",
+        "birth": "1817",
+        "death": "1871",
+        "article": null
+      },
+      {
+        "wikidata": "http://www.wikidata.org/entity/Q67627145",
+        "description": "French photographer (1824–1904)",
+        "birth": "1824",
+        "death": "1904",
+        "article": null
+      }
+    ],
+    "fetched_at": "2026-10-13T11:46:17.701Z"
+  },
+  "Aoki Shukuya": {
+    "name": "Aoki Shukuya",
+    "wikidata": "http://www.wikidata.org/entity/Q60686375",
+    "description": "Japanese 18th century artist and illustrator (1737–1802)",
+    "birth": "1737",
+    "death": "1802",
+    "nationality": [
+      "Japan"
+    ],
+    "movement": [],
+    "article": null,
+    "found": true,
+    "fetched_at": "2026-10-13T11:46:17.701Z"
+  },
+  "Pierre Jean David d'Angers": {
+    "name": "Pierre Jean David d'Angers",
+    "found": false,
+    "fetched_at": "2026-10-13T11:46:17.702Z"
   }
 }
