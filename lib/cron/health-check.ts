@@ -1,10 +1,8 @@
-// Daily health check -- Vercel Hobby's minimum cron interval, enough
-// since DB growth is bursty rather than sub-daily-urgent and source
-// reliability needs a multi-day trend.
+// Daily health check -- often enough, since DB growth is bursty rather
+// than sub-daily-urgent and source reliability needs a multi-day trend.
 //
 // Silent on a healthy run. On a threshold breach: emails the maintainer
-// directly (see lib/cron/analytics-report.ts for the separate periodic
-// trend-review rollup -- this file is the fast threshold-triggered path).
+// directly.
 //
 // Checks:
 //   1. Per-source image reachability -- samples real image URLs from

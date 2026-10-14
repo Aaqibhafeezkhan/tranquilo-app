@@ -1,5 +1,6 @@
-// Several cron jobs merged into one file, dispatching on ?job=, to stay
-// under Vercel Hobby's 12-function cap. Each job's logic lives in
+// Several cron jobs merged into one file, dispatching on ?job=. Originally
+// done to stay under a 12-function plan cap; kept because it keeps each
+// job's cold-start bundle out of every other function. Each job's logic lives in
 // lib/cron/ (only api/ files count toward the cap) and still does its
 // own CRON_SECRET check internally, so calling one directly behaves
 // exactly as before the merge -- this file only adds routing.
@@ -11,16 +12,16 @@
 // `opts.jobs` is injected so the dispatch contract is testable without
 // touching the real handlers -- see tests/cron-dispatcher.test.ts.
 
-import analyticsReport from "../../lib/cron/analytics-report.ts";
 import dbBackup from "../../lib/cron/db-backup.ts";
 import healthCheck from "../../lib/cron/health-check.ts";
+import restoreDrillReminder from "../../lib/cron/restore-drill-reminder.ts";
 import vercelDeploymentCleanup from "../../lib/cron/vercel-deployment-cleanup.ts";
 import warmImageCache from "../../lib/cron/warm-image-cache.ts";
 
 const REAL_JOBS = {
   "db-backup": dbBackup,
-  "analytics-report": analyticsReport,
   "health-check": healthCheck,
+  "restore-drill-reminder": restoreDrillReminder,
   "vercel-deployment-cleanup": vercelDeploymentCleanup,
   // Reachable by hand but not in vercel.json's `crons` -- a rare-backfill
   // job now, not a standing schedule; scripts/warm_image_cache.mts is

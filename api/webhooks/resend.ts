@@ -2,10 +2,10 @@
 // like health-check.ts, so a vanished signup doesn't wait for the next
 // scheduled check.
 //
-// On email.bounced/delivery_delayed/complained, emails the ops inbox
-// and posts to the "Analytics Reports" Linear doc, same as
-// health-check.ts does on a breach. Other event types are acknowledged
-// and ignored.
+// On email.bounced/delivery_delayed/complained, emails the ops inbox.
+// Other event types are acknowledged and ignored. A failed alert email
+// returns a 500, so Resend retries the webhook instead of the alert
+// being lost.
 //
 // Signature verification (Svix under the hood) needs the RAW request
 // body, so req.body (Vercel's auto-parsed helper, which re-serializes
@@ -13,14 +13,13 @@
 // stream is read manually instead.
 //
 // Required env vars: RESEND_WEBHOOK_SECRET, RESEND_API_KEY,
-// SUBMIT_NOTIFY_EMAIL, LINEAR_API_KEY.
+// SUBMIT_NOTIFY_EMAIL (or OPS_ALERT_EMAIL).
 
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
 import { Webhook } from "svix";
 import { reportError } from "../../lib/sentry.ts";
 
-const LINEAR_DOC_ID = "2c5a75f9-7ad3-448b-a942-ee84779f3af9"; // "Analytics Reports" doc
 const ALERT_WORTHY_TYPES = [
   "email.bounced",
   "email.delivery_delayed",
@@ -57,7 +56,7 @@ async function sendAlertEmail(summary: {
     process.env.RESEND_FROM_EMAIL || "Tranquilo <onboarding@resend.dev>";
   if (!apiKey || !notifyEmail) return;
 
-  await fetch("https://api.resend.com/emails", {
+  const resp = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${apiKey}`,
@@ -69,39 +68,8 @@ async function sendAlertEmail(summary: {
       subject: `Tranquilo email delivery issue: ${summary.type}`,
       text: summary.description,
     }),
-  }).catch(() => {}); // best-effort -- the Linear doc post is the durable record
-}
-
-async function linearGraphQL(query: string, variables: any): Promise<any> {
-  const resp = await fetch("https://api.linear.app/graphql", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: process.env.LINEAR_API_KEY || "",
-    },
-    body: JSON.stringify({ query, variables }),
   });
-  const json = await resp.json();
-  if (json.errors)
-    throw new Error(`Linear API error: ${JSON.stringify(json.errors)}`);
-  return json.data;
-}
-
-async function postAlertToLinearDoc(summary: {
-  type: string;
-  description: string;
-}): Promise<void> {
-  const current = await linearGraphQL(
-    "query($id: String!) { document(id: $id) { content } }",
-    { id: LINEAR_DOC_ID },
-  );
-  const now = new Date().toISOString().slice(0, 10);
-  const section = `## Email delivery alert — ${now}\n\n- ${summary.description}\n\n---\n`;
-  const updatedContent = `${current.document.content}\n${section}`;
-  await linearGraphQL(
-    "mutation($id: String!, $content: String!) { documentUpdate(id: $id, input: { content: $content }) { success } }",
-    { id: LINEAR_DOC_ID, content: updatedContent },
-  );
+  if (!resp.ok) throw new Error(`Resend responded ${resp.status}`);
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -147,9 +115,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     await sendAlertEmail(summary);
-    if (process.env.LINEAR_API_KEY) {
-      await postAlertToLinearDoc(summary);
-    }
     res.statusCode = 200;
     res.json({ ok: true, handled: true });
   } catch (err) {

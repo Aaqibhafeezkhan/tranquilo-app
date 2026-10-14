@@ -11,7 +11,7 @@ import { describe, expect, it } from "vitest";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // The jobs live in lib/cron/, dispatched by one Vercel function
-// (api/cron/index.ts, on ?job=) to stay under Hobby's 12-function cap.
+// (api/cron/index.ts, on ?job=).
 const CRON = path.join(__dirname, "../lib/cron");
 const crons = readdirSync(CRON).filter((f) => f.endsWith(".ts"));
 
@@ -106,29 +106,5 @@ describe("cron check-ins actually reach Sentry", () => {
     expect(msg, "no captureMessage found").toBeTruthy();
     expect(msg?.[0]).not.toMatch(/level:\s*elapsed/);
     expect(src).toMatch(/if \(elapsed > [^)]*\) \{\s*Sentry\.captureMessage/);
-  });
-});
-
-describe("the quarterly restore drill has a reminder attached", () => {
-  // The runbook commits to a quarterly drill; rides the analytics report
-  // rather than a new cron since api/ is at Vercel Hobby's 12-function cap.
-  const src = readFileSync(path.join(CRON, "analytics-report.ts"), "utf8");
-
-  it("appears on the Quarterly run", () => {
-    expect(src).toMatch(/label === "Quarterly"/);
-    expect(src).toMatch(/restore drill/i);
-  });
-
-  it("does NOT appear on the Monthly run, which would make it wallpaper", () => {
-    const block = src.match(/if \(label === "Quarterly"\) \{[\s\S]*?\n {2}\}/);
-    expect(
-      block,
-      "the drill block should be conditional, not unconditional",
-    ).toBeTruthy();
-  });
-
-  it("tells the reader what to actually do, not just that it is due", () => {
-    expect(src).toMatch(/restore_from_backup\.py/);
-    expect(src).toMatch(/Neon branch/);
   });
 });
