@@ -8,12 +8,12 @@ import { describe, expect, it } from "vitest";
 
 const SHIPPED = ["api", "lib", "src"];
 
+// existsSync: a deleted-but-uncommitted file is still listed by git.
 function shippedFiles(): string[] {
   return execFileSync("git", ["ls-files", "--", ...SHIPPED], {
     encoding: "utf8",
   })
     .split("\n")
-    // existsSync: a deleted-but-uncommitted file is still listed by git.
     .filter((f) => /\.(ts|mts|js|yaml)$/.test(f) && existsSync(f));
 }
 
