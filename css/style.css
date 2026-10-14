@@ -635,6 +635,37 @@ html,body{
   100%{ background-position:-200% 0; }
 }
 
+/* Feed-level loading state (TranquiloFeed.ts's showLoadingSkeleton()) --
+   covers the gap between render() clearing the feed and the first real
+   batch landing, for every filter/category/search switch including the
+   very first one on page load. Rendered with both "slide" and
+   "slide-skeleton" classes, so .slide's own rule (height:100svh, flex
+   centering, background) already applies with no override needed here;
+   .art-frame/.art-skeleton (and their shimmer) are reused directly too,
+   rather than inventing a second loading treatment -- only the caption
+   placeholder bars below are new. */
+.slide-skeleton-caption{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+  padding:0 40px 36px;
+  width:100%;
+  box-sizing:border-box;
+}
+.slide-skeleton-bar{
+  height:14px;
+  border-radius:4px;
+  background:linear-gradient(100deg, #1a1a18 30%, #232220 50%, #1a1a18 70%);
+  background-size:200% 100%;
+  animation:shimmer 1.6s ease-in-out infinite;
+}
+.slide-skeleton-bar.title{ width:46%; height:22px; }
+.slide-skeleton-bar.artist{ width:28%; }
+@media (prefers-reduced-motion: reduce){
+  .slide-skeleton-bar{ animation:none; }
+}
+
 /* Failed-load state (see wireArtworkImageState() in app.js) -- a source
    CDN that's slow or down (confirmed directly against Smithsonian's
    ids.si.edu) previously left the shimmer running forever with no way
@@ -1063,15 +1094,6 @@ html,body{
      the only overlay in the app that did not float on a fading gradient.
      In flow it needs no background of its own: the topbar's gradient is
      already behind it, and --topbar-h now measures it for free. */
-  /* Column, not the row itself: .filter-banner-row carries the original
-     centered-row layout, and the artist card (when expanded) is a second,
-     block-level child below it. filterBannerEl's own offsetHeight already
-     drives --filter-banner-h via TranquiloTopbar's ResizeObserver, so the
-     card's height is picked up for free the same way a wrapped label is. */
-  display:flex;
-  flex-direction:column;
-}
-.filter-banner-row{
   display:flex;
   align-items:center;
   justify-content:center;
@@ -1097,26 +1119,73 @@ html,body{
   white-space:nowrap;
 }
 .filter-banner button:hover{ color:#fff; border-color:var(--gold-soft); }
-.filter-banner-about{
-  padding:4px 6px !important;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-}
-.filter-banner-about svg{ transition:transform 0.15s ease; }
-.filter-banner-about.expanded svg{ transform:rotate(180deg); }
 
-/* The expanded card: a real surface (unlike .filter-banner-row, which
-   floats on the topbar's own gradient) since prose needs to read clearly
-   regardless of whatever art is behind it. */
-.filter-banner-card{
+/* Inline, always rendered when a profile resolves -- no toggle. A sibling
+   of .filter-banner, not a child: it needs to render as its own full-width
+   line regardless of viewport (see the width:100%/order rule in the
+   responsive section below, same "claim the whole line" trick
+   .share-banner already uses), which a row-flex item sharing a line with
+   the wordmark/icons can't do once it's taller than one line.
+   Deliberately bare: this element's only job is claiming that line. A
+   max-width here (to cap the visible card's width) would also cap this
+   element's own flex-basis, defeating the "claim the whole line" width:100%
+   below -- a narrower flex-basis fits back onto the wordmark/icons' line
+   instead of being forced to wrap. The actual card look lives one level
+   in, on .artist-card-inner, where a narrower max-width is safe. */
+/* overflow:hidden so .artist-card-inner's max-height collapse (below)
+   actually clips rather than just getting cut off by the viewport. */
+.filter-banner-card{ text-align:left; overflow:hidden; }
+
+/* The visible card: a real surface (unlike .filter-banner, which floats on
+   the topbar's own gradient) since prose and a photo need to read clearly
+   regardless of whatever art is behind it. A soft border and a little
+   margin read as an inset callout sitting inside the dark bar, rather than
+   a flush continuation of it.
+
+   Relevant only while looking at the first result of whatever's filtered
+   -- browsing past it with a card still pinned over the art would be in
+   the way -- so app.ts toggles .is-scrolled (below) off the feed's own
+   scroll position, not anything artist-specific. max-height (not
+   display/visibility) is what actually animates: a height tall enough for
+   any real card is also what sets what it collapses FROM, hence the
+   generous, arbitrary-looking value. */
+.artist-card-inner{
   background:var(--surface);
-  border-top:1px solid var(--hairline);
+  border:1px solid var(--hairline);
+  border-radius:4px;
   padding:14px 20px 16px;
   max-width:480px;
-  margin:0 auto;
-  text-align:left;
+  margin:10px auto 14px;
+  max-height:600px;
+  opacity:1;
+  transition:max-height 0.3s ease, opacity 0.25s ease, margin 0.3s ease, padding 0.3s ease, border-width 0.3s ease;
 }
+.filter-banner-card.is-scrolled .artist-card-inner{
+  max-height:0;
+  opacity:0;
+  margin-top:0;
+  margin-bottom:0;
+  padding-top:0;
+  padding-bottom:0;
+  border-width:0;
+}
+@media (prefers-reduced-motion: reduce){
+  .artist-card-inner{ transition:none; }
+}
+.artist-card-row{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+}
+.artist-card-photo{
+  width:56px;
+  height:56px;
+  border-radius:8px;
+  object-fit:cover;
+  flex-shrink:0;
+  background:var(--surface-deep);
+}
+.artist-card-text{ min-width:0; flex:1; }
 .artist-card-name{
   font-family:var(--serif);
   font-size:1.05rem;
@@ -1866,12 +1935,17 @@ html,body{
   /* Tightened to buy the row back some width. */
   .chip{ font-size:0.68rem; letter-spacing:0.04em; padding:6px 11px; }
   /* Same slot as the chips it replaces -- never both up. flex:1 absorbs
-     the row's free space, keeping the icon group together. The row-level
-     overrides (alignment/padding) target .filter-banner-row, the nested
-     flex row, now that .filter-banner itself is just the column wrapper
-     positioning the whole banner (row + card) within .topbar's own row. */
-  .filter-banner{ order:2; flex:1; }
-  .filter-banner-row{ justify-content:flex-start; padding:0; }
+     the row's free space, keeping the icon group together. */
+  .filter-banner{ order:2; flex:1; justify-content:flex-start; padding:0; }
+  /* Its own line below the whole row, same "claim the whole line" trick
+     .share-banner uses (width:100% leaves no room to share a line, so
+     flex-wrap puts it on the next one) -- order:7 is past every other
+     ordered child here (collection-toggle is the highest at 6), so it
+     always falls after the row regardless of which slot (chips vs.
+     filter-banner) is active. Needed because .filter-banner-card is a
+     sibling of .filter-banner, not nested inside it -- see its own rule's
+     comment for why a row-flex item couldn't host it. */
+  .filter-banner-card{ width:100%; order:7; }
   /* `margin-left:auto` here broke the lightbox (Playwright: art frame
      never stable) by letting space-between scatter the icons once
      neither .chips nor .filter-banner was present to absorb it. Fixed by

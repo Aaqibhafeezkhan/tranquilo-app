@@ -22,7 +22,11 @@ import {
   sourceLinkLabel,
   sourceLinkPreposition,
 } from "./app/sourceLinks";
-import { getArtistProfile } from "./data/artist-profiles";
+import type { ArtistProfile } from "./data/artist-profiles";
+import {
+  findArtistProfileForQuery,
+  getArtistProfile,
+} from "./data/artist-profiles";
 import { TRANQUILO_CONFIG } from "./data/config.generated";
 import { renderErrorState } from "./errorState";
 import { buildEmptyCollectionSlide, buildIntroSlide } from "./feed/introSlides";
@@ -796,12 +800,23 @@ class TranquiloApp {
       scrollTelemetry.onScroll();
     });
 
+    // One rule for every banner mode, not just the artist filter: a search
+    // for a name we hold a profile for ("gauguin") shows the same card an
+    // artist-link click does. filterState is already updated to the new
+    // mode by the time this runs in every call site, so reading it here
+    // once covers both paths instead of each one threading its own profile
+    // through.
+    function resolveArtistProfileForBanner(): ArtistProfile | null {
+      const artist = filterState.getArtist();
+      if (artist) return getArtistProfile(artist);
+      const search = filterState.getSearch();
+      if (search) return findArtistProfileForQuery(search);
+      return null;
+    }
+
     function showFilterBanner(labelHtml: any) {
       filterState.setBannerHtml(labelHtml);
-      // Cleared here, not just in hideFilterBanner(), so every non-artist
-      // banner (collection, search, concept) starts from a clean slate --
-      // setArtistFilter re-sets it right after, for the one mode that has one.
-      topbarEl.setArtistProfile(null);
+      topbarEl.setArtistProfile(resolveArtistProfileForBanner());
       adjustFeedScrollForHeightChange(() => {
         feedEl.classList.add("filter-push");
         topbarEl.showFilterBanner(labelHtml);
@@ -823,7 +838,6 @@ class TranquiloApp {
       filterState.setCollectionFilter(false);
       if (artist) {
         showFilterBanner(`More by <strong>${escapeHtml(artist)}</strong>`);
-        topbarEl.setArtistProfile(getArtistProfile(artist));
       } else {
         hideFilterBanner();
       }
@@ -993,6 +1007,14 @@ class TranquiloApp {
         "compact",
         feedEl.scrollTop > slideHeight * 0.6,
       );
+    });
+
+    // The artist card is only relevant while looking at the first result
+    // of whatever's filtered -- pinned over the art the whole time you're
+    // browsing past it would be in the way. A small threshold, not >0,
+    // so idle subpixel scroll jitter at rest doesn't flicker it.
+    feedEl.addEventListener("scroll", () => {
+      topbarEl.setArtistCardScrolled(feedEl.scrollTop > 10);
     });
 
     const scrollDepthTracker = new ScrollDepthTracker({

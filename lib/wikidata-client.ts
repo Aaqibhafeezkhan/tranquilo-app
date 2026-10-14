@@ -85,7 +85,7 @@ function artistQuery(names: any): string {
     .join(" ");
   return [
     "SELECT ?artist ?artistLabel ?artistDescription ?birth ?death",
-    "       ?nationalityLabel ?movementLabel ?article WHERE {",
+    "       ?nationalityLabel ?movementLabel ?article ?image WHERE {",
     `  VALUES ?name { ${values} }`,
     `  VALUES ?occupation { ${ART_OCCUPATIONS.join(" ")} }`,
     "  ?artist rdfs:label ?name .",
@@ -95,6 +95,7 @@ function artistQuery(names: any): string {
     "  OPTIONAL { ?artist wdt:P570 ?death }",
     "  OPTIONAL { ?artist wdt:P27 ?nationality }",
     "  OPTIONAL { ?artist wdt:P135 ?movement }",
+    "  OPTIONAL { ?artist wdt:P18 ?image }", // portrait/depiction, Commons-hosted
     "  OPTIONAL {",
     "    ?article schema:about ?artist ;",
     "             schema:isPartOf <https://en.wikipedia.org/> .",
@@ -108,6 +109,11 @@ function year(iso: any): any {
   if (!iso) return null;
   const m = String(iso).match(/^(-?\d{4})/);
   return m ? m[1] : null;
+}
+
+function httpsify(url: any): any {
+  if (!url) return null;
+  return String(url).replace(/^http:/, "https:");
 }
 
 // Wikidata returns one row per combination -- an artist with two
@@ -135,6 +141,11 @@ function parseArtists(json: any): any[] {
         nationality: [],
         movement: [],
         article: v("article"),
+        // Special:FilePath is what Commons resolves directly to file bytes,
+        // so this is usable as an <img src> with no further lookup -- but
+        // WDQS returns it as http:, and the browser page is https:, so a
+        // plain <img> would be a mixed-content block without this rewrite.
+        image: httpsify(v("image")),
         found: true,
         fetched_at: new Date().toISOString(),
       };
@@ -142,6 +153,7 @@ function parseArtists(json: any): any[] {
     }
     // Later rows may carry a value an earlier one lacked.
     if (!rec.article) rec.article = v("article");
+    if (!rec.image) rec.image = httpsify(v("image"));
     if (!rec.description) rec.description = v("artistDescription");
     if (!rec.birth) rec.birth = year(v("birth"));
     if (!rec.death) rec.death = year(v("death"));

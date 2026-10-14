@@ -129,7 +129,13 @@ async function main() {
   }
 
   const store = loadStore();
-  const todo = wd.namesToFetch(names, store);
+  // --refresh re-asks names the store already answered -- only for a
+  // deliberate schema widening (a field added to artistQuery() after those
+  // answers were recorded), never for routine coverage runs, which must
+  // keep going through namesToFetch so a stored miss stays a miss.
+  const todo: any[] = args.includes("--refresh")
+    ? names
+    : wd.namesToFetch(names, store);
   console.log(
     `${names.length} name(s) requested; ${names.length - todo.length} already stored; ${todo.length} to fetch`,
   );

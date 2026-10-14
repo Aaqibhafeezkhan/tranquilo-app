@@ -2,7 +2,10 @@
 // "never render" cases (missing, ambiguous, stored miss) matter more here
 // than any one artist's actual bio text, which can change on a re-fetch.
 import { describe, expect, it } from "vitest";
-import { getArtistProfile } from "../src/data/artist-profiles";
+import {
+  findArtistProfileForQuery,
+  getArtistProfile,
+} from "../src/data/artist-profiles";
 
 describe("getArtistProfile", () => {
   it("returns null for empty/placeholder names", () => {
@@ -37,5 +40,41 @@ describe("getArtistProfile", () => {
     expect(typeof profile?.description).toBe("string");
     expect(Array.isArray(profile?.nationality)).toBe(true);
     expect(Array.isArray(profile?.movement)).toBe(true);
+  });
+
+  it("carries a photo URL when Wikidata holds one", () => {
+    // Backfilled onto every already-resolved name; Dürer is a known hit.
+    const profile = getArtistProfile("Albrecht Dürer");
+    expect(profile?.image).toMatch(/^https:\/\/commons\.wikimedia\.org\//);
+  });
+});
+
+describe("findArtistProfileForQuery", () => {
+  it("returns null for an empty query", () => {
+    expect(findArtistProfileForQuery(null)).toBeNull();
+    expect(findArtistProfileForQuery("")).toBeNull();
+    expect(findArtistProfileForQuery("   ")).toBeNull();
+  });
+
+  it("matches a full name exactly, case/diacritic-insensitive", () => {
+    expect(findArtistProfileForQuery("paul gauguin")?.name).toBe(
+      "Paul Gauguin",
+    );
+    expect(findArtistProfileForQuery("durer")?.name).toBe("Albrecht Dürer");
+  });
+
+  it("matches a surname alone when it's unique among held profiles", () => {
+    expect(findArtistProfileForQuery("gauguin")?.name).toBe("Paul Gauguin");
+  });
+
+  it("refuses to guess when a surname is shared by more than one held artist", () => {
+    // Both Giovanni Battista Tiepolo and Giovanni Domenico Tiepolo are
+    // resolved profiles -- picking either would be exactly the wrong-card-
+    // is-worse-than-no-card mistake the ticket warns about.
+    expect(findArtistProfileForQuery("tiepolo")).toBeNull();
+  });
+
+  it("returns null for a query that matches nothing held", () => {
+    expect(findArtistProfileForQuery("some random search term")).toBeNull();
   });
 });

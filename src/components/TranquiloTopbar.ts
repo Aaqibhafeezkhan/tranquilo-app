@@ -61,16 +61,11 @@ const TOPBAR_MARKUP = `
 </div>
 <nav class="chips" id="chips"></nav>
 <div class="filter-banner" id="filterBanner" style="display:none;">
-  <div class="filter-banner-row">
-    <span id="filterBannerLabel"></span>
-    <button id="filterBannerAbout" type="button" class="filter-banner-about" aria-expanded="false" aria-label="About this artist" style="display:none;">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
-    </button>
-    <button id="filterBannerExport" type="button" style="display:none;">Export</button>
-    <button id="filterBannerClear" type="button">Show all &times;</button>
-  </div>
-  <div class="filter-banner-card" id="filterBannerCard" style="display:none;"></div>
+  <span id="filterBannerLabel"></span>
+  <button id="filterBannerExport" type="button" style="display:none;">Export</button>
+  <button id="filterBannerClear" type="button">Show all &times;</button>
 </div>
+<div class="filter-banner-card" id="filterBannerCard" style="display:none;"></div>
 `;
 
 export class TranquiloTopbar extends HTMLElement {
@@ -81,9 +76,7 @@ export class TranquiloTopbar extends HTMLElement {
   private filterBannerEl!: HTMLElement;
   private filterBannerLabelEl!: HTMLElement;
   private filterBannerExportEl!: HTMLButtonElement;
-  private filterBannerAboutEl!: HTMLButtonElement;
   private filterBannerCardEl!: HTMLElement;
-  private currentArtistProfile: ArtistProfile | null = null;
   private musicToggleEl!: HTMLButtonElement;
   private searchToggleEl!: HTMLButtonElement;
   private collectionToggleEl!: HTMLButtonElement;
@@ -135,8 +128,6 @@ export class TranquiloTopbar extends HTMLElement {
     this.filterBannerExportEl = this.requireEl<HTMLButtonElement>(
       "#filterBannerExport",
     );
-    this.filterBannerAboutEl =
-      this.requireEl<HTMLButtonElement>("#filterBannerAbout");
     this.filterBannerCardEl = this.requireEl<HTMLElement>("#filterBannerCard");
     this.musicToggleEl = this.requireEl<HTMLButtonElement>("#musicToggle");
     this.searchToggleEl = this.requireEl<HTMLButtonElement>("#searchToggle");
@@ -154,11 +145,6 @@ export class TranquiloTopbar extends HTMLElement {
     on(this.collectionToggleEl, () => this.app?.onCollectionToggle());
     on(filterBannerClearEl, () => this.app?.onFilterBannerClear());
     on(this.filterBannerExportEl, () => this.app?.onFilterBannerExport());
-    on(this.filterBannerAboutEl, () => {
-      const expanded =
-        this.filterBannerAboutEl.getAttribute("aria-expanded") === "true";
-      this.setArtistCardExpanded(!expanded);
-    });
     on(shareBannerCloseEl, () => {
       this.hideShareBanner();
       this.app?.onShareBannerDismiss();
@@ -197,16 +183,15 @@ export class TranquiloTopbar extends HTMLElement {
     // Same pattern for --filter-banner-h: the banner can wrap to a second
     // line on a narrow viewport with a long label, so it stays
     // measurement-driven for its whole life, not just when it appears.
+    // Observes both #filterBanner and #filterBannerCard (a sibling, not a
+    // child -- see updateFilterBannerHeight()'s own comment on why) so the
+    // feed push accounts for the card's height too, not just the row's.
     if (typeof ResizeObserver !== "undefined") {
-      this.filterBannerResizeObserver = new ResizeObserver(() => {
-        if (this.filterBannerEl.style.display !== "none") {
-          document.documentElement.style.setProperty(
-            "--filter-banner-h",
-            `${this.filterBannerEl.offsetHeight}px`,
-          );
-        }
-      });
+      this.filterBannerResizeObserver = new ResizeObserver(() =>
+        this.updateFilterBannerHeight(),
+      );
       this.filterBannerResizeObserver.observe(this.filterBannerEl);
+      this.filterBannerResizeObserver.observe(this.filterBannerCardEl);
     }
 
     on(window, "resize", () => {
@@ -407,6 +392,24 @@ export class TranquiloTopbar extends HTMLElement {
     );
   }
 
+  // #filterBannerCard is a sibling of #filterBanner, not a child of it --
+  // it has to render as its own full-width line at desktop widths (see its
+  // CSS rule's comment), which a single row-flex item can't do while also
+  // sharing a line with the wordmark/icons. That means its height isn't
+  // part of #filterBanner's own offsetHeight, so --filter-banner-h (what
+  // #feed.filter-push subtracts) has to sum both rather than read one.
+  private updateFilterBannerHeight(): void {
+    if (this.filterBannerEl.style.display === "none") return;
+    const cardH =
+      this.filterBannerCardEl.style.display === "none"
+        ? 0
+        : this.filterBannerCardEl.offsetHeight;
+    document.documentElement.style.setProperty(
+      "--filter-banner-h",
+      `${this.filterBannerEl.offsetHeight + cardH}px`,
+    );
+  }
+
   // Full show: label, layout, hides the chip row, sizes --filter-banner-h.
   // app.js still owns the surrounding feed-scroll compensation; this only
   // does the topbar's own part of that synchronous DOM write.
@@ -414,10 +417,7 @@ export class TranquiloTopbar extends HTMLElement {
     this.filterBannerLabelEl.innerHTML = html;
     this.filterBannerEl.style.display = "flex";
     this.setChipsHidden(true);
-    document.documentElement.style.setProperty(
-      "--filter-banner-h",
-      `${this.filterBannerEl.offsetHeight}px`,
-    );
+    this.updateFilterBannerHeight();
   }
 
   // Full hide: also resets the export button and restores the chip row.
@@ -429,48 +429,58 @@ export class TranquiloTopbar extends HTMLElement {
   }
 
   // A raw display toggle, short of hideFilterBanner()'s full reset --
-  // app.js's openSearch() uses this to hide the banner while the search
-  // panel covers that space without losing the export button's visibility
-  // or the remembered label, both restored once the panel closes.
+  // app.js's openSearch() uses this to hide the banner (and any open card)
+  // while the search panel covers that space without losing the export
+  // button's visibility or the remembered label/card, both restored once
+  // the panel closes.
   setFilterBannerVisible(visible: boolean): void {
     this.filterBannerEl.style.display = visible ? "flex" : "none";
+    if (this.filterBannerCardEl.innerHTML) {
+      this.filterBannerCardEl.style.display = visible ? "block" : "none";
+    }
   }
 
   setFilterBannerExportVisible(visible: boolean): void {
     this.filterBannerExportEl.style.display = visible ? "inline-block" : "none";
   }
 
-  // Shows/hides the "About" chevron depending on whether a profile exists
-  // for the current filter -- null for every mode except an artist filter
-  // with held profile data, per the ticket's "no chevron, no empty state"
-  // rule. Collapses any open card rather than leaving it stale when the
-  // filter changes out from under it (switching artist, clearing, or
-  // switching to a non-artist filter mode entirely).
+  // Renders inline, immediately -- no chevron, no click to reveal. Shown
+  // for every filter mode that resolved a profile (an artist filter or a
+  // search matching one by name), hidden otherwise.
   setArtistProfile(profile: ArtistProfile | null): void {
-    this.currentArtistProfile = profile;
-    this.filterBannerAboutEl.style.display = profile ? "inline-flex" : "none";
-    this.setArtistCardExpanded(false);
-  }
-
-  private setArtistCardExpanded(expanded: boolean): void {
-    this.filterBannerAboutEl.setAttribute(
-      "aria-expanded",
-      expanded ? "true" : "false",
-    );
-    this.filterBannerAboutEl.classList.toggle("expanded", expanded);
-    if (expanded && this.currentArtistProfile) {
-      this.filterBannerCardEl.innerHTML = this.renderArtistCard(
-        this.currentArtistProfile,
-      );
+    if (profile) {
+      // The inner wrapper (not #filterBannerCard itself) carries the
+      // visible card's width cap -- see its CSS rule's comment.
+      this.filterBannerCardEl.innerHTML = `<div class="artist-card-inner">${this.renderArtistCard(profile)}</div>`;
       this.filterBannerCardEl.style.display = "block";
+      // A fresh filter always lands back on its own first result (every
+      // render() path resets scrollTop), so the card should always start
+      // visible -- not wherever .is-scrolled happened to be left from
+      // whatever was filtered before.
+      this.filterBannerCardEl.classList.remove("is-scrolled");
     } else {
+      this.filterBannerCardEl.innerHTML = "";
       this.filterBannerCardEl.style.display = "none";
     }
-    // The card changes filterBannerEl's total height; the existing
-    // ResizeObserver on filterBannerEl (above) picks that up on its own
-    // and keeps --filter-banner-h in sync, same as a wrapped label does.
+    // The ResizeObserver on filterBannerCardEl (above) would catch this on
+    // its own a frame later; calling it synchronously here avoids a
+    // one-frame flash of the feed sitting under the card before it's
+    // pushed down.
+    this.updateFilterBannerHeight();
   }
 
+  // Collapses the card (CSS max-height/opacity transition, see its rule)
+  // once the visitor scrolls past the first result of whatever's
+  // filtered, and restores it on the way back -- app.ts drives this off
+  // the feed's own scrollTop, not anything this component tracks itself.
+  // A no-op when there's no card to begin with: toggling a class an empty,
+  // hidden #filterBannerCard doesn't have content for is harmless.
+  setArtistCardScrolled(scrolled: boolean): void {
+    this.filterBannerCardEl.classList.toggle("is-scrolled", scrolled);
+  }
+
+  // Loosely modeled on a search engine's knowledge panel: photo + name up
+  // top, facts and a short description below, a source link last.
   private renderArtistCard(profile: ArtistProfile): string {
     const dates =
       profile.birth || profile.death
@@ -483,7 +493,12 @@ export class TranquiloTopbar extends HTMLElement {
     const sourceLabel = profile.article
       ? "Read more on Wikipedia"
       : "View on Wikidata";
+    const photoHtml = profile.image
+      ? `<img class="artist-card-photo" src="${escapeHtml(profile.image)}" alt="" loading="lazy">`
+      : "";
     return (
+      `<div class="artist-card-row">${photoHtml}` +
+      `<div class="artist-card-text">` +
       `<div class="artist-card-name">${escapeHtml(profile.name)}</div>` +
       (line1
         ? `<div class="artist-card-meta">${escapeHtml(line1)}</div>`
@@ -496,7 +511,8 @@ export class TranquiloTopbar extends HTMLElement {
         : "") +
       (sourceHref
         ? `<a class="artist-card-source" href="${escapeHtml(sourceHref)}" target="_blank" rel="noopener">${sourceLabel} <span aria-hidden="true">&rarr;</span></a>`
-        : "")
+        : "") +
+      `</div></div>`
     );
   }
 

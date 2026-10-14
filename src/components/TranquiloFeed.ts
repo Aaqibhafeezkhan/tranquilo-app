@@ -224,6 +224,7 @@ export class TranquiloFeed extends HTMLElement {
     host.resetScrollDepthTracking();
     host.resetRecycleWindow();
     this.innerHTML = "";
+    this.showLoadingSkeleton();
     this.feedPager = null;
     // Invalidated so a page still in flight from the previous mode can't
     // append its shells into this one -- otherwise switching category
@@ -364,6 +365,7 @@ export class TranquiloFeed extends HTMLElement {
         // A mode switch landed while this was in flight; its shells belong
         // to a feed that no longer exists.
         if (renderToken !== this.activeRenderToken) return;
+        this.clearLoadingSkeleton();
 
         let initial = (leadingItems || []).concat(firstPage || []);
         if (fixedItems) initial = firstPage || [];
@@ -402,8 +404,10 @@ export class TranquiloFeed extends HTMLElement {
       })
       .catch((err) => {
         // A failed render still settles -- a waiter that never resolves
-        // turns one broken fetch into a hung page.
+        // turns one broken fetch into a hung page. Also clears the
+        // skeleton, which would otherwise shimmer forever over nothing.
         console.error("items: feed render failed", err);
+        this.clearLoadingSkeleton();
         this.markFeedSettled(onSettled);
       });
   }
@@ -412,6 +416,31 @@ export class TranquiloFeed extends HTMLElement {
     this.feedRenderCount++;
     window.__tranquiloFeedRenders = this.feedRenderCount;
     if (onSettled) onSettled();
+  }
+
+  // Shown the instant render() clears the feed (any filter/category/search
+  // switch, including the very first one on page load) and removed the
+  // moment real content lands -- see the two call sites above. Reuses
+  // .art-frame/.art-skeleton's own shimmer rather than inventing a second
+  // loading treatment. Deliberately NOT pushed into slideRecords: it's
+  // cosmetic and always fully removed before any real slide bookkeeping
+  // runs, never a position any other code needs to reason about.
+  private showLoadingSkeleton(): void {
+    const el = document.createElement("section");
+    el.className = "slide slide-skeleton";
+    el.innerHTML =
+      '<div class="art-frame loading"><div class="art-skeleton"></div></div>' +
+      '<div class="slide-skeleton-caption">' +
+      '<div class="slide-skeleton-bar title"></div>' +
+      '<div class="slide-skeleton-bar artist"></div>' +
+      "</div>";
+    this.appendChild(el);
+  }
+
+  private clearLoadingSkeleton(): void {
+    this.querySelectorAll(".slide-skeleton").forEach((el) => {
+      el.remove();
+    });
   }
 
   // Shells for a batch of items, appended in one fragment. data-category
