@@ -309,9 +309,9 @@ paths:
         Registered in Resend's dashboard (RESEND_WEBHOOK_SECRET), not
         called by this site's own client. Signature-verified via Svix
         (svix-id/svix-timestamp/svix-signature headers) against the raw
-        request body. On a bounce/delay/complaint, alerts the ops inbox and
-        posts to the same "Analytics Reports" Linear doc the cron jobs
-        below use; every other event type is acknowledged and ignored.
+        request body. On a bounce/delay/complaint, emails the ops inbox
+        (a failed send returns 500 so Resend retries); every other event
+        type is acknowledged and ignored.
       parameters:
         - name: svix-id
           in: header
@@ -522,7 +522,7 @@ paths:
       operationId: cronHealthCheck
       description: >-
         Vercel Cron only (see vercel.json's `crons`) -- silent on a healthy
-        run, alerts (email + Linear doc) on a threshold breach. `?op=` also
+        run, emails the maintainer on a threshold breach. `?op=` also
         exposes hand-triggered Blob-cache maintenance operations, dry-run
         by default.
       security: [{ cronSecret: [] }]
@@ -580,34 +580,27 @@ paths:
           content:
             application/json: { schema: { $ref: "#/components/schemas/Error" } }
 
-  /api/cron/analytics-report:
+  /api/cron/restore-drill-reminder:
     get:
       tags: [cron]
-      summary: Monthly/quarterly analytics rollup, posted to Linear
-      operationId: cronAnalyticsReport
+      summary: Quarterly reminder that a database restore drill is due
+      operationId: cronRestoreDrillReminder
       description: >-
-        Vercel Cron only, two schedule entries (`days=30&label=Monthly`,
-        `days=92&label=Quarterly`) hitting this one function. `?healthcheck=1`
-        is a standing, permanent liveness check for the configured
-        LINEAR_API_KEY -- same auth, boolean-only response.
+        Vercel Cron only, on the first day of each quarter. Emails the
+        maintainer the restore-drill checklist. A failed send returns 500
+        rather than being swallowed, since the email is the only output.
       security: [{ cronSecret: [] }]
-      parameters:
-        - name: days
-          in: query
-          schema: { type: integer, default: 30 }
-        - name: label
-          in: query
-          schema: { type: string, default: Report }
-        - name: healthcheck
-          in: query
-          schema: { type: string, enum: ["1"] }
       responses:
         "200":
-          description: Report posted, or (for `?healthcheck=1`) `{ ok, reason? }`.
+          description: Reminder sent.
           content:
             application/json: { schema: { type: object } }
         "401":
           $ref: "#/components/responses/CronUnauthorized"
+        "500":
+          description: Email not configured, or the Resend call failed.
+          content:
+            application/json: { schema: { $ref: "#/components/schemas/Error" } }
 
 components:
   securitySchemes:

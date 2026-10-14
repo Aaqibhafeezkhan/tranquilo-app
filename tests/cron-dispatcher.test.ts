@@ -60,13 +60,13 @@ describe("api/cron/index.js dispatcher", () => {
   });
 
   it("exposes the real job map, wired to lib/cron/*.js, for Vercel's own invocation", () => {
-    // Not calling these (they'd hit real Postgres/Sentry/Linear) -- just
+    // Not calling these (they'd hit real Postgres/Sentry/Resend) -- just
     // confirming they're wired up, since an import-path typo would silently
     // 400 every real cron invocation.
     expect(Object.keys(dispatcherModule.REAL_JOBS).sort()).toEqual([
-      "analytics-report",
       "db-backup",
       "health-check",
+      "restore-drill-reminder",
       "vercel-deployment-cleanup",
       "warm-image-cache",
     ]);

@@ -2,7 +2,7 @@
 // KEEP_COUNT. Vercel keeps every deployment indefinitely by default.
 //
 // Plain fetch against Vercel's REST API, same convention as GitHub/
-// Resend/Linear elsewhere in this codebase.
+// Resend elsewhere in this codebase.
 //
 // Dry run unless invoked with ?commit=1. The deployment currently
 // aliased to production is NEVER deleted, regardless of where it falls

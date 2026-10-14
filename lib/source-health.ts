@@ -107,9 +107,8 @@ function healthAlerts(
 /**
  * The set of sources under a standing hold, as a plain object for O(1) lookup.
  *
- * Exists because several server-side paths (health-check, analytics-report,
- * api/og/[slug]) fetch source images directly from the raw origin URL on
- * their own schedule, bypassing the Wikimedia hold honoured elsewhere.
+ * Exists because server-side paths (health-check, api/og/[slug]) fetch
+ * source images directly from the raw origin URL on their own schedule, bypassing the Wikimedia hold honoured elsewhere.
  *
  * Fails CLOSED: if the holds cannot be read, every source is reported held --
  * losing a latency sample is trivial; breaking a hold commitment is not.

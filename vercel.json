@@ -38,11 +38,7 @@
   ],
   "crons": [
     {
-      "path": "/api/cron?job=analytics-report&days=30&label=Monthly",
-      "schedule": "7 9 1 * *"
-    },
-    {
-      "path": "/api/cron?job=analytics-report&days=92&label=Quarterly",
+      "path": "/api/cron?job=restore-drill-reminder",
       "schedule": "11 9 1 1,4,7,10 *"
     },
     {

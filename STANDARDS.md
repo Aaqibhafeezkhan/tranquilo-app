@@ -24,7 +24,7 @@ We maintain a strict minimal-dependency philosophy to ensure fast builds, small 
 ### Dependency Budget
 We enforce a strict upper limit on production dependencies. Serverless API functions (`/api`) rely on **only 7 core packages** (`@neondatabase/serverless`, `@sentry/node`, `@vercel/blob`, `@vercel/og`, `sharp`, `svix`, `ws`).
 
-> **Standing Rule:** Do not install full third-party SDKs for one-off HTTP tasks. Integrations for services like Resend, Linear, and S3 (using hand-rolled SigV4 authentication) use native `fetch`.
+> **Standing Rule:** Do not install full third-party SDKs for one-off HTTP tasks. Integrations for services like Resend and S3 (using hand-rolled SigV4 authentication) use native `fetch`.
 
 ---
 

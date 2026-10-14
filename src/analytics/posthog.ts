@@ -12,8 +12,9 @@
 // imports this module's default export and calls .capture() alongside its
 // own /api/track send) -- originally additive alongside Cloudflare Web
 // Analytics and trackEvent()'s /api/track pipeline for general
-// click/pageview/navigation-timing signals neither captured, now also the
-// mirror target for the events analytics-report.ts used to summarize.
+// click/pageview/navigation-timing signals neither captured, now also where the
+// named product events are summarized (a server-side monthly report used
+// to do that and has since been retired).
 //
 // Configured for the strictest anonymous mode posthog-js supports: no
 // person profiles ever created, autocapture scoped to clicks only (no form
