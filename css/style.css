@@ -1063,6 +1063,15 @@ html,body{
      the only overlay in the app that did not float on a fading gradient.
      In flow it needs no background of its own: the topbar's gradient is
      already behind it, and --topbar-h now measures it for free. */
+  /* Column, not the row itself: .filter-banner-row carries the original
+     centered-row layout, and the artist card (when expanded) is a second,
+     block-level child below it. filterBannerEl's own offsetHeight already
+     drives --filter-banner-h via TranquiloTopbar's ResizeObserver, so the
+     card's height is picked up for free the same way a wrapped label is. */
+  display:flex;
+  flex-direction:column;
+}
+.filter-banner-row{
   display:flex;
   align-items:center;
   justify-content:center;
@@ -1088,6 +1097,53 @@ html,body{
   white-space:nowrap;
 }
 .filter-banner button:hover{ color:#fff; border-color:var(--gold-soft); }
+.filter-banner-about{
+  padding:4px 6px !important;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+.filter-banner-about svg{ transition:transform 0.15s ease; }
+.filter-banner-about.expanded svg{ transform:rotate(180deg); }
+
+/* The expanded card: a real surface (unlike .filter-banner-row, which
+   floats on the topbar's own gradient) since prose needs to read clearly
+   regardless of whatever art is behind it. */
+.filter-banner-card{
+  background:var(--surface);
+  border-top:1px solid var(--hairline);
+  padding:14px 20px 16px;
+  max-width:480px;
+  margin:0 auto;
+  text-align:left;
+}
+.artist-card-name{
+  font-family:var(--serif);
+  font-size:1.05rem;
+  color:var(--text);
+}
+.artist-card-meta{
+  font-family:var(--sans);
+  font-size:0.75rem;
+  color:var(--ink-soft);
+  margin-top:2px;
+}
+.artist-card-bio{
+  font-family:var(--sans);
+  font-size:0.82rem;
+  line-height:1.5;
+  color:var(--text);
+  margin:8px 0 0;
+}
+.artist-card-source{
+  display:inline-block;
+  font-family:var(--sans);
+  font-size:0.72rem;
+  color:var(--gold-soft);
+  margin-top:8px;
+  text-decoration:none;
+}
+.artist-card-source:hover{ text-decoration:underline; }
 
 /* Pushes the feed down below the filter banner instead of letting it
    float on top of the artwork -- same "#feed.search-push" pattern used
@@ -1810,8 +1866,12 @@ html,body{
   /* Tightened to buy the row back some width. */
   .chip{ font-size:0.68rem; letter-spacing:0.04em; padding:6px 11px; }
   /* Same slot as the chips it replaces -- never both up. flex:1 absorbs
-     the row's free space, keeping the icon group together. */
-  .filter-banner{ order:2; flex:1; justify-content:flex-start; padding:0; }
+     the row's free space, keeping the icon group together. The row-level
+     overrides (alignment/padding) target .filter-banner-row, the nested
+     flex row, now that .filter-banner itself is just the column wrapper
+     positioning the whole banner (row + card) within .topbar's own row. */
+  .filter-banner{ order:2; flex:1; }
+  .filter-banner-row{ justify-content:flex-start; padding:0; }
   /* `margin-left:auto` here broke the lightbox (Playwright: art frame
      never stable) by letting space-between scatter the icons once
      neither .chips nor .filter-banner was present to absorb it. Fixed by

@@ -22,6 +22,7 @@ import {
   sourceLinkLabel,
   sourceLinkPreposition,
 } from "./app/sourceLinks";
+import { getArtistProfile } from "./data/artist-profiles";
 import { TRANQUILO_CONFIG } from "./data/config.generated";
 import { renderErrorState } from "./errorState";
 import { buildEmptyCollectionSlide, buildIntroSlide } from "./feed/introSlides";
@@ -797,6 +798,10 @@ class TranquiloApp {
 
     function showFilterBanner(labelHtml: any) {
       filterState.setBannerHtml(labelHtml);
+      // Cleared here, not just in hideFilterBanner(), so every non-artist
+      // banner (collection, search, concept) starts from a clean slate --
+      // setArtistFilter re-sets it right after, for the one mode that has one.
+      topbarEl.setArtistProfile(null);
       adjustFeedScrollForHeightChange(() => {
         feedEl.classList.add("filter-push");
         topbarEl.showFilterBanner(labelHtml);
@@ -804,6 +809,7 @@ class TranquiloApp {
     }
     function hideFilterBanner() {
       filterState.setBannerHtml(null);
+      topbarEl.setArtistProfile(null);
       adjustFeedScrollForHeightChange(() => {
         feedEl.classList.remove("filter-push");
         topbarEl.hideFilterBanner();
@@ -817,6 +823,7 @@ class TranquiloApp {
       filterState.setCollectionFilter(false);
       if (artist) {
         showFilterBanner(`More by <strong>${escapeHtml(artist)}</strong>`);
+        topbarEl.setArtistProfile(getArtistProfile(artist));
       } else {
         hideFilterBanner();
       }

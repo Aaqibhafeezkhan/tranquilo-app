@@ -18,8 +18,20 @@
 // build output filenames, so a string literal in a template can't resolve
 // once bundled. This gives the real, current URL either way.
 import tranquiloFlowerVioletUrl from "../../assets/tranquilo-flower-violet.svg";
+import type { ArtistProfile } from "../data/artist-profiles";
 import type { ITopbarHost } from "../types/ITopbarHost";
 import { on } from "../utils/on";
+
+// Duplicated rather than imported from app.ts/slideBuilder.ts: small,
+// fully static, cheaper to copy once than to add an import for -- same
+// call TranquiloDetailModal.ts already made for its own copy.
+function escapeHtml(str: unknown): string {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
 
 const TOPBAR_MARKUP = `
 <div class="share-banner" id="shareBanner" style="display:none;">
@@ -49,9 +61,15 @@ const TOPBAR_MARKUP = `
 </div>
 <nav class="chips" id="chips"></nav>
 <div class="filter-banner" id="filterBanner" style="display:none;">
-  <span id="filterBannerLabel"></span>
-  <button id="filterBannerExport" type="button" style="display:none;">Export</button>
-  <button id="filterBannerClear" type="button">Show all &times;</button>
+  <div class="filter-banner-row">
+    <span id="filterBannerLabel"></span>
+    <button id="filterBannerAbout" type="button" class="filter-banner-about" aria-expanded="false" aria-label="About this artist" style="display:none;">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+    </button>
+    <button id="filterBannerExport" type="button" style="display:none;">Export</button>
+    <button id="filterBannerClear" type="button">Show all &times;</button>
+  </div>
+  <div class="filter-banner-card" id="filterBannerCard" style="display:none;"></div>
 </div>
 `;
 
@@ -63,6 +81,9 @@ export class TranquiloTopbar extends HTMLElement {
   private filterBannerEl!: HTMLElement;
   private filterBannerLabelEl!: HTMLElement;
   private filterBannerExportEl!: HTMLButtonElement;
+  private filterBannerAboutEl!: HTMLButtonElement;
+  private filterBannerCardEl!: HTMLElement;
+  private currentArtistProfile: ArtistProfile | null = null;
   private musicToggleEl!: HTMLButtonElement;
   private searchToggleEl!: HTMLButtonElement;
   private collectionToggleEl!: HTMLButtonElement;
@@ -114,6 +135,9 @@ export class TranquiloTopbar extends HTMLElement {
     this.filterBannerExportEl = this.requireEl<HTMLButtonElement>(
       "#filterBannerExport",
     );
+    this.filterBannerAboutEl =
+      this.requireEl<HTMLButtonElement>("#filterBannerAbout");
+    this.filterBannerCardEl = this.requireEl<HTMLElement>("#filterBannerCard");
     this.musicToggleEl = this.requireEl<HTMLButtonElement>("#musicToggle");
     this.searchToggleEl = this.requireEl<HTMLButtonElement>("#searchToggle");
     this.collectionToggleEl =
@@ -130,6 +154,11 @@ export class TranquiloTopbar extends HTMLElement {
     on(this.collectionToggleEl, () => this.app?.onCollectionToggle());
     on(filterBannerClearEl, () => this.app?.onFilterBannerClear());
     on(this.filterBannerExportEl, () => this.app?.onFilterBannerExport());
+    on(this.filterBannerAboutEl, () => {
+      const expanded =
+        this.filterBannerAboutEl.getAttribute("aria-expanded") === "true";
+      this.setArtistCardExpanded(!expanded);
+    });
     on(shareBannerCloseEl, () => {
       this.hideShareBanner();
       this.app?.onShareBannerDismiss();
@@ -395,6 +424,7 @@ export class TranquiloTopbar extends HTMLElement {
   hideFilterBanner(): void {
     this.filterBannerEl.style.display = "none";
     this.filterBannerExportEl.style.display = "none";
+    this.setArtistProfile(null);
     this.setChipsHidden(false);
   }
 
@@ -408,6 +438,66 @@ export class TranquiloTopbar extends HTMLElement {
 
   setFilterBannerExportVisible(visible: boolean): void {
     this.filterBannerExportEl.style.display = visible ? "inline-block" : "none";
+  }
+
+  // Shows/hides the "About" chevron depending on whether a profile exists
+  // for the current filter -- null for every mode except an artist filter
+  // with held profile data, per the ticket's "no chevron, no empty state"
+  // rule. Collapses any open card rather than leaving it stale when the
+  // filter changes out from under it (switching artist, clearing, or
+  // switching to a non-artist filter mode entirely).
+  setArtistProfile(profile: ArtistProfile | null): void {
+    this.currentArtistProfile = profile;
+    this.filterBannerAboutEl.style.display = profile ? "inline-flex" : "none";
+    this.setArtistCardExpanded(false);
+  }
+
+  private setArtistCardExpanded(expanded: boolean): void {
+    this.filterBannerAboutEl.setAttribute(
+      "aria-expanded",
+      expanded ? "true" : "false",
+    );
+    this.filterBannerAboutEl.classList.toggle("expanded", expanded);
+    if (expanded && this.currentArtistProfile) {
+      this.filterBannerCardEl.innerHTML = this.renderArtistCard(
+        this.currentArtistProfile,
+      );
+      this.filterBannerCardEl.style.display = "block";
+    } else {
+      this.filterBannerCardEl.style.display = "none";
+    }
+    // The card changes filterBannerEl's total height; the existing
+    // ResizeObserver on filterBannerEl (above) picks that up on its own
+    // and keeps --filter-banner-h in sync, same as a wrapped label does.
+  }
+
+  private renderArtistCard(profile: ArtistProfile): string {
+    const dates =
+      profile.birth || profile.death
+        ? `${profile.birth ?? "?"}–${profile.death ?? "?"}`
+        : null;
+    const nationality = profile.nationality.join(", ") || null;
+    const line1 = [dates, nationality].filter(Boolean).join(" · ");
+    const line2 = profile.movement.join(", ");
+    const sourceHref = profile.article ?? profile.wikidata ?? null;
+    const sourceLabel = profile.article
+      ? "Read more on Wikipedia"
+      : "View on Wikidata";
+    return (
+      `<div class="artist-card-name">${escapeHtml(profile.name)}</div>` +
+      (line1
+        ? `<div class="artist-card-meta">${escapeHtml(line1)}</div>`
+        : "") +
+      (line2
+        ? `<div class="artist-card-meta artist-card-movement">${escapeHtml(line2)}</div>`
+        : "") +
+      (profile.description
+        ? `<p class="artist-card-bio">${escapeHtml(profile.description)}</p>`
+        : "") +
+      (sourceHref
+        ? `<a class="artist-card-source" href="${escapeHtml(sourceHref)}" target="_blank" rel="noopener">${sourceLabel} <span aria-hidden="true">&rarr;</span></a>`
+        : "")
+    );
   }
 
   // Unlike showFilterBanner/hideFilterBanner, this never touches a CSS
