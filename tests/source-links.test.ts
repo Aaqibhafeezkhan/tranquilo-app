@@ -24,6 +24,10 @@ describe("sourceLinkLabel", () => {
     expect(sourceLinkLabel({ source: "wellcome" })).toBe("Wellcome Collection");
   });
 
+  it("maps nga to the institution's name, not a domain", () => {
+    expect(sourceLinkLabel({ source: "nga" })).toBe("National Gallery of Art");
+  });
+
   it("falls back to the raw source string for an unmapped source", () => {
     expect(sourceLinkLabel({ source: "some-new-source" })).toBe(
       "some-new-source",
@@ -50,6 +54,10 @@ describe("sourceLinkPreposition", () => {
 
   it("is 'at' for wellcome too, same reasoning", () => {
     expect(sourceLinkPreposition({ source: "wellcome" })).toBe("at");
+  });
+
+  it("is 'at' for nga, a named institution", () => {
+    expect(sourceLinkPreposition({ source: "nga" })).toBe("at");
   });
 });
 

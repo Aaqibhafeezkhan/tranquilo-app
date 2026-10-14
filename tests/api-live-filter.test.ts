@@ -148,6 +148,7 @@ describe("share-link attribution never invents an institution", () => {
       "commons",
       "europeana",
       "wellcome",
+      "nga",
     ].forEach((src) => {
       expect(slugSource, `INSTITUTION_NAMES missing ${src}`).toMatch(
         new RegExp(`\\b${src}\\s*:`),

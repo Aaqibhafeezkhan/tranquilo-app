@@ -56,6 +56,7 @@ const INSTITUTION_NAMES = {
   commons: "Wikimedia Commons",
   europeana: "Europeana",
   wellcome: "Wellcome Collection",
+  nga: "National Gallery of Art",
 };
 
 // Serves the real app in place rather than a redirect stub, so a

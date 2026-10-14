@@ -39,7 +39,14 @@ const IMAGE_LOAD_FAILED_THRESHOLD_24H = 5;
 // second while images served fine to everyone else; 2 is the smallest
 // value that means "more than one client".
 const IMAGE_LOAD_FAILED_MIN_PAGE_LOADS = 2;
-const SOURCES = ["met", "smithsonian", "cleveland", "commons", "europeana"];
+const SOURCES = [
+  "met",
+  "smithsonian",
+  "cleveland",
+  "commons",
+  "europeana",
+  "nga",
+];
 const IMAGE_FETCH_TIMEOUT_MS = 15000;
 
 // ---------------------------------------------------------------------------

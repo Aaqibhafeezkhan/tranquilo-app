@@ -9,6 +9,7 @@ const EXPORT_SOURCE_NAMES: Record<string, string> = {
   cleveland: "Cleveland Museum of Art",
   commons: "Wikimedia Commons",
   europeana: "Europeana",
+  nga: "National Gallery of Art",
 };
 
 function csvField(value: unknown): string {

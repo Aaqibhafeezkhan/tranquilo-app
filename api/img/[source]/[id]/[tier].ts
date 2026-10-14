@@ -143,6 +143,10 @@ const ALLOWED_ORIGIN_HOSTS: Record<string, string[]> = {
   // paths, so a source can cache cleanly at ingest time while every live
   // image request for it still 400s here until this entry exists.
   wellcome: ["iiif.wellcomecollection.org"],
+  // nga.py's IIIF Image API host (api.nga.gov/iiif/{uuid}), the only
+  // image host in NGA's published_images data. Added before the first
+  // ingestion run for the same reason as wellcome above.
+  nga: ["api.nga.gov"],
 };
 
 type ImgSource = keyof typeof ALLOWED_ORIGIN_HOSTS;
