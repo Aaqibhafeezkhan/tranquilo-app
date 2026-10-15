@@ -76,6 +76,20 @@ test.describe("narrow desktop", () => {
     expect(hidden).toBeGreaterThan(0);
   });
 
+  test("picking a category from the More menu leaves one chip per category", async ({
+    page,
+  }) => {
+    // Selecting rebuilds the row; the chips parked in the menu from the
+    // previous build used to be moved back alongside the new ones, so
+    // several categories appeared twice.
+    await gotoFeed(page);
+    await page.locator("#chipsMore").click();
+    await page.locator("#chipsMoreMenu .chip").first().click();
+    const chips = await page.locator(".chip").allTextContents();
+    expect(chips.length).toBeGreaterThan(1);
+    expect(new Set(chips).size, JSON.stringify(chips)).toBe(chips.length);
+  });
+
   test("the menu opens anchored under the More button", async ({ page }) => {
     // It was pinned to the topbar's right edge, opening under the icon
     // cluster instead of the button that summons it.

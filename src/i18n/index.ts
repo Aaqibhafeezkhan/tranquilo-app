@@ -25,10 +25,12 @@ import {
   resolveLocale,
 } from "./core";
 import { type Dictionary, en, type MessageKey } from "./en";
+import { type FacetField, facetKey } from "./facets";
 import { LOCALES, type LocaleCode, type LocaleInfo } from "./locales";
 import { ptBR } from "./pt-BR";
 
 export type { MessageKey } from "./en";
+export type { FacetField } from "./facets";
 export type { LocaleInfo } from "./locales";
 
 // Typed by LocaleCode, so registering a locale without a dictionary (or
@@ -116,6 +118,18 @@ export function applyDocumentLocale(
 
 function chain(): string[] {
   return fallbackChain(currentLocale(), AVAILABLE);
+}
+
+/**
+ * The on-screen label for a controlled-vocabulary value, e.g.
+ * facetLabel("category", item.category). Display only: keep using the raw
+ * value for filtering and matching. A value with no label anywhere (a term
+ * the catalogue gained before anyone labelled it) is shown as-is.
+ */
+export function facetLabel(field: FacetField, value: string): string {
+  const key = facetKey(field, value);
+  const label = lookup(key, chain(), DICTIONARIES);
+  return label === key ? value : label;
 }
 
 /** The string for `key` in the active locale, falling back per key. */

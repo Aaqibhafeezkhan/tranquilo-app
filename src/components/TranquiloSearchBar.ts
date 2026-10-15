@@ -20,6 +20,7 @@
 // plain getElementById, including the #didYouMeanBtn app.js's runSearch()
 // creates inside the results line and wires up itself.
 
+import { type FacetField, facetLabel } from "../i18n/index";
 import {
   findDidYouMean,
   isRealArtist,
@@ -27,6 +28,13 @@ import {
   shuffled,
 } from "../logic/logic";
 import { on } from "../utils/on";
+
+// A "Browse by" suggestion: the stored value is what gets searched; field
+// (null for artists, which have no label) is how its label is looked up.
+interface BrowseHint {
+  value: string;
+  field: FacetField | null;
+}
 
 interface FacetEntry {
   value: string;
@@ -295,19 +303,23 @@ export class TranquiloSearchBar extends HTMLElement {
   // Six pool categories, two picks each, for the "Browse by" chips shown
   // alongside recent-search history on a fresh (empty) open. Reads
   // `facets`, handed over once at startup.
-  private buildBrowseHint(): string[] {
-    const artistPool = (this.facets.artist || [])
-      .filter((e) => isRealArtist(e.value))
-      .map((e) => e.value);
-    const categoryPool = (this.facets.categories || []).map((e) => e.value);
-    const facetPool = ([] as FacetEntry[])
-      .concat(
-        this.facets.region || [],
-        this.facets.era || [],
-        this.facets.type || [],
-        this.facets.color || [],
-      )
-      .map((e) => e.value);
+  private buildBrowseHint(): BrowseHint[] {
+    const hints = (
+      entries: FacetEntry[] | undefined,
+      field: FacetField | null,
+    ) => (entries || []).map((e) => ({ value: e.value, field }));
+    const artistPool = hints(this.facets.artist, null).filter((h) =>
+      isRealArtist(h.value),
+    );
+    const categoryPool = hints(this.facets.categories, "category");
+    // Facet groups as /api/items?shape=facets names them: era is the
+    // timeframe column, type is media_type, color is palette.
+    const facetPool = [
+      ...hints(this.facets.region, "region"),
+      ...hints(this.facets.era, "timeframe"),
+      ...hints(this.facets.type, "media_type"),
+      ...hints(this.facets.color, "palette"),
+    ];
     return shuffled(artistPool)
       .slice(0, 2)
       .concat(shuffled(categoryPool).slice(0, 2))
@@ -340,8 +352,10 @@ export class TranquiloSearchBar extends HTMLElement {
     if (hintTerms.length > 0) {
       html += `<div class="search-hint-label">Browse by</div><div class="search-hint-chips">${hintTerms
         .map(
-          (term) =>
-            `<button type="button" class="search-hint-chip"><span>${escapeHtml(term)}</span></button>`,
+          (hint) =>
+            `<button type="button" class="search-hint-chip"><span>${escapeHtml(
+              hint.field ? facetLabel(hint.field, hint.value) : hint.value,
+            )}</span></button>`,
         )
         .join("")}</div>`;
     }
@@ -362,7 +376,9 @@ export class TranquiloSearchBar extends HTMLElement {
       .querySelectorAll<HTMLButtonElement>(".search-hint-chip")
       .forEach((chip, i) => {
         on(chip, () => {
-          this.inputEl.value = hintTerms[i];
+          // The stored value, not the (possibly translated) label: search
+          // matches stored values.
+          this.inputEl.value = hintTerms[i].value;
           this.submit();
         });
       });

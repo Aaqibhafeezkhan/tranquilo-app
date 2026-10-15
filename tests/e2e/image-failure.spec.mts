@@ -3,7 +3,17 @@
 // isn't removed here (see its own header on the Commons rate-limit hold) --
 // it gains a failure switch instead.
 import { expect, test } from "@playwright/test";
-import { failImages, gotoFeed } from "./harness.mts";
+import { failImages, gotoFeed, ITEMS, scrollToSlide } from "./harness.mts";
+
+// Slugs (slide data-slug, source-id) of fixture items that carry a
+// blur_placeholder. Not every item does, the "All" feed starts at a random
+// point in the shuffle, and only the slide on screen requests its image --
+// so asserting on "the first frame" failed whenever an item without a
+// placeholder happened to open the feed (roughly one run in fifteen). The
+// test scrolls to the first slide that has one instead.
+const SLUGS_WITH_PLACEHOLDER: string[] = ITEMS.filter(
+  (i: { blur_placeholder?: string }) => i.blur_placeholder,
+).map((i: { source?: string; id: string }) => `${i.source || "met"}-${i.id}`);
 
 test("a failed image degrades to the artwork, not a grey box", async ({
   page,
@@ -14,7 +24,19 @@ test("a failed image degrades to the artwork, not a grey box", async ({
   failImages(page, () => true);
   const feed = await gotoFeed(page);
 
-  const frame = feed.locator(".slide .art-frame").first();
+  const index = await page.evaluate((slugs) => {
+    const wanted = new Set(slugs);
+    return Array.from(
+      document.querySelectorAll<HTMLElement>("#feed .slide"),
+    ).findIndex((s) => wanted.has(s.dataset.slug ?? ""));
+  }, SLUGS_WITH_PLACEHOLDER);
+  expect(
+    index,
+    "no slide with a placeholder in the opening page",
+  ).toBeGreaterThan(0);
+  await scrollToSlide(page, index);
+
+  const frame = feed.locator(".slide").nth(index).locator(".art-frame");
   await expect(frame).toHaveClass(/failed/, { timeout: 15000 });
 
   const painted = await frame.evaluate((el) => {
@@ -24,7 +46,7 @@ test("a failed image degrades to the artwork, not a grey box", async ({
     const m = bg.match(/rgba?\(([^)]+)\)/);
     const alpha = m ? Number(m[1].split(",")[3] ?? 1) : 0;
     return {
-      frameHasPlaceholder: !!el.style.backgroundImage,
+      frameHasPlaceholder: !!(el as HTMLElement).style.backgroundImage,
       skeletonAlpha: alpha,
     };
   });

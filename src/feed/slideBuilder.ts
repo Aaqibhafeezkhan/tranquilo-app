@@ -17,6 +17,7 @@
 // escapeHtml/SHARE_SVG are exported for TranquiloStorylineMode.ts, which
 // used to read them as classic-script globals.
 
+import { facetLabel } from "../i18n/index";
 import {
   deriveTint,
   hexToRgb,
@@ -459,7 +460,7 @@ export function createSlideBuilder(
       : "";
 
     caption.innerHTML = `<div class="caption-inner">
-<div class="cat-label">${escapeHtml(item.category)}</div>
+<div class="cat-label">${escapeHtml(facetLabel("category", item.category ?? ""))}</div>
 <h2 class="art-title"><button type="button" class="art-title-btn">${escapeHtml(item.title || "Untitled")}</button></h2>
 <p class="art-meta">${artistLine}${dateLine}</p>
 <p class="art-medium">${escapeHtml(item.medium || "")}</p>

@@ -21,6 +21,7 @@
 // css/style.css.
 
 import { licenseLabel } from "../app/licenseLabels";
+import { facetLabel } from "../i18n/index";
 import { isRealArtist as isRealArtistLogic } from "../logic/logic";
 import type { ITranquiloDetailModalHost } from "../types/ITranquiloDetailModalHost";
 import type { Item } from "../types/Item";
@@ -588,7 +589,7 @@ export class TranquiloDetailModal extends HTMLElement {
         item.img
           ? `<div class="d-frame loading"><div class="art-skeleton"></div><img alt="${escapeHtml(item.title || "Untitled")}"></div>`
           : ""
-      }<div class="cat-label">${escapeHtml(item.category)}</div>` +
+      }<div class="cat-label">${escapeHtml(facetLabel("category", item.category ?? ""))}</div>` +
       `<h2 class="art-title">${escapeHtml(item.title || "Untitled")}</h2>` +
       `<p class="art-meta">${artistLine}${dateLine}</p>${storylineChipHtml}${
         setOfWorksChipHtml
