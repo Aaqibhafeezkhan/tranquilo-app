@@ -215,6 +215,12 @@ export class TranquiloTopbar extends HTMLElement {
     opts: { collectionActive: boolean; storylineActive: boolean },
   ): void {
     this.chipsEl.innerHTML = "";
+    // A full rebuild owns the More menu's contents too: chips parked there
+    // by the previous build are stale, and reflowChips() would otherwise
+    // move them back into the row next to their replacements. (reflowChips
+    // itself must not wipe the menu -- on a resize-only reflow the parked
+    // chips are the only copies.)
+    if (this.chipsMoreMenu) this.chipsMoreMenu.innerHTML = "";
     categories.forEach((cat) => {
       const chip = document.createElement("button");
       chip.className = `chip${cat === activeCategory && !opts.collectionActive ? " active" : ""}`;
