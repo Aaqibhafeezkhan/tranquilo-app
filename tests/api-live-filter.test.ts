@@ -13,6 +13,7 @@ import {
 } from "../lib/items-sql.ts";
 import { expandBaseTemplate } from "../vite-plugins/base-template.mts";
 import { expandHeadPartial } from "../vite-plugins/head-partial.mts";
+import { LIVE_SOURCE_IDS } from "./helpers/live-sources.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
@@ -141,15 +142,7 @@ describe("share-link attribution never invents an institution", () => {
   });
 
   it("maps every live source, so the fallback stays a genuine last resort", () => {
-    [
-      "met",
-      "smithsonian",
-      "cleveland",
-      "commons",
-      "europeana",
-      "wellcome",
-      "nga",
-    ].forEach((src) => {
+    LIVE_SOURCE_IDS.forEach((src) => {
       expect(slugSource, `INSTITUTION_NAMES missing ${src}`).toMatch(
         new RegExp(`\\b${src}\\s*:`),
       );

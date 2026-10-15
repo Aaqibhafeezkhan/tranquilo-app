@@ -13,6 +13,21 @@ export interface CollectionStoreHost {
   getItemSource(id: string): string | undefined;
 }
 
+// Every source a saved key can start with -- the prefix check in
+// isCollectionKey() below. A source missing here makes its saved items
+// look like legacy bare ids, re-resolved on every page load.
+export const COLLECTION_SOURCES = [
+  "met",
+  "smithsonian",
+  "cleveland",
+  "commons",
+  "europeana",
+  "npm",
+  "wellcome",
+  "nga",
+  "tepapa",
+];
+
 export class CollectionStore {
   constructor(
     private storageKey: string,

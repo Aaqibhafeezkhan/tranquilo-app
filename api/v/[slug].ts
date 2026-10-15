@@ -55,8 +55,10 @@ const INSTITUTION_NAMES = {
   cleveland: "Cleveland Museum of Art",
   commons: "Wikimedia Commons",
   europeana: "Europeana",
+  npm: "National Palace Museum",
   wellcome: "Wellcome Collection",
   nga: "National Gallery of Art",
+  tepapa: "Museum of New Zealand Te Papa Tongarewa",
 };
 
 // Serves the real app in place rather than a redirect stub, so a

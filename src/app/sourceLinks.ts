@@ -19,6 +19,9 @@ const SOURCE_LINK_LABELS: Record<string, string> = {
   wellcome: "Wellcome Collection",
   // nga.gov alone is ambiguous between several national galleries.
   nga: "National Gallery of Art",
+  // The name the museum uses for itself day to day; the full name
+  // (Museum of New Zealand Te Papa Tongarewa) is in the CSV export.
+  tepapa: "Te Papa",
 };
 
 // Every other source's label is a domain ("View on metmuseum.org"), where
@@ -31,6 +34,7 @@ const SOURCE_LINK_PREPOSITIONS: Record<string, string> = {
   npm: "at",
   wellcome: "at",
   nga: "at",
+  tepapa: "at",
 };
 
 export function sourceLinkPreposition(item: any): string {

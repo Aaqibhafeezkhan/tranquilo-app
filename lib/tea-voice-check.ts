@@ -28,6 +28,10 @@ const INSTITUTION_HOSTS = [
   "americanart.si.edu",
   "europeana.eu",
   "commons.wikimedia.org",
+  "npm.gov.tw",
+  "wellcomecollection.org",
+  "nga.gov",
+  "tepapa.govt.nz",
 ];
 
 // Openers that only make sense if the reader has just seen another item.

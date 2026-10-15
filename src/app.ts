@@ -7,7 +7,7 @@
 import { Analytics } from "./app/Analytics";
 import { wireAiDisclosureToggle } from "./app/aiDisclosureToggle";
 import { CatalogueCache } from "./app/CatalogueCache";
-import { CollectionStore } from "./app/CollectionStore";
+import { COLLECTION_SOURCES, CollectionStore } from "./app/CollectionStore";
 import { ExportService } from "./app/ExportService";
 import { FilterState } from "./app/FilterState";
 import { ItemsApiClient } from "./app/ItemsApiClient";
@@ -674,7 +674,7 @@ class TranquiloApp {
 
     const collectionStore = new CollectionStore(
       COLLECTION_KEY,
-      ["met", "smithsonian", "cleveland", "commons", "europeana"],
+      COLLECTION_SOURCES,
       {
         resolveItemsByIds: (ids: any) => resolveItemsByIds(ids),
         getItemSource: (id: any) => itemsById[id]?.source,

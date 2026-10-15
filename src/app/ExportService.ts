@@ -3,13 +3,16 @@ import { isRealArtist } from "../logic/logic";
 // Builds and downloads a CSV of the visitor's saved collection, entirely
 // client-side with no server call. An unmapped source falls back to its raw
 // slug instead of a hardcoded institution name.
-const EXPORT_SOURCE_NAMES: Record<string, string> = {
+export const EXPORT_SOURCE_NAMES: Record<string, string> = {
   met: "The Metropolitan Museum of Art",
   smithsonian: "Smithsonian (Cooper Hewitt)",
   cleveland: "Cleveland Museum of Art",
   commons: "Wikimedia Commons",
   europeana: "Europeana",
+  npm: "National Palace Museum",
+  wellcome: "Wellcome Collection",
   nga: "National Gallery of Art",
+  tepapa: "Museum of New Zealand Te Papa Tongarewa",
 };
 
 function csvField(value: unknown): string {

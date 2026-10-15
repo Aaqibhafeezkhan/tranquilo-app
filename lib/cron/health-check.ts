@@ -408,4 +408,5 @@ export {
   checkSourceReachability,
   IMAGE_LOAD_FAILED_MIN_PAGE_LOADS,
   IMAGE_LOAD_FAILED_THRESHOLD_24H,
+  SOURCES,
 };
