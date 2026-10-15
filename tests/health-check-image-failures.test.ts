@@ -164,4 +164,25 @@ describe("checkSourceReachability", () => {
     );
     expect(sentHeaders).toEqual(imageFetchHeaders("commons"));
   });
+
+  // These three were live in the catalogue but missing from the probe
+  // list, so their origins were never actively checked.
+  it("probes npm, wellcome and tepapa like every other live source", async () => {
+    const fetched: string[] = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: any) => {
+        fetched.push(String(url));
+        return { ok: true, status: 200 };
+      }),
+    );
+    const imgs = {
+      npm: "https://iiifod.npm.gov.tw/x/full/843,/0/default.jpg",
+      wellcome:
+        "https://iiif.wellcomecollection.org/image/x/full/843,/0/default.jpg",
+      tepapa: "https://media.tepapa.govt.nz/collection/x/preview",
+    };
+    await checkSourceReachability(reachabilityClient(imgs));
+    for (const url of Object.values(imgs)) expect(fetched).toContain(url);
+  });
 });

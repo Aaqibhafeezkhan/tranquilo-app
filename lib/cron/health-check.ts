@@ -44,6 +44,9 @@ const SOURCES = [
   "commons",
   "europeana",
   "nga",
+  "npm",
+  "wellcome",
+  "tepapa",
 ];
 const IMAGE_FETCH_TIMEOUT_MS = 15000;
 
