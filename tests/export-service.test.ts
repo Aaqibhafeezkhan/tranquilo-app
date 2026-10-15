@@ -86,6 +86,18 @@ describe("exportCollectionCsv", () => {
     expect(cooper).toContain(',"Cooper Hewitt, Smithsonian Design Museum",');
   });
 
+  it("credits a Tainacan item to the Brazilian museum it came from", () => {
+    const svc = new ExportService();
+    svc.exportCollectionCsv([
+      {
+        source: "tainacan",
+        url: "https://museuregionalcasadosottoni.acervos.museus.gov.br/acervo-museologico/x/",
+      },
+    ]);
+    const [, row] = capturedCsv.trim().split("\n");
+    expect(row).toContain(",Museu Regional Casa dos Ottoni,");
+  });
+
   it("falls back to the raw source string for an unmapped source", () => {
     const svc = new ExportService();
     svc.exportCollectionCsv([{ source: "some-new-source" }]);

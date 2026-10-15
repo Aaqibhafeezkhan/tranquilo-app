@@ -96,7 +96,7 @@ const AI_DISCLOSURE_HTML =
   `</span>`;
 
 function licenseRow(item: Item): string {
-  const { label, deed } = licenseLabel(item?.license);
+  const { label, deed } = licenseLabel(item?.license, item?.url);
   if (!label) return "";
   const value = deed
     ? `<a class="meta-license-link" href="${escapeHtml(deed)}" target="_blank" rel="noopener license">${escapeHtml(label)}</a>`

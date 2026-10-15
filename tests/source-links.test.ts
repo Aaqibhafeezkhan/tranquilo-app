@@ -107,3 +107,24 @@ describe("isAggregatorSource", () => {
     expect(isAggregatorSource(null)).toBe(false);
   });
 });
+
+describe("Tainacan items", () => {
+  const at = (url?: string) => ({ source: "tainacan", url });
+
+  it("name the Brazilian museum their object page belongs to", () => {
+    expect(
+      sourceLinkLabel(
+        at("https://acervo.margs.rs.gov.br/acervo-artistico-2/x/"),
+      ),
+    ).toBe("Museu de Arte do Rio Grande do Sul");
+    expect(
+      sourceLinkLabel(
+        at("https://museudoouro.acervos.museus.gov.br/acervo/x/"),
+      ),
+    ).toBe("Museu do Ouro");
+  });
+
+  it("read 'View at', since the label is a museum's name", () => {
+    expect(sourceLinkPreposition(at())).toBe("at");
+  });
+});

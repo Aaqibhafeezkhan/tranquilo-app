@@ -30,7 +30,7 @@ export interface ErrorStateOptions {
 // retry handler without an id-based document.getElementById round trip.
 export function renderErrorState(opts: ErrorStateOptions): HTMLElement {
   const art = pickRandomErrorArt();
-  const { label: licenseText, deed } = licenseLabel(art.license);
+  const { label: licenseText, deed } = licenseLabel(art.license, art.url);
   const sourceLabel = sourceLinkLabel(art);
   const preposition = sourceLinkPreposition(art);
 

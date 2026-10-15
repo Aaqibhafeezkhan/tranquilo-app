@@ -1,5 +1,5 @@
 import { isRealArtist } from "../logic/logic";
-import { smithsonianMuseum } from "./sourceLinks";
+import { smithsonianMuseum, tainacanMuseum } from "./sourceLinks";
 
 // Builds and downloads a CSV of the visitor's saved collection, entirely
 // client-side with no server call. An unmapped source falls back to its raw
@@ -15,6 +15,8 @@ export const EXPORT_SOURCE_NAMES: Record<string, string> = {
   wellcome: "Wellcome Collection",
   nga: "National Gallery of Art",
   tepapa: "Museum of New Zealand Te Papa Tongarewa",
+  // Per item rather than per source -- see tainacanMuseum().
+  tainacan: "Brazilian museum collections",
 };
 
 function csvField(value: unknown): string {
@@ -33,7 +35,9 @@ export class ExportService {
         item.category || "",
         item.source === "smithsonian"
           ? smithsonianMuseum(item.url)
-          : EXPORT_SOURCE_NAMES[item.source || "met"] || item.source || "",
+          : item.source === "tainacan"
+            ? tainacanMuseum(item.url)
+            : EXPORT_SOURCE_NAMES[item.source || "met"] || item.source || "",
         item.url || "",
       ]
         .map(csvField)

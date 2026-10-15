@@ -51,6 +51,13 @@ export const LIVE_SOURCES: Record<string, { image: string; page: string }> = {
     image: "https://media.tepapa.govt.nz/collection/271820/full",
     page: "https://collections.tepapa.govt.nz/object/1130277",
   },
+  // Taken from a dry run against the museum's own site, ahead of the first
+  // ingestion, the same way nga was added.
+  tainacan: {
+    image:
+      "https://acervo.margs.rs.gov.br/wp-content/uploads/tainacan-items/258341/447402/5366-Pedro-Weingartner_Sem-titulo-1885-Grande-799x1024.jpg",
+    page: "https://acervo.margs.rs.gov.br/acervo-artistico-2/sem-titulo-1898/",
+  },
 };
 
 export const LIVE_SOURCE_IDS = Object.keys(LIVE_SOURCES);

@@ -32,6 +32,8 @@ const INSTITUTION_HOSTS = [
   "wellcomecollection.org",
   "nga.gov",
   "tepapa.govt.nz",
+  "acervo.margs.rs.gov.br",
+  "museus.gov.br",
 ];
 
 // Openers that only make sense if the reader has just seen another item.

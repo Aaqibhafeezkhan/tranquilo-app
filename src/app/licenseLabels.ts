@@ -31,17 +31,49 @@ export const LICENSE_LABELS: Record<string, [string, string | null]> = {
     "Open Government Data License 1.0",
     "https://data.gov.tw/license",
   ],
+  // Works from Ibram (Brazil's federal museums institute) collections. The
+  // works are out of copyright, but each museum attaches its own reuse terms
+  // to the images -- credit "<museum>/Ibram", and commercial use goes through
+  // an Ibram authorization -- so this is not presented as Creative Commons.
+  // The link is per museum; see IBRAM_TERMS_PAGES below.
+  "public-domain-ibram": ["Public domain (Ibram reuse terms)", null],
 };
+
+// Each Ibram museum publishes its reproduction terms on its own site.
+// Keyed by the object page's host; an unlisted museum gets no link rather
+// than another museum's terms.
+const IBRAM_TERMS_PAGES: Record<string, string> = {
+  "museudoouro.acervos.museus.gov.br":
+    "https://museudoouro.acervos.museus.gov.br/reproducao-de-imagens-do-acervo/",
+  "museuregionalcasadosottoni.acervos.museus.gov.br":
+    "https://museuregionalcasadosottoni.acervos.museus.gov.br/reproducao-de-imagens/",
+};
+
+function ibramTermsPage(url: unknown): string | null {
+  const host = /^https?:\/\/([^/:?#]+)/i.exec(String(url ?? ""))?.[1];
+  return (host && IBRAM_TERMS_PAGES[host]) || null;
+}
 
 // Falls through to the raw slug for an unmapped value rather than hiding
 // it -- showing something unrecognized beats silently dropping the one
 // field that tells someone their rights.
-export function licenseLabel(raw: string | null | undefined): {
+// `itemUrl` (the item's object page) is only read for a license whose terms
+// page differs per institution.
+export function licenseLabel(
+  raw: string | null | undefined,
+  itemUrl?: unknown,
+): {
   label: string;
   deed: string | null;
 } {
   const value = (raw ? String(raw) : "").trim();
   if (!value) return { label: "", deed: null };
+  if (value.toLowerCase() === "public-domain-ibram") {
+    return {
+      label: LICENSE_LABELS["public-domain-ibram"][0],
+      deed: ibramTermsPage(itemUrl),
+    };
+  }
   const entry = LICENSE_LABELS[value.toLowerCase()];
   return entry
     ? { label: entry[0], deed: entry[1] }

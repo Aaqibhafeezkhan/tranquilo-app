@@ -151,6 +151,14 @@ const ALLOWED_ORIGIN_HOSTS: Record<string, string[]> = {
   // full_img both). Missed at launch: the display tier was cached at
   // ingest, so only cache misses -- mostly the lightbox -- 400'd.
   tepapa: ["media.tepapa.govt.nz"],
+  // tainacan.py reads each museum's own WordPress site, which serves its
+  // own uploads; one host per instance in the adapter's INSTANCES. Added
+  // before the first ingestion run, as with wellcome above.
+  tainacan: [
+    "acervo.margs.rs.gov.br",
+    "museudoouro.acervos.museus.gov.br",
+    "museuregionalcasadosottoni.acervos.museus.gov.br",
+  ],
 };
 
 type ImgSource = keyof typeof ALLOWED_ORIGIN_HOSTS;

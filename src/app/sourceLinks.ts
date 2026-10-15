@@ -37,6 +37,7 @@ const SOURCE_LINK_PREPOSITIONS: Record<string, string> = {
   nga: "at",
   tepapa: "at",
   smithsonian: "at",
+  tainacan: "at",
 };
 
 export function sourceLinkPreposition(item: any): string {
@@ -54,6 +55,7 @@ const SOURCE_IS_AGGREGATOR: Record<string, boolean> = { europeana: true };
 // honest rather than a wrong institution name.
 export function sourceLinkLabel(item: any): string {
   if (item?.source === "smithsonian") return smithsonianMuseum(item.url);
+  if (item?.source === "tainacan") return tainacanMuseum(item.url);
   return SOURCE_LINK_LABELS[item?.source] || item?.source || "source";
 }
 
@@ -69,16 +71,38 @@ export const SMITHSONIAN_MUSEUMS: Record<string, string> = {
   "americanart.si.edu": "Smithsonian American Art Museum",
 };
 
+// Tainacan is the collections platform many Brazilian public museums
+// publish on: one source, one museum per site, read from the same host.
+// Mirrors lib/institution-names.ts the same way.
+export const TAINACAN_MUSEUMS: Record<string, string> = {
+  "acervo.margs.rs.gov.br": "Museu de Arte do Rio Grande do Sul",
+  "museudoouro.acervos.museus.gov.br": "Museu do Ouro",
+  "museuregionalcasadosottoni.acervos.museus.gov.br":
+    "Museu Regional Casa dos Ottoni",
+};
+
 // Never a guessed museum: an unlisted host gets the umbrella name.
-export function smithsonianMuseum(url: unknown): string {
+function museumByHost(
+  url: unknown,
+  museums: Record<string, string>,
+  fallback: string,
+): string {
   // A pattern rather than new URL(), which callers' test environments
   // (and old browsers) can't always be relied on to provide.
   const host = /^https?:\/\/([^/:?#]+)/i.exec(String(url ?? ""))?.[1];
-  if (!host) return "Smithsonian Institution";
-  for (const [h, name] of Object.entries(SMITHSONIAN_MUSEUMS)) {
+  if (!host) return fallback;
+  for (const [h, name] of Object.entries(museums)) {
     if (host === h || host.endsWith(`.${h}`)) return name;
   }
-  return "Smithsonian Institution";
+  return fallback;
+}
+
+export function smithsonianMuseum(url: unknown): string {
+  return museumByHost(url, SMITHSONIAN_MUSEUMS, "Smithsonian Institution");
+}
+
+export function tainacanMuseum(url: unknown): string {
+  return museumByHost(url, TAINACAN_MUSEUMS, "Brazilian museum collections");
 }
 
 export function isAggregatorSource(item: any): boolean {

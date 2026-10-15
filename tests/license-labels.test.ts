@@ -18,6 +18,33 @@ describe("licenseLabel", () => {
     });
   });
 
+  it("labels Ibram public-domain items as public domain under Ibram's terms, not as CC", () => {
+    // The works are out of copyright; Ibram's museums attach their own reuse
+    // terms to the images, so the label says so and links to those terms.
+    const ouro = licenseLabel(
+      "public-domain-ibram",
+      "https://museudoouro.acervos.museus.gov.br/acervo/cordao/",
+    );
+    expect(ouro.label).toBe("Public domain (Ibram reuse terms)");
+    expect(ouro.deed).toBe(
+      "https://museudoouro.acervos.museus.gov.br/reproducao-de-imagens-do-acervo/",
+    );
+    expect(ouro.label).not.toMatch(/CC|Creative Commons/);
+  });
+
+  it("leaves the Ibram terms unlinked rather than linking the wrong museum's page", () => {
+    expect(
+      licenseLabel(
+        "public-domain-ibram",
+        "https://outro.acervos.museus.gov.br/x/",
+      ),
+    ).toEqual({ label: "Public domain (Ibram reuse terms)", deed: null });
+    expect(licenseLabel("public-domain-ibram")).toEqual({
+      label: "Public domain (Ibram reuse terms)",
+      deed: null,
+    });
+  });
+
   it("is case-insensitive on the stored slug", () => {
     expect(licenseLabel("CC0")).toEqual({
       label: "CC0 1.0",
