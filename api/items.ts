@@ -107,6 +107,7 @@ function serializeRow(row: any): any {
     category: row.category,
     region_primary: row.region_primary,
     region_alt: row.region_alt,
+    place_of_origin: row.place_of_origin,
     timeframe: row.timeframe,
     media_type: row.media_type,
     palette: row.palette,

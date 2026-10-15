@@ -74,6 +74,9 @@ export interface Item {
   category: Category | null;
   region_primary: RegionPrimary | null;
   region_alt: RegionPrimary[] | null;
+  // The source's own free-text place of production ("Brasil, Minas
+  // Gerais"), as stored -- searchable, not a facet.
+  place_of_origin?: string | null;
   timeframe: Timeframe | null;
   media_type: MediaType | null;
   palette: Palette | null;

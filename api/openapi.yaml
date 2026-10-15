@@ -79,7 +79,8 @@ paths:
         - name: q
           in: query
           description: >-
-            Free-text search (title/artist/medium/tags/bio/date,
+            Free-text search (title/artist/medium/tags/bio/date/place of
+            production,
             diacritic-folded substring match) when used as a filter, or the
             partial query being autocompleted when combined with
             `shape=suggest`/`shape=correction`.
@@ -658,6 +659,7 @@ components:
         category: { type: string, nullable: true }
         region_primary: { type: string, nullable: true }
         region_alt: { type: array, items: { type: string } }
+        place_of_origin: { type: string, nullable: true, description: "The source's own free-text place of production, as stored. Searchable via `q`; not a facet." }
         timeframe: { type: string, nullable: true }
         media_type: { type: string, nullable: true }
         palette: { type: string, nullable: true }

@@ -403,6 +403,14 @@ export function matchesQuery(item: Item, rawQuery: string): boolean {
   if (matchesTimeframe(q, item._century)) return true;
   if (item.date && normalizeForSearch(item.date).indexOf(q) !== -1) return true;
   if (item.bio && normalizeForSearch(item.bio).indexOf(q) !== -1) return true;
+  // The place of production -- for an anonymous object, often the only
+  // geographic word in the record. Same field search_text gained in
+  // sql/043_items_search_place_of_origin.sql.
+  if (
+    item.place_of_origin &&
+    normalizeForSearch(item.place_of_origin).indexOf(q) !== -1
+  )
+    return true;
   return false;
 }
 

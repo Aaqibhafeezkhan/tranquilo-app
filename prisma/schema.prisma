@@ -105,7 +105,7 @@ model items {
   culture_period     String?
 
   century     Int?
-  search_text Unsupported("text GENERATED ALWAYS AS (immutable_unaccent(lower(coalesce(title, '') || ' ' || coalesce(artist, '') || ' ' || coalesce(category, '') || ' ' || coalesce(medium, '') || ' ' || coalesce(tags, '') || ' ' || coalesce(region_primary, '') || ' ' || coalesce(timeframe, '') || ' ' || coalesce(media_type, '') || ' ' || coalesce(palette, '') || ' ' || coalesce(date, '') || ' ' || coalesce(bio, '')))) STORED")?
+  search_text Unsupported("text GENERATED ALWAYS AS (immutable_unaccent(lower(coalesce(title, '') || ' ' || coalesce(artist, '') || ' ' || coalesce(category, '') || ' ' || coalesce(medium, '') || ' ' || coalesce(tags, '') || ' ' || coalesce(region_primary, '') || ' ' || coalesce(timeframe, '') || ' ' || coalesce(media_type, '') || ' ' || coalesce(palette, '') || ' ' || coalesce(date, '') || ' ' || coalesce(bio, '') || ' ' || coalesce(place_of_origin, '')))) STORED")?
 
   region_alt String[]
 

@@ -148,6 +148,18 @@ describe("matchesQuery", () => {
     expect(matchesQuery(item, "1839")).toBe(true); // bio
   });
 
+  it("matches on the place of production, which an anonymous object may be all it has", () => {
+    // Mirrors search_text (sql/043_items_search_place_of_origin.sql).
+    const santo: any = {
+      title: "Santo de roca",
+      artist: "Unknown",
+      place_of_origin: "Brasil, Minas Gerais",
+    };
+    expect(matchesQuery(santo, "minas gerais")).toBe(true);
+    expect(matchesQuery(santo, "Brasil")).toBe(true);
+    expect(matchesQuery(santo, "Lisboa")).toBe(false);
+  });
+
   it("matches on the four taxonomy facet fields (region_primary/timeframe/media_type/palette)", () => {
     expect(matchesQuery(item, "europe")).toBe(true);
     expect(matchesQuery(item, "19th century")).toBe(true);

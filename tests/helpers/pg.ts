@@ -25,6 +25,8 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { PGlite } from "@electric-sql/pglite";
+import { pg_trgm } from "@electric-sql/pglite/contrib/pg_trgm";
+import { unaccent } from "@electric-sql/pglite/contrib/unaccent";
 
 const ROOT = join(import.meta.dirname, "..", "..");
 
@@ -47,7 +49,9 @@ function ddl(...files: string[]) {
  * so the mock stays lenient there rather than being a faithful restriction.
  */
 async function makeSql(files: string[]) {
-  const db = new PGlite();
+  // The two extensions sql/005_items_search.sql creates, so search_text can
+  // be built from the real files. Loaded only when a file asks for them.
+  const db = new PGlite({ extensions: { pg_trgm, unaccent } });
   await db.exec(ddl(...files));
   const run = async (text: string, params?: any[]) =>
     (await db.query(text, params || [])).rows;
