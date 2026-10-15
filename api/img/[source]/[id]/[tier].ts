@@ -147,6 +147,10 @@ const ALLOWED_ORIGIN_HOSTS: Record<string, string[]> = {
   // image host in NGA's published_images data. Added before the first
   // ingestion run for the same reason as wellcome above.
   nga: ["api.nga.gov"],
+  // tepapa.py's media host, confirmed against real ingested rows (img and
+  // full_img both). Missed at launch: the display tier was cached at
+  // ingest, so only cache misses -- mostly the lightbox -- 400'd.
+  tepapa: ["media.tepapa.govt.nz"],
 };
 
 type ImgSource = keyof typeof ALLOWED_ORIGIN_HOSTS;

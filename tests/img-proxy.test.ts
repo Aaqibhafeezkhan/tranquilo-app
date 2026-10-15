@@ -93,6 +93,22 @@ describe("isAllowedOrigin", () => {
     ).toBe(true);
   });
 
+  it("allows Te Papa's media host, on both tiers", () => {
+    // Same gap as npm: tepapa went live with its display tier cached at
+    // ingest, so the feed looked fine while every cache miss (the
+    // lightbox, mostly) 400'd here. Host confirmed against real ingested
+    // rows -- img and full_img both use it.
+    for (const tier of ["display", "lightbox"] as const) {
+      expect(
+        proxy.isAllowedOrigin(
+          "tepapa",
+          tier,
+          "https://media.tepapa.govt.nz/collection/271820/full",
+        ),
+      ).toBe(true);
+    }
+  });
+
   it("rejects a host outside the allowlist for a real source", () => {
     expect(
       proxy.isAllowedOrigin("commons", "display", "https://example.com/x.jpg"),
