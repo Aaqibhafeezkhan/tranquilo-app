@@ -72,6 +72,20 @@ describe("exportCollectionCsv", () => {
     expect(row).toBe("Untitled,Unknown,,,Cleveland Museum of Art,");
   });
 
+  it("credits a Smithsonian item to its own museum, quoted if it has a comma", () => {
+    const svc = new ExportService();
+    svc.exportCollectionCsv([
+      { source: "smithsonian", url: "https://asia.si.edu/object/F1/" },
+      {
+        source: "smithsonian",
+        url: "https://collection.cooperhewitt.org/objects/1/",
+      },
+    ]);
+    const [, asian, cooper] = capturedCsv.trim().split("\n");
+    expect(asian).toContain(",National Museum of Asian Art,");
+    expect(cooper).toContain(',"Cooper Hewitt, Smithsonian Design Museum",');
+  });
+
   it("falls back to the raw source string for an unmapped source", () => {
     const svc = new ExportService();
     svc.exportCollectionCsv([{ source: "some-new-source" }]);

@@ -14,6 +14,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { getSql } from "../../lib/db.ts";
 import { escapeHtml } from "../../lib/html-escape.ts";
+import { institutionName } from "../../lib/institution-names.ts";
 import { LIVE_ITEMS_AND } from "../../lib/items-sql.ts";
 import { getOrigin } from "../../lib/request-origin.ts";
 import { reportError } from "../../lib/sentry.ts";
@@ -48,18 +49,6 @@ function parseSlug(slug: any) {
   if (parts.length < 2 || !parts[0] || !parts[1]) return null;
   return { source: parts[0], nativeId: decodeSlugId(parts[0], parts[1]) };
 }
-
-const INSTITUTION_NAMES = {
-  met: "The Metropolitan Museum of Art",
-  smithsonian: "Smithsonian (Cooper Hewitt)",
-  cleveland: "Cleveland Museum of Art",
-  commons: "Wikimedia Commons",
-  europeana: "Europeana",
-  npm: "National Palace Museum",
-  wellcome: "Wellcome Collection",
-  nga: "National Gallery of Art",
-  tepapa: "Museum of New Zealand Te Papa Tongarewa",
-};
 
 // Serves the real app in place rather than a redirect stub, so a
 // visitor's address bar, bookmarks and back button point at the real
@@ -319,12 +308,10 @@ export default async function handler(req: any, res: any) {
   const title = item.title || "Untitled";
   const artist =
     item.artist && item.artist !== "Unknown" ? item.artist : "Unknown Artist";
-  // Falls back to the raw source string, never to a specific
-  // institution -- wrong-but-honest beats wrong-but-confident here.
-  const institutionName =
-    (INSTITUTION_NAMES as any)[item.source] || item.source;
+  // Falls back to the raw source string, never a specific institution.
+  const institution = institutionName(item);
   const descriptionParts = [item.medium, item.date].filter(Boolean).join(", ");
-  const description = `${descriptionParts ? `${descriptionParts} · ` : ""}via ${institutionName}`;
+  const description = `${descriptionParts ? `${descriptionParts} · ` : ""}via ${institution}`;
   const ogTitle = `${title} — ${artist}`;
 
   const meta = {

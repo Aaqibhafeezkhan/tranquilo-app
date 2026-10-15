@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import * as proxy from "../api/img/[source]/[id]/[tier].ts";
 import { SOURCES as HEALTH_CHECK_SOURCES } from "../lib/cron/health-check.ts";
+import { institutionName } from "../lib/institution-names.ts";
 import { INSTITUTION_HOSTS } from "../lib/tea-voice-check.ts";
 import { COLLECTION_SOURCES } from "../src/app/CollectionStore.ts";
 import { EXPORT_SOURCE_NAMES } from "../src/app/ExportService.ts";
@@ -39,11 +40,8 @@ describe.each(LIVE_SOURCE_IDS)("live source %s", (src) => {
     expect(EXPORT_SOURCE_NAMES[src]).toBeTruthy();
   });
 
-  it("has a share-page institution name", () => {
-    // Static read: the handler opens a database connection at import.
-    expect(read("api/v/[slug].ts")).toMatch(
-      new RegExp(`INSTITUTION_NAMES = \\{[^}]*\\b${src}:`, "s"),
-    );
+  it("has a share-page institution name, not the raw id", () => {
+    expect(institutionName({ source: src, url: page })).not.toBe(src);
   });
 
   it("has its object pages recognised by the Tea Voice link check", () => {

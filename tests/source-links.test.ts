@@ -5,10 +5,46 @@ import {
   sourceLinkPreposition,
 } from "../src/app/sourceLinks";
 
+describe("Smithsonian items", () => {
+  // The Smithsonian is an umbrella over many museums, each with its own
+  // site. Labelling every item with one of them credited the wrong museum
+  // for almost all of them once more than one unit was ingested.
+  const at = (url: string) => ({ source: "smithsonian", url });
+
+  it("name the museum their object page belongs to", () => {
+    expect(sourceLinkLabel(at("https://asia.si.edu/object/F1904.61/"))).toBe(
+      "National Museum of Asian Art",
+    );
+    expect(sourceLinkLabel(at("https://hirshhorn.si.edu/collection/x/"))).toBe(
+      "Hirshhorn Museum and Sculpture Garden",
+    );
+    expect(
+      sourceLinkLabel(at("https://collection.cooperhewitt.org/objects/1/")),
+    ).toBe("Cooper Hewitt, Smithsonian Design Museum");
+    expect(
+      sourceLinkLabel(
+        at("https://americanart.si.edu/collections/search/artwork/?id=1"),
+      ),
+    ).toBe("Smithsonian American Art Museum");
+  });
+
+  it("fall back to the Smithsonian itself, never a guessed museum", () => {
+    expect(sourceLinkLabel(at("https://naturalhistory.si.edu/x"))).toBe(
+      "Smithsonian Institution",
+    );
+    expect(sourceLinkLabel({ source: "smithsonian" })).toBe(
+      "Smithsonian Institution",
+    );
+  });
+
+  it("read 'View at', since the label is a name rather than a domain", () => {
+    expect(sourceLinkPreposition({ source: "smithsonian" })).toBe("at");
+  });
+});
+
 describe("sourceLinkLabel", () => {
   it("maps each known source to its own domain", () => {
     expect(sourceLinkLabel({ source: "met" })).toBe("metmuseum.org");
-    expect(sourceLinkLabel({ source: "smithsonian" })).toBe("cooperhewitt.org");
     expect(sourceLinkLabel({ source: "cleveland" })).toBe("clevelandart.org");
     expect(sourceLinkLabel({ source: "europeana" })).toBe("europeana.eu");
   });

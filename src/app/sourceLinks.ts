@@ -3,7 +3,6 @@
 // institutional names for a CSV rather than the actual host item.url points at.
 const SOURCE_LINK_LABELS: Record<string, string> = {
   met: "metmuseum.org",
-  smithsonian: "cooperhewitt.org",
   cleveland: "clevelandart.org",
   // The project's name: "commons.wikimedia.org" is hard to read at a
   // glance, and "on" still reads naturally ("View on Wikimedia Commons").
@@ -37,6 +36,7 @@ const SOURCE_LINK_PREPOSITIONS: Record<string, string> = {
   wellcome: "at",
   nga: "at",
   tepapa: "at",
+  smithsonian: "at",
 };
 
 export function sourceLinkPreposition(item: any): string {
@@ -53,7 +53,32 @@ const SOURCE_IS_AGGREGATOR: Record<string, boolean> = { europeana: true };
 // SOURCE_LINK_LABELS is, so an unmapped source still shows something
 // honest rather than a wrong institution name.
 export function sourceLinkLabel(item: any): string {
+  if (item?.source === "smithsonian") return smithsonianMuseum(item.url);
   return SOURCE_LINK_LABELS[item?.source] || item?.source || "source";
+}
+
+// The Smithsonian is an umbrella over many museums, each with its own
+// site, so one label for the whole source credits the wrong museum. The
+// object page's host says which museum an item belongs to. Mirrors
+// lib/institution-names.ts (server side); tests/institution-names.test.ts
+// keeps the two identical.
+export const SMITHSONIAN_MUSEUMS: Record<string, string> = {
+  "asia.si.edu": "National Museum of Asian Art",
+  "hirshhorn.si.edu": "Hirshhorn Museum and Sculpture Garden",
+  "cooperhewitt.org": "Cooper Hewitt, Smithsonian Design Museum",
+  "americanart.si.edu": "Smithsonian American Art Museum",
+};
+
+// Never a guessed museum: an unlisted host gets the umbrella name.
+export function smithsonianMuseum(url: unknown): string {
+  // A pattern rather than new URL(), which callers' test environments
+  // (and old browsers) can't always be relied on to provide.
+  const host = /^https?:\/\/([^/:?#]+)/i.exec(String(url ?? ""))?.[1];
+  if (!host) return "Smithsonian Institution";
+  for (const [h, name] of Object.entries(SMITHSONIAN_MUSEUMS)) {
+    if (host === h || host.endsWith(`.${h}`)) return name;
+  }
+  return "Smithsonian Institution";
 }
 
 export function isAggregatorSource(item: any): boolean {

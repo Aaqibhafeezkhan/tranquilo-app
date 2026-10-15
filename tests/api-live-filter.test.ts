@@ -13,7 +13,6 @@ import {
 } from "../lib/items-sql.ts";
 import { expandBaseTemplate } from "../vite-plugins/base-template.mts";
 import { expandHeadPartial } from "../vite-plugins/head-partial.mts";
-import { LIVE_SOURCE_IDS } from "./helpers/live-sources.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
@@ -120,33 +119,6 @@ describe("the predicate itself", () => {
   it("composes correctly with and without an existing WHERE clause", () => {
     expect(LIVE_ITEMS_WHERE.startsWith("WHERE ")).toBe(true);
     expect(LIVE_ITEMS_AND.startsWith("AND ")).toBe(true);
-  });
-});
-
-describe("share-link attribution never invents an institution", () => {
-  const slugSource = source("../api/v/[slug].ts");
-
-  it("falls back to the raw source string, not a hardcoded museum name", () => {
-    // The original bug labelled 708 of 954 live items "via The
-    // Metropolitan Museum of Art" regardless of real credit --
-    // wrong-but-honest beats wrong-but-confident for attribution.
-    expect(slugSource).toContain(
-      "(INSTITUTION_NAMES as any)[item.source] || item.source",
-    );
-  });
-
-  it("never defaults to a specific institution entry", () => {
-    expect(slugSource).not.toMatch(
-      /INSTITUTION_NAMES\[[^\]]*\]\s*\|\|\s*INSTITUTION_NAMES\./,
-    );
-  });
-
-  it("maps every live source, so the fallback stays a genuine last resort", () => {
-    LIVE_SOURCE_IDS.forEach((src) => {
-      expect(slugSource, `INSTITUTION_NAMES missing ${src}`).toMatch(
-        new RegExp(`\\b${src}\\s*:`),
-      );
-    });
   });
 });
 

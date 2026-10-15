@@ -1,11 +1,13 @@
 import { isRealArtist } from "../logic/logic";
+import { smithsonianMuseum } from "./sourceLinks";
 
 // Builds and downloads a CSV of the visitor's saved collection, entirely
 // client-side with no server call. An unmapped source falls back to its raw
 // slug instead of a hardcoded institution name.
 export const EXPORT_SOURCE_NAMES: Record<string, string> = {
   met: "The Metropolitan Museum of Art",
-  smithsonian: "Smithsonian (Cooper Hewitt)",
+  // Per item rather than per source -- see smithsonianMuseum().
+  smithsonian: "Smithsonian Institution",
   cleveland: "Cleveland Museum of Art",
   commons: "Wikimedia Commons",
   europeana: "Europeana",
@@ -29,7 +31,9 @@ export class ExportService {
         isRealArtist(item.artist) ? item.artist : "Unknown",
         item.date || "",
         item.category || "",
-        EXPORT_SOURCE_NAMES[item.source || "met"] || item.source || "",
+        item.source === "smithsonian"
+          ? smithsonianMuseum(item.url)
+          : EXPORT_SOURCE_NAMES[item.source || "met"] || item.source || "",
         item.url || "",
       ]
         .map(csvField)
