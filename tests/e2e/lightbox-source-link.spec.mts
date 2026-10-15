@@ -7,6 +7,7 @@
 
 import type { Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
+import { sourceLinkLabel } from "../../src/app/sourceLinks.ts";
 import { gotoArtwork, gotoFeed, ITEMS, scrollToSlide } from "./harness.mts";
 
 declare global {
@@ -104,8 +105,11 @@ test("it names the institution rather than our internal source slug", async ({
     expect(text, `${source} shows its raw slug`).not.toMatch(
       new RegExp(`\\b${source}\\b(?!\\.)`),
     );
-    expect(text, `${source} has no institution label`).toMatch(
-      /\.(org|eu|edu|com)\b/,
+    // The label the source is meant to show, whatever its shape -- a domain
+    // ("metmuseum.org") or a name ("Wikimedia Commons"). Matching a domain
+    // pattern instead failed the moment a source switched to its name.
+    expect(text, `${source} has no institution label`).toContain(
+      sourceLinkLabel(item),
     );
     visited.push(source);
     await page.locator("#lightboxClose").click();
