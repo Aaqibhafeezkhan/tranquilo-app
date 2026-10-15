@@ -88,7 +88,26 @@ test("?resetUpsell=1 re-arms it without emptying the collection", async ({
   );
   expect(saved).toBeGreaterThanOrEqual(MIN_SAVED);
 
-  // An unsaved slide: re-clicking an existing one would un-save it.
-  await saveSlides(page, 1, FIRST_ARTWORK_SLIDE + MIN_SAVED);
+  // An unsaved slide: re-clicking an existing one would un-save it. Found
+  // by checking the collection, not by position -- the "All" feed starts
+  // at a random point on each load, so after the reload above a fixed
+  // index can land on one of the slides already saved.
+  const unsaved = await page.evaluate(() => {
+    // Collection keys are source:native_id; slide slugs are source-id.
+    const saved = new Set(
+      (
+        JSON.parse(
+          localStorage.getItem("tranquilo:collection") || "[]",
+        ) as string[]
+      ).map((k) => k.replace(":", "-")),
+    );
+    return Array.from(
+      document.querySelectorAll<HTMLElement>("#feed .slide"),
+    ).findIndex(
+      (s, i) => i > 0 && s.dataset.slug && !saved.has(s.dataset.slug),
+    );
+  });
+  expect(unsaved, "no unsaved artwork slide").toBeGreaterThan(0);
+  await saveSlides(page, 1, unsaved);
   await expect(page.locator("#upsellToast")).toHaveClass(/show/);
 });
