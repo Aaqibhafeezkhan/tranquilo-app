@@ -5,7 +5,9 @@ const SOURCE_LINK_LABELS: Record<string, string> = {
   met: "metmuseum.org",
   smithsonian: "cooperhewitt.org",
   cleveland: "clevelandart.org",
-  commons: "commons.wikimedia.org",
+  // The project's name: "commons.wikimedia.org" is hard to read at a
+  // glance, and "on" still reads naturally ("View on Wikimedia Commons").
+  commons: "Wikimedia Commons",
   europeana: "europeana.eu",
   // The institution's name, not a domain -- digitalarchive.npm.gov.tw
   // reads as noise next to "National Palace Museum" the way it wouldn't

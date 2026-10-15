@@ -10,10 +10,12 @@ describe("sourceLinkLabel", () => {
     expect(sourceLinkLabel({ source: "met" })).toBe("metmuseum.org");
     expect(sourceLinkLabel({ source: "smithsonian" })).toBe("cooperhewitt.org");
     expect(sourceLinkLabel({ source: "cleveland" })).toBe("clevelandart.org");
-    expect(sourceLinkLabel({ source: "commons" })).toBe(
-      "commons.wikimedia.org",
-    );
     expect(sourceLinkLabel({ source: "europeana" })).toBe("europeana.eu");
+  });
+
+  it("maps commons to the project's name, not its hard-to-read domain", () => {
+    expect(sourceLinkLabel({ source: "commons" })).toBe("Wikimedia Commons");
+    expect(sourceLinkPreposition({ source: "commons" })).toBe("on");
   });
 
   it("maps npm to the institution's name, not a domain", () => {
