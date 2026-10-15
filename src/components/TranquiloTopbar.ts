@@ -19,6 +19,7 @@
 // once bundled. This gives the real, current URL either way.
 import tranquiloFlowerVioletUrl from "../../assets/tranquilo-flower-violet.svg";
 import type { ArtistProfile } from "../data/artist-profiles";
+import { facetLabel, t } from "../i18n/index";
 import type { ITopbarHost } from "../types/ITopbarHost";
 import { on } from "../utils/on";
 
@@ -224,7 +225,12 @@ export class TranquiloTopbar extends HTMLElement {
     categories.forEach((cat) => {
       const chip = document.createElement("button");
       chip.className = `chip${cat === activeCategory && !opts.collectionActive ? " active" : ""}`;
-      chip.textContent = cat;
+      // The stored category value drives behaviour (dataset + the select
+      // handler); the visible text is only its translated label, so
+      // nothing below may compare against textContent.
+      chip.dataset.category = cat;
+      chip.textContent =
+        cat === "All" ? t("chips.all") : facetLabel("category", cat);
       on(chip, () => this.app?.onCategorySelect(cat));
       this.chipsEl.appendChild(chip);
     });
@@ -363,7 +369,7 @@ export class TranquiloTopbar extends HTMLElement {
         return (
           c !== moreBtn &&
           c.id !== "storylineChip" &&
-          c.textContent !== "All" &&
+          (c as HTMLElement).dataset.category !== "All" &&
           !c.classList.contains("active")
         );
       });
