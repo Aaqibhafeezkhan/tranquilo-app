@@ -6,6 +6,13 @@
 // app.js's consts of the same name/value: the same key string is also read
 // by an unrelated legacy-migration and a `?resetUpsell=1` test switch, and
 // storage is keyed by string, so duplicating the literal is safe.
+//
+// Text comes from src/i18n (the reference conversion other components
+// follow): the markup below is structure only, and the strings are filled
+// in with textContent/setAttribute once mounted, so they're read in the
+// active language and a translation can never inject markup.
+import { t } from "../i18n/index";
+
 const SESSION_TOAST_KEY = "tranquilo:toastShownThisSession";
 const LAST_TOAST_KEY = "tranquilo:lastToastShownAt";
 // Fires on the Nth save rather than on a clock, so "your collection is
@@ -13,9 +20,9 @@ const LAST_TOAST_KEY = "tranquilo:lastToastShownAt";
 const UPSELL_MIN_SAVED = 3;
 
 const UPSELL_TOAST_MARKUP = `
-<button class="upsell-close" id="upsellClose" type="button" aria-label="Dismiss">&times;</button>
-<p>Saved temporarily in this browser. Permanent collections and organization are part of Pro, still taking shape.</p>
-<a class="upsell-cta" id="upsellCta" href="/pages/pro.html">Join the waitlist</a>
+<button class="upsell-close" id="upsellClose" type="button">&times;</button>
+<p class="upsell-body"></p>
+<a class="upsell-cta" id="upsellCta" href="/pages/pro.html"></a>
 `;
 
 export class TranquiloUpsellToast extends HTMLElement {
@@ -27,11 +34,16 @@ export class TranquiloUpsellToast extends HTMLElement {
 
     this.innerHTML = UPSELL_TOAST_MARKUP;
     const closeBtn = this.querySelector<HTMLButtonElement>("#upsellClose");
-    if (!closeBtn) {
+    const body = this.querySelector<HTMLElement>(".upsell-body");
+    const cta = this.querySelector<HTMLAnchorElement>("#upsellCta");
+    if (!closeBtn || !body || !cta) {
       throw new Error(
-        "<tranquilo-upsell-toast>: missing #upsellClose in its own template",
+        "<tranquilo-upsell-toast>: missing an element from its own template",
       );
     }
+    closeBtn.setAttribute("aria-label", t("upsell.dismiss"));
+    body.textContent = t("upsell.body");
+    cta.textContent = t("upsell.cta");
     closeBtn.addEventListener("click", () => this.hide());
     // upsellCta's href is root-relative deliberately: the feed
     // pushState()s to /v/{slug} without reloading, so a relative path

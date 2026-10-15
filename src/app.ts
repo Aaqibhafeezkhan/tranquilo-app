@@ -32,6 +32,7 @@ import { renderErrorState } from "./errorState";
 import { buildEmptyCollectionSlide, buildIntroSlide } from "./feed/introSlides";
 import { createRecycleWindow } from "./feed/recycleWindow";
 import { createSlideBuilder } from "./feed/slideBuilder";
+import { applyDocumentLocale } from "./i18n/index";
 import type { ITopbarHost } from "./types/ITopbarHost";
 import type { ITranquiloDetailModalHost } from "./types/ITranquiloDetailModalHost";
 import type { ITranquiloExportModalHost } from "./types/ITranquiloExportModalHost";
@@ -60,6 +61,10 @@ import "./analytics/posthog";
 
 class TranquiloApp {
   async start() {
+    // First, so <html lang> names the language actually rendered (index.html
+    // ships lang="en" as the no-JS default).
+    applyDocumentLocale();
+
     const COLLECTION_KEY = "tranquilo:collection";
     const LAST_TOAST_KEY = "tranquilo:lastToastShownAt";
     const SESSION_TOAST_KEY = "tranquilo:toastShownThisSession";

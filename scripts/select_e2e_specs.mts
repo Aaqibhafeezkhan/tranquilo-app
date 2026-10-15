@@ -58,6 +58,7 @@ const GROUPS: Record<string, string[]> = {
     "feedback-page.spec.mts",
   ],
   misc: ["share.spec.mts", "no-analytics.spec.mts"],
+  i18n: ["i18n.spec.mts"],
 };
 
 // Ordered path -> group(s) rules, checked with String.prototype.startsWith.
@@ -126,6 +127,8 @@ const RUN_EVERYTHING_PREFIXES = [
   "src/app.ts",
   "src/logic/logic.ts",
   "src/utils/on.ts",
+  // Every converted component reads its text through here.
+  "src/i18n/",
   "src/types/Item.ts",
   "tests/e2e/harness.mts",
   "css/style.css",
