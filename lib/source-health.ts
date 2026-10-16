@@ -4,8 +4,8 @@
 // one (health-check cron, operators) is not.
 //
 // Deliberately does NOT filter manifests by health: excluding a degraded
-// source would empty whole categories (Architecture & Space is all
-// Smithsonian) and deadlock recovery (no requests means consecutive_failures
+// source could empty whole categories (a category served by one source)
+// and deadlock recovery (no requests means consecutive_failures
 // never resets). Health drives alerting and shedding, not visibility -- the
 // client already degrades a failed image gracefully on its own.
 

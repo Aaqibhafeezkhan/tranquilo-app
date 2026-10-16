@@ -9,7 +9,7 @@ export interface ActiveConcept {
 
 // A curated fallback when a query finds nothing literally and no spelling
 // correction either -- each entry names a server filter, not a predicate.
-interface ConceptEntry {
+export interface ConceptEntry {
   label: string;
   filter: Record<string, unknown>;
 }
@@ -17,14 +17,10 @@ interface ConceptEntry {
 // "renaissance" maps to the timeframe facet (centuries 15-16). "couples"
 // stays a text query, since it's only a tag substring test and ?q=
 // searches tags among its fields.
-const CONCEPT_MAP: Record<string, ConceptEntry> = {
+export const CONCEPT_MAP: Record<string, ConceptEntry> = {
   armor: {
     label: "armor",
     filter: { category: "Arms & Armor" },
-  },
-  architecture: {
-    label: "architecture",
-    filter: { category: "Architecture & Space" },
   },
   renaissance: {
     label: "the Renaissance",
