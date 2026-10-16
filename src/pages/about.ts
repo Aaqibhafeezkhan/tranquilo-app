@@ -2,7 +2,7 @@
 // api/subscribe.js endpoint as pro.html, tagged source: "feature_notify".
 import { fieldWrap, isValidEmail } from "../utils/formValidation";
 import "../analytics/cloudflareBeacon";
-import { t } from "../i18n/index";
+import { currentLocale, t } from "../i18n/index";
 
 const form = document.getElementById("notifyForm") as HTMLFormElement;
 const emailInput = document.getElementById("notifyEmail") as HTMLInputElement;
@@ -27,7 +27,11 @@ form.addEventListener("submit", (e) => {
   fetch("/api/subscribe", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email: email, source: "feature_notify" }),
+    body: JSON.stringify({
+      email: email,
+      source: "feature_notify",
+      locale: currentLocale(),
+    }),
   })
     .then((res) => {
       if (!res.ok) throw new Error("subscribe failed");

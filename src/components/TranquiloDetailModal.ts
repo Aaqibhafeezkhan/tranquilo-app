@@ -21,7 +21,7 @@
 // css/style.css.
 
 import { licenseLabel } from "../app/licenseLabels";
-import { facetLabel, type MessageKey, t } from "../i18n/index";
+import { currentLocale, facetLabel, type MessageKey, t } from "../i18n/index";
 import { isRealArtist as isRealArtistLogic } from "../logic/logic";
 import type { ITranquiloDetailModalHost } from "../types/ITranquiloDetailModalHost";
 import type { Item } from "../types/Item";
@@ -342,6 +342,7 @@ function wireReportMenu(
           itemUrl: `${location.origin}/v/${encodeURIComponent(`${item.source}-${item.id}`)}`,
           categories,
           comment,
+          locale: currentLocale(),
         }),
       }).catch(() => {});
 

@@ -241,6 +241,8 @@ paths:
                 source:
                   type: string
                   enum: [pro_waitlist, feature_notify, newsletter_submit, homepage_newsletter]
+                locale:
+                  $ref: "#/components/schemas/RequestLocale"
       responses:
         "200":
           description: Subscribed (or already subscribed -- this call is idempotent).
@@ -890,6 +892,7 @@ components:
         description: { type: string }
         estimatedSize: { type: string }
         newsletterOptIn: { type: boolean }
+        locale: { $ref: "#/components/schemas/RequestLocale" }
     FeedbackSubmission:
       type: object
       required: [kind, message]
@@ -899,3 +902,12 @@ components:
         feedbackType: { type: string, enum: [Bug, "Feature idea", Content, "Something else"] }
         context: { type: string, maxLength: 300 }
         email: { type: string, format: email, maxLength: 200, description: Optional -- anonymous feedback is allowed. }
+        locale: { $ref: "#/components/schemas/RequestLocale" }
+    RequestLocale:
+      type: string
+      description: >-
+        Optional BCP-47 code of the language the form or signup was sent in
+        (e.g. "en", "pt-BR"). Only a code from the site's locale registry is
+        recorded, matched case-insensitively; anything else is ignored rather
+        than rejected. On /api/subscribe it is stored as the contact's
+        `locale` property, and a signup without one keeps the stored value.

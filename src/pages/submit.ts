@@ -3,6 +3,7 @@
 // This is pages/submit.html's single entry point -- the Cloudflare beacon
 // is a side-effect import rather than its own <script> tag, same pattern
 // as src/app.ts's own imports.
+import { currentLocale } from "../i18n/index";
 import {
   clearFieldError,
   isNonEmpty,
@@ -125,6 +126,7 @@ form.addEventListener("submit", (e) => {
     newsletterOptIn: (
       document.getElementById("newsletterOptIn") as HTMLInputElement
     ).checked,
+    locale: currentLocale(),
   };
 
   const newsletterOptIn = payload.newsletterOptIn;
@@ -149,6 +151,7 @@ form.addEventListener("submit", (e) => {
           body: JSON.stringify({
             email: payload.submitterEmail,
             source: "newsletter_submit",
+            locale: payload.locale,
           }),
         })
           .then((res) => {

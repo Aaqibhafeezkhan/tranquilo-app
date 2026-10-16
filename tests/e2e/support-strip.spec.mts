@@ -318,6 +318,7 @@ test.describe("the homepage newsletter modal", () => {
     expect(posted).toEqual({
       email: "reader@example.com",
       source: "homepage_newsletter",
+      locale: "en",
     });
   });
 
@@ -489,6 +490,7 @@ test.describe("About page", () => {
     expect(posted).toEqual({
       email: "reader@example.com",
       source: "feature_notify",
+      locale: "en",
     });
   });
 

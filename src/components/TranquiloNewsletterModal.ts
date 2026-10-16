@@ -8,6 +8,7 @@
 // Posts to the same /api/subscribe endpoint as pages/about.html's "Notify
 // me" form and pages/pro.html's waitlist, tagged with its own `source` so
 // Resend segments can tell the three apart.
+import { currentLocale } from "../i18n/index";
 import { fieldWrap, isValidEmail } from "../utils/formValidation";
 import { on } from "../utils/on";
 
@@ -58,7 +59,11 @@ function wireForm(form: HTMLFormElement): void {
     fetch("/api/subscribe", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, source: NEWSLETTER_SOURCE }),
+      body: JSON.stringify({
+        email,
+        source: NEWSLETTER_SOURCE,
+        locale: currentLocale(),
+      }),
     })
       .then((res) => {
         if (!res.ok) throw new Error("subscribe failed");

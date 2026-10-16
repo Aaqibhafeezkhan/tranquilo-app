@@ -1,6 +1,7 @@
 // pages/pro.html's Pro waitlist form -- posts to api/subscribe.js, tagged
 // source: "pro_waitlist". Cloudflare beacon is a side-effect import
 // rather than its own <script> tag.
+import { currentLocale } from "../i18n/index";
 import { fieldWrap, isValidEmail } from "../utils/formValidation";
 import "../analytics/cloudflareBeacon";
 
@@ -28,7 +29,11 @@ form.addEventListener("submit", (e) => {
   fetch("/api/subscribe", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email: email, source: "pro_waitlist" }),
+    body: JSON.stringify({
+      email: email,
+      source: "pro_waitlist",
+      locale: currentLocale(),
+    }),
   })
     .then((res) => {
       if (!res.ok) throw new Error("subscribe failed");
