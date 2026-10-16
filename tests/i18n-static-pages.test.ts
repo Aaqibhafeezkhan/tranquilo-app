@@ -99,3 +99,31 @@ describe("an English page", () => {
     expect(html).toContain('href="../css/style.css"');
   });
 });
+
+// A translation mirrors its English page block for block: the same
+// headings, paragraphs and list items in the same order. That's what lets
+// review pair each translated paragraph with the English it translates
+// (review-app's translation import does exactly this), and it catches a
+// paragraph dropped or merged in translation.
+describe("translated pages mirror their English structure", () => {
+  const blockTags = (html: string): string[] => {
+    const main = html.slice(
+      html.indexOf('<block name="main">'),
+      html.indexOf("</block>", html.indexOf('<block name="main">')),
+    );
+    return [...main.matchAll(/<(h1|h2|h3|p|li|label)\b/g)].map((m) => m[1]);
+  };
+
+  for (const [locale, files] of Object.entries(TRANSLATED_PAGES)) {
+    for (const file of files) {
+      it(`${locale}/${file}`, () => {
+        const english = readFileSync(path.join(ROOT, "pages", file), "utf8");
+        const translated = readFileSync(
+          path.join(ROOT, "pages", locale, file),
+          "utf8",
+        );
+        expect(blockTags(translated)).toEqual(blockTags(english));
+      });
+    }
+  }
+});
