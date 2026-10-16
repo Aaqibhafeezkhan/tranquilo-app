@@ -68,11 +68,11 @@ test("sharing copies the storyline's own URL, not the cover artwork's", async ({
   await openAStoryline(page);
   await captureClipboard(page);
 
-  const openId = await page.evaluate(() => {
-    const dots = document.querySelectorAll("#storylineTimeline .storyline-dot");
-    return dots.length;
-  });
-  expect(openId).toBeGreaterThan(0);
+  // The overlay opens before its timeline renders, so wait for the dots
+  // rather than counting them once -- a single read raced on slow CI runners.
+  await expect
+    .poll(() => page.locator("#storylineTimeline .storyline-dot").count())
+    .toBeGreaterThan(0);
 
   await page.locator("#storylineMode .storyline-intro-page .btn-share").click();
   await page.waitForFunction(
