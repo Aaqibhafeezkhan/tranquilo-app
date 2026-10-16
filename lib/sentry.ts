@@ -47,4 +47,28 @@ async function reportError(
   await Sentry.flush(2000);
 }
 
-export { reportError, Sentry };
+// For a failure that isn't an exception: a request we rejected or an upstream
+// we couldn't use, where the bug is ours rather than the visitor's (a form
+// sending a value the endpoint doesn't accept, a missing key, Resend refusing
+// a call). These used to reach only the function log, which nobody watches;
+// a signup form was quietly turned away for weeks that way. `key` is the
+// fingerprint, so repeats group into one issue instead of one alert each.
+//
+// Callers pass only shapes and statuses, never visitor input; upstream error
+// text goes through redactEmails() (lib/redact.ts) first, since providers sometimes echo the
+// address back.
+async function reportProblem(
+  key: string,
+  message: string,
+  extra?: Record<string, unknown>,
+): Promise<void> {
+  Sentry.captureMessage(message, {
+    level: "error",
+    fingerprint: [key],
+    tags: { problem: key },
+    extra,
+  });
+  await Sentry.flush(2000);
+}
+
+export { reportError, reportProblem, Sentry };
