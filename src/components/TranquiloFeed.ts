@@ -415,6 +415,9 @@ export class TranquiloFeed extends HTMLElement {
   private markFeedSettled(onSettled?: () => void): void {
     this.feedRenderCount++;
     window.__tranquiloFeedRenders = this.feedRenderCount;
+    // For page chrome that depends on how much feed there is (the scroll
+    // cue in app.ts), which can only be judged once a render has landed.
+    this.dispatchEvent(new Event("feed-settled"));
     if (onSettled) onSettled();
   }
 
