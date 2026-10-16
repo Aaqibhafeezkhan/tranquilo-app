@@ -5,7 +5,8 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { escapeHtml } from "../lib/html-escape.ts";
 import { isValidEmail } from "../lib/is-valid-email.ts";
-import { reportError } from "../lib/sentry.ts";
+import { redactEmails } from "../lib/redact.ts";
+import { reportError, reportProblem } from "../lib/sentry.ts";
 
 const REQUIRED_FIELDS = [
   "collectionName",
@@ -45,6 +46,10 @@ async function sendNotification(
   if (!apiKey || !notifyEmail) {
     console.error(
       "submit-collection: missing RESEND_API_KEY or SUBMIT_NOTIFY_EMAIL env var",
+    );
+    await reportProblem(
+      "submit.not_configured",
+      "submit-collection: RESEND_API_KEY or SUBMIT_NOTIFY_EMAIL is not set",
     );
     res.statusCode = 500;
     res.json({ error: "Submission pipeline isn't configured yet" });
@@ -97,6 +102,11 @@ async function sendNotification(
         "submit-collection: Resend API error",
         resendRes.status,
         errText,
+      );
+      await reportProblem(
+        "submit.resend_failed",
+        `submit-collection: Resend refused the email (${resendRes.status})`,
+        { status: resendRes.status, body: redactEmails(errText) },
       );
       res.statusCode = 502;
       res.json({ error: "Couldn't send the submission email" });

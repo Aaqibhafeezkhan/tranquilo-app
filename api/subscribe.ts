@@ -13,7 +13,8 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
 import { isValidEmail } from "../lib/is-valid-email.ts";
-import { reportError } from "../lib/sentry.ts";
+import { redactEmails } from "../lib/redact.ts";
+import { reportError, reportProblem } from "../lib/sentry.ts";
 
 const VALID_SOURCES: Record<string, boolean> = {
   pro_waitlist: true,
@@ -120,6 +121,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
   if (!VALID_SOURCES[source]) {
+    // A visitor can't choose the source -- each form hard-codes it -- so an
+    // unknown one means a form and this list disagree.
+    await reportProblem(
+      "subscribe.invalid_source",
+      "subscribe: a form sent a source this endpoint doesn't accept",
+      { source: String(source).slice(0, 100) },
+    );
     res.statusCode = 400;
     res.json({ error: "Invalid source" });
     return;
@@ -128,6 +136,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     console.error("subscribe: missing RESEND_API_KEY env var");
+    await reportProblem(
+      "subscribe.not_configured",
+      "subscribe: RESEND_API_KEY is not set",
+    );
     res.statusCode = 500;
     res.json({ error: "Subscribe isn't configured yet" });
     return;
@@ -154,6 +166,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             resendRes.status,
             errBody,
           );
+          await reportProblem(
+            "subscribe.resend_failed",
+            `subscribe: Resend refused the contact (${resendRes.status})`,
+            { status: resendRes.status, body: redactEmails(errBody), source },
+          );
           res.statusCode = 502;
           res.json({ error: "Couldn't subscribe right now" });
           return;
@@ -164,6 +181,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
 
       console.error("subscribe: Resend API error", resendRes.status, errBody);
+      await reportProblem(
+        "subscribe.resend_failed",
+        `subscribe: Resend refused the contact (${resendRes.status})`,
+        { status: resendRes.status, body: redactEmails(errBody), source },
+      );
       res.statusCode = 502;
       res.json({ error: "Couldn't subscribe right now" });
       return;
