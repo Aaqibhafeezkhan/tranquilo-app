@@ -41,6 +41,17 @@ export const en = {
   "collection.empty.title": "Nothing collected\nyet.",
   "collection.empty.body": "Tap the bookmark on any piece to start.",
 
+  // The AI-disclosure note on Tea captions -- APPROVED WORDING, held here
+  // so other languages can be reviewed before any is shown. Components do
+  // not read these yet (they carry the locked English directly); the
+  // English must stay identical to it -- tests/ai-disclosure-static.test.ts.
+  // A translation needs explicit approval, not just a native-speaker pass:
+  // it backs a claim in the Terms about human editorial review.
+  "ai.disclosure.text":
+    "Drafted with AI help; edited and reviewed by a person.",
+  "ai.disclosure.errorPrompt": "Spotted an error?",
+  "ai.disclosure.badgeLabel": "How this text was written",
+
   // Shared across components.
   "common.untitled": "Untitled",
 

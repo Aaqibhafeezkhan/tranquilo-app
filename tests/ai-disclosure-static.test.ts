@@ -85,3 +85,21 @@ describe("the AI disclosure is immutable", () => {
     }
   });
 });
+
+// The disclosure's wording also lives in src/i18n (en + drafts), so other
+// languages can be reviewed and approved before any of them is shown. The
+// English entries must stay identical to the approved wording above --
+// a dictionary copy that drifted would be a second, unapproved disclosure
+// the moment components switch to reading it.
+describe("the dictionary copy of the disclosure", () => {
+  it("matches the approved English wording exactly", async () => {
+    const { en } = await import("../src/i18n/en");
+    for (const src of sources) {
+      expect(src).toContain(`${en["ai.disclosure.text"]} `);
+      expect(src).toContain(
+        `${en["ai.disclosure.errorPrompt"]} <a href="mailto:`,
+      );
+      expect(src).toContain(`aria-label="${en["ai.disclosure.badgeLabel"]}"`);
+    }
+  });
+});
