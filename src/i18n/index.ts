@@ -73,6 +73,10 @@ function browserLanguages(): readonly string[] {
 
 /** The locale currently in use, resolved once and then remembered. */
 export function currentLocale(): string {
+  // A ?lang= link is checked on the first lookup rather than at app start:
+  // components render their text while modules are still evaluating, so
+  // anything later would leave the first screen in the old language.
+  if (active === undefined) applyLocaleParam();
   active ??= resolveLocale({
     stored: readStored(),
     browser: browserLanguages(),
@@ -96,6 +100,26 @@ export function setLocale(code: string): void {
     // Storage unavailable: the choice holds for this page only.
   }
   active = code;
+}
+
+/**
+ * Honours a ?lang=<code> link: the shareable way into a locale, draft ones
+ * included, so a preview can be sent to a reviewer before the language is
+ * public. Treated as an explicit choice (persisted, like setLocale). An
+ * unknown code is ignored rather than thrown, since links get mangled in
+ * transit. Returns whether it switched. Call before applyDocumentLocale().
+ */
+export function applyLocaleParam(
+  search: string = typeof location === "undefined" ? "" : location.search,
+): boolean {
+  const requested = new URLSearchParams(search).get("lang");
+  if (!requested) return false;
+  const match = LOCALES.find(
+    (l) => l.code.toLowerCase() === requested.toLowerCase(),
+  );
+  if (!match) return false;
+  setLocale(match.code);
+  return true;
 }
 
 /** Locales visible to visitors, e.g. for a language switcher. */

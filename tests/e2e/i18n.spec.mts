@@ -46,6 +46,36 @@ test.describe("a browser asking for draft pt-BR", () => {
   });
 });
 
+// ?lang= is the shareable way into a locale, draft ones included, so a
+// preview can be shared before the language is public. It must apply to
+// the very first screen and stick for the rest of the visit.
+test.describe("a ?lang=pt-BR link", () => {
+  test("opens the site in pt-BR and is remembered", async ({ page }) => {
+    await gotoFeed(page, "?lang=pt-BR");
+    await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
+    // That the link wins even for text drawn while modules are still
+    // evaluating (before start()) is pinned by the unit test "is honoured
+    // by the very first lookup" -- chips render inside start(), so this
+    // line alone can't tell the two apart.
+    await expect(page.locator('button.chip[data-category="All"]')).toHaveText(
+      "Todos",
+    );
+
+    // A later visit without the parameter keeps the choice.
+    await gotoFeed(page);
+    await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
+  });
+
+  test("?lang=en switches back", async ({ page }) => {
+    await gotoFeed(page, "?lang=pt-BR");
+    await gotoFeed(page, "?lang=en");
+    await expect(page.locator("html")).toHaveAttribute("lang", "en");
+    await expect(page.locator('button.chip[data-category="All"]')).toHaveText(
+      "All",
+    );
+  });
+});
+
 // Category values are data keys (filters, shelves, music buckets), so only
 // their on-screen label is translated. These pin that split: the chip reads
 // in Portuguese, but selecting it still filters by the stored English value.

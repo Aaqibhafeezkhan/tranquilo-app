@@ -319,4 +319,52 @@ describe("runtime (src/i18n/index.ts)", () => {
     expect(codes).toContain("en");
     for (const l of i18n.shippedLocales()) expect(l.status).toBe("shipped");
   });
+
+  // ?lang= is the shareable way into a locale -- including a draft one, so
+  // a preview link can be shared (e.g. with a reviewer) before the language
+  // is public. It's an explicit choice, so it's
+  // remembered like any other.
+  describe("applyLocaleParam (?lang=)", () => {
+    it("opts into a draft locale and remembers it", async () => {
+      const i18n = await loadWith({});
+      expect(i18n.applyLocaleParam("?lang=pt-BR")).toBe(true);
+      expect(i18n.currentLocale()).toBe("pt-BR");
+      expect(store["tranquilo:locale"]).toBe("pt-BR");
+    });
+
+    it("accepts the code case-insensitively", async () => {
+      const i18n = await loadWith({});
+      expect(i18n.applyLocaleParam("?lang=pt-br")).toBe(true);
+      expect(i18n.currentLocale()).toBe("pt-BR");
+    });
+
+    it("switches back to English with ?lang=en", async () => {
+      const i18n = await loadWith({ stored: "pt-BR" });
+      expect(i18n.applyLocaleParam("?lang=en")).toBe(true);
+      expect(i18n.currentLocale()).toBe("en");
+    });
+
+    it("ignores an unknown code instead of throwing -- links get mangled", async () => {
+      const i18n = await loadWith({ stored: "pt-BR" });
+      expect(i18n.applyLocaleParam("?lang=xx")).toBe(false);
+      expect(i18n.currentLocale()).toBe("pt-BR");
+    });
+
+    it("is honoured by the very first lookup, before any startup code runs", async () => {
+      // Components render while modules are still evaluating -- before
+      // app.ts's start() -- so the link must win on first resolution, not
+      // only when something remembers to call applyLocaleParam().
+      vi.stubGlobal("location", { search: "?lang=pt-BR" });
+      const i18n = await loadWith({});
+      expect(i18n.currentLocale()).toBe("pt-BR");
+      expect(store["tranquilo:locale"]).toBe("pt-BR");
+    });
+
+    it("does nothing without the parameter", async () => {
+      const i18n = await loadWith({});
+      expect(i18n.applyLocaleParam("?resetUpsell=1")).toBe(false);
+      expect(i18n.applyLocaleParam("")).toBe(false);
+      expect(i18n.currentLocale()).toBe("en");
+    });
+  });
 });
