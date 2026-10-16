@@ -48,6 +48,7 @@ const GROUPS: Record<string, string[]> = {
     "smoke.spec.mts",
     "urls.spec.mts",
     "image-failure.spec.mts",
+    "scroll-hint.spec.mts",
   ],
   lightbox: ["lightbox-source-link.spec.mts", "link-underlines.spec.mts"],
   detail: ["ai-disclosure.spec.mts", "tea-sources.spec.mts"],

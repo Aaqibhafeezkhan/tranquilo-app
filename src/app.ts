@@ -992,7 +992,19 @@ class TranquiloApp {
       overlayHistory.closeSync(closeFn);
     }
 
+    // "Scroll to explore" invites the first scroll, so it shows only while
+    // there is feed below to scroll to -- not on a single search result or a
+    // one-item collection, where the one slide is all there is. Re-checked
+    // after every render (filters change how much feed there is); once the
+    // visitor has scrolled, it's gone for good.
     let hintHidden = false;
+    function refreshScrollHint() {
+      if (hintHidden) return;
+      const roomBelow =
+        feedEl.scrollHeight - feedEl.clientHeight - feedEl.scrollTop;
+      scrollHint.classList.toggle("hidden", roomBelow <= 40);
+    }
+    feedEl.addEventListener("feed-settled", refreshScrollHint);
     feedEl.addEventListener("scroll", () => {
       if (!hintHidden && feedEl.scrollTop > 40) {
         scrollHint.classList.add("hidden");
