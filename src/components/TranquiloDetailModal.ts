@@ -21,17 +21,19 @@
 // css/style.css.
 
 import { licenseLabel } from "../app/licenseLabels";
-import { facetLabel } from "../i18n/index";
+import { facetLabel, type MessageKey, t } from "../i18n/index";
 import { isRealArtist as isRealArtistLogic } from "../logic/logic";
 import type { ITranquiloDetailModalHost } from "../types/ITranquiloDetailModalHost";
 import type { Item } from "../types/Item";
 import { on } from "../utils/on";
 
-const DETAIL_MODAL_MARKUP = `
-<button class="detail-close" id="detailClose" aria-label="Close">&times;</button>
+// Built when the element mounts, with text from src/i18n escaped on the way
+// in (translations must never be parsed as markup).
+const detailModalMarkup = () => `
+<button class="detail-close" id="detailClose" aria-label="${escapeHtml(t("detail.close"))}">&times;</button>
 <div class="detail-shelf-position" id="detailShelfPosition" hidden></div>
-<button class="detail-shelf-nav prev" id="detailShelfPrev" type="button" aria-label="Previous in this shelf" hidden>&larr;</button>
-<button class="detail-shelf-nav next" id="detailShelfNext" type="button" aria-label="Next in this shelf" hidden>&rarr;</button>
+<button class="detail-shelf-nav prev" id="detailShelfPrev" type="button" aria-label="${escapeHtml(t("detail.shelfPrev"))}" hidden>&larr;</button>
+<button class="detail-shelf-nav next" id="detailShelfNext" type="button" aria-label="${escapeHtml(t("detail.shelfNext"))}" hidden>&rarr;</button>
 <div class="detail-modal-track" id="detailModalTrack"></div>
 `;
 
@@ -68,11 +70,18 @@ const FLAG_SVG =
 // Checkboxes, not buttons -- more than one can apply to the same
 // report. A free-text comment sits alongside them regardless of which (if
 // any) are checked; see wireReportMenu().
-const REPORT_CATEGORIES = [
-  "There's an issue with image",
-  "There's an issue with content",
-  "I'm having a technical issue (broken link)",
-  "Tell us more",
+//
+// `value` is what reaches /api/submit-collection (and the report email), so
+// it stays fixed English whatever the visitor's language; only `label` is
+// translated.
+const REPORT_CATEGORIES: ReadonlyArray<{ value: string; label: MessageKey }> = [
+  { value: "There's an issue with image", label: "detail.report.image" },
+  { value: "There's an issue with content", label: "detail.report.content" },
+  {
+    value: "I'm having a technical issue (broken link)",
+    label: "detail.report.technical",
+  },
+  { value: "Tell us more", label: "detail.report.more" },
 ];
 
 // The AI-disclosure badge on a Tea-tier caption. TranquiloStorylineMode.ts
@@ -103,7 +112,7 @@ function licenseRow(item: Item): string {
     ? `<a class="meta-license-link" href="${escapeHtml(deed)}" target="_blank" rel="noopener license">${escapeHtml(label)}</a>`
     : escapeHtml(label);
   // Not metaRow(), which escapes its value -- this one carries a link.
-  return `<div class="meta-row"><span class="meta-label">License</span> ${value}</div>`;
+  return `<div class="meta-row"><span class="meta-label">${escapeHtml(t("detail.meta.license"))}</span> ${value}</div>`;
 }
 
 function metaRow(label: string, value: string | null | undefined): string {
@@ -120,7 +129,7 @@ function originRows(item: Item): string {
   const lifespan = item.artist_lifespan || "";
   if (nationality || lifespan) {
     rows += metaRow(
-      "Artist origin",
+      t("detail.meta.artistOrigin"),
       [nationality, lifespan].filter(Boolean).join(" · "),
     );
   }
@@ -133,16 +142,16 @@ function originRows(item: Item): string {
     // artist once rendered as "Culture: Netherlands" under that label.
     rows += metaRow(
       item.source === "europeana"
-        ? "Object origin"
+        ? t("detail.meta.objectOrigin")
         : item.attribution_type === "person"
-          ? "Origin"
-          : "Culture",
+          ? t("detail.meta.origin")
+          : t("detail.meta.culture"),
       [culture, period].filter(Boolean).join(" · "),
     );
   }
   // Older rows, and anything the split could not place, still have the raw
   // string. Showing it unlabelled-but-present beats dropping it.
-  if (!rows && item.bio) rows = metaRow("Origin", item.bio);
+  if (!rows && item.bio) rows = metaRow(t("detail.meta.origin"), item.bio);
   return rows;
 }
 
@@ -177,15 +186,17 @@ function buildCastSectionHtml(item: Item): string {
   const peopleHtml = item.cast
     .map((person, idx) => {
       const hedgedPerson = person.attribution_confidence === "hedged";
-      const displayName = (hedgedPerson ? "Possibly " : "") + person.name;
+      const displayName = hedgedPerson
+        ? t("detail.cast.possibly", { name: person.name })
+        : person.name;
       const tidbitHtml =
         person.status === "grounded" && person.tidbit
           ? `<p>${escapeHtml(person.tidbit)}</p>${
               person.source_url
-                ? `<a class="source-link" href="${person.source_url}" target="_blank" rel="noopener"><span class="link-text">Source</span><span class="link-arrow" aria-hidden="true">&rarr;</span></a>`
+                ? `<a class="source-link" href="${person.source_url}" target="_blank" rel="noopener"><span class="link-text">${escapeHtml(t("detail.source"))}</span><span class="link-arrow" aria-hidden="true">&rarr;</span></a>`
                 : ""
             }`
-          : '<p class="cast-no-tidbit">No verified detail available yet.</p>';
+          : `<p class="cast-no-tidbit">${escapeHtml(t("detail.cast.noDetail"))}</p>`;
       return (
         `<li class="cast-person">` +
         `<button class="cast-person-toggle" type="button" aria-expanded="false" data-cast-idx="${idx}">` +
@@ -201,7 +212,7 @@ function buildCastSectionHtml(item: Item): string {
   return (
     `<div class="cast-section">` +
     `<button class="cast-toggle" type="button" aria-expanded="false">` +
-    `<span>Meet the Cast</span>${CHEVRON_SVG}</button>` +
+    `<span>${escapeHtml(t("detail.cast.title"))}</span>${CHEVRON_SVG}</button>` +
     `<div class="cast-panel" hidden>${
       introHtml
     }<ul class="cast-list">${peopleHtml}</ul>${contextDetailHtml}</div>` +
@@ -325,6 +336,8 @@ function wireReportMenu(
           kind: "report",
           itemSource: item.source,
           itemNativeId: item.id,
+          // Fixed English, like the category values: this is report data
+          // for the team, not text shown to the visitor.
           itemTitle: item.title || "Untitled",
           itemUrl: `${location.origin}/v/${encodeURIComponent(`${item.source}-${item.id}`)}`,
           categories,
@@ -332,7 +345,7 @@ function wireReportMenu(
         }),
       }).catch(() => {});
 
-      host.showToast("Thanks, your feedback has been sent. We'll take a look.");
+      host.showToast(t("detail.report.thanks"));
       closeMenu();
     });
   }
@@ -345,11 +358,11 @@ function wireReportMenu(
 function buildTwistSectionHtml(item: Item): string {
   if (!item.twist_category) return "";
   const sourceLinkHtml = item.twist_source_url
-    ? `<a class="source-link" href="${item.twist_source_url}" target="_blank" rel="noopener"><span class="link-text">Source</span><span class="link-arrow" aria-hidden="true">&rarr;</span></a>`
+    ? `<a class="source-link" href="${item.twist_source_url}" target="_blank" rel="noopener"><span class="link-text">${escapeHtml(t("detail.source"))}</span><span class="link-arrow" aria-hidden="true">&rarr;</span></a>`
     : "";
   return (
     `<div class="twist-box">` +
-    `<div class="twist-label">${TWIST_SVG}<span>The Twist</span></div>` +
+    `<div class="twist-label">${TWIST_SVG}<span>${escapeHtml(t("detail.twist"))}</span></div>` +
     `<p>${escapeHtml(item.twist_story || "")}</p>${sourceLinkHtml}</div>`
   );
 }
@@ -384,7 +397,7 @@ function buildTeaSourcesHtml(item: Item): string {
 
   return (
     `<div class="tea-sources">` +
-    `<span class="tea-sources-label">Sources</span>${sources
+    `<span class="tea-sources-label">${escapeHtml(t("detail.sources"))}</span>${sources
       .map((src) => {
         if (!src?.url) return "";
         // The tooltip carries the claim this link actually backs, plus the
@@ -396,7 +409,7 @@ function buildTeaSourcesHtml(item: Item): string {
           `<a class="tea-source" href="${escapeHtml(src.url)}" ` +
           'target="_blank" rel="noopener noreferrer" ' +
           `title="${escapeHtml(tip)}" ` +
-          `aria-label="Source: ${escapeHtml(host)}">` +
+          `aria-label="${escapeHtml(t("detail.sourceHost", { host }))}">` +
           `${TEA_SOURCE_SVG}</a>`
         );
       })
@@ -451,7 +464,7 @@ export class TranquiloDetailModal extends HTMLElement {
   // close does nothing special.
   private storylineHandoff: StorylineHandoffRestoreDetail | null = null;
 
-  // Throws a clear error instead of a silent null if DETAIL_MODAL_MARKUP and
+  // Throws a clear error instead of a silent null if detailModalMarkup() and
   // a selector below ever drift apart.
   private requireEl<T extends Element>(selector: string): T {
     const el = this.querySelector<T>(selector);
@@ -481,7 +494,7 @@ export class TranquiloDetailModal extends HTMLElement {
     if (this.getAttribute("data-detail-modal-mounted") === "1") return;
     this.setAttribute("data-detail-modal-mounted", "1");
 
-    this.innerHTML = DETAIL_MODAL_MARKUP;
+    this.innerHTML = detailModalMarkup();
     this.closeBtn = this.requireEl<HTMLButtonElement>("#detailClose");
     this.trackEl = this.requireEl<HTMLElement>("#detailModalTrack");
     this.shelfPositionEl = this.requireEl<HTMLElement>("#detailShelfPosition");
@@ -516,7 +529,10 @@ export class TranquiloDetailModal extends HTMLElement {
   private updateShelfPosition(index: number): void {
     if (!this.shelfItems) return;
     this.shelfIndex = index;
-    this.shelfPositionEl.textContent = `${index + 1} of ${this.shelfItems.length}`;
+    this.shelfPositionEl.textContent = t("slide.position", {
+      index: index + 1,
+      total: this.shelfItems.length,
+    });
     this.shelfPrevEl.disabled = index === 0;
     this.shelfNextEl.disabled = index === this.shelfItems.length - 1;
     this.requireApp().sampleArtworkColor(this.shelfItems[index], (tint) => {
@@ -567,9 +583,9 @@ export class TranquiloDetailModal extends HTMLElement {
     // Labelled since a lone "Unknown" would otherwise read as though
     // something failed to load rather than an honest attribution.
     if (artistLine)
-      artistLine = `<span class="meta-label">Artist</span> ${artistLine}`;
+      artistLine = `<span class="meta-label">${escapeHtml(t("detail.meta.artist"))}</span> ${artistLine}`;
     const dateLine = item.date
-      ? `<span class="sep">&middot;</span><span class="meta-label">Created</span> ${escapeHtml(item.date)}`
+      ? `<span class="sep">&middot;</span><span class="meta-label">${escapeHtml(t("detail.meta.created"))}</span> ${escapeHtml(item.date)}`
       : "";
     // Same storyline chip the main feed renders, for entry points that
     // only ever land here.
@@ -587,28 +603,28 @@ export class TranquiloDetailModal extends HTMLElement {
     return (
       `${
         item.img
-          ? `<div class="d-frame loading"><div class="art-skeleton"></div><img alt="${escapeHtml(item.title || "Untitled")}"></div>`
+          ? `<div class="d-frame loading"><div class="art-skeleton"></div><img alt="${escapeHtml(item.title || t("common.untitled"))}"></div>`
           : ""
       }<div class="cat-label">${escapeHtml(facetLabel("category", item.category ?? ""))}</div>` +
-      `<h2 class="art-title">${escapeHtml(item.title || "Untitled")}</h2>` +
+      `<h2 class="art-title">${escapeHtml(item.title || t("common.untitled"))}</h2>` +
       `<p class="art-meta">${artistLine}${dateLine}</p>${storylineChipHtml}${
         setOfWorksChipHtml
         // Reuses shareItem()/.btn-share as-is, a second entry point onto
         // the feed's existing mechanism.
-      }<div class="caption-actions"><button class="btn-share" type="button" aria-label="Copy share link">` +
-      `${SHARE_SVG}</button><button class="btn-report" type="button" aria-label="Report a problem" aria-haspopup="true" aria-expanded="false">${FLAG_SVG}</button>` +
+      }<div class="caption-actions"><button class="btn-share" type="button" aria-label="${escapeHtml(t("slide.share"))}">` +
+      `${SHARE_SVG}</button><button class="btn-report" type="button" aria-label="${escapeHtml(t("detail.report.button"))}" aria-haspopup="true" aria-expanded="false">${FLAG_SVG}</button>` +
       `<div class="report-menu" hidden role="menu">${REPORT_CATEGORIES.map(
         (c) =>
-          `<label class="report-checkbox"><input type="checkbox" value="${escapeHtml(c)}">${escapeHtml(c)}</label>`,
+          `<label class="report-checkbox"><input type="checkbox" value="${escapeHtml(c.value)}">${escapeHtml(t(c.label))}</label>`,
       ).join(
         "",
-      )}<textarea class="report-comment" maxlength="2000" placeholder="Anything else? (optional)"></textarea>` +
-      `<button class="report-send" type="button">Send</button></div></div>${buildTwistSectionHtml(
+      )}<textarea class="report-comment" maxlength="2000" placeholder="${escapeHtml(t("detail.report.commentPlaceholder"))}"></textarea>` +
+      `<button class="report-send" type="button">${escapeHtml(t("detail.report.send"))}</button></div></div>${buildTwistSectionHtml(
         item,
       )}${
         item.caption_tea || item.caption_basic
           ? `<div class="fact-box">` +
-            `<div class="fact-label">${item.caption_tea ? "Did you know?" : "Basic Information"}` +
+            `<div class="fact-label">${escapeHtml(item.caption_tea ? t("detail.fact.didYouKnow") : t("detail.fact.basic"))}` +
             `${item.caption_tea ? AI_DISCLOSURE_HTML : ""}</div>` +
             `<p>${escapeHtml(item.caption_tea || item.caption_basic || "")}</p>${buildTeaSourcesHtml(
               item,
@@ -618,16 +634,16 @@ export class TranquiloDetailModal extends HTMLElement {
       `<div class="d-body">${
         // Labelled rows. metaRow() renders nothing (not an empty <div>)
         // when the value is missing.
-        metaRow("Material", item.medium)
+        metaRow(t("detail.meta.material"), item.medium)
       }${
         originRows(item)
         // Set only when `date` describes the photograph rather than the
         // object, labelled separately so it never reads as the creation date.
       }${
-        metaRow("Date of photograph", item.photograph_date)
+        metaRow(t("detail.meta.photographDate"), item.photograph_date)
         // "Provenance", not "Credit" -- non-provenance text is blanked at
         // ingestion, so anything reaching here has earned the label.
-      }${metaRow("Provenance", item.credit)}${metaRow("Tagged", item.tags)}${
+      }${metaRow(t("detail.meta.provenance"), item.credit)}${metaRow(t("detail.meta.tagged"), item.tags)}${
         licenseRow(item)
         // sourceLinkLabel() rather than an inline lookup, so this and the
         // lightbox's link can't drift into naming the institution two ways.

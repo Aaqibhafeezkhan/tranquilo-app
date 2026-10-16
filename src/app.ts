@@ -32,7 +32,7 @@ import { renderErrorState } from "./errorState";
 import { buildEmptyCollectionSlide, buildIntroSlide } from "./feed/introSlides";
 import { createRecycleWindow } from "./feed/recycleWindow";
 import { createSlideBuilder } from "./feed/slideBuilder";
-import { applyDocumentLocale } from "./i18n/index";
+import { applyDocumentLocale, formatNumber, t, tHtml } from "./i18n/index";
 import type { ITopbarHost } from "./types/ITopbarHost";
 import type { ITranquiloDetailModalHost } from "./types/ITranquiloDetailModalHost";
 import type { ITranquiloExportModalHost } from "./types/ITranquiloExportModalHost";
@@ -575,7 +575,7 @@ class TranquiloApp {
           .map((entry: any) => itemsByKey[entry] || itemsById[entry])
           .filter(Boolean);
         if (collectedItems.length === 0) {
-          showToast("Nothing collected yet");
+          showToast(t("collection.toast.empty"));
           return;
         }
         exportCollectionCsv(collectedItems);
@@ -842,7 +842,11 @@ class TranquiloApp {
       filterState.setConcept(null);
       filterState.setCollectionFilter(false);
       if (artist) {
-        showFilterBanner(`More by <strong>${escapeHtml(artist)}</strong>`);
+        showFilterBanner(
+          tHtml("filter.moreBy", {
+            artist: `<strong>${escapeHtml(artist)}</strong>`,
+          }),
+        );
       } else {
         hideFilterBanner();
       }
@@ -857,7 +861,12 @@ class TranquiloApp {
       if (searchController.isOpen()) {
         closeOverlaySync(closeSearch);
       }
-      showFilterBanner(`<strong>My Collection</strong> (${collectionCount()})`);
+      showFilterBanner(
+        tHtml("filter.collection", {
+          title: `<strong>${escapeHtml(t("collection.empty.eyebrow"))}</strong>`,
+          count: formatNumber(collectionCount()),
+        }),
+      );
       topbarEl.setFilterBannerExportVisible(true);
       renderChips();
       feedEl.render();

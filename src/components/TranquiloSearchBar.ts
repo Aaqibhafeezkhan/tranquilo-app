@@ -20,7 +20,7 @@
 // plain getElementById, including the #didYouMeanBtn app.js's runSearch()
 // creates inside the results line and wires up itself.
 
-import { type FacetField, facetLabel } from "../i18n/index";
+import { type FacetField, facetLabel, t } from "../i18n/index";
 import {
   findDidYouMean,
   isRealArtist,
@@ -64,13 +64,13 @@ const SEARCH_HISTORY_MAX = 8;
 const CLOCK_SVG =
   '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 15.5 14"></polyline></svg>';
 
-const SEARCH_BAR_MARKUP = `
+const searchBarMarkup = () => `
 <div class="search-input-row">
-  <input type="search" id="searchInput" placeholder="Search artist, title, category, era…" autocomplete="off" enterkeyhint="search">
-  <button id="searchSubmit" type="button" aria-label="Run search">
+  <input type="search" id="searchInput" placeholder="${escapeHtml(t("search.placeholder"))}" autocomplete="off" enterkeyhint="search">
+  <button id="searchSubmit" type="button" aria-label="${escapeHtml(t("search.submit"))}">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
   </button>
-  <button id="searchClose" type="button" aria-label="Close search">&times;</button>
+  <button id="searchClose" type="button" aria-label="${escapeHtml(t("search.close"))}">&times;</button>
 </div>
 <div class="search-results-line" id="searchResultsLine" aria-live="polite"></div>
 <div class="search-suggestions" id="searchSuggestions"></div>
@@ -135,7 +135,7 @@ export class TranquiloSearchBar extends HTMLElement {
     this.setAttribute("data-search-bar-mounted", "1");
 
     this.style.display = "none";
-    this.innerHTML = SEARCH_BAR_MARKUP;
+    this.innerHTML = searchBarMarkup();
     this.inputEl = this.requireEl<HTMLInputElement>("#searchInput");
     this.resultsLineEl = this.requireEl<HTMLElement>("#searchResultsLine");
     this.suggestionsEl = this.requireEl<HTMLElement>("#searchSuggestions");
@@ -341,7 +341,7 @@ export class TranquiloSearchBar extends HTMLElement {
   private renderHistoryChips(): void {
     let html = "";
     if (this.history.length > 0) {
-      html += `<div class="search-history-label">Recent searches</div><div class="search-history-chips">${this.history
+      html += `<div class="search-history-label">${escapeHtml(t("search.recent"))}</div><div class="search-history-chips">${this.history
         .map(
           (q) =>
             `<button type="button" class="search-history-chip">${CLOCK_SVG}<span>${escapeHtml(q)}</span></button>`,
@@ -350,7 +350,7 @@ export class TranquiloSearchBar extends HTMLElement {
     }
     const hintTerms = this.buildBrowseHint();
     if (hintTerms.length > 0) {
-      html += `<div class="search-hint-label">Browse by</div><div class="search-hint-chips">${hintTerms
+      html += `<div class="search-hint-label">${escapeHtml(t("search.browseBy"))}</div><div class="search-hint-chips">${hintTerms
         .map(
           (hint) =>
             `<button type="button" class="search-hint-chip"><span>${escapeHtml(

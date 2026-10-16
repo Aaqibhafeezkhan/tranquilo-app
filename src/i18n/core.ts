@@ -101,6 +101,16 @@ export function interpolate(
   );
 }
 
+/** Escapes text for insertion into HTML, attributes included. */
+export function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 /** The plural sibling key for `count` under `locale`'s CLDR rules. */
 export function pluralKey(base: string, count: number, locale: string): string {
   return `${base}.${new Intl.PluralRules(locale).select(count)}`;

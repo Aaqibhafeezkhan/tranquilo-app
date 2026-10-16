@@ -8,6 +8,7 @@
 import { licenseLabel } from "./app/licenseLabels";
 import { sourceLinkLabel, sourceLinkPreposition } from "./app/sourceLinks";
 import { pickRandomErrorArt } from "./data/errorArt";
+import { t } from "./i18n/index";
 
 function escapeHtml(value: string): string {
   return String(value)
@@ -38,16 +39,16 @@ export function renderErrorState(opts: ErrorStateOptions): HTMLElement {
   el.className = "error-state";
   el.innerHTML =
     `<div class="error-frame"><img src="${escapeHtml(art.img)}" alt="${escapeHtml(art.title)}" width="600" height="600"></div>` +
-    `<p class="error-heading">We&rsquo;re having a problem right now, but we&rsquo;ll be back soon.</p>` +
+    `<p class="error-heading">${escapeHtml(t("error.heading"))}</p>` +
     `<p class="error-detail">${escapeHtml(opts.detail)}</p>` +
     `<div class="error-art-caption">` +
     `<h2 class="art-title">${escapeHtml(art.title)}</h2>` +
     `<p class="art-meta"><span class="artist">${escapeHtml(art.artist)}</span><span class="sep">&middot;</span>${escapeHtml(art.date)}</p>` +
     `<div class="d-body">` +
-    `<div class="meta-row"><span class="meta-label">Material</span> ${escapeHtml(art.medium)}</div>` +
-    `<div class="meta-row"><span class="meta-label">Provenance</span> ${escapeHtml(art.credit)}</div>` +
+    `<div class="meta-row"><span class="meta-label">${escapeHtml(t("detail.meta.material"))}</span> ${escapeHtml(art.medium)}</div>` +
+    `<div class="meta-row"><span class="meta-label">${escapeHtml(t("detail.meta.provenance"))}</span> ${escapeHtml(art.credit)}</div>` +
     (licenseText
-      ? `<div class="meta-row"><span class="meta-label">License</span> ${
+      ? `<div class="meta-row"><span class="meta-label">${escapeHtml(t("detail.meta.license"))}</span> ${
           deed
             ? `<a class="meta-license-link" href="${escapeHtml(deed)}" target="_blank" rel="noopener license">${escapeHtml(licenseText)}</a>`
             : escapeHtml(licenseText)
@@ -57,8 +58,8 @@ export function renderErrorState(opts: ErrorStateOptions): HTMLElement {
     `</div>` +
     `</div>` +
     (opts.onRetry
-      ? `<button type="button" class="btn-primary error-retry-btn">Try again</button>`
-      : `<a class="btn-primary error-home-link" href="/">Back to Tranquilo</a>`);
+      ? `<button type="button" class="btn-primary error-retry-btn">${escapeHtml(t("error.retry"))}</button>`
+      : `<a class="btn-primary error-home-link" href="/">${escapeHtml(t("error.home"))}</a>`);
 
   if (opts.onRetry) {
     const retryBtn = el.querySelector(".error-retry-btn") as HTMLButtonElement;

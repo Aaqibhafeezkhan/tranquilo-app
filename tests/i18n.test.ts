@@ -319,4 +319,84 @@ describe("runtime (src/i18n/index.ts)", () => {
     expect(codes).toContain("en");
     for (const l of i18n.shippedLocales()) expect(l.status).toBe("shipped");
   });
+
+  // For sentences that wrap markup around a value ("<strong>3</strong>
+  // results for …"): the translated template is escaped -- translations are
+  // contributed text -- but params are caller-built HTML, inserted as given.
+  // Escaping user input in a param stays the caller's job.
+  describe("tHtml / tnHtml", () => {
+    it("escapes the translated template", async () => {
+      const i18n = await loadWith({});
+      expect(i18n.tHtml("detail.report.image")).toBe(
+        "There&#39;s an issue with image",
+      );
+    });
+
+    it("inserts params as given, so callers can wrap markup", async () => {
+      const i18n = await loadWith({});
+      expect(i18n.tHtml("detail.cast.possibly", { name: "<b>Ana</b>" })).toBe(
+        "Possibly <b>Ana</b>",
+      );
+    });
+
+    it("picks the plural form by count, and lets {count} carry markup", async () => {
+      const i18n = await loadWith({});
+      expect(
+        i18n.tnHtml("topbar.collection.count", 3, {
+          count: "<strong>3</strong>",
+        }),
+      ).toBe("My Collection, <strong>3</strong> items");
+      expect(i18n.tnHtml("topbar.collection.count", 1)).toBe(
+        "My Collection, 1 item",
+      );
+    });
+  });
+
+  // ?lang= is the shareable way into a locale -- including a draft one, so
+  // a preview link can be shared (e.g. with a reviewer) before the language
+  // is public. It's an explicit choice, so it's
+  // remembered like any other.
+  describe("applyLocaleParam (?lang=)", () => {
+    it("opts into a draft locale and remembers it", async () => {
+      const i18n = await loadWith({});
+      expect(i18n.applyLocaleParam("?lang=pt-BR")).toBe(true);
+      expect(i18n.currentLocale()).toBe("pt-BR");
+      expect(store["tranquilo:locale"]).toBe("pt-BR");
+    });
+
+    it("accepts the code case-insensitively", async () => {
+      const i18n = await loadWith({});
+      expect(i18n.applyLocaleParam("?lang=pt-br")).toBe(true);
+      expect(i18n.currentLocale()).toBe("pt-BR");
+    });
+
+    it("switches back to English with ?lang=en", async () => {
+      const i18n = await loadWith({ stored: "pt-BR" });
+      expect(i18n.applyLocaleParam("?lang=en")).toBe(true);
+      expect(i18n.currentLocale()).toBe("en");
+    });
+
+    it("ignores an unknown code instead of throwing -- links get mangled", async () => {
+      const i18n = await loadWith({ stored: "pt-BR" });
+      expect(i18n.applyLocaleParam("?lang=xx")).toBe(false);
+      expect(i18n.currentLocale()).toBe("pt-BR");
+    });
+
+    it("is honoured by the very first lookup, before any startup code runs", async () => {
+      // Components render while modules are still evaluating -- before
+      // app.ts's start() -- so the link must win on first resolution, not
+      // only when something remembers to call applyLocaleParam().
+      vi.stubGlobal("location", { search: "?lang=pt-BR" });
+      const i18n = await loadWith({});
+      expect(i18n.currentLocale()).toBe("pt-BR");
+      expect(store["tranquilo:locale"]).toBe("pt-BR");
+    });
+
+    it("does nothing without the parameter", async () => {
+      const i18n = await loadWith({});
+      expect(i18n.applyLocaleParam("?resetUpsell=1")).toBe(false);
+      expect(i18n.applyLocaleParam("")).toBe(false);
+      expect(i18n.currentLocale()).toBe("en");
+    });
+  });
 });

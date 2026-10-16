@@ -17,7 +17,7 @@
 // escapeHtml/SHARE_SVG are exported for TranquiloStorylineMode.ts, which
 // used to read them as classic-script globals.
 
-import { facetLabel } from "../i18n/index";
+import { facetLabel, t } from "../i18n/index";
 import {
   deriveTint,
   hexToRgb,
@@ -156,7 +156,10 @@ export function createSlideBuilder(
     storyline.items.forEach((si, i) => {
       if (String(si.id) === String(item.id)) idx = i;
     });
-    return `${idx + 1} of ${storyline.items.length}`;
+    return t("slide.position", {
+      index: idx + 1,
+      total: storyline.items.length,
+    });
   }
 
   // Same shape as storylineFor()/storylinePositionLabel() above --
@@ -174,7 +177,10 @@ export function createSlideBuilder(
     setOfWork.items.forEach((member, i) => {
       if (String(member.id) === String(item.id)) idx = i;
     });
-    return `${idx + 1} of ${setOfWork.items.length} in set`;
+    return t("slide.setPosition", {
+      index: idx + 1,
+      total: setOfWork.items.length,
+    });
   }
 
   function itemNeedsNudityGate(item: Item | null | undefined): boolean {
@@ -193,11 +199,8 @@ export function createSlideBuilder(
     const overlay = document.createElement("button");
     overlay.type = "button";
     overlay.className = `nudity-gate-overlay${compact ? " compact" : ""}`;
-    overlay.setAttribute(
-      "aria-label",
-      "This image may contain nudity. Tap to reveal.",
-    );
-    overlay.innerHTML = `${NUDITY_GATE_SVG}<span>May contain nudity<br>Tap to reveal</span>`;
+    overlay.setAttribute("aria-label", t("slide.nudity.label"));
+    overlay.innerHTML = `${NUDITY_GATE_SVG}<span>${escapeHtml(t("slide.nudity.line1"))}<br>${escapeHtml(t("slide.nudity.line2"))}</span>`;
     overlay.addEventListener("click", (e) => {
       e.stopPropagation();
       frame.classList.remove("nudity-gated");
@@ -256,7 +259,7 @@ export function createSlideBuilder(
     function renderFailedUI(): void {
       frame.classList.remove("loading");
       frame.classList.add("failed");
-      skeleton.innerHTML = `${IMAGE_ERROR_SVG}<span>Couldn&rsquo;t load image &mdash; tap to retry</span>`;
+      skeleton.innerHTML = `${IMAGE_ERROR_SVG}<span>${escapeHtml(t("slide.imageError"))}</span>`;
     }
 
     function markFailed(isManualRetry: boolean, reason?: string): void {
@@ -393,7 +396,7 @@ export function createSlideBuilder(
 
     const img = document.createElement("img");
     // No loading="lazy" -- imageVisibilityObserver is the sole gate.
-    img.alt = item.title || "Untitled";
+    img.alt = item.title || t("common.untitled");
     // Width/height attributes (not CSS) give the browser
     // the image's real aspect ratio via its UA stylesheet (`img{
     // aspect-ratio: attr(width) / attr(height) }`), the standard way to
@@ -431,7 +434,7 @@ export function createSlideBuilder(
       // Opens on the display image, already loaded, so the lightbox
       // paints instantly; the host upgrades to lightbox tier in the background.
       const openLightbox = (): void =>
-        host.openLightbox(item.img, item.title || "Untitled", item);
+        host.openLightbox(item.img, item.title || t("common.untitled"), item);
       // Feature-detected, scoped to exactly this thumbnail -> lightbox
       // transition -- not applied anywhere else this
       // frame's img is used. Named only for the duration of the
@@ -461,15 +464,15 @@ export function createSlideBuilder(
 
     caption.innerHTML = `<div class="caption-inner">
 <div class="cat-label">${escapeHtml(facetLabel("category", item.category ?? ""))}</div>
-<h2 class="art-title"><button type="button" class="art-title-btn">${escapeHtml(item.title || "Untitled")}</button></h2>
+<h2 class="art-title"><button type="button" class="art-title-btn">${escapeHtml(item.title || t("common.untitled"))}</button></h2>
 <p class="art-meta">${artistLine}${dateLine}</p>
 <p class="art-medium">${escapeHtml(item.medium || "")}</p>
 ${item.twist_category ? `<p class="twist-hook">${TWIST_SVG}<span>${escapeHtml(item.twist_hook || "")}</span></p>` : ""}
-${storyline ? `<button class="storyline-chip" type="button">${STORYLINE_SVG}<span>Storyline &middot; ${storylinePositionLabel(item, storyline)}</span></button>` : ""}
-${setOfWork ? `<button class="set-of-works-chip" type="button">${SET_OF_WORKS_SVG}<span>${setOfWorkPositionLabel(item, setOfWork)}</span></button>` : ""}
+${storyline ? `<button class="storyline-chip" type="button">${STORYLINE_SVG}<span>${escapeHtml(t("slide.storylineChip", { position: storylinePositionLabel(item, storyline) }))}</span></button>` : ""}
+${setOfWork ? `<button class="set-of-works-chip" type="button">${SET_OF_WORKS_SVG}<span>${escapeHtml(setOfWorkPositionLabel(item, setOfWork))}</span></button>` : ""}
 <div class="caption-actions">
 <button class="btn-collect" type="button">${BOOKMARK_SVG}</button>
-<button class="btn-share" type="button" aria-label="Copy share link">${SHARE_SVG}</button>
+<button class="btn-share" type="button" aria-label="${escapeHtml(t("slide.share"))}">${SHARE_SVG}</button>
 </div>
 </div>`;
 
@@ -502,7 +505,7 @@ ${setOfWork ? `<button class="set-of-works-chip" type="button">${SET_OF_WORKS_SV
       collectBtn.setAttribute("aria-pressed", collected ? "true" : "false");
       collectBtn.setAttribute(
         "aria-label",
-        collected ? "Remove from collection" : "Collect this piece",
+        collected ? t("slide.collect.remove") : t("slide.collect.add"),
       );
     }
     refreshCollectBtn();

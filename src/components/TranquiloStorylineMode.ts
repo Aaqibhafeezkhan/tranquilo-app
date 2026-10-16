@@ -23,6 +23,7 @@
 // Renders into light DOM: every style already lives in css/style.css.
 
 import { escapeHtml, SHARE_SVG } from "../feed/slideBuilder";
+import { t } from "../i18n/index";
 import type { ITranquiloStorylineModeHost } from "../types/ITranquiloStorylineModeHost";
 import type { Item } from "../types/Item";
 import type { Storyline, StorylineChapter } from "../types/Storyline";
@@ -31,16 +32,16 @@ import type { Storyline, StorylineChapter } from "../types/Storyline";
 // pointing device -- the track is overflow-x:auto with its scrollbar
 // hidden, so a mouse has no scrollbar or gesture. Hidden under
 // (pointer: coarse) in CSS, where the swipe is the affordance instead.
-const STORYLINE_MARKUP = `
+const storylineMarkup = () => `
 <div class="storyline-header">
   <div class="storyline-header-title" id="storylineHeaderTitle"></div>
-  <button class="storyline-close" id="storylineClose" type="button" aria-label="Close storyline">&times;</button>
+  <button class="storyline-close" id="storylineClose" type="button" aria-label="${escapeHtml(t("storyline.close"))}">&times;</button>
 </div>
 <div class="storyline-track" id="storylineTrack"></div>
 <button class="storyline-nav storyline-nav-prev" type="button"
-        data-storyline-nav="prev" aria-label="Previous page" disabled>&#8249;</button>
+        data-storyline-nav="prev" aria-label="${escapeHtml(t("storyline.prev"))}" disabled>&#8249;</button>
 <button class="storyline-nav storyline-nav-next" type="button"
-        data-storyline-nav="next" aria-label="Next page">&#8250;</button>
+        data-storyline-nav="next" aria-label="${escapeHtml(t("storyline.next"))}">&#8250;</button>
 <div class="storyline-timeline" id="storylineTimeline"></div>
 `;
 
@@ -95,7 +96,7 @@ export class TranquiloStorylineMode extends HTMLElement {
   // is one, clearing it once the track arrives.
   private navTarget: number | null = null;
 
-  // Throws a clear error instead of a silent null if STORYLINE_MARKUP and
+  // Throws a clear error instead of a silent null if storylineMarkup() and
   // a selector below ever drift apart.
   private requireEl<T extends Element>(selector: string): T {
     const el = this.querySelector<T>(selector);
@@ -118,7 +119,7 @@ export class TranquiloStorylineMode extends HTMLElement {
     if (this.getAttribute("data-storyline-mode-mounted") === "1") return;
     this.setAttribute("data-storyline-mode-mounted", "1");
 
-    this.innerHTML = STORYLINE_MARKUP;
+    this.innerHTML = storylineMarkup();
     this.headerTitleEl = this.requireEl("#storylineHeaderTitle");
     this.closeBtn = this.requireEl<HTMLButtonElement>("#storylineClose");
     this.trackEl = this.requireEl("#storylineTrack");
@@ -186,8 +187,8 @@ export class TranquiloStorylineMode extends HTMLElement {
     // contributes to textContent and would leave the wrong instruction
     // readable to assistive tech.
     return this.hasFinePointer()
-      ? "Use the arrows to begin →"
-      : "Swipe to begin →";
+      ? t("storyline.hint.arrows")
+      : t("storyline.hint.swipe");
   }
 
   private buildIntroPage(storyline: Storyline): HTMLElement {
@@ -214,9 +215,9 @@ export class TranquiloStorylineMode extends HTMLElement {
       // whole, and repeating it per chapter would be ambiguous between
       // the story and the artwork on screen.
       `<div class="caption-actions storyline-intro-actions">` +
-      `<button class="btn-share" type="button" aria-label="Copy link to this storyline">${SHARE_SVG}</button>` +
+      `<button class="btn-share" type="button" aria-label="${escapeHtml(t("storyline.share"))}">${SHARE_SVG}</button>` +
       `</div>` +
-      `<div class="storyline-intro-hint">${this.beginHintText()}</div>`;
+      `<div class="storyline-intro-hint">${escapeHtml(this.beginHintText())}</div>`;
     const introStack = page.querySelector<HTMLElement>(
       ".storyline-intro-stack",
     );
@@ -242,9 +243,9 @@ export class TranquiloStorylineMode extends HTMLElement {
     // Both the title and the artwork are routes out to more about it,
     // without losing the story.
     page.innerHTML =
-      `<div class="storyline-chapter-frame"><img src="${item.img}" alt="${escapeHtml(item.title || "Untitled")}"></div>` +
-      `<div class="storyline-chapter-meta">Chapter ${storyItem.position} of ${storyline.items.length} &middot; ` +
-      `<button type="button" class="storyline-chapter-title">${escapeHtml(item.title || "Untitled")}</button></div>` +
+      `<div class="storyline-chapter-frame"><img src="${item.img}" alt="${escapeHtml(item.title || t("common.untitled"))}"></div>` +
+      `<div class="storyline-chapter-meta">${escapeHtml(t("storyline.chapterOf", { index: storyItem.position, total: storyline.items.length }))} &middot; ` +
+      `<button type="button" class="storyline-chapter-title">${escapeHtml(item.title || t("common.untitled"))}</button></div>` +
       `<p class="storyline-chapter-caption">${escapeHtml(storyItem.chapter_caption)}</p>`;
     // Always rendered together by the template above, so guaranteed present.
     const frame = page.querySelector(".storyline-chapter-frame") as HTMLElement;
@@ -267,7 +268,7 @@ export class TranquiloStorylineMode extends HTMLElement {
     const frameImg = frame.querySelector("img") as HTMLImageElement;
     frameImg.addEventListener("click", () => {
       if (frame.classList.contains("nudity-gated")) return;
-      host.openLightbox(item.img, item.title || "Untitled", item);
+      host.openLightbox(item.img, item.title || t("common.untitled"), item);
     });
     return page;
   }
@@ -305,7 +306,10 @@ export class TranquiloStorylineMode extends HTMLElement {
       dot.type = "button";
       dot.className = "storyline-dot";
       dot.dataset.position = String(storyItem.position);
-      dot.setAttribute("aria-label", `Go to chapter ${storyItem.position}`);
+      dot.setAttribute(
+        "aria-label",
+        t("storyline.goToChapter", { index: storyItem.position }),
+      );
       dot.addEventListener("click", () => {
         const target = this.trackEl.querySelector<HTMLElement>(
           `.storyline-chapter-page[data-storyline-position="${storyItem.position}"]`,

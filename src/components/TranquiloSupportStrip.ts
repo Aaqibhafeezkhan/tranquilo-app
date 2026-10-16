@@ -21,6 +21,7 @@
  * needs Vercel Pro -- a deliberate omission, not an oversight.
  */
 
+import { type MessageKey, t } from "../i18n/index";
 import { on } from "../utils/on";
 
 interface DonateTier {
@@ -30,7 +31,8 @@ interface DonateTier {
 }
 
 interface DonateConfig {
-  once: { url: string; note: string };
+  // noteKey: the one-off link's label, a src/i18n key.
+  once: { url: string; noteKey: MessageKey };
   monthly: DonateTier[];
 }
 
@@ -60,7 +62,7 @@ const DONATE: DonateConfig = {
     url: "https://buy.stripe.com/8x2fZg5djcaY7iUbNY9ws02",
     // "Customer chooses price" can't be recurring, a Stripe limitation --
     // hence fixed tiers for the monthly options below.
-    note: "Choose your own amount",
+    noteKey: "support.once.note",
   },
   monthly: [
     {
@@ -122,19 +124,20 @@ function escapeHtml(str: unknown): string {
     .replace(/'/g, "&#39;");
 }
 
-const STRIP_LINE = "Tranquilo runs on direct support, not ads.";
+// Text comes from src/i18n; looked up at render time, escaped on the way in.
+const stripLine = () => t("support.strip.line");
 
 function brokenStripHtml(problem: string): string {
   console.error(
     `[support] ${problem} -- donation disabled. See src/components/TranquiloSupportStrip.ts DONATE.`,
   );
-  return `<p class="support-strip-line">${escapeHtml(STRIP_LINE)}</p>
-<p class="support-strip-note">Donations are briefly unavailable. Thank you for wanting to &mdash; please try again shortly.</p>`;
+  return `<p class="support-strip-line">${escapeHtml(stripLine())}</p>
+<p class="support-strip-note">${escapeHtml(t("support.strip.unavailable"))}</p>`;
 }
 
 function comingSoonStripHtml(): string {
-  return `<p class="support-strip-line">${escapeHtml(STRIP_LINE)}</p>
-<p class="support-strip-soon">Donations open soon.</p>`;
+  return `<p class="support-strip-line">${escapeHtml(stripLine())}</p>
+<p class="support-strip-soon">${escapeHtml(t("support.strip.soon"))}</p>`;
 }
 
 function stripHtml(withLine: boolean): string {
@@ -142,7 +145,7 @@ function stripHtml(withLine: boolean): string {
   // only when genuinely live, since a disabled button asking for money
   // is worse than no button.
   const line = withLine
-    ? `<p class="support-strip-line">${escapeHtml(STRIP_LINE)}</p>`
+    ? `<p class="support-strip-line">${escapeHtml(stripLine())}</p>`
     : "";
   return `${line}<div class="support-strip-actions">
 <button type="button" class="btn btn-primary support-donate-btn" data-support-open aria-haspopup="dialog">
@@ -151,31 +154,31 @@ function stripHtml(withLine: boolean): string {
 <rect x="2" y="5" width="20" height="14" rx="2"></rect>
 <line x1="2" y1="10" x2="22" y2="10"></line>
 </svg>
-</span>Donate</button>
+</span>${escapeHtml(t("support.strip.donate"))}</button>
 </div>`;
 }
 
 function dialogHtml(): string {
   const tiers = DONATE.monthly
     .map(
-      (t) =>
-        `<a class="support-tier" href="${escapeHtml(t.url)}" target="_blank" rel="noopener"><span class="support-tier-amount">R$${t.brl}</span><span class="support-tier-sub">per month</span></a>`,
+      (tier) =>
+        `<a class="support-tier" href="${escapeHtml(tier.url)}" target="_blank" rel="noopener"><span class="support-tier-amount">R$${tier.brl}</span><span class="support-tier-sub">${escapeHtml(t("support.dialog.perMonth"))}</span></a>`,
     )
     .join("");
 
   return `<div class="support-dialog-inner" role="document">
-<button type="button" class="support-dialog-close" data-support-close aria-label="Close">&times;</button>
-<h2 id="supportDialogTitle" class="support-dialog-title">Support Tranquilo</h2>
-<p class="support-dialog-body">Every contribution goes to hosting and the quiet cost of keeping this running.</p>
+<button type="button" class="support-dialog-close" data-support-close aria-label="${escapeHtml(t("support.dialog.close"))}">&times;</button>
+<h2 id="supportDialogTitle" class="support-dialog-title">${escapeHtml(t("support.dialog.title"))}</h2>
+<p class="support-dialog-body">${escapeHtml(t("support.dialog.body"))}</p>
 <div class="support-group">
-<h3 class="support-group-label">Give once</h3>
-<a class="support-once" href="${escapeHtml(DONATE.once.url)}" target="_blank" rel="noopener">${escapeHtml(DONATE.once.note)}<span class="link-arrow" aria-hidden="true">&rarr;</span></a>
+<h3 class="support-group-label">${escapeHtml(t("support.dialog.once"))}</h3>
+<a class="support-once" href="${escapeHtml(DONATE.once.url)}" target="_blank" rel="noopener">${escapeHtml(t(DONATE.once.noteKey))}<span class="link-arrow" aria-hidden="true">&rarr;</span></a>
 </div>
 <div class="support-group">
-<h3 class="support-group-label">Give monthly</h3>
+<h3 class="support-group-label">${escapeHtml(t("support.dialog.monthly"))}</h3>
 <div class="support-tiers">${tiers}</div>
 </div>
-<p class="support-dialog-note">Payment is handled by Stripe &mdash; Tranquilo never sees your card details. Amounts are shown in your own currency at checkout.</p>
+<p class="support-dialog-note">${escapeHtml(t("support.dialog.note"))}</p>
 </div>`;
 }
 
@@ -268,7 +271,9 @@ customElements.define("tranquilo-support-strip", TranquiloSupportStrip);
 const TranquiloSupport = {
   DONATE,
   COMING_SOON,
-  STRIP_LINE,
+  get STRIP_LINE() {
+    return stripLine();
+  },
   allLinks,
   isTestLink,
   isProductionHost,

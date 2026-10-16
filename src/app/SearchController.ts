@@ -1,3 +1,4 @@
+import { formatNumber, tHtml, tnHtml } from "../i18n/index";
 import { matchConcept } from "../logic/logic";
 
 export interface ActiveConcept {
@@ -132,14 +133,17 @@ export class SearchController {
   private activeSearchLabel(): string {
     const concept = this.host.getActiveConcept();
     if (concept) {
-      return `Showing pieces related to “${this.host.escapeHtml(concept.label)}”`;
+      return tHtml("search.related", {
+        concept: this.host.escapeHtml(concept.label),
+      });
     }
     const search = this.host.getActiveSearch();
     if (search) {
       const count = this.host.getSearchResultCount();
-      return `<strong>${count}</strong> ${
-        count === 1 ? "result" : "results"
-      } for “${this.host.escapeHtml(search)}”`;
+      return tnHtml("search.results", count, {
+        count: `<strong>${formatNumber(count)}</strong>`,
+        query: this.host.escapeHtml(search),
+      });
     }
     return "";
   }
@@ -255,7 +259,9 @@ export class SearchController {
     this.host.setActiveConcept(null);
     this.host.setActiveCategory("All");
     this.host.hideFilterBanner();
-    this.host.setResultsLine(`No results for “${this.host.escapeHtml(q)}.”`);
+    this.host.setResultsLine(
+      tHtml("search.noResults", { query: this.host.escapeHtml(q) }),
+    );
     this.host.renderChips();
     this.host.renderFeed();
   }
@@ -316,10 +322,12 @@ export class SearchController {
       // feed underneath is unfiltered, so no banner should claim it is.
       this.host.hideFilterBanner();
       this.host.setResultsLine(
-        `No results for “${this.host.escapeHtml(q)}.” Did you mean ` +
-          `<button type="button" class="did-you-mean-link" id="didYouMeanBtn">${this.host.escapeHtml(
+        tHtml("search.didYouMean", {
+          query: this.host.escapeHtml(q),
+          suggestion: `<button type="button" class="did-you-mean-link" id="didYouMeanBtn">${this.host.escapeHtml(
             correction,
-          )}</button>?`,
+          )}</button>`,
+        }),
       );
       const dymBtn = document.getElementById("didYouMeanBtn");
       if (dymBtn) {

@@ -19,8 +19,180 @@ export const en = {
   "upsell.cta": "Join the waitlist",
   "upsell.dismiss": "Dismiss",
 
-  // Category chip row: the reset chip. Its filter value stays "All".
+  // Intro slide (src/feed/introSlides.ts). {works} is a rounded count like
+  // "10k+"; {count} is the number of sources.
+  "intro.heading": "A calmer way to scroll.",
+  "intro.tagline.one":
+    "Enjoy calm scrolling with {works} public-domain works across {count} source.",
+  "intro.tagline.other":
+    "Enjoy calm scrolling with {works} public-domain works across {count} sources.",
+  "intro.mission.title": "Mission",
+  "intro.mission.body": "Open source & ad‑free.",
+  "intro.mission.cta": "Get involved",
+  "intro.connect.title": "Connect",
+  "intro.connect.body": "Monthly curated art.",
+  "intro.connect.cta": "Subscribe",
+  "intro.support.title": "Support",
+  "intro.support.body": "Sustained by community.",
+  "intro.support.cta": "Give",
+
+  // My Collection's empty slide. A newline in the title is a line break.
+  "collection.empty.eyebrow": "My Collection",
+  "collection.empty.title": "Nothing collected\nyet.",
+  "collection.empty.body": "Tap the bookmark on any piece to start.",
+
+  // Shared across components.
+  "common.untitled": "Untitled",
+
+  // Feed slides (src/feed/slideBuilder.ts).
+  "slide.nudity.label": "This image may contain nudity. Tap to reveal.",
+  "slide.nudity.line1": "May contain nudity",
+  "slide.nudity.line2": "Tap to reveal",
+  "slide.imageError": "Couldn’t load image — tap to retry",
+  // {position} is slide.position, e.g. "3 of 13".
+  "slide.storylineChip": "Storyline · {position}",
+  "slide.position": "{index} of {total}",
+  "slide.setPosition": "{index} of {total} in set",
+  "slide.share": "Copy share link",
+  "slide.collect.add": "Collect this piece",
+  "slide.collect.remove": "Remove from collection",
+
+  // <tranquilo-detail-modal>. The AI-disclosure note is deliberately NOT
+  // here: it's fixed, approved wording (tests/ai-disclosure-static.test.ts)
+  // and needs its own approved translation before it can vary by language.
+  "detail.close": "Close",
+  "detail.shelfPrev": "Previous in this shelf",
+  "detail.shelfNext": "Next in this shelf",
+  "detail.source": "Source",
+  // aria-label on a caption source icon; {host} is e.g. "metmuseum.org".
+  "detail.sourceHost": "Source: {host}",
+  "detail.sources": "Sources",
+  "detail.twist": "The Twist",
+  "detail.cast.title": "Meet the Cast",
+  "detail.cast.possibly": "Possibly {name}",
+  "detail.cast.noDetail": "No verified detail available yet.",
+  "detail.fact.didYouKnow": "Did you know?",
+  "detail.fact.basic": "Basic Information",
+  "detail.meta.artist": "Artist",
+  "detail.meta.created": "Created",
+  "detail.meta.material": "Material",
+  "detail.meta.artistOrigin": "Artist origin",
+  "detail.meta.objectOrigin": "Object origin",
+  "detail.meta.origin": "Origin",
+  "detail.meta.culture": "Culture",
+  "detail.meta.photographDate": "Date of photograph",
+  "detail.meta.provenance": "Provenance",
+  "detail.meta.tagged": "Tagged",
+  "detail.meta.license": "License",
+  "detail.report.button": "Report a problem",
+  "detail.report.image": "There's an issue with image",
+  "detail.report.content": "There's an issue with content",
+  "detail.report.technical": "I'm having a technical issue (broken link)",
+  "detail.report.more": "Tell us more",
+  "detail.report.commentPlaceholder": "Anything else? (optional)",
+  "detail.report.send": "Send",
+  "detail.report.thanks":
+    "Thanks, your feedback has been sent. We'll take a look.",
+
+  // Search panel and results lines. Strings with {query}/{suggestion}/
+  // {count} are rendered with tHtml/tnHtml: the values carry markup.
+  "search.placeholder": "Search artist, title, category, era…",
+  "search.submit": "Run search",
+  "search.close": "Close search",
+  "search.recent": "Recent searches",
+  "search.browseBy": "Browse by",
+  "search.related": "Showing pieces related to “{concept}”",
+  "search.results.one": "{count} result for “{query}”",
+  "search.results.other": "{count} results for “{query}”",
+  "search.noResults": "No results for “{query}.”",
+  "search.didYouMean": "No results for “{query}.” Did you mean {suggestion}?",
+
+  // Filter banner under the top bar.
+  "filter.moreBy": "More by {artist}",
+  "filter.collection": "{title} ({count})",
+  "collection.toast.empty": "Nothing collected yet",
+
+  "share.copied": "Link copied",
+  "share.failed": "Couldn't copy link",
+
+  // Shown when the catalogue fails to load (src/errorState.ts).
+  "error.heading": "We’re having a problem right now, but we’ll be back soon.",
+  "error.retry": "Try again",
+  "error.home": "Back to Tranquilo",
+
+  // <tranquilo-support-strip> and its donation dialog.
+  "support.strip.line": "Tranquilo runs on direct support, not ads.",
+  "support.strip.unavailable":
+    "Donations are briefly unavailable. Thank you for wanting to — please try again shortly.",
+  "support.strip.soon": "Donations open soon.",
+  "support.strip.donate": "Donate",
+  "support.dialog.close": "Close",
+  "support.dialog.title": "Support Tranquilo",
+  "support.dialog.body":
+    "Every contribution goes to hosting and the quiet cost of keeping this running.",
+  "support.dialog.once": "Give once",
+  "support.dialog.monthly": "Give monthly",
+  "support.dialog.perMonth": "per month",
+  "support.dialog.note":
+    "Payment is handled by Stripe — Tranquilo never sees your card details. Amounts are shown in your own currency at checkout.",
+  "support.once.note": "Choose your own amount",
+
+  // Discover (shelves) mode.
+  "shelves.home": "Tranquilo, back to the homepage",
+  "shelves.title": "Discover",
+  "shelves.close": "Close discover",
+  "shelves.storylines.title": "Storylines",
+  "shelves.storylines.subtitle": "Curated stories behind the art",
+  "shelves.moods.title": "Shelves, Curated by Hand",
+  "shelves.moods.subtitle": "Pick a mood and enjoy",
+
+  // Storyline mode.
+  "storyline.close": "Close storyline",
+  "storyline.prev": "Previous page",
+  "storyline.next": "Next page",
+  "storyline.hint.arrows": "Use the arrows to begin →",
+  "storyline.hint.swipe": "Swipe to begin →",
+  "storyline.share": "Copy link to this storyline",
+  "storyline.chapterOf": "Chapter {index} of {total}",
+  "storyline.goToChapter": "Go to chapter {index}",
+
+  "setOfWorks.details": "View details",
+
+  // Collection export confirmation.
+  "export.title": "Your CSV is downloading",
+  "export.body":
+    "Syncing across devices, organized lists, and sharing are part of Pro, still taking shape.",
+
+  // Lightbox. {institution} is the source's display name.
+  "lightbox.loading": "Loading full resolution…",
+  "lightbox.sourceRecord": "Source record at {institution}",
+  "lightbox.fullResolution": "Full resolution at {institution}",
+
+  // <tranquilo-topbar>
+  "topbar.shareBanner.text": "Tranquilo is open source and volunteer-run.",
+  "topbar.shareBanner.newsletter": "Get newsletter",
+  "topbar.shareBanner.involved": "Get involved",
+  "topbar.shareBanner.dismiss": "Dismiss",
+  "topbar.home": "Tranquilo, back to the top",
+  "topbar.music": "Toggle music",
+  "topbar.search": "Search",
+  "topbar.discover": "Discover shelves",
+  "topbar.collection.label": "My Collection",
+  // Screen-reader label for the bookmark button; {count} saved items.
+  "topbar.collection.empty": "My Collection, empty",
+  "topbar.collection.count.one": "My Collection, {count} item",
+  "topbar.collection.count.other": "My Collection, {count} items",
+  "topbar.filter.export": "Export",
+  "topbar.filter.clear": "Show all",
+  // Artist card shown above search results for an artist.
+  "artistCard.wikipedia": "Read more on Wikipedia",
+  "artistCard.wikidata": "View on Wikidata",
+
+  // Category chip row: the reset chip (its filter value stays "All"), the
+  // Storyline toggle, and the overflow menu button.
   "chips.all": "All",
+  "chips.storyline": "Storyline",
+  "chips.more": "More",
 
   // Display labels for controlled-vocabulary values, keyed by facetKey()
   // (src/i18n/facets.ts) and rendered with facetLabel(). Every term in

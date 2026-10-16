@@ -22,6 +22,7 @@
 // once bundled. This gives the real, current URL either way.
 import tranquiloFlowerVioletUrl from "../../assets/tranquilo-flower-violet.svg";
 import { ShelfType } from "../enums/ShelfType";
+import { t } from "../i18n/index";
 import { shelfRenderLimit } from "../logic/logic";
 import type { ITranquiloShelvesModeHost } from "../types/ITranquiloShelvesModeHost";
 import type { Item } from "../types/Item";
@@ -35,15 +36,15 @@ import { on } from "../utils/on";
 // heading beside it is deliberately outside the anchor, since the title
 // of the page you're on shouldn't read as a way to leave it -- so the
 // anchor needs its own aria-label or it announces as nothing.
-const SHELVES_MARKUP = `
+const shelvesMarkup = () => `
 <div class="shelves-header">
   <div class="shelves-header-brand">
-    <a class="shelves-mark-link" href="/" aria-label="Tranquilo, back to the homepage">
+    <a class="shelves-mark-link" href="/" aria-label="${escapeHtml(t("shelves.home"))}">
       <img class="shelves-mark" src="${tranquiloFlowerVioletUrl}" alt="" aria-hidden="true" width="26" height="36">
     </a>
-    <h2 class="shelves-header-title">Discover</h2>
+    <h2 class="shelves-header-title">${escapeHtml(t("shelves.title"))}</h2>
   </div>
-  <button class="shelves-close" id="shelvesClose" type="button" aria-label="Close discover">&times;</button>
+  <button class="shelves-close" id="shelvesClose" type="button" aria-label="${escapeHtml(t("shelves.close"))}">&times;</button>
 </div>
 <div class="shelves-body" id="shelvesBody"></div>
 `;
@@ -100,7 +101,7 @@ export class TranquiloShelvesMode extends HTMLElement {
     if (this.getAttribute("data-shelves-mode-mounted") === "1") return;
     this.setAttribute("data-shelves-mode-mounted", "1");
 
-    this.innerHTML = SHELVES_MARKUP;
+    this.innerHTML = shelvesMarkup();
     this.closeBtn = this.requireEl<HTMLButtonElement>("#shelvesClose");
     this.bodyEl = this.requireEl("#shelvesBody");
 
@@ -289,8 +290,12 @@ export class TranquiloShelvesMode extends HTMLElement {
             budget--;
           });
         };
-        section("Storylines", "Curated stories behind the art", storyline);
-        section("Shelves, Curated by Hand", "Pick a mood and enjoy", moods);
+        section(
+          t("shelves.storylines.title"),
+          t("shelves.storylines.subtitle"),
+          storyline,
+        );
+        section(t("shelves.moods.title"), t("shelves.moods.subtitle"), moods);
       })
       .catch((err) => {
         console.error("items: shelves failed to render", err);

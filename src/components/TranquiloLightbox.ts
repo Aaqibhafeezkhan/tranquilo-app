@@ -16,18 +16,19 @@
 //
 // Renders into light DOM: every style already lives in css/style.css.
 
-import type { ImageState } from "../feed/slideBuilder";
+import { escapeHtml, type ImageState } from "../feed/slideBuilder";
+import { t } from "../i18n/index";
 import type { ITranquiloLightboxHost } from "../types/ITranquiloLightboxHost";
 import type { Item } from "../types/Item";
 import { on } from "../utils/on";
 
-const LIGHTBOX_MARKUP = `
-<button class="lightbox-close" id="lightboxClose" aria-label="Close">&times;</button>
+const lightboxMarkup = () => `
+<button class="lightbox-close" id="lightboxClose" aria-label="${escapeHtml(t("detail.close"))}">&times;</button>
 <div class="art-skeleton" id="lightboxSkeleton"></div>
 <img id="lightboxImg" src="" alt="">
 <div class="lightbox-upgrading" aria-live="polite">
   <span class="lightbox-spinner" aria-hidden="true"></span>
-  <span>Loading full resolution&hellip;</span>
+  <span>${escapeHtml(t("lightbox.loading"))}</span>
 </div>
 <a class="lightbox-source-link source-link" id="lightboxSourceLink" href=""
    target="_blank" rel="noopener" hidden><span class="link-text"></span><span
@@ -84,7 +85,7 @@ export class TranquiloLightbox extends HTMLElement {
   private lastTapInfo: { time: number; x: number; y: number } | null = null;
   private momentumFrame: number | null = null;
 
-  // Throws a clear error instead of a silent null if LIGHTBOX_MARKUP and a
+  // Throws a clear error instead of a silent null if lightboxMarkup() and a
   // selector below ever drift apart.
   private requireEl<T extends Element>(selector: string): T {
     const el = this.querySelector<T>(selector);
@@ -107,7 +108,7 @@ export class TranquiloLightbox extends HTMLElement {
     if (this.getAttribute("data-lightbox-mounted") === "1") return;
     this.setAttribute("data-lightbox-mounted", "1");
 
-    this.innerHTML = LIGHTBOX_MARKUP;
+    this.innerHTML = lightboxMarkup();
     this.imgEl = this.requireEl<HTMLImageElement>("#lightboxImg");
     this.skeletonEl = this.requireEl<HTMLElement>("#lightboxSkeleton");
     this.sourceLinkEl = this.requireEl<HTMLAnchorElement>(
@@ -153,8 +154,10 @@ export class TranquiloLightbox extends HTMLElement {
     }
     const host = this.requireApp();
     const copy = host.isAggregatorSource(item)
-      ? `Source record at ${host.sourceLinkLabel(item)}`
-      : `Full resolution at ${host.sourceLinkLabel(item)}`;
+      ? t("lightbox.sourceRecord", { institution: host.sourceLinkLabel(item) })
+      : t("lightbox.fullResolution", {
+          institution: host.sourceLinkLabel(item),
+        });
     this.sourceLinkEl.href = href;
     const linkText = this.sourceLinkEl.querySelector(".link-text");
     if (linkText) linkText.textContent = copy;
