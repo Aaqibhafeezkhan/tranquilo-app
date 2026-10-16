@@ -6,7 +6,8 @@
 // under their "New Contacts Experience" -- a contact can belong to zero
 // or more Audiences, with custom `properties` at the contact level. A
 // Resend Segment filtering on `source` can target any cohort for a
-// Broadcast.
+// Broadcast. A `locale` property records the language the signup was made
+// in (lib/request-locale.ts), so a later newsletter can match it.
 //
 // Required env var: RESEND_API_KEY (shared with api/submit-collection.ts).
 
@@ -14,6 +15,7 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 
 import { isValidEmail } from "../lib/is-valid-email.ts";
 import { redactEmails } from "../lib/redact.ts";
+import { requestLocale } from "../lib/request-locale.ts";
 import { reportError, reportProblem } from "../lib/sentry.ts";
 
 const VALID_SOURCES: Record<string, boolean> = {
@@ -27,22 +29,22 @@ const VALID_SOURCES: Record<string, boolean> = {
 // can set one, or it 422s ("One or more properties do not exist"). This
 // creates the property on first encounter and retries, self-healing
 // rather than needing a manual dashboard step.
-function createSourceProperty(apiKey: string) {
+function createStringProperty(apiKey: string, key: string) {
   return fetch("https://api.resend.com/contact-properties", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ key: "source", type: "string" }),
+    body: JSON.stringify({ key, type: "string" }),
   });
 }
 
 // Resend's create-contact silently upserts, REPLACING `properties`
 // wholesale rather than merging -- so this reads the contact's current
-// source value first (a 404 is expected for a first-time signup) and
-// folds the new source into a comma-separated set instead of
-// overwriting a prior signup's tag.
+// properties first (a 404 is expected for a first-time signup), folds the
+// new source into a comma-separated set instead of overwriting a prior
+// signup's tag, and keeps a stored locale when this signup sent none.
 function getContact(apiKey: string, email: string) {
   return fetch(`https://api.resend.com/contacts/${encodeURIComponent(email)}`, {
     method: "GET",
@@ -50,7 +52,7 @@ function getContact(apiKey: string, email: string) {
   });
 }
 
-// GET /contacts/{email} doesn't return properties.source as a plain
+// GET /contacts/{email} doesn't return a property as a plain
 // string the way create-contact accepts one -- handles both a plain
 // string and an object wrapper, falling back to "no history" (safe) if
 // neither shape matches.
@@ -61,14 +63,19 @@ function extractPropertyStringValue(raw: any): string | null {
   return null;
 }
 
-async function mergedSourceValue(
+async function mergedProperties(
   apiKey: string,
   email: string,
   newSource: string,
-): Promise<string> {
+  newLocale: string | null,
+): Promise<Record<string, string>> {
+  const merged: Record<string, string> = { source: newSource };
+  if (newLocale) merged.locale = newLocale;
+
   const getRes = await getContact(apiKey, email);
-  if (!getRes.ok) return newSource;
+  if (!getRes.ok) return merged;
   const data = await getRes.json();
+
   const rawExisting = data?.properties?.source;
   const existing = extractPropertyStringValue(rawExisting);
   if (rawExisting && existing === null) {
@@ -77,18 +84,31 @@ async function mergedSourceValue(
       JSON.stringify(rawExisting),
     );
   }
-  if (!existing) return newSource;
-  const set = existing
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean);
-  if (set.indexOf(newSource) === -1) {
-    set.push(newSource);
+  if (existing) {
+    const set = existing
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    if (set.indexOf(newSource) === -1) {
+      set.push(newSource);
+    }
+    merged.source = set.join(",");
   }
-  return set.join(",");
+
+  if (!newLocale) {
+    const storedLocale = requestLocale(
+      extractPropertyStringValue(data?.properties?.locale),
+    );
+    if (storedLocale) merged.locale = storedLocale;
+  }
+  return merged;
 }
 
-function createContact(apiKey: string, email: string, source: string) {
+function createContact(
+  apiKey: string,
+  email: string,
+  properties: Record<string, string>,
+) {
   return fetch("https://api.resend.com/contacts", {
     method: "POST",
     headers: {
@@ -98,7 +118,7 @@ function createContact(apiKey: string, email: string, source: string) {
     body: JSON.stringify({
       email: email,
       unsubscribed: false,
-      properties: { source: source },
+      properties,
     }),
   });
 }
@@ -114,6 +134,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const body = req.body || {};
   const email = body.email;
   const source = body.source;
+  const locale = requestLocale(body.locale);
 
   if (!isValidEmail(email)) {
     res.statusCode = 400;
@@ -145,10 +166,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  let mergedSource: any, resendRes: any, errBody: any;
+  let properties: Record<string, string>, resendRes: any, errBody: any;
   try {
-    mergedSource = await mergedSourceValue(apiKey, email, source);
-    resendRes = await createContact(apiKey, email, mergedSource);
+    properties = await mergedProperties(apiKey, email, source, locale);
+    resendRes = await createContact(apiKey, email, properties);
 
     if (!resendRes.ok) {
       errBody = await resendRes.text();
@@ -157,8 +178,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         resendRes.status === 422 &&
         /properties do not exist/i.test(errBody)
       ) {
-        await createSourceProperty(apiKey);
-        resendRes = await createContact(apiKey, email, mergedSource);
+        // Creating a property that already exists is harmless, so create
+        // every one this contact carries rather than parse which was missing.
+        for (const key of Object.keys(properties)) {
+          await createStringProperty(apiKey, key);
+        }
+        resendRes = await createContact(apiKey, email, properties);
         if (!resendRes.ok) {
           errBody = await resendRes.text();
           console.error(

@@ -1,4 +1,5 @@
 // pages/feedback.html's bug report / feedback form.
+import { currentLocale } from "../i18n/index";
 import {
   isNonEmpty,
   isValidEmail,
@@ -66,6 +67,7 @@ form.addEventListener("submit", (e) => {
       message: messageEl.value.trim(),
       context: contextEl.value.trim(),
       email: emailValue,
+      locale: currentLocale(),
     }),
   })
     .then((res) => {

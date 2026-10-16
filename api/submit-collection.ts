@@ -1,11 +1,13 @@
 // Form submissions via Resend email. Handles collection, feedback, and report forms
-// distinguished by body.kind (absent kind = collection).
+// distinguished by body.kind (absent kind = collection). Each email names the
+// language the form was sent in, so a reply can be written in it.
 // Requires RESEND_API_KEY and SUBMIT_NOTIFY_EMAIL.
 
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { escapeHtml } from "../lib/html-escape.ts";
 import { isValidEmail } from "../lib/is-valid-email.ts";
 import { redactEmails } from "../lib/redact.ts";
+import { requestLocale } from "../lib/request-locale.ts";
 import { reportError, reportProblem } from "../lib/sentry.ts";
 
 const REQUIRED_FIELDS = [
@@ -17,6 +19,11 @@ const REQUIRED_FIELDS = [
   "licenseVerificationLink",
   "description",
 ];
+
+// Registered locale or "(not given)" -- never the raw request value.
+function languageLine(body: any): string {
+  return requestLocale(body.locale) || "(not given)";
+}
 
 // Shared by both forms: build the email, send it, map Resend's failure onto a
 // response. Everything above the call is per-form.
@@ -182,6 +189,7 @@ async function handleFeedback(
       ["Message", body.message],
       ["Where", (body.context && String(body.context).trim()) || "(not given)"],
       ["Reply to", email || "(anonymous — no reply possible)"],
+      ["Language", languageLine(body)],
       [
         "Next step",
         "Log in Signals. Promote to an issue only once corroborated.",
@@ -257,14 +265,16 @@ async function handleReport(
     ? categories.join(", ")
     : "(no category selected)";
   const commentLine = comment || "No comment provided";
+  const language = languageLine(body);
 
   await sendNotification(res, {
     subject: `User content report ${reportTimestamp()}`,
     replyTo: null,
-    text: `A user made a report at: ${itemUrl}\nReport: ${reportLine}\nComment: ${commentLine}`,
+    text: `A user made a report at: ${itemUrl}\nReport: ${reportLine}\nComment: ${commentLine}\nLanguage: ${language}`,
     html: `<p>A user made a report at: <a href="${escapeHtml(itemUrl)}">${escapeHtml(itemUrl)}</a></p>
 <p>Report: ${escapeHtml(reportLine)}</p>
-<p>Comment: ${escapeHtml(commentLine).replace(/\n/g, "<br>")}</p>`,
+<p>Comment: ${escapeHtml(commentLine).replace(/\n/g, "<br>")}</p>
+<p>Language: ${escapeHtml(language)}</p>`,
   });
 }
 
@@ -319,6 +329,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     ["Estimated size", body.estimatedSize || "(not given)"],
     ["Description", body.description],
     ["Newsletter opt-in", body.newsletterOptIn ? "YES" : "no"],
+    ["Language", languageLine(body)],
   ];
 
   await sendNotification(res, {
