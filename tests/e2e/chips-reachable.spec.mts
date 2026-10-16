@@ -5,9 +5,24 @@
 // fix lets the row wrap on desktop. These tests measure reachability rather
 // than asserting flex-wrap, since the bug is about what a user can click.
 
+import { readFileSync } from "node:fs";
 import type { Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
 import { gotoFeed } from "./harness.mts";
+
+// Every category the e2e catalogue actually holds -- each needs a chip.
+const FIXTURE_CATEGORIES = [
+  ...new Set(
+    (
+      JSON.parse(
+        readFileSync(
+          new URL("../fixtures/e2e-items.json", import.meta.url),
+          "utf8",
+        ),
+      ) as { category: string }[]
+    ).map((i) => i.category),
+  ),
+];
 
 async function chipGeometry(page: Page) {
   return page.evaluate(() => {
@@ -160,7 +175,7 @@ test.describe("narrow desktop", () => {
     const all = [...labels.inRow, ...labels.inMenu];
     expect(new Set(all).size, "a chip appears twice").toBe(all.length);
     expect(all).toContain("All");
-    expect(all).toContain("Architecture & Space");
+    for (const category of FIXTURE_CATEGORIES) expect(all).toContain(category);
   });
 
   test("choosing from the menu filters the feed and closes the menu", async ({
