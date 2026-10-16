@@ -14,6 +14,7 @@ beforeAll(async () => {
     "021_shelves.sql",
     "022_shelves_seed.sql",
     "044_shelves_seed_brazil_latin_america.sql",
+    "045_shelves_brazil_latin_america_first.sql",
   ]);
   SHELVES = await getShelves(sql);
 });
@@ -36,10 +37,19 @@ describe("Brazil and Latin America shelves", () => {
     }
   });
 
-  it("come after every existing shelf, Brazil first", () => {
+  it("lead the hand-picked shelves, right after Storylines", () => {
+    // Storylines renders as its own section; among the rest, hero shelves
+    // keep their position order, so these two open the second section.
     const ids = SHELVES.map((s) => s.id);
-    expect(ids.slice(-2)).toEqual(["brazil", "latin-america"]);
-    expect(ids.slice(0, -2)).toContain("birdwatching");
+    expect(ids.slice(0, 3)).toEqual(["storylines", "brazil", "latin-america"]);
+    expect(ids.slice(3)).toEqual([
+      "painted-by-themselves",
+      "pets-in-art",
+      "merry-company",
+      "creature-curiosities",
+      "old-world-portraiture",
+      "birdwatching",
+    ]);
   });
 
   it("include the new Brazilian museum collections", () => {
