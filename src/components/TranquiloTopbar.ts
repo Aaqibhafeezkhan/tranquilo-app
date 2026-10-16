@@ -19,7 +19,7 @@
 // once bundled. This gives the real, current URL either way.
 import tranquiloFlowerVioletUrl from "../../assets/tranquilo-flower-violet.svg";
 import type { ArtistProfile } from "../data/artist-profiles";
-import { facetLabel, t } from "../i18n/index";
+import { facetLabel, t, tn } from "../i18n/index";
 import type { ITopbarHost } from "../types/ITopbarHost";
 import { on } from "../utils/on";
 
@@ -34,28 +34,32 @@ function escapeHtml(str: unknown): string {
     .replace(/"/g, "&quot;");
 }
 
-const TOPBAR_MARKUP = `
+// Built when the element mounts (not at module load) and escaped on the way
+// in: text comes from src/i18n, and translations are contributed text that
+// must never be parsed as markup.
+const h = (s: string) => escapeHtml(s);
+const topbarMarkup = () => `
 <div class="share-banner" id="shareBanner" style="display:none;">
-  <span>Tranquilo is open source and volunteer-run.</span>
+  <span>${h(t("topbar.shareBanner.text"))}</span>
   <div class="share-banner-actions">
-    <button id="shareBannerNewsletter" type="button" data-open-newsletter><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 6-10 7L2 6"></path></svg>Get newsletter</button>
-    <a id="shareBannerInvolved" href="/pages/get-involved.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>Get involved</a>
-    <button id="shareBannerClose" type="button" aria-label="Dismiss">&times;</button>
+    <button id="shareBannerNewsletter" type="button" data-open-newsletter><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 6-10 7L2 6"></path></svg>${h(t("topbar.shareBanner.newsletter"))}</button>
+    <a id="shareBannerInvolved" href="/pages/get-involved.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>${h(t("topbar.shareBanner.involved"))}</a>
+    <button id="shareBannerClose" type="button" aria-label="${h(t("topbar.shareBanner.dismiss"))}">&times;</button>
   </div>
 </div>
 <div class="topbar-row1">
-  <a class="wordmark" href="/" aria-label="Tranquilo, back to the top"><img class="wordmark-mark" src="${tranquiloFlowerVioletUrl}" alt="" width="30" height="41" aria-hidden="true"><span>Tranquilo</span></a>
+  <a class="wordmark" href="/" aria-label="${h(t("topbar.home"))}"><img class="wordmark-mark" src="${tranquiloFlowerVioletUrl}" alt="" width="30" height="41" aria-hidden="true"><span>Tranquilo</span></a>
   <div class="topbar-icons">
-    <button class="music-toggle" id="musicToggle" type="button" aria-pressed="false" aria-label="Toggle music">
+    <button class="music-toggle" id="musicToggle" type="button" aria-pressed="false" aria-label="${h(t("topbar.music"))}">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
     </button>
-    <button class="search-toggle" id="searchToggle" type="button" aria-label="Search">
+    <button class="search-toggle" id="searchToggle" type="button" aria-label="${h(t("topbar.search"))}">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
     </button>
-    <button class="discover-toggle" id="discoverToggle" type="button" aria-label="Discover shelves">
+    <button class="discover-toggle" id="discoverToggle" type="button" aria-label="${h(t("topbar.discover"))}">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
     </button>
-    <button class="collection-toggle" id="collectionToggle" type="button" aria-label="My Collection">
+    <button class="collection-toggle" id="collectionToggle" type="button" aria-label="${h(t("topbar.collection.label"))}">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg><span class="collection-count" id="collectionCount" aria-hidden="true"></span>
     </button>
   </div>
@@ -63,8 +67,8 @@ const TOPBAR_MARKUP = `
 <nav class="chips" id="chips"></nav>
 <div class="filter-banner" id="filterBanner" style="display:none;">
   <span id="filterBannerLabel"></span>
-  <button id="filterBannerExport" type="button" style="display:none;">Export</button>
-  <button id="filterBannerClear" type="button">Show all &times;</button>
+  <button id="filterBannerExport" type="button" style="display:none;">${h(t("topbar.filter.export"))}</button>
+  <button id="filterBannerClear" type="button">${h(t("topbar.filter.clear"))} &times;</button>
 </div>
 <div class="filter-banner-card" id="filterBannerCard" style="display:none;"></div>
 `;
@@ -93,7 +97,7 @@ export class TranquiloTopbar extends HTMLElement {
   private resizeObserver: ResizeObserver | null = null;
   private filterBannerResizeObserver: ResizeObserver | null = null;
 
-  // Throws a clear error instead of a silent null if TOPBAR_MARKUP and a
+  // Throws a clear error instead of a silent null if topbarMarkup() and a
   // selector below ever drift apart.
   private requireEl<T extends Element>(selector: string): T {
     const el = this.querySelector<T>(selector);
@@ -112,7 +116,7 @@ export class TranquiloTopbar extends HTMLElement {
     if (this.getAttribute("data-topbar-mounted") === "1") return;
     this.setAttribute("data-topbar-mounted", "1");
 
-    this.innerHTML = TOPBAR_MARKUP;
+    this.innerHTML = topbarMarkup();
     this.chipsEl = this.requireEl<HTMLElement>("#chips");
     this.shareBannerEl = this.requireEl<HTMLElement>("#shareBanner");
     const shareBannerNewsletterEl = this.requireEl<HTMLButtonElement>(
@@ -242,7 +246,7 @@ export class TranquiloTopbar extends HTMLElement {
     // No bespoke class: .chip.active already reads as related to the
     // item-level chip's own active color without inventing a variant.
     storylineChip.className = `chip${opts.storylineActive ? " active" : ""}`;
-    storylineChip.textContent = "Storyline";
+    storylineChip.textContent = t("chips.storyline");
     storylineChip.setAttribute(
       "aria-pressed",
       opts.storylineActive ? "true" : "false",
@@ -286,7 +290,7 @@ export class TranquiloTopbar extends HTMLElement {
     btn.className = "chip chip-more";
     btn.setAttribute("aria-haspopup", "true");
     btn.setAttribute("aria-expanded", "false");
-    btn.textContent = "More";
+    btn.textContent = t("chips.more");
     on(btn, (e) => {
       e.stopPropagation();
       const open = menu.hidden;
@@ -503,8 +507,8 @@ export class TranquiloTopbar extends HTMLElement {
     const line2 = profile.movement.join(", ");
     const sourceHref = profile.article ?? profile.wikidata ?? null;
     const sourceLabel = profile.article
-      ? "Read more on Wikipedia"
-      : "View on Wikidata";
+      ? t("artistCard.wikipedia")
+      : t("artistCard.wikidata");
     const photoHtml = profile.image
       ? `<img class="artist-card-photo" src="${escapeHtml(profile.image)}" alt="" loading="lazy">`
       : "";
@@ -522,7 +526,7 @@ export class TranquiloTopbar extends HTMLElement {
         ? `<p class="artist-card-bio">${escapeHtml(profile.description)}</p>`
         : "") +
       (sourceHref
-        ? `<a class="artist-card-source" href="${escapeHtml(sourceHref)}" target="_blank" rel="noopener">${sourceLabel} <span aria-hidden="true">&rarr;</span></a>`
+        ? `<a class="artist-card-source" href="${escapeHtml(sourceHref)}" target="_blank" rel="noopener">${escapeHtml(sourceLabel)} <span aria-hidden="true">&rarr;</span></a>`
         : "") +
       `</div></div>`
     );
@@ -571,9 +575,7 @@ export class TranquiloTopbar extends HTMLElement {
     // for a screen reader.
     this.collectionToggleEl.setAttribute(
       "aria-label",
-      n === 0
-        ? "My Collection, empty"
-        : `My Collection, ${n} ${n === 1 ? "item" : "items"}`,
+      n === 0 ? t("topbar.collection.empty") : tn("topbar.collection.count", n),
     );
   }
 }

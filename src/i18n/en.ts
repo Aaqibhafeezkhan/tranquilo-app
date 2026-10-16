@@ -19,8 +19,106 @@ export const en = {
   "upsell.cta": "Join the waitlist",
   "upsell.dismiss": "Dismiss",
 
-  // Category chip row: the reset chip. Its filter value stays "All".
+  // Intro slide (src/feed/introSlides.ts). {works} is a rounded count like
+  // "10k+"; {count} is the number of sources.
+  "intro.heading": "A calmer way to scroll.",
+  "intro.tagline.one":
+    "Enjoy calm scrolling with {works} public-domain works across {count} source.",
+  "intro.tagline.other":
+    "Enjoy calm scrolling with {works} public-domain works across {count} sources.",
+  "intro.mission.title": "Mission",
+  "intro.mission.body": "Open source & ad‑free.",
+  "intro.mission.cta": "Get involved",
+  "intro.connect.title": "Connect",
+  "intro.connect.body": "Monthly curated art.",
+  "intro.connect.cta": "Subscribe",
+  "intro.support.title": "Support",
+  "intro.support.body": "Sustained by community.",
+  "intro.support.cta": "Give",
+
+  // My Collection's empty slide. A newline in the title is a line break.
+  "collection.empty.eyebrow": "My Collection",
+  "collection.empty.title": "Nothing collected\nyet.",
+  "collection.empty.body": "Tap the bookmark on any piece to start.",
+
+  // Shared across components.
+  "common.untitled": "Untitled",
+
+  // Feed slides (src/feed/slideBuilder.ts).
+  "slide.nudity.label": "This image may contain nudity. Tap to reveal.",
+  "slide.nudity.line1": "May contain nudity",
+  "slide.nudity.line2": "Tap to reveal",
+  "slide.imageError": "Couldn’t load image — tap to retry",
+  // {position} is slide.position, e.g. "3 of 13".
+  "slide.storylineChip": "Storyline · {position}",
+  "slide.position": "{index} of {total}",
+  "slide.setPosition": "{index} of {total} in set",
+  "slide.share": "Copy share link",
+  "slide.collect.add": "Collect this piece",
+  "slide.collect.remove": "Remove from collection",
+
+  // <tranquilo-detail-modal>. The AI-disclosure note is deliberately NOT
+  // here: it's fixed, approved wording (tests/ai-disclosure-static.test.ts)
+  // and needs its own approved translation before it can vary by language.
+  "detail.close": "Close",
+  "detail.shelfPrev": "Previous in this shelf",
+  "detail.shelfNext": "Next in this shelf",
+  "detail.source": "Source",
+  // aria-label on a caption source icon; {host} is e.g. "metmuseum.org".
+  "detail.sourceHost": "Source: {host}",
+  "detail.sources": "Sources",
+  "detail.twist": "The Twist",
+  "detail.cast.title": "Meet the Cast",
+  "detail.cast.possibly": "Possibly {name}",
+  "detail.cast.noDetail": "No verified detail available yet.",
+  "detail.fact.didYouKnow": "Did you know?",
+  "detail.fact.basic": "Basic Information",
+  "detail.meta.artist": "Artist",
+  "detail.meta.created": "Created",
+  "detail.meta.material": "Material",
+  "detail.meta.artistOrigin": "Artist origin",
+  "detail.meta.objectOrigin": "Object origin",
+  "detail.meta.origin": "Origin",
+  "detail.meta.culture": "Culture",
+  "detail.meta.photographDate": "Date of photograph",
+  "detail.meta.provenance": "Provenance",
+  "detail.meta.tagged": "Tagged",
+  "detail.meta.license": "License",
+  "detail.report.button": "Report a problem",
+  "detail.report.image": "There's an issue with image",
+  "detail.report.content": "There's an issue with content",
+  "detail.report.technical": "I'm having a technical issue (broken link)",
+  "detail.report.more": "Tell us more",
+  "detail.report.commentPlaceholder": "Anything else? (optional)",
+  "detail.report.send": "Send",
+  "detail.report.thanks":
+    "Thanks, your feedback has been sent. We'll take a look.",
+
+  // <tranquilo-topbar>
+  "topbar.shareBanner.text": "Tranquilo is open source and volunteer-run.",
+  "topbar.shareBanner.newsletter": "Get newsletter",
+  "topbar.shareBanner.involved": "Get involved",
+  "topbar.shareBanner.dismiss": "Dismiss",
+  "topbar.home": "Tranquilo, back to the top",
+  "topbar.music": "Toggle music",
+  "topbar.search": "Search",
+  "topbar.discover": "Discover shelves",
+  "topbar.collection.label": "My Collection",
+  // Screen-reader label for the bookmark button; {count} saved items.
+  "topbar.collection.empty": "My Collection, empty",
+  "topbar.collection.count.one": "My Collection, {count} item",
+  "topbar.collection.count.other": "My Collection, {count} items",
+  "topbar.filter.export": "Export",
+  "topbar.filter.clear": "Show all",
+  // Artist card shown above search results for an artist.
+  "artistCard.wikipedia": "Read more on Wikipedia",
+  "artistCard.wikidata": "View on Wikidata",
+
+  // Category chip row: the reset chip (its filter value stays "All"), the
+  // Storyline toggle, and the overflow menu button.
   "chips.all": "All",
+  "chips.storyline": "Storyline",
+  "chips.more": "More",
 
   // Display labels for controlled-vocabulary values, keyed by facetKey()
   // (src/i18n/facets.ts) and rendered with facetLabel(). Every term in
