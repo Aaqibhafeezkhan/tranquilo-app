@@ -32,6 +32,12 @@ export const ptBR: Dictionary = {
   "collection.empty.title": "Nada salvo\nainda.",
   "collection.empty.body": "Toque no marcador de qualquer obra para começar.",
 
+  // AI disclosure: draft awaiting approval (see en.ts) -- not shown yet.
+  "ai.disclosure.text":
+    "Redigido com ajuda de IA; editado e revisado por uma pessoa.",
+  "ai.disclosure.errorPrompt": "Encontrou um erro?",
+  "ai.disclosure.badgeLabel": "Como este texto foi escrito",
+
   "common.untitled": "Sem título",
 
   "slide.nudity.label": "Esta imagem pode conter nudez. Toque para ver.",
