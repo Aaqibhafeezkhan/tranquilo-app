@@ -176,7 +176,7 @@ export const ptBR: Dictionary = {
 
   "facet.region.europe": "Europa",
   "facet.region.east-asia": "Ásia Oriental",
-  "facet.region.south-asia": "Sul da Ásia",
+  "facet.region.south-asia": "Ásia Meridional",
   "facet.region.southeast-asia": "Sudeste Asiático",
   "facet.region.west-asia-middle-east": "Ásia Ocidental e Oriente Médio",
   "facet.region.africa": "África",
