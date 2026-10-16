@@ -72,8 +72,10 @@ describe("share banner CTAs", () => {
   });
 
   it("the get-involved link points at the existing page", () => {
+    // Via pagePath(), so a visitor in a translated locale lands on that
+    // translation of the page (and on the English page otherwise).
     expect(topbarSource).toMatch(
-      /id="shareBannerInvolved"[^>]*href="\/pages\/get-involved\.html"/,
+      /id="shareBannerInvolved"[^>]*href="\$\{pagePath\("get-involved\.html"\)\}"/,
     );
   });
 });

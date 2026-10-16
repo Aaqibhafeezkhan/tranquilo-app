@@ -2,6 +2,7 @@
 // api/subscribe.js endpoint as pro.html, tagged source: "feature_notify".
 import { fieldWrap, isValidEmail } from "../utils/formValidation";
 import "../analytics/cloudflareBeacon";
+import { t } from "../i18n/index";
 
 const form = document.getElementById("notifyForm") as HTMLFormElement;
 const emailInput = document.getElementById("notifyEmail") as HTMLInputElement;
@@ -21,7 +22,7 @@ form.addEventListener("submit", (e) => {
 
   errorMsg.classList.remove("show");
   submitBtn.disabled = true;
-  submitBtn.textContent = "Joining…";
+  submitBtn.textContent = t("form.joining");
 
   fetch("/api/subscribe", {
     method: "POST",
@@ -34,10 +35,9 @@ form.addEventListener("submit", (e) => {
       success.style.display = "block";
     })
     .catch(() => {
-      errorMsg.textContent =
-        "Something went wrong — please try again in a moment.";
+      errorMsg.textContent = t("form.error");
       errorMsg.classList.add("show");
       submitBtn.disabled = false;
-      submitBtn.textContent = "Notify me";
+      submitBtn.textContent = t("about.notify.cta");
     });
 });

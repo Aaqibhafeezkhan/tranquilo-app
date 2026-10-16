@@ -1,5 +1,5 @@
 import tranquiloIconLightUrl from "../../assets/tranquilo-icon-light.svg";
-import { t, tn } from "../i18n/index";
+import { pagePath, t, tn } from "../i18n/index";
 import { roundedWorkCount } from "../logic/logic";
 import { escapeHtml } from "./slideBuilder";
 
@@ -72,7 +72,7 @@ export function buildIntroSlide(facets: {
       icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`,
       title: h(t("intro.mission.title")),
       body: h(t("intro.mission.body")),
-      action: `<a class="action-card-btn" href="/pages/get-involved.html">${h(t("intro.mission.cta"))}</a>`,
+      action: `<a class="action-card-btn" href="${pagePath("get-involved.html")}">${h(t("intro.mission.cta"))}</a>`,
     }) +
     actionCard({
       icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 6-10 7L2 6"></path></svg>`,
@@ -87,7 +87,7 @@ export function buildIntroSlide(facets: {
       icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>`,
       title: h(t("intro.support.title")),
       body: h(t("intro.support.body")),
-      action: `<a class="action-card-btn" href="/pages/support.html">${h(t("intro.support.cta"))}</a>`,
+      action: `<a class="action-card-btn" href="${pagePath("support.html")}">${h(t("intro.support.cta"))}</a>`,
       attrs: " data-donations",
     }) +
     `</div>`;

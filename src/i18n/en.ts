@@ -168,6 +168,21 @@ export const en = {
   "lightbox.sourceRecord": "Source record at {institution}",
   "lightbox.fullResolution": "Full resolution at {institution}",
 
+  // Static pages' layout (vite-plugins/base-template.mts, at build time).
+  "nav.home": "Home",
+  "nav.about": "About",
+  "nav.submit": "Submit",
+  "nav.getInvolved": "Get involved",
+  "nav.support": "Support us",
+  "footer.feedback": "Feedback",
+  "footer.legal": "Terms & Privacy",
+  "footer.pro": "Pro Waitlist",
+
+  // Email sign-up forms on static pages (src/pages/*.ts).
+  "form.joining": "Joining…",
+  "form.error": "Something went wrong — please try again in a moment.",
+  "about.notify.cta": "Notify me",
+
   // <tranquilo-topbar>
   "topbar.shareBanner.text": "Tranquilo is open source and volunteer-run.",
   "topbar.shareBanner.newsletter": "Get newsletter",
