@@ -352,6 +352,38 @@ describe("runtime (src/i18n/index.ts)", () => {
     });
   });
 
+  // A translated static page carries data-locale on <html> (set at build
+  // time). Landing on one is choosing that language: it's adopted and
+  // remembered, so going on to the feed stays in it.
+  describe("static pages and page links", () => {
+    it("adopts a translated page's own locale and remembers it", async () => {
+      vi.stubGlobal("document", {
+        documentElement: { dataset: { locale: "pt-BR" } },
+      });
+      const i18n = await loadWith({});
+      expect(i18n.currentLocale()).toBe("pt-BR");
+      expect(store["tranquilo:locale"]).toBe("pt-BR");
+    });
+
+    it("lets an explicit ?lang= win over the page's locale", async () => {
+      vi.stubGlobal("document", {
+        documentElement: { dataset: { locale: "pt-BR" } },
+      });
+      vi.stubGlobal("location", { search: "?lang=en" });
+      const i18n = await loadWith({});
+      expect(i18n.currentLocale()).toBe("en");
+    });
+
+    it("pagePath() links the translated page when there is one", async () => {
+      const i18n = await loadWith({});
+      expect(i18n.pagePath("about.html")).toBe("/pages/about.html");
+      i18n.setLocale("pt-BR");
+      expect(i18n.pagePath("about.html")).toBe("/pages/pt-BR/about.html");
+      // Not translated: the English page, never a dead link.
+      expect(i18n.pagePath("terms.html")).toBe("/pages/terms.html");
+    });
+  });
+
   // ?lang= is the shareable way into a locale -- including a draft one, so
   // a preview link can be shared (e.g. with a reviewer) before the language
   // is public. It's an explicit choice, so it's

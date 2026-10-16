@@ -2,7 +2,7 @@
 // state. Everything is passed in, which keeps it unit-testable and lets the
 // same code run at build time (static-page generation) and on the server.
 // The browser-bound layer that remembers the active locale is index.ts.
-import { DEFAULT_LOCALE, type LocaleInfo } from "./locales";
+import { DEFAULT_LOCALE, type LocaleInfo } from "./locales.ts";
 
 type Lookupable = Readonly<Record<string, string | undefined>>;
 

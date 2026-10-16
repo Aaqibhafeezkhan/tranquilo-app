@@ -4,7 +4,7 @@
 //
 // Labels use Portuguese sentence case ("Pinturas e retratos"), not the
 // English title case of the source strings.
-import type { Dictionary } from "./en";
+import type { Dictionary } from "./en.ts";
 
 export const ptBR: Dictionary = {
   "upsell.body":
@@ -77,7 +77,7 @@ export const ptBR: Dictionary = {
   "detail.report.commentPlaceholder": "Mais alguma coisa? (opcional)",
   "detail.report.send": "Enviar",
   "detail.report.thanks":
-    "Obrigado, seu comentário foi enviado. Vamos dar uma olhada.",
+    "Agradecemos! Seu comentário foi enviado e vamos dar uma olhada.",
 
   "search.placeholder": "Busque artista, título, categoria, época…",
   "search.submit": "Buscar",
@@ -105,7 +105,7 @@ export const ptBR: Dictionary = {
   "support.strip.line":
     "O Tranquilo é mantido por apoio direto, não por anúncios.",
   "support.strip.unavailable":
-    "As doações estão indisponíveis por um momento. Obrigado pela vontade de ajudar — tente de novo em breve.",
+    "As doações estão indisponíveis por um momento. Agradecemos a vontade de ajudar — tente de novo em breve.",
   "support.strip.soon": "As doações abrem em breve.",
   "support.strip.donate": "Doar",
   "support.dialog.close": "Fechar",
@@ -145,6 +145,19 @@ export const ptBR: Dictionary = {
   "lightbox.loading": "Carregando em resolução máxima…",
   "lightbox.sourceRecord": "Registro original: {institution}",
   "lightbox.fullResolution": "Resolução máxima: {institution}",
+
+  "nav.home": "Início",
+  "nav.about": "Sobre",
+  "nav.submit": "Enviar acervo",
+  "nav.getInvolved": "Participe",
+  "nav.support": "Apoie",
+  "footer.feedback": "Comentários",
+  "footer.legal": "Termos e Privacidade",
+  "footer.pro": "Lista de espera do Pro",
+
+  "form.joining": "Inscrevendo…",
+  "form.error": "Algo deu errado — tente de novo em instantes.",
+  "about.notify.cta": "Quero receber",
 
   "topbar.shareBanner.text":
     "O Tranquilo é de código aberto e mantido por voluntários.",

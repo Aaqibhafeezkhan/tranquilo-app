@@ -25,21 +25,16 @@ import {
   pluralKey,
   resolveLocale,
 } from "./core";
-import { type Dictionary, en, type MessageKey } from "./en";
+import { DICTIONARIES } from "./dictionaries";
+import type { MessageKey } from "./en";
 import { type FacetField, facetKey } from "./facets";
-import { LOCALES, type LocaleCode, type LocaleInfo } from "./locales";
-import { ptBR } from "./pt-BR";
+import { LOCALES, type LocaleInfo } from "./locales";
+import { localizedPagePath } from "./pages";
 
 export type { MessageKey } from "./en";
 export type { FacetField } from "./facets";
 export type { LocaleInfo } from "./locales";
 
-// Typed by LocaleCode, so registering a locale without a dictionary (or
-// the reverse) fails typecheck.
-const DICTIONARIES: Record<LocaleCode, Dictionary> = {
-  en,
-  "pt-BR": ptBR,
-};
 const AVAILABLE: ReadonlySet<string> = new Set(Object.keys(DICTIONARIES));
 
 const STORAGE_KEY = "tranquilo:locale";
@@ -77,7 +72,10 @@ export function currentLocale(): string {
   // A ?lang= link is checked on the first lookup rather than at app start:
   // components render their text while modules are still evaluating, so
   // anything later would leave the first screen in the old language.
-  if (active === undefined) applyLocaleParam();
+  // A translated static page's own language (data-locale on <html>, set at
+  // build time) counts as the visitor's choice too -- unless a ?lang= link
+  // already made one.
+  if (active === undefined && !applyLocaleParam()) adoptPageLocale();
   active ??= resolveLocale({
     stored: readStored(),
     browser: browserLanguages(),
@@ -121,6 +119,24 @@ export function applyLocaleParam(
   if (!match) return false;
   setLocale(match.code);
   return true;
+}
+
+function adoptPageLocale(): void {
+  const pageLocale =
+    typeof document === "undefined"
+      ? undefined
+      : document.documentElement?.dataset?.locale;
+  if (pageLocale && LOCALES.some((l) => l.code === pageLocale)) {
+    setLocale(pageLocale);
+  }
+}
+
+/**
+ * The URL of a static page (e.g. "about.html") in the active locale: its
+ * translation where one exists, otherwise the English page.
+ */
+export function pagePath(file: string): string {
+  return localizedPagePath(currentLocale(), file);
 }
 
 /** Locales visible to visitors, e.g. for a language switcher. */

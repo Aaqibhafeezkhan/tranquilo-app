@@ -1,8 +1,20 @@
 import { resolve } from "node:path";
 import { defineConfig } from "vite";
+import { TRANSLATED_PAGES } from "./src/i18n/pages.ts";
 import baseTemplate from "./vite-plugins/base-template.mts";
 import headPartial from "./vite-plugins/head-partial.mts";
 import pageChromePartial from "./vite-plugins/page-chrome-partial.mts";
+
+// Translated static pages (pages/<locale>/<file>), one build input each,
+// from the same registry the layout's nav and the app's page links use.
+const translatedPageInputs = Object.fromEntries(
+  Object.entries(TRANSLATED_PAGES).flatMap(([locale, files]) =>
+    files.map((file) => [
+      `${locale}/${file.replace(/\.html$/, "")}`,
+      resolve(import.meta.dirname, "pages", locale, file),
+    ]),
+  ),
+);
 
 // Multi-page build: index.html + every static page under pages/. No
 // framework plugins -- Vite here is a dev server + a `vite build` step, not
@@ -43,6 +55,7 @@ export default defineConfig({
         support: resolve(import.meta.dirname, "pages/support.html"),
         terms: resolve(import.meta.dirname, "pages/terms.html"),
         thankYou: resolve(import.meta.dirname, "pages/thank-you.html"),
+        ...translatedPageInputs,
       },
     },
   },

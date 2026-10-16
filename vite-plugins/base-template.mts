@@ -14,6 +14,10 @@
 import path from "node:path";
 import { createRequire } from "node:module";
 import type { Plugin } from "vite";
+import { escapeHtml, fallbackChain, lookup } from "../src/i18n/core.ts";
+import { DICTIONARIES } from "../src/i18n/dictionaries.ts";
+import { LOCALES } from "../src/i18n/locales.ts";
+import { localizedPagePath, TRANSLATED_PAGES } from "../src/i18n/pages.ts";
 
 const nodeRequire = createRequire(import.meta.url);
 const posthtml = nodeRequire("posthtml");
@@ -26,12 +30,30 @@ export const EXTENDS_MARKER = "<extends";
 // every page under pages/*.html has migrated (see that file's own
 // deprecation note), so a temporary duplication beats a shared import that
 // only exists for the migration window.
+//
+// Labels are src/i18n keys, looked up at build time in the page's own
+// locale (English for pages/*.html, <locale> for pages/<locale>/*.html).
 const NAV_LINKS: Array<{ href: string; label: string; donationGated?: boolean }> = [
-  { href: "about.html", label: "About" },
-  { href: "submit.html", label: "Submit" },
-  { href: "get-involved.html", label: "Get involved" },
-  { href: "support.html", label: "Support us", donationGated: true },
+  { href: "about.html", label: "nav.about" },
+  { href: "submit.html", label: "nav.submit" },
+  { href: "get-involved.html", label: "nav.getInvolved" },
+  { href: "support.html", label: "nav.support", donationGated: true },
 ];
+
+const FOOTER_LINKS: Array<{ href: string; label: string }> = [
+  { href: "feedback.html", label: "footer.feedback" },
+  { href: "terms.html", label: "footer.legal" },
+  { href: "pro.html", label: "footer.pro" },
+];
+
+const AVAILABLE: ReadonlySet<string> = new Set(Object.keys(DICTIONARIES));
+
+// A build-time t(): the same per-key fallback the browser uses.
+function label(locale: string, key: string): string {
+  return escapeHtml(
+    lookup(key, fallbackChain(locale, AVAILABLE), DICTIONARIES),
+  );
+}
 
 // A page's <nav> can't be static content living in _base.html -- which
 // link (if any) is "current" depends on which page is being built, and a
@@ -44,17 +66,20 @@ const NAV_LINKS: Array<{ href: string; label: string; donationGated?: boolean }>
 // convention picks it up as the site's 404 with no rewrite needed) would
 // need the opposite relative prefix. Absolute paths work identically
 // regardless of which directory the linking page itself lives in.
-function buildNav(currentFile: string): string {
-  const links = NAV_LINKS.map(({ href, label, donationGated }) => {
+//
+// Links go to the page's translation in the current locale where one
+// exists (localizedPagePath), otherwise to the English page -- never a 404.
+function buildNav(currentFile: string, locale: string): string {
+  const links = NAV_LINKS.map(({ href, label: key, donationGated }) => {
     const current = href === currentFile ? ' class="current"' : "";
     const prefix = donationGated ? "data-donations " : "";
-    return `<a ${prefix}href="/pages/${href}"${current}>${label}</a>`;
+    return `<a ${prefix}href="${localizedPagePath(locale, href)}"${current}>${label(locale, key)}</a>`;
   }).join("\n      ");
 
   return `<header class="mkt-nav">
     <a class="wordmark" href="/index.html"><img class="wordmark-mark" src="/assets/tranquilo-flower-violet.svg" alt="" width="30" height="41" aria-hidden="true"><span>Tranquilo</span></a>
     <nav class="mkt-nav-links">
-      <a href="/index.html">Home</a>
+      <a href="/index.html">${label(locale, "nav.home")}</a>
       ${links}
     </nav>
   </header>`;
@@ -64,21 +89,81 @@ function buildNav(currentFile: string): string {
 // right after its opening tag -- posthtml-extend collects every <block>
 // inside <extends>...</extends> regardless of position, so this only needs
 // to land somewhere inside that wrapper, not any particular slot.
-function injectComputedNav(html: string, currentFile: string): string {
-  const navBlock = `<block name="nav">${buildNav(currentFile)}</block>`;
-  return html.replace(/(<extends[^>]*>)/, `$1\n${navBlock}`);
+function injectComputedNav(
+  html: string,
+  currentFile: string,
+  locale: string,
+): string {
+  const navBlock = `<block name="nav">${buildNav(currentFile, locale)}</block>`;
+  const footerBlock = `<block name="footer">${buildFooter(currentFile, locale)}</block>`;
+  return html.replace(/(<extends[^>]*>)/, `$1\n${navBlock}\n${footerBlock}`);
+}
+
+// Computed for the same reason as the nav: its labels follow the page's
+// locale. A translated page also links back to its English original --
+// but English pages don't advertise a draft translation (see
+// localeAttributes below).
+function buildFooter(currentFile: string, locale: string): string {
+  const links = FOOTER_LINKS.map(
+    ({ href, label: key }) =>
+      `<a href="${localizedPagePath(locale, href)}">${label(locale, key)}</a>`,
+  );
+  if (locale !== "en") {
+    links.push(
+      `<a href="/pages/${currentFile}?lang=en" lang="en" hreflang="en">English</a>`,
+    );
+  }
+  return `<footer class="mkt-footer">
+    <div class="mkt-footer-links">
+      ${links.join("\n      ")}
+    </div>
+  </footer>`;
+}
+
+// pages/<locale>/<file>.html -> { locale, file }; pages/<file>.html -> en.
+function pageLocale(relPath: string): { locale: string; file: string } {
+  const parts = relPath.split("/");
+  if (parts[0] === "pages" && parts.length === 3 && TRANSLATED_PAGES[parts[1]]) {
+    return { locale: parts[1], file: parts[2] };
+  }
+  return {
+    locale: "en",
+    file: relPath.startsWith("pages/") ? relPath.slice("pages/".length) : relPath,
+  };
+}
+
+// A translated page declares its language (html lang) and hands it to the
+// runtime (data-locale, which src/i18n adopts as the visitor's choice). A
+// draft locale's pages are kept out of search engines until it ships --
+// they're for sharing by link while the translation is reviewed.
+function localeAttributes(html: string, locale: string): string {
+  if (locale === "en") return html;
+  const draft = LOCALES.find((l) => l.code === locale)?.status !== "shipped";
+  let out = html.replace(
+    /<html lang="en">/,
+    `<html lang="${locale}" data-locale="${locale}">`,
+  );
+  if (draft) {
+    out = out.replace("</head>", '<meta name="robots" content="noindex">\n</head>');
+  }
+  // Not every page's own script touches src/i18n, so the page's language
+  // is adopted by a module of its own (src/i18n/adoptPageLocale.ts).
+  return out.replace(
+    "</body>",
+    '<script type="module" src="/src/i18n/adoptPageLocale.ts"></script>\n</body>',
+  );
 }
 
 export async function expandBaseTemplate(root: string, filename: string, html: string): Promise<string> {
   if (!html.includes(EXTENDS_MARKER)) return html; // not migrated yet -- untouched
 
   const relPath = path.relative(root, filename).split(path.sep).join("/");
-  const currentFile = relPath.startsWith("pages/") ? relPath.slice("pages/".length) : relPath;
+  const { locale, file: currentFile } = pageLocale(relPath);
   const pagesDir = path.join(root, "pages");
 
-  const withNav = injectComputedNav(html, currentFile);
+  const withNav = injectComputedNav(html, currentFile, locale);
   const result = await posthtml([extendPlugin({ root: pagesDir })]).process(withNav);
-  return result.html;
+  return localeAttributes(result.html, locale);
 }
 
 export default function baseTemplate(root: string): Plugin {

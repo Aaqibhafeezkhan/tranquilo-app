@@ -4,7 +4,7 @@
 // useful case: a browser asking for it must stay in English, and someone
 // who explicitly opts in must get English fallbacks, not blanks or keys.
 import { expect, test } from "@playwright/test";
-import { gotoFeed } from "./harness.mts";
+import { gotoFeed, stubBackend } from "./harness.mts";
 
 test("an English browser gets lang=en and real toast copy", async ({
   page,
@@ -208,5 +208,53 @@ test.describe("category labels with pt-BR opted in", () => {
     await expect(
       page.locator('#chipsMoreMenu button.chip[data-category="All"]'),
     ).toHaveCount(0);
+  });
+});
+
+// Translated static pages (pages/pt-BR/*.html). The page itself is
+// Portuguese; landing on it is choosing Portuguese, so the rest of the
+// site follows -- and links lead to translated pages where they exist.
+test.describe("pt-BR static pages", () => {
+  test.beforeEach(async ({ page }) => {
+    await stubBackend(page);
+  });
+
+  test("the About page is Portuguese, chrome included", async ({ page }) => {
+    await page.goto("/pages/pt-BR/about.html");
+    await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
+    await expect(page.locator("h1")).toHaveText("Por que o Tranquilo existe");
+    await expect(page.locator(".mkt-nav-links a.current")).toHaveText("Sobre");
+    await expect(
+      page.locator('.mkt-footer a[href="/pages/about.html?lang=en"]'),
+    ).toHaveText("English");
+  });
+
+  test("the Support page's donation strip follows the page's language", async ({
+    page,
+  }) => {
+    await page.goto("/pages/pt-BR/support.html");
+    await expect(page.locator(".support-donate-btn")).toContainText("Doar");
+  });
+
+  test("landing on a pt-BR page carries Portuguese into the feed", async ({
+    page,
+  }) => {
+    await page.goto("/pages/pt-BR/get-involved.html");
+    await gotoFeed(page);
+    await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
+    // The intro's cards lead to the translated pages.
+    await expect(
+      page.locator(
+        '.slide.intro a.action-card-btn[href="/pages/pt-BR/get-involved.html"]',
+      ),
+    ).toHaveText("Participe");
+  });
+
+  test("English pages don't point at the draft translation", async ({
+    page,
+  }) => {
+    await page.goto("/pages/about.html");
+    await expect(page.locator("html")).toHaveAttribute("lang", "en");
+    await expect(page.locator('a[href*="/pages/pt-BR/"]')).toHaveCount(0);
   });
 });

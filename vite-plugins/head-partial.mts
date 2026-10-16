@@ -30,8 +30,17 @@ export function expandHeadPartial(root: string, filename: string, html: string):
   const description = descMatch[1];
 
   const relPath = path.relative(root, filename).split(path.sep).join("/");
-  const isNested = relPath.startsWith("pages/");
-  const assetPrefix = isNested ? "../" : "";
+  // One "../" per directory between the page and the site root: pages/*.html
+  // is one level down, a translated pages/<locale>/*.html two.
+  const assetPrefix = "../".repeat(relPath.split("/").length - 1);
+  // og:locale for a translated page (html lang set by base-template.mts),
+  // so link previews know the page's language. English pages are the
+  // default and carry none, as before.
+  const lang = /<html lang="([^"]+)"/.exec(html)?.[1];
+  const ogLocale =
+    lang && lang !== "en"
+      ? `\n<meta property="og:locale" content="${lang.replace("-", "_")}">`
+      : "";
   const canonicalPath = relPath === "index.html" ? "/" : `/${relPath}`;
   const canonicalUrl = `${SITE_ORIGIN}${canonicalPath}`;
 
@@ -42,7 +51,7 @@ export function expandHeadPartial(root: string, filename: string, html: string):
 <link rel="stylesheet" href="${assetPrefix}css/style.css">
 <link rel="canonical" href="${canonicalUrl}">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="Tranquilo">
+<meta property="og:site_name" content="Tranquilo">${ogLocale}
 <meta property="og:url" content="${canonicalUrl}">
 <meta property="og:title" content="${escapeAttr(title)}">
 <meta property="og:description" content="${escapeAttr(description)}">
