@@ -7,6 +7,11 @@
 import type { Dictionary } from "./en";
 
 export const ptBR: Dictionary = {
+  "upsell.body":
+    "Salvo temporariamente neste navegador. Coleções permanentes e organização fazem parte do Pro, que ainda está tomando forma.",
+  "upsell.cta": "Entrar na lista de espera",
+  "upsell.dismiss": "Fechar",
+
   "intro.heading": "Um jeito mais calmo de navegar.",
   // Portuguese treats 0 and 1 as singular ("0 acervo"), so .one covers both.
   "intro.tagline.one":
@@ -73,6 +78,73 @@ export const ptBR: Dictionary = {
   "detail.report.send": "Enviar",
   "detail.report.thanks":
     "Obrigado, seu comentário foi enviado. Vamos dar uma olhada.",
+
+  "search.placeholder": "Busque artista, título, categoria, época…",
+  "search.submit": "Buscar",
+  "search.close": "Fechar a busca",
+  "search.recent": "Buscas recentes",
+  "search.browseBy": "Explore por",
+  "search.related": "Mostrando obras relacionadas a “{concept}”",
+  "search.results.one": "{count} resultado para “{query}”",
+  "search.results.other": "{count} resultados para “{query}”",
+  "search.noResults": "Nenhum resultado para “{query}”.",
+  "search.didYouMean":
+    "Nenhum resultado para “{query}”. Você quis dizer {suggestion}?",
+
+  "filter.moreBy": "Mais de {artist}",
+  "filter.collection": "{title} ({count})",
+  "collection.toast.empty": "Nada salvo ainda",
+
+  "share.copied": "Link copiado",
+  "share.failed": "Não foi possível copiar o link",
+
+  "error.heading": "Estamos com um problema agora, mas voltaremos em breve.",
+  "error.retry": "Tentar de novo",
+  "error.home": "Voltar ao Tranquilo",
+
+  "support.strip.line":
+    "O Tranquilo é mantido por apoio direto, não por anúncios.",
+  "support.strip.unavailable":
+    "As doações estão indisponíveis por um momento. Obrigado pela vontade de ajudar — tente de novo em breve.",
+  "support.strip.soon": "As doações abrem em breve.",
+  "support.strip.donate": "Doar",
+  "support.dialog.close": "Fechar",
+  "support.dialog.title": "Apoie o Tranquilo",
+  "support.dialog.body":
+    "Cada contribuição vai para a hospedagem e para o custo silencioso de manter tudo funcionando.",
+  "support.dialog.once": "Doação única",
+  "support.dialog.monthly": "Doação mensal",
+  "support.dialog.perMonth": "por mês",
+  "support.dialog.note":
+    "O pagamento é feito pelo Stripe — o Tranquilo nunca vê os dados do seu cartão. Os valores aparecem na sua moeda no momento do pagamento.",
+  "support.once.note": "Escolha o valor",
+
+  "shelves.home": "Tranquilo, voltar à página inicial",
+  "shelves.title": "Descobrir",
+  "shelves.close": "Fechar Descobrir",
+  "shelves.storylines.title": "Narrativas",
+  "shelves.storylines.subtitle": "Histórias selecionadas por trás da arte",
+  "shelves.moods.title": "Estantes, feitas à mão",
+  "shelves.moods.subtitle": "Escolha um clima e aproveite",
+
+  "storyline.close": "Fechar a narrativa",
+  "storyline.prev": "Página anterior",
+  "storyline.next": "Próxima página",
+  "storyline.hint.arrows": "Use as setas para começar →",
+  "storyline.hint.swipe": "Deslize para começar →",
+  "storyline.share": "Copiar link desta narrativa",
+  "storyline.chapterOf": "Capítulo {index} de {total}",
+  "storyline.goToChapter": "Ir para o capítulo {index}",
+
+  "setOfWorks.details": "Ver detalhes",
+
+  "export.title": "Seu CSV está sendo baixado",
+  "export.body":
+    "Sincronizar entre dispositivos, organizar listas e compartilhar fazem parte do Pro, que ainda está tomando forma.",
+
+  "lightbox.loading": "Carregando em resolução máxima…",
+  "lightbox.sourceRecord": "Registro original: {institution}",
+  "lightbox.fullResolution": "Resolução máxima: {institution}",
 
   "topbar.shareBanner.text":
     "O Tranquilo é de código aberto e mantido por voluntários.",

@@ -94,6 +94,80 @@ export const en = {
   "detail.report.thanks":
     "Thanks, your feedback has been sent. We'll take a look.",
 
+  // Search panel and results lines. Strings with {query}/{suggestion}/
+  // {count} are rendered with tHtml/tnHtml: the values carry markup.
+  "search.placeholder": "Search artist, title, category, era…",
+  "search.submit": "Run search",
+  "search.close": "Close search",
+  "search.recent": "Recent searches",
+  "search.browseBy": "Browse by",
+  "search.related": "Showing pieces related to “{concept}”",
+  "search.results.one": "{count} result for “{query}”",
+  "search.results.other": "{count} results for “{query}”",
+  "search.noResults": "No results for “{query}.”",
+  "search.didYouMean": "No results for “{query}.” Did you mean {suggestion}?",
+
+  // Filter banner under the top bar.
+  "filter.moreBy": "More by {artist}",
+  "filter.collection": "{title} ({count})",
+  "collection.toast.empty": "Nothing collected yet",
+
+  "share.copied": "Link copied",
+  "share.failed": "Couldn't copy link",
+
+  // Shown when the catalogue fails to load (src/errorState.ts).
+  "error.heading": "We’re having a problem right now, but we’ll be back soon.",
+  "error.retry": "Try again",
+  "error.home": "Back to Tranquilo",
+
+  // <tranquilo-support-strip> and its donation dialog.
+  "support.strip.line": "Tranquilo runs on direct support, not ads.",
+  "support.strip.unavailable":
+    "Donations are briefly unavailable. Thank you for wanting to — please try again shortly.",
+  "support.strip.soon": "Donations open soon.",
+  "support.strip.donate": "Donate",
+  "support.dialog.close": "Close",
+  "support.dialog.title": "Support Tranquilo",
+  "support.dialog.body":
+    "Every contribution goes to hosting and the quiet cost of keeping this running.",
+  "support.dialog.once": "Give once",
+  "support.dialog.monthly": "Give monthly",
+  "support.dialog.perMonth": "per month",
+  "support.dialog.note":
+    "Payment is handled by Stripe — Tranquilo never sees your card details. Amounts are shown in your own currency at checkout.",
+  "support.once.note": "Choose your own amount",
+
+  // Discover (shelves) mode.
+  "shelves.home": "Tranquilo, back to the homepage",
+  "shelves.title": "Discover",
+  "shelves.close": "Close discover",
+  "shelves.storylines.title": "Storylines",
+  "shelves.storylines.subtitle": "Curated stories behind the art",
+  "shelves.moods.title": "Shelves, Curated by Hand",
+  "shelves.moods.subtitle": "Pick a mood and enjoy",
+
+  // Storyline mode.
+  "storyline.close": "Close storyline",
+  "storyline.prev": "Previous page",
+  "storyline.next": "Next page",
+  "storyline.hint.arrows": "Use the arrows to begin →",
+  "storyline.hint.swipe": "Swipe to begin →",
+  "storyline.share": "Copy link to this storyline",
+  "storyline.chapterOf": "Chapter {index} of {total}",
+  "storyline.goToChapter": "Go to chapter {index}",
+
+  "setOfWorks.details": "View details",
+
+  // Collection export confirmation.
+  "export.title": "Your CSV is downloading",
+  "export.body":
+    "Syncing across devices, organized lists, and sharing are part of Pro, still taking shape.",
+
+  // Lightbox. {institution} is the source's display name.
+  "lightbox.loading": "Loading full resolution…",
+  "lightbox.sourceRecord": "Source record at {institution}",
+  "lightbox.fullResolution": "Full resolution at {institution}",
+
   // <tranquilo-topbar>
   "topbar.shareBanner.text": "Tranquilo is open source and volunteer-run.",
   "topbar.shareBanner.newsletter": "Get newsletter",

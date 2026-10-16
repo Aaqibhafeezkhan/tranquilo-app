@@ -12,6 +12,7 @@
 // Server-side that path rewrites to slug "s-{id}" and reuses
 // api/v/[slug].js rather than getting its own route (Vercel Hobby's
 // 12-function cap).
+import { t } from "../i18n/index";
 export interface ShareServiceHost {
   trackEvent(name: string, props?: Record<string, unknown>): void;
   showToast(msg: string): void;
@@ -125,13 +126,13 @@ export class ShareService {
       navigator.clipboard
         .writeText(url)
         .then(() => {
-          this.host.showToast("Link copied");
+          this.host.showToast(t("share.copied"));
         })
         .catch(() => {
-          this.host.showToast("Couldn't copy link");
+          this.host.showToast(t("share.failed"));
         });
       return;
     }
-    this.host.showToast("Couldn't copy link");
+    this.host.showToast(t("share.failed"));
   }
 }

@@ -17,14 +17,15 @@
 // Renders into light DOM: every style already lives in css/.
 
 import { escapeHtml } from "../feed/slideBuilder";
+import { t } from "../i18n/index";
 import type { ITranquiloSetOfWorksModeHost } from "../types/ITranquiloSetOfWorksModeHost";
 import type { Item } from "../types/Item";
 import type { SetOfWorkMember } from "../types/SetOfWork";
 
-const SET_OF_WORKS_MARKUP = `
+const setOfWorksMarkup = () => `
 <div class="set-of-works-header">
   <div class="set-of-works-header-title" id="setOfWorksHeaderTitle"></div>
-  <button class="set-of-works-close" id="setOfWorksClose" type="button" aria-label="Close">&times;</button>
+  <button class="set-of-works-close" id="setOfWorksClose" type="button" aria-label="${escapeHtml(t("detail.close"))}">&times;</button>
 </div>
 <div class="set-of-works-panels" id="setOfWorksPanels"></div>
 `;
@@ -65,7 +66,7 @@ export class TranquiloSetOfWorksMode extends HTMLElement {
     if (this.getAttribute("data-set-of-works-mode-mounted") === "1") return;
     this.setAttribute("data-set-of-works-mode-mounted", "1");
 
-    this.innerHTML = SET_OF_WORKS_MARKUP;
+    this.innerHTML = setOfWorksMarkup();
     this.headerTitleEl = this.requireEl("#setOfWorksHeaderTitle");
     this.closeBtn = this.requireEl<HTMLButtonElement>("#setOfWorksClose");
     this.panelsEl = this.requireEl("#setOfWorksPanels");
@@ -92,17 +93,17 @@ export class TranquiloSetOfWorksMode extends HTMLElement {
       ? `<span class="sep">&middot;</span>${escapeHtml(item.date)}`
       : "";
     panel.innerHTML =
-      `<div class="set-of-works-frame"><img src="${item.img}" alt="${escapeHtml(item.title || "Untitled")}"></div>` +
-      `<h3 class="set-of-works-title">${escapeHtml(item.title || "Untitled")}</h3>` +
+      `<div class="set-of-works-frame"><img src="${item.img}" alt="${escapeHtml(item.title || t("common.untitled"))}"></div>` +
+      `<h3 class="set-of-works-title">${escapeHtml(item.title || t("common.untitled"))}</h3>` +
       `<p class="set-of-works-meta">${artistLine}${dateLine}</p>` +
       `<p class="set-of-works-trait">${escapeHtml(member.distinguishing_trait)}</p>` +
-      `<button type="button" class="set-of-works-details-btn">View details &rarr;</button>`;
+      `<button type="button" class="set-of-works-details-btn">${escapeHtml(t("setOfWorks.details"))} &rarr;</button>`;
     const frame = panel.querySelector(".set-of-works-frame") as HTMLElement;
     host.applyNudityGate(frame, item, true);
     const frameImg = frame.querySelector("img") as HTMLImageElement;
     frameImg.addEventListener("click", () => {
       if (frame.classList.contains("nudity-gated")) return;
-      host.openLightbox(item.img, item.title || "Untitled", item);
+      host.openLightbox(item.img, item.title || t("common.untitled"), item);
     });
     const detailsBtn = panel.querySelector(
       ".set-of-works-details-btn",

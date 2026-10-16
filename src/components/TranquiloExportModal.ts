@@ -3,15 +3,18 @@
 // overlay-history mechanism; the actual CSV export stays app.js's job,
 // this element just owns the confirmation UI shown after. Light DOM, not
 // shadow root -- styles already live in css/style.css.
+
+import { escapeHtml } from "../feed/slideBuilder";
+import { t } from "../i18n/index";
 import type { ITranquiloExportModalHost } from "../types/ITranquiloExportModalHost";
 import { on } from "../utils/on";
 
-const EXPORT_MODAL_MARKUP = `
+const exportModalMarkup = () => `
 <div class="export-modal-inner">
-  <button class="export-modal-close" id="exportModalClose" type="button" aria-label="Close">&times;</button>
-  <h2>Your CSV is downloading</h2>
-  <p>Syncing across devices, organized lists, and sharing are part of Pro, still taking shape.</p>
-  <a class="upsell-cta" href="/pages/pro.html">Join the waitlist</a>
+  <button class="export-modal-close" id="exportModalClose" type="button" aria-label="${escapeHtml(t("detail.close"))}">&times;</button>
+  <h2>${escapeHtml(t("export.title"))}</h2>
+  <p>${escapeHtml(t("export.body"))}</p>
+  <a class="upsell-cta" href="/pages/pro.html">${escapeHtml(t("upsell.cta"))}</a>
 </div>
 `;
 
@@ -31,7 +34,7 @@ export class TranquiloExportModal extends HTMLElement {
     if (this.getAttribute("data-export-modal-mounted") === "1") return;
     this.setAttribute("data-export-modal-mounted", "1");
 
-    this.innerHTML = EXPORT_MODAL_MARKUP;
+    this.innerHTML = exportModalMarkup();
     const closeBtn = this.querySelector<HTMLButtonElement>("#exportModalClose");
     if (!closeBtn) {
       throw new Error(

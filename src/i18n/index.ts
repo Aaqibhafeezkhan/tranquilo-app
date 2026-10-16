@@ -18,6 +18,7 @@
 // Insert results with textContent or setAttribute, never innerHTML:
 // translations are contributed text and must not be parsed as markup.
 import {
+  escapeHtml,
   fallbackChain,
   interpolate,
   lookup,
@@ -168,12 +169,42 @@ export function t(key: MessageKey, params?: Params): string {
  * with the locale-formatted number.
  */
 export function tn(base: PluralBase, count: number, params?: Params): string {
+  return interpolate(pluralTemplate(base, count), {
+    count: formatNumber(count),
+    ...params,
+  });
+}
+
+function pluralTemplate(base: string, count: number): string {
   const key = pluralKey(base, count, currentLocale());
-  let template = lookup(key, chain(), DICTIONARIES);
-  if (template === key) {
-    template = lookup(`${base}.other`, chain(), DICTIONARIES);
-  }
-  return interpolate(template, { count: formatNumber(count), ...params });
+  const template = lookup(key, chain(), DICTIONARIES);
+  return template === key
+    ? lookup(`${base}.other`, chain(), DICTIONARIES)
+    : template;
+}
+
+/**
+ * Like t(), for a sentence that wraps markup around a value -- e.g.
+ * `tHtml("search.moreBy", { artist: `<strong>${escapeHtml(name)}</strong>` })`.
+ * The translated template is escaped (translations are contributed text);
+ * params are inserted as given, so escaping any user input inside them is
+ * the caller's job. Prefer t() + textContent wherever no markup is needed.
+ */
+export function tHtml(key: MessageKey, params?: Params): string {
+  const template = escapeHtml(lookup(key, chain(), DICTIONARIES));
+  return params ? interpolate(template, params) : template;
+}
+
+/** tn() with tHtml()'s escaping rules; params (including {count}) may carry markup. */
+export function tnHtml(
+  base: PluralBase,
+  count: number,
+  params?: Params,
+): string {
+  return interpolate(escapeHtml(pluralTemplate(base, count)), {
+    count: formatNumber(count),
+    ...params,
+  });
 }
 
 /** A number with the active locale's separators: 1,234 / 1.234. */

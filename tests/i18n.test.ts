@@ -320,6 +320,38 @@ describe("runtime (src/i18n/index.ts)", () => {
     for (const l of i18n.shippedLocales()) expect(l.status).toBe("shipped");
   });
 
+  // For sentences that wrap markup around a value ("<strong>3</strong>
+  // results for …"): the translated template is escaped -- translations are
+  // contributed text -- but params are caller-built HTML, inserted as given.
+  // Escaping user input in a param stays the caller's job.
+  describe("tHtml / tnHtml", () => {
+    it("escapes the translated template", async () => {
+      const i18n = await loadWith({});
+      expect(i18n.tHtml("detail.report.image")).toBe(
+        "There&#39;s an issue with image",
+      );
+    });
+
+    it("inserts params as given, so callers can wrap markup", async () => {
+      const i18n = await loadWith({});
+      expect(i18n.tHtml("detail.cast.possibly", { name: "<b>Ana</b>" })).toBe(
+        "Possibly <b>Ana</b>",
+      );
+    });
+
+    it("picks the plural form by count, and lets {count} carry markup", async () => {
+      const i18n = await loadWith({});
+      expect(
+        i18n.tnHtml("topbar.collection.count", 3, {
+          count: "<strong>3</strong>",
+        }),
+      ).toBe("My Collection, <strong>3</strong> items");
+      expect(i18n.tnHtml("topbar.collection.count", 1)).toBe(
+        "My Collection, 1 item",
+      );
+    });
+  });
+
   // ?lang= is the shareable way into a locale -- including a draft one, so
   // a preview link can be shared (e.g. with a reviewer) before the language
   // is public. It's an explicit choice, so it's

@@ -32,7 +32,7 @@ test.describe("a browser asking for draft pt-BR", () => {
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
   });
 
-  test("an explicit opt-in sets lang=pt-BR and falls back per key", async ({
+  test("an explicit stored opt-in sets lang=pt-BR and its strings", async ({
     page,
   }) => {
     await page.addInitScript(() => {
@@ -40,9 +40,11 @@ test.describe("a browser asking for draft pt-BR", () => {
     });
     await gotoFeed(page);
     await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
-    // The toast has no pt-BR strings yet: English fallback, never
-    // "upsell.cta".
-    await expect(page.locator("#upsellCta")).toHaveText("Join the waitlist");
+    // Per-key fallback to English is pinned by tests/i18n.test.ts with
+    // fixture dictionaries; pt-BR itself now covers every key.
+    await expect(page.locator("#upsellCta")).toHaveText(
+      "Entrar na lista de espera",
+    );
   });
 });
 
@@ -64,6 +66,40 @@ test.describe("a ?lang=pt-BR link", () => {
     // A later visit without the parameter keeps the choice.
     await gotoFeed(page);
     await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
+  });
+
+  test("the top bar, drawn while modules load, is already in pt-BR", async ({
+    page,
+  }) => {
+    // <tranquilo-topbar> renders its markup in connectedCallback, which
+    // runs when its module defines the element -- before app.ts's start().
+    // So this fails if the link were only honoured at startup.
+    await gotoFeed(page, "?lang=pt-BR");
+    await expect(page.locator("#searchToggle")).toHaveAttribute(
+      "aria-label",
+      "Buscar",
+    );
+  });
+
+  test("never shows a raw dictionary key anywhere on the page", async ({
+    page,
+  }) => {
+    await gotoFeed(page, "?lang=pt-BR");
+    await page.locator("#searchToggle").click();
+    // Visible text plus the attributes screen readers and placeholders use.
+    const text = await page.evaluate(() => {
+      const attrs = Array.from(
+        document.querySelectorAll("[aria-label], [placeholder], [title]"),
+      ).flatMap((el) => [
+        el.getAttribute("aria-label") ?? "",
+        el.getAttribute("placeholder") ?? "",
+        el.getAttribute("title") ?? "",
+      ]);
+      return [document.body.innerText, ...attrs].join("\n");
+    });
+    const keyLike =
+      /\b(?:intro|topbar|slide|detail|search|support|shelves|storyline|chips|common|facet|filter|error|lightbox|export|share|collection|upsell|artistCard|setOfWorks)\.[a-zA-Z][\w-]*(?:\.[\w-]+)*/g;
+    expect(text.match(keyLike) ?? []).toEqual([]);
   });
 
   test("?lang=en switches back", async ({ page }) => {
