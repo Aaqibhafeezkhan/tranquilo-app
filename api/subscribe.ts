@@ -1,5 +1,5 @@
 // One capture endpoint for multiple entry points (Pro waitlist, feature
-// notify, newsletter), distinguished by a `source` property rather than
+// notify, newsletter opt-in on submit, homepage newsletter), distinguished by a `source` property rather than
 // separate systems per entry point.
 //
 // Uses Resend's global Contacts model (POST /contacts, no audience_id)
@@ -19,6 +19,7 @@ const VALID_SOURCES: Record<string, boolean> = {
   pro_waitlist: true,
   feature_notify: true,
   newsletter_submit: true,
+  homepage_newsletter: true,
 };
 
 // Contact Properties must exist on the account before create-contact

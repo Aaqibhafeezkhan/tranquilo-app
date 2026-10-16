@@ -224,7 +224,8 @@ paths:
       operationId: subscribe
       description: >-
         One capture endpoint for every "leave your email" entry point (Pro
-        waitlist, feature-notify, newsletter opt-in), distinguished by
+        waitlist, feature-notify, newsletter opt-in, homepage newsletter),
+        distinguished by
         `source`. Re-subscribing under a second source merges into a
         comma-separated `source` property rather than overwriting the
         first.
@@ -239,7 +240,7 @@ paths:
                 email: { type: string, format: email }
                 source:
                   type: string
-                  enum: [pro_waitlist, feature_notify, newsletter_submit]
+                  enum: [pro_waitlist, feature_notify, newsletter_submit, homepage_newsletter]
       responses:
         "200":
           description: Subscribed (or already subscribed -- this call is idempotent).
