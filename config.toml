@@ -80,8 +80,13 @@ token_starvation_min_attempts = 20
 # Above the admission threshold by enough that a one-off cannot qualify,
 # and above the ordinary retry noise of a single visitor reloading.
 thrash_min_requests = 4
-# One thrashing key is an oddity; a cluster is a budget problem.
+# One unstored hot key is an oddity (an oversized scan, one visitor
+# reloading); a cluster of them at once means the store is failing.
 thrash_min_keys = 10
+# Only keys requested this recently count. Without a window, unrelated
+# one-time failures pile up for months until they cross thrash_min_keys
+# and the alert fires about a store that is working fine today.
+thrash_window_days = 7
 
 [source_health]
 # Asymmetric on purpose -- see lib/source-health.ts's own comment. Five

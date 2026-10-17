@@ -117,6 +117,38 @@ describe("eviction thrash", () => {
     for (let i = 0; i < 50; i++) await entry(`met:once${i}:display`, 1, null);
     expect(await alerts.checkEvictionThrash(sql)).toEqual([]);
   });
+
+  it("ignores keys nobody has asked for recently", async () => {
+    // Without a window, every key that was ever hot and never stored stays
+    // counted forever, so months of unrelated one-time failures eventually
+    // add up to an alert about a store that is working fine today.
+    for (let i = 0; i < 12; i++) await entry(`met:old${i}:display`, 6, null);
+    await sql.query(
+      "UPDATE img_cache_entries SET last_seen = now() - make_interval(days => $1)",
+      [alerts.THRASH_WINDOW_DAYS + 1],
+    );
+    expect(await alerts.checkEvictionThrash(sql)).toEqual([]);
+  });
+
+  it("ignores sources we have deliberately put on hold", async () => {
+    // A held source never fetches, so its keys are unstored by design --
+    // the same exclusion the token-bucket check makes.
+    await sql.query(
+      "INSERT INTO source_fetch_state (source, tokens, refill_per_sec, hold_reason) " +
+        "VALUES ('met', 0, 0, 'paused') " +
+        "ON CONFLICT (source) DO UPDATE SET hold_reason = EXCLUDED.hold_reason",
+    );
+    for (let i = 0; i < 12; i++) await entry(`met:held${i}:display`, 6, null);
+    expect(await alerts.checkEvictionThrash(sql)).toEqual([]);
+  });
+
+  it("describes a failing store, not eviction", async () => {
+    // Nothing evicts objects any more; advice about the storage budget
+    // would send whoever reads this looking in the wrong place.
+    for (let i = 0; i < 12; i++) await entry(`met:thrash${i}:display`, 6, null);
+    const [line] = await alerts.checkEvictionThrash(sql);
+    expect(line).not.toMatch(/evict|budget|pin set/i);
+  });
 });
 
 describe("rate-limit digest", () => {
