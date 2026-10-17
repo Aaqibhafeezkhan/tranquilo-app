@@ -1,23 +1,25 @@
-// "Cite this work": an MLA 9 or APA 7 citation for an artwork, built only
-// from fields the item actually has. The work is cited at the institution
-// that holds it, via its own object page -- not via Tranquilo, and not via
-// the caption's grounding sources (those support the caption, not the
-// work's identity).
+// "Cite this work": an MLA 9, APA 7 or ABNT (NBR 6023) citation for an
+// artwork, built only from fields the item actually has. The work is cited
+// at the institution that holds it, via its own object page -- not via
+// Tranquilo, and not via the caption's grounding sources (those support the
+// caption, not the work's identity).
 //
 // Deliberately conservative:
 // - A missing field is dropped, never printed as a blank or "Unknown".
-// - The artist string is used as stored. Both styles prefer "Surname,
-//   Given" for people, but inverting names automatically goes wrong for
-//   single names, workshops, cultures and non-Western name order, and a
-//   wrong name is worse than an un-inverted one.
+// - The artist string is used as stored. All three styles prefer "Surname,
+//   Given" for people (ABNT also upper-cases the surname), but inverting
+//   names automatically goes wrong for single names, workshops, cultures
+//   and non-Western name order, and a wrong name is worse than an
+//   un-inverted one.
 // - Plain text: the styles italicize the title, which a clipboard of plain
 //   text can't carry.
-// Citation styles are English-language conventions, so the text stays in
-// English whatever the interface language is.
+// Each style keeps its own language conventions whatever the interface
+// language is: MLA and APA are English, ABNT is Brazilian Portuguese
+// ("Disponível em", "Acesso em").
 import { isRealArtist } from "../logic/logic";
 import { institutionName } from "./ExportService";
 
-export type CitationStyle = "mla" | "apa";
+export type CitationStyle = "mla" | "apa" | "abnt";
 
 export interface CitableItem {
   source?: string | null;
@@ -43,6 +45,22 @@ const MLA_MONTHS = [
   "Oct.",
   "Nov.",
   "Dec.",
+];
+
+// ABNT abbreviates every month except maio (NBR 6023, annex A).
+const ABNT_MONTHS = [
+  "jan.",
+  "fev.",
+  "mar.",
+  "abr.",
+  "maio",
+  "jun.",
+  "jul.",
+  "ago.",
+  "set.",
+  "out.",
+  "nov.",
+  "dez.",
 ];
 
 function clean(value: string | null | undefined): string {
@@ -87,10 +105,36 @@ function apa(item: CitableItem): string {
     .join(" ");
 }
 
+function abnt(item: CitableItem, accessed: Date): string {
+  const artist = isRealArtist(item.artist) ? clean(item.artist) : "";
+  const title = clean(item.title) || "Untitled";
+  // "[s. d.]" (sine data) is ABNT's marker for an undated work.
+  const date = clean(item.date) || "[s. d.]";
+  const url = clean(item.url);
+  const accessedOn = `Acesso em: ${accessed.getDate()} ${ABNT_MONTHS[accessed.getMonth()]} ${accessed.getFullYear()}.`;
+  return [
+    artist,
+    title,
+    date,
+    clean(item.medium),
+    clean(institutionName(item)),
+    url ? `Disponível em: ${url}` : "",
+  ]
+    .filter(Boolean)
+    .map(sentence)
+    .concat(url ? [accessedOn] : [])
+    .join(" ");
+}
+
+const FORMATTERS: Record<
+  CitationStyle,
+  (item: CitableItem, accessed: Date) => string
+> = { mla, apa: (item) => apa(item), abnt };
+
 export function formatCitation(
   item: CitableItem,
   style: CitationStyle,
   accessed: Date = new Date(),
 ): string {
-  return style === "mla" ? mla(item, accessed) : apa(item);
+  return FORMATTERS[style](item, accessed);
 }

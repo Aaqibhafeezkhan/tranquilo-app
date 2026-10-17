@@ -429,32 +429,67 @@
   .fact-label{ position:relative; }
 }
 
-/* "Cite this work": a quiet text button under the source link that opens
-   both citation styles. Same gold-soft as the source link, so it reads as
-   a sibling of it rather than a new kind of control. */
-.detail-modal-inner .cite{ margin-top:10px; }
-.detail-modal-inner .btn-cite{
-  background:none;
-  border:0;
-  padding:0;
-  font:inherit;
-  font-size:0.9rem;
-  color:var(--gold-soft);
-  text-decoration:underline;
-  text-underline-offset:3px;
-  text-decoration-color:rgba(203,184,136,0.5);
-  cursor:pointer;
+/* Actions ("View on <institution>", "Cite this work") are set apart from the
+   metadata list above them: a divider, then one row of matching pills --
+   the same control language as the category chips -- so they read as
+   things to do rather than two more facts. The citation panel opens full
+   width under the row. */
+.detail-modal-inner .detail-actions{
+  margin-top:22px;
+  padding-top:16px;
+  border-top:1px solid rgba(255,255,255,0.12);
 }
-.detail-modal-inner .btn-cite:hover{ color:#fff; }
+.detail-modal-inner .detail-actions-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+/* The pill's border is its only line: no text underline on top of it
+   (see tests/e2e/link-underlines.spec.mts). */
+.detail-modal-inner .detail-actions a.source-link,
+.detail-modal-inner .btn-cite{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:7px 14px;
+  border:1px solid rgba(255,255,255,0.18);
+  border-radius:999px;
+  background:rgba(255,255,255,0.06);
+  color:#fff;
+  font:inherit;
+  font-size:0.85rem;
+  line-height:1.2;
+  text-decoration:none;
+  cursor:pointer;
+  transition:border-color 0.2s ease, background 0.2s ease;
+}
+.detail-modal-inner .detail-actions a.source-link .link-text{ text-decoration:none; }
+.detail-modal-inner .detail-actions a.source-link:hover,
+.detail-modal-inner .btn-cite:hover{
+  color:#fff;
+  border-color:var(--gold-soft);
+  background:rgba(255,255,255,0.1);
+}
+.detail-modal-inner .btn-cite[aria-expanded="true"]{ border-color:var(--gold-soft); }
+/* Expand indicator, keyed off aria-expanded so what a sighted visitor sees
+   and what a screen reader announces can't disagree. */
+.detail-modal-inner .btn-cite::after{
+  content:"+";
+  display:inline-block;
+  width:1em;
+  text-align:center;
+}
+.detail-modal-inner .btn-cite[aria-expanded="true"]::after{ content:"\2212"; }
 .detail-modal-inner .cite-panel{
-  margin-top:10px;
+  margin-top:12px;
   display:grid;
   gap:10px;
 }
 .detail-modal-inner .cite-panel[hidden]{ display:none; }
 .detail-modal-inner .cite-row{
   display:grid;
-  grid-template-columns:auto 1fr auto;
+  /* Fixed label column so every style's text starts at the same x. */
+  grid-template-columns:3em 1fr auto;
   align-items:start;
   gap:10px;
   padding:10px 12px;

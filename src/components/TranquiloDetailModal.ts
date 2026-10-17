@@ -389,25 +389,28 @@ function sourceHostLabel(url: string): string {
   }
 }
 
-// "Cite this work": MLA and APA side by side, each with its own Copy
-// button. Offered only alongside a Tea caption, the reviewed tier whose
+// "Cite this work": MLA, APA and ABNT (the Brazilian standard), each with
+// its own Copy button. Collapsed until asked for. Offered only alongside a Tea caption, the reviewed tier whose
 // readers (educators, students) are the ones asking for citations.
 const CITATION_STYLES: { style: CitationStyle; label: string }[] = [
   { style: "mla", label: "MLA" },
   { style: "apa", label: "APA" },
+  { style: "abnt", label: "ABNT" },
 ];
 
-function buildCiteHtml(item: Item): string {
+function citeButtonHtml(item: Item): string {
   if (!item.caption_tea) return "";
-  return (
-    `<div class="cite"><button class="btn-cite" type="button" aria-expanded="false">${escapeHtml(t("detail.cite.button"))}</button>` +
-    `<div class="cite-panel" hidden>${CITATION_STYLES.map(
-      ({ style, label }) =>
-        `<div class="cite-row" data-style="${style}"><span class="cite-style">${label}</span>` +
-        `<p class="cite-text">${escapeHtml(formatCitation(item, style))}</p>` +
-        `<button class="cite-copy" type="button">${escapeHtml(t("detail.cite.copy"))}</button></div>`,
-    ).join("")}</div></div>`
-  );
+  return `<button class="btn-cite" type="button" aria-expanded="false">${escapeHtml(t("detail.cite.button"))}</button>`;
+}
+
+function citePanelHtml(item: Item): string {
+  if (!item.caption_tea) return "";
+  return `<div class="cite-panel" hidden>${CITATION_STYLES.map(
+    ({ style, label }) =>
+      `<div class="cite-row" data-style="${style}"><span class="cite-style">${label}</span>` +
+      `<p class="cite-text">${escapeHtml(formatCitation(item, style))}</p>` +
+      `<button class="cite-copy" type="button">${escapeHtml(t("detail.cite.copy"))}</button></div>`,
+  ).join("")}</div>`;
 }
 
 function wireCite(container: HTMLElement): void {
@@ -698,11 +701,10 @@ export class TranquiloDetailModal extends HTMLElement {
         // ingestion, so anything reaching here has earned the label.
       }${metaRow(t("detail.meta.provenance"), item.credit)}${metaRow(t("detail.meta.tagged"), item.tags)}${
         licenseRow(item)
+        // Actions, not metadata: grouped after a divider (.detail-actions).
         // sourceLinkLabel() rather than an inline lookup, so this and the
         // lightbox's link can't drift into naming the institution two ways.
-      }<div style="margin-top:14px;"><a class="source-link" href="${item.url}" target="_blank" rel="noopener"><span class="link-text">View ${escapeHtml(host.sourceLinkPreposition(item))} ${escapeHtml(host.sourceLinkLabel(item))}</span><span class="link-arrow" aria-hidden="true">&rarr;</span></a></div>${buildCiteHtml(
-        item,
-      )}` +
+      }<div class="detail-actions"><div class="detail-actions-row"><a class="source-link" href="${item.url}" target="_blank" rel="noopener"><span class="link-text">View ${escapeHtml(host.sourceLinkPreposition(item))} ${escapeHtml(host.sourceLinkLabel(item))}</span><span class="link-arrow" aria-hidden="true">&rarr;</span></a>${citeButtonHtml(item)}</div>${citePanelHtml(item)}</div>` +
       `</div>`
     );
   }

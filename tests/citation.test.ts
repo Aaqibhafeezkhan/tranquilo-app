@@ -62,9 +62,38 @@ describe("APA", () => {
   });
 });
 
-describe("both styles", () => {
+describe("ABNT (NBR 6023)", () => {
+  it("cites author, title, date, medium, institution, Disponível em and Acesso em", () => {
+    expect(formatCitation(full, "abnt", ACCESSED)).toBe(
+      "Vincent van Gogh. Wheat Field with Cypresses. 1889. Oil on canvas. " +
+        "The Metropolitan Museum of Art. " +
+        "Disponível em: https://www.metmuseum.org/art/collection/search/436535. " +
+        "Acesso em: 17 out. 2026.",
+    );
+  });
+
+  it("marks a missing date [s. d.] and starts with the title for no artist", () => {
+    const c = formatCitation(
+      { ...full, artist: "Unknown", date: null },
+      "abnt",
+      ACCESSED,
+    );
+    expect(c.startsWith("Wheat Field with Cypresses. [s. d.].")).toBe(true);
+  });
+
+  it("uses Portuguese month abbreviations (maio is never abbreviated)", () => {
+    expect(formatCitation(full, "abnt", new Date(2026, 4, 2))).toContain(
+      "Acesso em: 2 maio 2026.",
+    );
+    expect(formatCitation(full, "abnt", new Date(2026, 8, 9))).toContain(
+      "Acesso em: 9 set. 2026.",
+    );
+  });
+});
+
+describe("every style", () => {
   it("drop missing fields instead of leaving empty punctuation", () => {
-    for (const style of ["mla", "apa"] as const) {
+    for (const style of ["mla", "apa", "abnt"] as const) {
       const c = formatCitation(
         { source: "met", title: "Fan", url: full.url },
         style,
@@ -80,7 +109,7 @@ describe("both styles", () => {
       title: "Bowl",
       url: "https://asia.si.edu/object/F1909.1/",
     };
-    for (const style of ["mla", "apa"] as const) {
+    for (const style of ["mla", "apa", "abnt"] as const) {
       expect(formatCitation(item, style, ACCESSED)).toContain(
         "National Museum of Asian Art",
       );

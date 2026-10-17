@@ -1,5 +1,6 @@
 // "Cite this work" in the detail panel: offered only where there's a Tea
-// caption, shows an MLA and an APA citation, and copies the one asked for.
+// caption, starts collapsed with a visible expand indicator, shows MLA, APA
+// and ABNT citations, and copies the one asked for.
 // The citation text itself is unit-tested (tests/citation.test.ts); this
 // covers the visitor-facing behaviour.
 
@@ -19,18 +20,41 @@ async function openDetailFor(page: Page, item: any) {
   await expect(page.locator("#detailModal")).toHaveClass(/open/);
 }
 
-test("an item with a Tea caption offers both citation styles", async ({
+test("the citations start collapsed, with an indicator that they expand", async ({
   page,
 }) => {
   expect(TEA, "fixture needs an item with caption_tea").toBeTruthy();
   await openDetailFor(page, TEA);
 
+  const btn = page.locator("#detailModal .btn-cite");
   const panel = page.locator("#detailModal .cite-panel");
-  await expect(panel).toBeHidden();
-  await page.locator("#detailModal .btn-cite").click();
-  await expect(panel).toBeVisible();
+  // The indicator is drawn by CSS, so read what's actually rendered.
+  const indicator = () =>
+    btn.evaluate((el) => getComputedStyle(el, "::after").content);
 
-  for (const style of ["mla", "apa"]) {
+  await expect(panel).toBeHidden();
+  await expect(btn).toHaveAttribute("aria-expanded", "false");
+  const collapsed = await indicator();
+  expect(collapsed).not.toMatch(/^(none|normal|"")$/);
+
+  await btn.click();
+  await expect(panel).toBeVisible();
+  await expect(btn).toHaveAttribute("aria-expanded", "true");
+  expect(await indicator()).not.toBe(collapsed);
+
+  await btn.click();
+  await expect(panel).toBeHidden();
+  await expect(btn).toHaveAttribute("aria-expanded", "false");
+});
+
+test("an item with a Tea caption offers MLA, APA and ABNT", async ({
+  page,
+}) => {
+  await openDetailFor(page, TEA);
+  const panel = page.locator("#detailModal .cite-panel");
+  await page.locator("#detailModal .btn-cite").click();
+
+  for (const style of ["mla", "apa", "abnt"]) {
     const text = panel.locator(`[data-style="${style}"] .cite-text`);
     await expect(text).toContainText(TEA.title);
     await expect(text).toContainText(TEA.url.replace(/^https?:\/\//, ""));
