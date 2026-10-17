@@ -79,6 +79,55 @@ test("they stay together while the search PANEL is still open", async ({
   expect(await iconSpread(page)).toBeLessThan(CLUSTERED_MAX_PX);
 });
 
+// The four icons read as one segmented control, not four loose circles:
+// fixed left-to-right order, and no daylight between neighbours. Measured
+// on screen rather than in the DOM, since the desktop layout used to
+// place each icon by CSS `order` independently of where it sat in markup.
+const GROUP_ORDER = [
+  "searchToggle",
+  "discoverToggle",
+  "collectionToggle",
+  "musicToggle",
+];
+
+async function iconRow(page: Page) {
+  return page.evaluate((ids) => {
+    return ids.map((id) => {
+      const r = document.getElementById(id)!.getBoundingClientRect();
+      return { id, x: r.x, right: r.right, y: r.y };
+    });
+  }, GROUP_ORDER);
+}
+
+for (const width of [390, 1440]) {
+  test(`${width}px: the icons read Search, Discover, Collection, Music`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await gotoFeed(page);
+    const row = await iconRow(page);
+    const onScreen = [...row].sort((a, b) => a.x - b.x).map((r) => r.id);
+    expect(onScreen).toEqual(GROUP_ORDER);
+  });
+
+  test(`${width}px: the icons are one group, with no gaps between them`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await gotoFeed(page);
+    const row = await iconRow(page);
+    for (let i = 1; i < row.length; i++) {
+      const gap = row[i].x - row[i - 1].right;
+      expect(
+        Math.abs(gap),
+        `${row[i - 1].id} → ${row[i].id} gap`,
+      ).toBeLessThanOrEqual(1.5);
+      // Same row, not wrapped onto a second line.
+      expect(Math.abs(row[i].y - row[0].y)).toBeLessThanOrEqual(1);
+    }
+  });
+}
+
 test("the icons remain the rightmost thing in the header", async ({ page }) => {
   // Clustering alone isn't enough -- clustered on the left would pass a
   // spread check and still be wrong.

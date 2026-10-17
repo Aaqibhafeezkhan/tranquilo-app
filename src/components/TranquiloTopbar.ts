@@ -1,4 +1,4 @@
-// The top bar (wordmark, music/search/discover/collection toggles, the
+// The top bar (wordmark, the search/discover/collection/music button group, the
 // category chip row and its overflow menu, and the filter banner), as a
 // native custom element.
 //
@@ -49,10 +49,7 @@ const topbarMarkup = () => `
 </div>
 <div class="topbar-row1">
   <a class="wordmark" href="/" aria-label="${h(t("topbar.home"))}"><img class="wordmark-mark" src="${tranquiloFlowerVioletUrl}" alt="" width="30" height="41" aria-hidden="true"><span>Tranquilo</span></a>
-  <div class="topbar-icons">
-    <button class="music-toggle" id="musicToggle" type="button" aria-pressed="false" aria-label="${h(t("topbar.music"))}">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
-    </button>
+  <div class="topbar-icons" role="group">
     <button class="search-toggle" id="searchToggle" type="button" aria-label="${h(t("topbar.search"))}">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
     </button>
@@ -61,6 +58,9 @@ const topbarMarkup = () => `
     </button>
     <button class="collection-toggle" id="collectionToggle" type="button" aria-label="${h(t("topbar.collection.label"))}">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg><span class="collection-count" id="collectionCount" aria-hidden="true"></span>
+    </button>
+    <button class="music-toggle" id="musicToggle" type="button" aria-pressed="false" aria-label="${h(t("topbar.music"))}">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
     </button>
   </div>
 </div>
