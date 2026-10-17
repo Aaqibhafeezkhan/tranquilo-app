@@ -21,6 +21,7 @@ import { facetLabel, t } from "../i18n/index";
 import {
   deriveTint,
   hexToRgb,
+  isRealArtist,
   rgbToHsl,
   shouldLogFailure,
   shouldSkipAutomaticLoad,
@@ -67,6 +68,10 @@ export interface ISlideBuilderHost {
   openDetailModal(item: Item): void;
   openStorylineMode(storylineId: string): void;
   openSetOfWorksMode(setOfWorkId: string): void;
+  // "More by <artist>" from the caption's artist name -- the same filter
+  // the detail panel's artist link applies. A no-op if that artist's view
+  // is already showing, so tapping a name there doesn't jump to the top.
+  showMoreByArtist(artist: string): void;
   shareItem(item: Item): void;
 }
 
@@ -455,9 +460,14 @@ export function createSlideBuilder(
     const caption = document.createElement("div");
     caption.className = "caption";
 
-    const artistLine = item.artist
-      ? `<span class="artist">${escapeHtml(item.artist)}</span>`
-      : "";
+    // A real artist's name is a button into "More by <artist>"; a
+    // placeholder ("Unknown", "Anonymous") stays plain text, as in the
+    // detail panel -- there's no one to show more of.
+    const artistLine = !item.artist
+      ? ""
+      : isRealArtist(item.artist)
+        ? `<button type="button" class="artist" aria-label="${escapeHtml(t("filter.moreBy", { artist: item.artist }))}">${escapeHtml(item.artist)}</button>`
+        : `<span class="artist">${escapeHtml(item.artist)}</span>`;
     const dateLine = item.date
       ? `<span class="sep">&middot;</span>${escapeHtml(item.date)}`
       : "";
@@ -483,6 +493,14 @@ ${setOfWork ? `<button class="set-of-works-chip" type="button">${SET_OF_WORKS_SV
     detailsBtn.addEventListener("click", () => {
       host.openDetailModal(item);
     });
+
+    const artistBtn = caption.querySelector("button.artist");
+    if (artistBtn && item.artist) {
+      const artist = item.artist;
+      artistBtn.addEventListener("click", () => {
+        host.showMoreByArtist(artist);
+      });
+    }
 
     const storylineChipBtn = caption.querySelector(".storyline-chip");
     if (storylineChipBtn && storyline) {

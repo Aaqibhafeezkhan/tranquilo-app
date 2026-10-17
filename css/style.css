@@ -774,6 +774,24 @@ html,body{
   margin:0 0 2px;
 }
 .art-meta .artist{ font-weight:500; }
+/* A real artist's name is a button into "More by <artist>". Reset to read
+   as the same text, with a quiet underline so it shows as tappable on
+   touch screens, which have no hover. */
+.art-meta button.artist{
+  font:inherit;
+  font-weight:500;
+  color:inherit;
+  background:none;
+  border:0;
+  padding:0;
+  cursor:pointer;
+  text-decoration:underline;
+  text-decoration-color:rgba(242,239,230,0.55);
+  text-decoration-thickness:1px;
+  text-underline-offset:3px;
+}
+.art-meta button.artist:hover{ text-decoration-color:var(--gold-soft); color:#fff; }
+.art-meta button.artist:focus-visible{ outline:2px solid var(--gold-soft); outline-offset:2px; border-radius:2px; }
 .art-meta .sep{ margin:0 6px; color:rgba(242,239,230,0.4); }
 
 .art-medium{

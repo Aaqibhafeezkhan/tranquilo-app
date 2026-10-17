@@ -657,6 +657,10 @@ class TranquiloApp {
         openSetOfWorksMode: (setOfWorkId: any) => {
           setOfWorksModeEl.open(setOfWorkId);
         },
+        showMoreByArtist: (artist: string) => {
+          if (filterState.getArtist() === artist) return;
+          setArtistFilter(artist);
+        },
         shareItem: (item: any) => {
           shareItem(item);
         },
