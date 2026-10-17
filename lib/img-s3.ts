@@ -3,11 +3,14 @@
 // in the single hottest function in the project for one signed request.
 //
 // Path-style addressing, not virtual-hosted: the bucket name
-// `cdn.tranquilo.art` contains dots, so the virtual-hosted host
-// (cdn.tranquilo.art.s3.us-east-1.amazonaws.com) has more labels than AWS's
-// wildcard cert (*.s3.us-east-1.amazonaws.com) can match -- confirmed live,
-// TLS fails with "no alternative certificate subject name matches". Path-style
-// keeps the host at plain s3.<region>.amazonaws.com, which verifies.
+// `cdn.prod.tranquilo.art` contains dots, so the virtual-hosted host
+// (cdn.prod.tranquilo.art.s3.us-east-1.amazonaws.com) has more labels than
+// AWS's wildcard cert (*.s3.us-east-1.amazonaws.com) can match -- confirmed
+// live, TLS fails with "no alternative certificate subject name matches".
+// Path-style keeps the host at plain s3.<region>.amazonaws.com, which
+// verifies. The bucket itself has been rotated at least once (same dotted-
+// name requirement each time) -- this reasoning outlives any one bucket
+// name, so don't treat the literal name here as a config source of truth.
 
 import crypto from "node:crypto";
 
