@@ -84,13 +84,25 @@ function artistQuery(names: any): string {
     .map((n: any) => `"${sparqlString(n)}"@en`)
     .join(" ");
   return [
-    "SELECT ?artist ?artistLabel ?artistDescription ?birth ?death",
+    "SELECT ?name ?via ?artist ?artistLabel ?artistDescription ?birth ?death",
     "       ?nationalityLabel ?movementLabel ?article ?image WHERE {",
+    // The catalogue's name for an artist is often an alias rather than
+    // Wikidata's main English label ("Rembrandt van Rijn" vs "Rembrandt"),
+    // so both are matched. A property path in the same group as VALUES
+    // keeps ?name bound for the lookup; a UNION of label/alias branches
+    // did not, and scanned every alias (WDQS 504s even at 3 names).
+    // ?via then says which matched, so parseArtists() can prefer a
+    // main-label match when deciding between people.
     `  VALUES ?name { ${values} }`,
-    `  VALUES ?occupation { ${ART_OCCUPATIONS.join(" ")} }`,
-    "  ?artist rdfs:label ?name .",
+    "  ?artist rdfs:label|skos:altLabel ?name .",
     "  ?artist wdt:P31 wd:Q5 .", // human: a museum must not match a name
-    "  ?artist wdt:P106 ?occupation .", // and an artist: not a badminton player
+    // and an artist, not a badminton player. FILTER EXISTS rather than a
+    // join, so an artist with several art occupations is still one row.
+    "  FILTER EXISTS {",
+    "    ?artist wdt:P106 ?occupation .",
+    `    VALUES ?occupation { ${ART_OCCUPATIONS.join(" ")} }`,
+    "  }",
+    '  BIND(IF(EXISTS { ?artist rdfs:label ?name }, "label", "alias") AS ?via)',
     "  OPTIONAL { ?artist wdt:P569 ?birth }",
     "  OPTIONAL { ?artist wdt:P570 ?death }",
     "  OPTIONAL { ?artist wdt:P27 ?nationality }",
@@ -120,20 +132,34 @@ function httpsify(url: any): any {
 // nationalities and two movements arrives as four rows sharing one
 // ?artist URI -- so rows are grouped by artist and multi-valued fields
 // collected, rather than keeping only the last row seen.
+//
+// Results are keyed by the name we ASKED for (?name), not by Wikidata's
+// label: an alias match ("Rembrandt van Rijn" -> label "Rembrandt") must
+// land under the catalogue's spelling, or the card's exact-name lookup
+// never finds it. Wikidata's own label is kept as `label`. Old-style
+// result rows without ?name/?via are read as label matches.
 function parseArtists(json: any): any[] {
   const rows = json?.results?.bindings;
   if (!Array.isArray(rows)) return [];
 
-  const byArtist = new Map();
+  // name -> artist URI -> record
+  const byName = new Map<string, Map<string, any>>();
   rows.forEach((b: any) => {
     const v = (k: any) => (b[k]?.value ? b[k].value : null);
+    const name = v("name") || v("artistLabel");
     const key = v("artist") || v("artistLabel");
-    if (!key) return;
+    if (!name || !key) return;
 
-    let rec = byArtist.get(key);
+    let people = byName.get(name);
+    if (!people) {
+      people = new Map();
+      byName.set(name, people);
+    }
+    let rec = people.get(key);
     if (!rec) {
       rec = {
-        name: v("artistLabel"),
+        name,
+        label: v("artistLabel"),
         wikidata: v("artist"),
         description: v("artistDescription"),
         birth: year(v("birth")),
@@ -148,9 +174,12 @@ function parseArtists(json: any): any[] {
         image: httpsify(v("image")),
         found: true,
         fetched_at: new Date().toISOString(),
+        // Internal: did any row match this person on the main label?
+        _byLabel: false,
       };
-      byArtist.set(key, rec);
+      people.set(key, rec);
     }
+    if ((v("via") || "label") === "label") rec._byLabel = true;
     // Later rows may carry a value an earlier one lacked.
     if (!rec.article) rec.article = v("article");
     if (!rec.image) rec.image = httpsify(v("image"));
@@ -164,27 +193,28 @@ function parseArtists(json: any): any[] {
     if (mov && rec.movement.indexOf(mov) === -1) rec.movement.push(mov);
   });
 
-  // Two painters can share a name. A name matching more than one person
-  // is recorded as ambiguous with every candidate kept and no facts of
-  // its own, rather than silently picking one.
-  const byName = new Map();
-  Array.from(byArtist.values()).forEach((rec: any) => {
-    const list = byName.get(rec.name) || [];
-    list.push(rec);
-    byName.set(rec.name, list);
-  });
-
+  // Two painters can share a name. Main-label matches outrank alias-only
+  // matches: exactly one person whose label IS the name resolves it, even
+  // if others carry it as an alias. Otherwise exactly one alias match
+  // resolves it. Anything else is recorded as ambiguous, with every
+  // contender kept and no facts of its own, rather than silently picking.
   const out: any[] = [];
-  byName.forEach((list: any, name: any) => {
-    if (list.length === 1) {
-      out.push(list[0]);
+  byName.forEach((people, name) => {
+    const all = Array.from(people.values());
+    const byLabel = all.filter((r: any) => r._byLabel);
+    const contenders = byLabel.length ? byLabel : all;
+    contenders.forEach((r: any) => {
+      delete r._byLabel;
+    });
+    if (contenders.length === 1) {
+      out.push(contenders[0]);
       return;
     }
     out.push({
-      name: name,
+      name,
       found: true,
       ambiguous: true,
-      candidates: list.map((c: any) => ({
+      candidates: contenders.map((c: any) => ({
         wikidata: c.wikidata,
         description: c.description,
         birth: c.birth,
@@ -213,9 +243,20 @@ function mergeStore(existing: any, rows: any, missNames?: any): any {
   return out;
 }
 
-function namesToFetch(names: any, existing: any): any[] {
+// A stored answer is never re-asked -- except, when explicitly requested,
+// a stored miss: matching has changed since some misses were recorded
+// (aliases are matched now), so they're worth exactly one more question.
+// Ambiguous names stay as they are; asking again can't make them less so.
+function namesToFetch(
+  names: any,
+  existing: any,
+  opts: { recheckMisses?: boolean } = {},
+): any[] {
   const have = existing || {};
-  return (names || []).filter((n: any) => !have[n]);
+  return (names || []).filter(
+    (n: any) =>
+      !have[n] || (opts.recheckMisses === true && have[n].found === false),
+  );
 }
 
 export {

@@ -14,6 +14,7 @@
 //   node scripts/fetch_wikidata_artists.mts --names "Edgar Degas,Odilon Redon"
 //   node scripts/fetch_wikidata_artists.mts --clusters 5     # top 5 by size
 //   node scripts/fetch_wikidata_artists.mts --dry-run
+//   node scripts/fetch_wikidata_artists.mts --names "..." --recheck-misses
 //
 // Dry run prints the query and writes nothing, so the SPARQL can be reviewed
 // before a single request is made.
@@ -133,9 +134,14 @@ async function main() {
   // deliberate schema widening (a field added to artistQuery() after those
   // answers were recorded), never for routine coverage runs, which must
   // keep going through namesToFetch so a stored miss stays a miss.
+  // --recheck-misses asks stored misses once more. Alias matching was
+  // added after many were recorded, so a "not in Wikidata" from before it
+  // may just have been a spelling Wikidata keeps as an alias.
   const todo: any[] = args.includes("--refresh")
     ? names
-    : wd.namesToFetch(names, store);
+    : wd.namesToFetch(names, store, {
+        recheckMisses: args.includes("--recheck-misses"),
+      });
   console.log(
     `${names.length} name(s) requested; ${names.length - todo.length} already stored; ${todo.length} to fetch`,
   );

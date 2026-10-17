@@ -22,8 +22,9 @@ describe("getArtistProfile", () => {
 
   it("returns null for a recorded miss, not just an absent key", () => {
     // Stored as {found: false} by a real fetch run -- must never render,
-    // same as a name that was never asked at all.
-    expect(getArtistProfile("Pierre Jean David d'Angers")).toBeNull();
+    // same as a name that was never asked at all. A manufactory, so it can
+    // never match the human-artist query and stays a miss for good.
+    expect(getArtistProfile("Meissen Manufactory")).toBeNull();
   });
 
   it("returns null for an ambiguous record even though found is true", () => {
