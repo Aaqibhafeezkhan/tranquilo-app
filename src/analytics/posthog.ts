@@ -23,6 +23,10 @@
 // localStorage -- posthog-js's default ("localStorage+cookie") would
 // otherwise persist an anonymous id across visits, which is exactly the
 // cross-visit tracking pages/privacy.html promises this site doesn't do.
+//
+// Web Vitals (LCP/INP/CLS/FCP) are on: anonymous page-speed timings, so
+// slow pages show up per path. network_timing stays off -- it would log
+// every URL the browser fetched, which nothing here needs.
 // Same real-site/not-opted-out gate as the Cloudflare beacon; calls
 // syncInternalTrafficFlag() itself so it's correct regardless of script order.
 
@@ -58,6 +62,7 @@ export function initPosthog() {
       capture_heatmaps: false,
       disable_surveys: true,
       disable_web_experiments: true,
+      capture_performance: { web_vitals: true, network_timing: false },
     });
     return posthog;
   }

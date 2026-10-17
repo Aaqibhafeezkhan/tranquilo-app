@@ -103,6 +103,25 @@ describe("initPosthog", () => {
     });
     expect(instance).toBeTruthy();
   });
+
+  it("captures page-speed timings (Web Vitals) but never a per-request network log", async () => {
+    // Web Vitals are anonymous timings (how fast the first artwork shows,
+    // how quickly a tap responds) -- what's needed to see whether pages
+    // are slow. network_timing would add every URL the browser fetched,
+    // which this site has no use for and doesn't collect.
+    stubProductionSite();
+    vi.stubEnv("VITE_POSTHOG_TOKEN", "test-token");
+    const init = vi.fn();
+    vi.doMock("posthog-js", () => ({ default: { init } }));
+
+    await import("../src/analytics/posthog");
+
+    const [, config] = init.mock.calls[0];
+    expect(config.capture_performance).toMatchObject({
+      web_vitals: true,
+      network_timing: false,
+    });
+  });
 });
 
 describe("initCloudflareAnalytics", () => {
