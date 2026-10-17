@@ -81,6 +81,11 @@ Full reference: [STANDARDS.md](STANDARDS.md) (stack and tooling) and [CONVENTION
 | Smithsonian Open Access | per-image `usage.access` field (checked at the image level, not the coarser object level) |
 | Europeana | each item's own `rights` URI, checked against an open-license allowlist |
 | Wikimedia Commons | each file's own license template, checked against the same allowlist |
+| National Gallery of Art (Washington) | per-image `openaccess` flag from the NGA Open Data release (CC0) |
+| National Palace Museum (Taiwan) | each record's own license statement, which must be Taiwan's [Open Government Data License v1.0](https://data.gov.tw/license) (CC BY 4.0–compatible, attribution required) |
+| Te Papa Tongarewa | each image's own rights statement, which must be "No Known Copyright Restrictions"; culturally restricted collections are excluded regardless |
+| Wellcome Collection | each image's own license, checked against the same allowlist |
+| Brazilian museums via Tainacan (Museu de Arte do Rio Grande do Sul, Museu do Ouro, Museu Regional Casa dos Ottoni) | the museum's own public-domain statement, plus an independent check that the artist is outside Brazil's life + 70 copyright term |
 
 That allowlist accepts CC0, Public Domain Mark, and CC BY of any version, and explicitly rejects CC BY-SA, CC BY-NC, and CC BY-ND — regardless of how open a source's own catalogue-level label claims to be.
 
