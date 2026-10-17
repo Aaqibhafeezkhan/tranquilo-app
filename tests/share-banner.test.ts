@@ -1,4 +1,4 @@
-// The deep-link share banner (TRANQ-49 pre-work): shown once per session
+// The deep-link share banner: shown once per session
 // when a visitor lands via /v/{slug} or /s/{id}, since that path skips the
 // intro slide (and its Mission/Connect/Support cards) entirely.
 //

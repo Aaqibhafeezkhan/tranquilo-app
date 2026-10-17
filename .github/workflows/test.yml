@@ -34,6 +34,30 @@ jobs:
             echo "::error::@ts-ignore/@ts-expect-error must explain why (e.g. '@ts-expect-error -- reason'), not stand alone."
             exit 1
           fi
+      # Public repo: internal tracker ids stay out of everything GitHub
+      # keeps. Tracked files are covered by tests/no-ticket-refs.test.ts;
+      # this covers what a test can't see -- the PR's own commit messages,
+      # title and branch name. Commits are read through `gh` rather than
+      # `git log` so this needs no full-history fetch. PR fields go through
+      # env, never inline ${{ }} in the script, so a crafted title can't
+      # inject shell. The branch is upper-cased because branch names are
+      # usually lower-case and the pattern is case-sensitive by design.
+      - name: No internal ticket ids in commits, PR title or branch
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BRANCH: ${{ github.head_ref }}
+        run: |
+          set -o pipefail
+          status=0
+          printf '%s\n' "$PR_TITLE" | bun scripts/ticket-refs.mts --label "PR title" || status=1
+          printf '%s\n' "${PR_BRANCH^^}" | bun scripts/ticket-refs.mts --label "branch name" || status=1
+          gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --json commits \
+            --jq '.commits[] | .messageHeadline + "\n" + .messageBody' \
+            | bun scripts/ticket-refs.mts --label "commit messages" || status=1
+          exit $status
       - run: bun run typecheck
       # `dist/` is gitignored -- this is the exact `vite build` Vercel's own
       # buildCommand runs at deploy time (see vercel.json). Running it here

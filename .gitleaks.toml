@@ -3,9 +3,17 @@
 # https://github.com/gitleaks/gitleaks/blob/master/config/gitleaks.toml
 # for what "default" actually checks.
 #
-# No local [allowlist] block: an empty one (regexes = []) fails gitleaks'
-# own config validation ("[[allowlists]] must contain at least one check"),
-# breaking secret-scan on every push/PR. Add one back only when there's an
-# actual non-secret identifier to allowlist, with at least one real entry.
+# Every allowlist entry must carry at least one real check: an empty one
+# (regexes = []) fails gitleaks' own config validation ("[[allowlists]]
+# must contain at least one check"), breaking secret-scan on every push/PR.
+# Keep entries narrow -- a line pattern for a known non-secret shape, never
+# a whole-path exclusion.
 [extend]
 useDefault = true
+
+# Sentry alert tags (`alert_key: "s3-put-failed"`) are alert names, not
+# credentials, but generic-api-key reads "<something>_key: <token>" as one.
+[[allowlists]]
+description = "Sentry alert_key tag literals"
+regexTarget = "line"
+regexes = ['''alert_key:\s*"[a-z0-9-]+"''']

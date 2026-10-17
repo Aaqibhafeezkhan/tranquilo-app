@@ -24,13 +24,11 @@ on:
   workflow_dispatch: {}
 
 jobs:
-  # Temporarily manual-only (workflow_dispatch): .gitleaks.toml's empty
-  # `[allowlist] regexes = []` is rejected by the current gitleaks image
-  # ("[[allowlists]] must contain at least one check for: commits, paths,
-  # regexes, or stopwords") -- a config bug, not a detected secret. Revert
-  # this `if` to the push/pull_request condition once the toml is fixed.
+  # Every push and PR, plus manual runs. (It was briefly manual-only while
+  # an invalid empty allowlist in .gitleaks.toml failed config validation;
+  # see that file's header for the rule that keeps it from recurring.)
   secret-scan:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
