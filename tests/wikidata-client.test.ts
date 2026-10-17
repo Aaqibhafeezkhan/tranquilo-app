@@ -288,3 +288,184 @@ describe("not losing what we fetched", () => {
     expect(wd.namesToFetch(["Nobody At All"], merged)).toEqual([]);
   });
 });
+
+describe("matching on aliases as well as the main label", () => {
+  // The catalogue's name for an artist often isn't Wikidata's English
+  // label: we hold "Rembrandt van Rijn", Wikidata's label is "Rembrandt"
+  // and "Rembrandt van Rijn" is an alias. Label-only matching left some of
+  // the most-represented artists without a card.
+  const row = (
+    q: string,
+    label: string,
+    name: string,
+    via: "label" | "alias",
+    extra: Record<string, string> = {},
+  ) => ({
+    artist: { value: `http://www.wikidata.org/entity/${q}` },
+    artistLabel: { value: label },
+    name: { value: name },
+    via: { value: via },
+    ...Object.fromEntries(
+      Object.entries(extra).map(([k, v]) => [k, { value: v }]),
+    ),
+  });
+
+  it("asks Wikidata for aliases too", () => {
+    expect(wd.artistQuery(["Rembrandt van Rijn"])).toContain("skos:altLabel");
+  });
+
+  it("files an alias match under the name we asked for, keeping Wikidata's label", () => {
+    const [r] = wd.parseArtists({
+      results: {
+        bindings: [
+          row("Q5598", "Rembrandt", "Rembrandt van Rijn", "alias", {
+            birth: "1606-07-15T00:00:00Z",
+          }),
+        ],
+      },
+    });
+    expect(r.name).toBe("Rembrandt van Rijn");
+    expect(r.label).toBe("Rembrandt");
+    expect(r.ambiguous).toBeFalsy();
+    expect(r.birth).toBe("1606");
+  });
+
+  it("prefers the one person whose main label is the name over alias-only matches", () => {
+    const [r] = wd.parseArtists({
+      results: {
+        bindings: [
+          row("Q1", "John Smith", "John Smith", "label"),
+          row("Q2", "John Smith the Younger", "John Smith", "alias"),
+        ],
+      },
+    });
+    expect(r.ambiguous).toBeFalsy();
+    expect(r.wikidata).toBe("http://www.wikidata.org/entity/Q1");
+  });
+
+  it("is still ambiguous when several people share the name only as an alias", () => {
+    const [r] = wd.parseArtists({
+      results: {
+        bindings: [
+          row("Q1", "A. Painter", "Painter", "alias"),
+          row("Q2", "B. Painter", "Painter", "alias"),
+        ],
+      },
+    });
+    expect(r.ambiguous).toBe(true);
+    expect(r.candidates).toHaveLength(2);
+  });
+
+  it("is still ambiguous when several people share the main label", () => {
+    const [r] = wd.parseArtists({
+      results: {
+        bindings: [
+          row("Q1", "Ma Lin", "Ma Lin", "label"),
+          row("Q2", "Ma Lin", "Ma Lin", "label"),
+          row("Q3", "Ma Lin (poet)", "Ma Lin", "alias"),
+        ],
+      },
+    });
+    expect(r.ambiguous).toBe(true);
+    // Only the label matches are the real contenders.
+    expect(r.candidates.map((c: any) => c.wikidata).sort()).toEqual([
+      "http://www.wikidata.org/entity/Q1",
+      "http://www.wikidata.org/entity/Q2",
+    ]);
+  });
+
+  it("treats one person matched by both label and alias as one match", () => {
+    const [r] = wd.parseArtists({
+      results: {
+        bindings: [
+          row("Q7", "Eakins", "Thomas Eakins", "label"),
+          row("Q7", "Eakins", "Thomas Eakins", "alias"),
+        ],
+      },
+    });
+    expect(r.ambiguous).toBeFalsy();
+    expect(r.name).toBe("Thomas Eakins");
+  });
+
+  it("can re-ask stored misses once, only when explicitly told to", () => {
+    const store = {
+      Found: { name: "Found", found: true },
+      Missed: { name: "Missed", found: false },
+      Unclear: { name: "Unclear", found: true, ambiguous: true },
+    };
+    const names = ["Found", "Missed", "Unclear", "New"];
+    expect(wd.namesToFetch(names, store)).toEqual(["New"]);
+    expect(wd.namesToFetch(names, store, { recheckMisses: true })).toEqual([
+      "Missed",
+      "New",
+    ]);
+  });
+});
+
+describe("capitalisation variants", () => {
+  // Wikidata labels and aliases match case-sensitively, and catalogues
+  // disagree on particles: we hold "Rembrandt van Rijn", Wikidata's alias
+  // is "Rembrandt Van Rijn". Each name is also asked with every word
+  // capitalised, and the original name travels with it so a match is
+  // still filed under the catalogue's spelling.
+  const row = (
+    q: string,
+    asked: string,
+    name: string,
+    via: "label" | "alias",
+  ) => ({
+    asked: { value: asked },
+    name: { value: name },
+    via: { value: via },
+    artist: { value: `http://www.wikidata.org/entity/${q}` },
+    artistLabel: { value: `label of ${q}` },
+  });
+
+  it("asks for the capitalised variant alongside the original", () => {
+    const q = wd.artistQuery(["Rembrandt van Rijn"]);
+    expect(q).toContain('"Rembrandt van Rijn"@en');
+    expect(q).toContain('"Rembrandt Van Rijn"@en');
+  });
+
+  it("doesn't send a variant identical to the original", () => {
+    const q = wd.artistQuery(["Edgar Degas"]);
+    expect(q.match(/"Edgar Degas"@en/g)).toHaveLength(2); // ?asked + ?name once
+  });
+
+  it("files a variant match under the name we asked for", () => {
+    const [r] = wd.parseArtists({
+      results: {
+        bindings: [
+          row("Q5598", "Rembrandt van Rijn", "Rembrandt Van Rijn", "alias"),
+        ],
+      },
+    });
+    expect(r.name).toBe("Rembrandt van Rijn");
+    expect(r.ambiguous).toBeFalsy();
+  });
+
+  it("prefers an exact-case match over a capitalised-variant match", () => {
+    const [r] = wd.parseArtists({
+      results: {
+        bindings: [
+          row("Q1", "Jan de Bray", "Jan de Bray", "alias"),
+          row("Q2", "Jan de Bray", "Jan De Bray", "alias"),
+        ],
+      },
+    });
+    expect(r.ambiguous).toBeFalsy();
+    expect(r.wikidata).toBe("http://www.wikidata.org/entity/Q1");
+  });
+
+  it("still lets a main-label match win over an exact-case alias", () => {
+    const [r] = wd.parseArtists({
+      results: {
+        bindings: [
+          row("Q1", "Jan de Bray", "Jan de Bray", "alias"),
+          row("Q2", "Jan de Bray", "Jan De Bray", "label"),
+        ],
+      },
+    });
+    expect(r.wikidata).toBe("http://www.wikidata.org/entity/Q2");
+  });
+});
