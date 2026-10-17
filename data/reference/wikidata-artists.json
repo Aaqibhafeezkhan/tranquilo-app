@@ -310,8 +310,21 @@
   },
   "Rembrandt van Rijn": {
     "name": "Rembrandt van Rijn",
-    "found": false,
-    "fetched_at": "2026-08-24T15:02:14.630Z"
+    "label": "Rembrandt",
+    "wikidata": "http://www.wikidata.org/entity/Q5598",
+    "description": "Dutch painter and printmaker (1606–1669)",
+    "birth": "1606",
+    "death": "1669",
+    "nationality": [
+      "Dutch Republic"
+    ],
+    "movement": [
+      "Dutch Golden Age painting"
+    ],
+    "article": "https://en.wikipedia.org/wiki/Rembrandt",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Rembrandt%20van%20Rijn%20-%20Self-Portrait%20-%20Google%20Art%20Project.jpg",
+    "found": true,
+    "fetched_at": "2026-10-17T20:49:24.851Z"
   },
   "Joseph Mallord William Turner": {
     "name": "Joseph Mallord William Turner",
@@ -935,8 +948,19 @@
   },
   "Allart van Everdingen": {
     "name": "Allart van Everdingen",
-    "found": false,
-    "fetched_at": "2026-08-24T15:02:20.291Z"
+    "label": "Allaert van Everdingen",
+    "wikidata": "http://www.wikidata.org/entity/Q539036",
+    "description": "Dutch painter (1621-1675)",
+    "birth": "1621",
+    "death": "1675",
+    "nationality": [
+      "Dutch Republic"
+    ],
+    "movement": [],
+    "article": "https://en.wikipedia.org/wiki/Allaert_van_Everdingen",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Portrait%20of%20Allaert%20van%20Everdingen.jpg",
+    "found": true,
+    "fetched_at": "2026-10-17T20:49:24.851Z"
   },
   "Jean Louis Forain": {
     "name": "Jean Louis Forain",
@@ -1449,8 +1473,25 @@
   },
   "Lucas Cranach": {
     "name": "Lucas Cranach",
-    "found": false,
-    "fetched_at": "2026-08-24T15:02:25.993Z"
+    "found": true,
+    "ambiguous": true,
+    "candidates": [
+      {
+        "wikidata": "http://www.wikidata.org/entity/Q191748",
+        "description": "German painter and printmaker (1472–1553)",
+        "birth": "1472",
+        "death": "1553",
+        "article": "https://en.wikipedia.org/wiki/Lucas_Cranach_the_Elder"
+      },
+      {
+        "wikidata": "http://www.wikidata.org/entity/Q170339",
+        "description": "German Renaissance artist (1515–1586)",
+        "birth": "1515",
+        "death": "1586",
+        "article": "https://en.wikipedia.org/wiki/Lucas_Cranach_the_Younger"
+      }
+    ],
+    "fetched_at": "2026-10-17T20:49:24.851Z"
   },
   "Sèvres Porcelain Factory": {
     "name": "Sèvres Porcelain Factory",
