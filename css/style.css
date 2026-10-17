@@ -50,11 +50,37 @@ html,body{
   gap:16px;
 }
 
+/* One segmented pill rather than four loose circles: the group carries the
+   border, glass and rounding; the buttons are flush segments inside it,
+   split by hairlines. Narrower than four spaced circles, which matters on a
+   phone where every pixel here is one the wordmark/chips don't have. */
 .topbar-icons{
   display:flex;
   align-items:center;
-  gap:16px;
+  flex:none;
+  border:1px solid rgba(255,255,255,0.18);
+  border-radius:999px;
+  background:rgba(255,255,255,0.08);
+  backdrop-filter: blur(6px);
+  overflow:hidden;
 }
+.topbar-icons > button{
+  flex:none;
+  width:38px; height:34px;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:background 0.2s ease;
+}
+.topbar-icons > button + button{ box-shadow:inset 1px 0 0 rgba(255,255,255,0.14); }
+.topbar-icons > button:hover{ background:rgba(255,255,255,0.14); }
+/* Active matches an active category chip: it's doing the same job. */
+.topbar-icons > button.active{ background:var(--gold); color:#fff; }
 
 .wordmark{
   font-family:var(--sans);
@@ -98,71 +124,6 @@ html,body{
   color:#fff;
   font-weight:500;
 }
-
-.search-toggle{
-  flex:none;
-  width:34px; height:34px;
-  border-radius:50%;
-  border:1px solid rgba(255,255,255,0.18);
-  background:rgba(255,255,255,0.08);
-  color:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  backdrop-filter: blur(6px);
-  transition:all 0.2s ease;
-}
-.search-toggle:hover, .search-toggle.active{
-  border-color:var(--gold-soft);
-  color:#fff;
-}
-.search-toggle.active{
-  background:var(--gold);
-  color:#fff;
-  border-color:var(--gold);
-}
-
-.music-toggle{
-  flex:none;
-  width:34px; height:34px;
-  border-radius:50%;
-  border:1px solid rgba(255,255,255,0.18);
-  background:rgba(255,255,255,0.08);
-  color:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  backdrop-filter: blur(6px);
-  transition:all 0.2s ease;
-}
-.music-toggle:hover{ border-color:var(--gold-soft); }
-.music-toggle.active{
-  background:var(--gold);
-  color:#fff;
-  border-color:var(--gold);
-}
-
-/* Same treatment as .search-toggle/.music-toggle, so all four topbar
-   icons read as one consistent set. */
-.discover-toggle,
-.collection-toggle{
-  flex:none;
-  width:34px; height:34px;
-  border-radius:50%;
-  border:1px solid rgba(255,255,255,0.18);
-  background:rgba(255,255,255,0.08);
-  color:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  backdrop-filter: blur(6px);
-  transition:all 0.2s ease;
-}
-.discover-toggle:hover,
-.collection-toggle:hover{ border-color:var(--gold-soft); }
 
 /* Shown only while music is actually playing (updateMusicCredit() in
    app.js), so it never appears with nothing audible behind it. */
@@ -1901,10 +1862,11 @@ html,body{
 /* ---------- Responsive ---------- */
 @media (min-width:720px){
   /* Collapse the mobile two-row topbar back into the original single row:
-     unwrap both wrapper divs so wordmark, chips, and the 4 icon buttons
-     become flat flex children of .topbar again, then use `order` to
-     restore the original left-to-right sequence regardless of where each
-     element now sits in the DOM. */
+     unwrap .topbar-row1 so the wordmark, chips and the icon group become
+     flat flex children of .topbar again, then use `order` to restore the
+     original left-to-right sequence regardless of where each element now
+     sits in the DOM. The icon group stays one box (it carries the pill
+     border), so it is ordered as a unit. */
   .topbar{
     flex-direction:row;
     /* nowrap (the default) would squeeze the share banner onto the same
@@ -1916,11 +1878,10 @@ html,body{
     justify-content:space-between;
     padding:18px 20px 28px;
     /* 12px -> 8px: the flattened row's only spacing mechanism, so this is what
-       sets both wordmark-to-chips and the gaps inside the icon cluster. */
+       sets the spacing between the wordmark, chips and icon group. */
     gap:8px;
   }
   .topbar-row1{ display:contents; }
-  .topbar-icons{ display:contents; }
   /* Scoped to the top bar -- unscoped, this also reorders .mkt-nav
      .wordmark on the static pages, which has no order of its own. */
   .topbar .wordmark{ order:1; }
@@ -1941,7 +1902,7 @@ html,body{
   /* Its own line below the whole row, same "claim the whole line" trick
      .share-banner uses (width:100% leaves no room to share a line, so
      flex-wrap puts it on the next one) -- order:7 is past every other
-     ordered child here (collection-toggle is the highest at 6), so it
+     ordered child here (the icon group is the highest at 3), so it
      always falls after the row regardless of which slot (chips vs.
      filter-banner) is active. Needed because .filter-banner-card is a
      sibling of .filter-banner, not nested inside it -- see its own rule's
@@ -1957,19 +1918,12 @@ html,body{
      and ::after isn't matched by it, so this can't become an invisible
      click target over the artwork. */
   body.search-panel-open .topbar::after{ content:""; order:2; flex:1; }
-  /* Smaller footprint for the four icons -- every pixel here is a pixel
-     the chips don't have. Spacing comes from .topbar's own `gap`,
-     tightened below; an explicit margin here would ADD to that gap. */
-  .music-toggle, .search-toggle, .discover-toggle, .collection-toggle{
-    width:30px; height:30px;
-  }
-  .music-toggle{ order:3; }
+  /* Smaller segments -- every pixel here is a pixel the chips don't have. */
+  .topbar-icons{ order:3; }
+  .topbar-icons > button{ width:34px; height:30px; }
   /* Same reason, unsearched state: chips grow to fill rather than
      relying on max-width happening to be wide enough. */
   .chips{ flex:1; }
-  .search-toggle{ order:4; }
-  .discover-toggle{ order:5; }
-  .collection-toggle{ order:6; }
 
   .art-frame{ padding:110px 60px 230px; }
   .caption{ padding:90px 40px calc(36px + env(safe-area-inset-bottom)); }
@@ -2573,7 +2527,6 @@ html,body{
 @media (max-width: 400px){
   .topbar .wordmark span{ max-width:0; opacity:0; }
   .topbar .wordmark{ gap:0; }
-  .topbar-icons{ gap:12px; }
 }
 
 /* ---------- Donations gate ----------
