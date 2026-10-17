@@ -62,27 +62,38 @@ async function checkTokenBuckets(sql: any): Promise<string[]> {
   }
 }
 
-/* Keys we keep requesting and keep not holding -- either evicted and
- * re-requested in a loop, or admitted and failing to store. Either
- * way, the origin cost is paid repeatedly for nothing. The `requests`
- * floor excludes ordinary one-off traffic, which is the common case. */
+/* Keys we keep requesting and keep not holding -- admitted and failing
+ * to store, so the origin cost is paid repeatedly for nothing. (This
+ * used to cover eviction thrash too; nothing evicts objects any more.)
+ *
+ * The `requests` floor excludes ordinary one-off traffic, which is the
+ * common case. The `last_seen` window keeps this about the store as it
+ * is NOW: unwindowed, individually-explained misses (an oversized scan,
+ * one visitor reloading a lightbox) accumulated for months and crossed
+ * the key threshold while every source was storing normally. Held
+ * sources are excluded for the same reason checkTokenBuckets() excludes
+ * them -- unstored by decision, not by failure. */
 async function checkEvictionThrash(sql: any): Promise<string[]> {
   if (!sql) return [];
   try {
     const rows = await sql.query(
-      "SELECT count(*)::int AS n FROM img_cache_entries " +
-        " WHERE bytes IS NULL AND requests >= $1",
-      [THRASH_MIN_REQUESTS],
+      "SELECT count(*)::int AS n FROM img_cache_entries e " +
+        " WHERE e.bytes IS NULL AND e.requests >= $1 " +
+        "   AND e.last_seen >= now() - make_interval(days => $2) " +
+        "   AND NOT EXISTS (SELECT 1 FROM source_fetch_state s " +
+        "                    WHERE s.source = e.source AND s.hold_reason IS NOT NULL)",
+      [THRASH_MIN_REQUESTS, THRASH_WINDOW_DAYS],
     );
     const n = rows.length ? Number(rows[0].n) : 0;
     if (n < THRASH_MIN_KEYS) return [];
     return [
-      `${n} cached images have been requested at least ${
+      `${n} cached images were each requested at least ${
         THRASH_MIN_REQUESTS
-      } times each and are still not stored. That is ` +
-        `eviction thrash or a failing store: we are paying the origin cost ` +
-        `repeatedly and keeping nothing. Usually means the storage budget is ` +
-        `too small or the pin set too large.`,
+      } times in the last ${THRASH_WINDOW_DAYS} days and are still not ` +
+        `stored, from sources that are not on hold. The store looks like ` +
+        `it is failing: we are paying the origin cost repeatedly and ` +
+        `keeping nothing. Check S3 credentials, bucket and region, and ` +
+        `Sentry for s3-put-failed.`,
     ];
   } catch (_err) {
     return [];
@@ -152,6 +163,7 @@ const TOKEN_STARVATION_MIN_ATTEMPTS =
 const THRASH_MIN_REQUESTS =
   TRANQUILO_CONFIG.img_cache_alerts.thrash_min_requests;
 const THRASH_MIN_KEYS = TRANQUILO_CONFIG.img_cache_alerts.thrash_min_keys;
+const THRASH_WINDOW_DAYS = TRANQUILO_CONFIG.img_cache_alerts.thrash_window_days;
 
 export {
   checkEvictionThrash,
@@ -161,5 +173,6 @@ export {
   SHED_REASON_MIN,
   THRASH_MIN_KEYS,
   THRASH_MIN_REQUESTS,
+  THRASH_WINDOW_DAYS,
   TOKEN_STARVATION_MIN_ATTEMPTS,
 };
