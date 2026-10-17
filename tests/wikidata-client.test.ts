@@ -401,3 +401,71 @@ describe("matching on aliases as well as the main label", () => {
     ]);
   });
 });
+
+describe("capitalisation variants", () => {
+  // Wikidata labels and aliases match case-sensitively, and catalogues
+  // disagree on particles: we hold "Rembrandt van Rijn", Wikidata's alias
+  // is "Rembrandt Van Rijn". Each name is also asked with every word
+  // capitalised, and the original name travels with it so a match is
+  // still filed under the catalogue's spelling.
+  const row = (
+    q: string,
+    asked: string,
+    name: string,
+    via: "label" | "alias",
+  ) => ({
+    asked: { value: asked },
+    name: { value: name },
+    via: { value: via },
+    artist: { value: `http://www.wikidata.org/entity/${q}` },
+    artistLabel: { value: `label of ${q}` },
+  });
+
+  it("asks for the capitalised variant alongside the original", () => {
+    const q = wd.artistQuery(["Rembrandt van Rijn"]);
+    expect(q).toContain('"Rembrandt van Rijn"@en');
+    expect(q).toContain('"Rembrandt Van Rijn"@en');
+  });
+
+  it("doesn't send a variant identical to the original", () => {
+    const q = wd.artistQuery(["Edgar Degas"]);
+    expect(q.match(/"Edgar Degas"@en/g)).toHaveLength(2); // ?asked + ?name once
+  });
+
+  it("files a variant match under the name we asked for", () => {
+    const [r] = wd.parseArtists({
+      results: {
+        bindings: [
+          row("Q5598", "Rembrandt van Rijn", "Rembrandt Van Rijn", "alias"),
+        ],
+      },
+    });
+    expect(r.name).toBe("Rembrandt van Rijn");
+    expect(r.ambiguous).toBeFalsy();
+  });
+
+  it("prefers an exact-case match over a capitalised-variant match", () => {
+    const [r] = wd.parseArtists({
+      results: {
+        bindings: [
+          row("Q1", "Jan de Bray", "Jan de Bray", "alias"),
+          row("Q2", "Jan de Bray", "Jan De Bray", "alias"),
+        ],
+      },
+    });
+    expect(r.ambiguous).toBeFalsy();
+    expect(r.wikidata).toBe("http://www.wikidata.org/entity/Q1");
+  });
+
+  it("still lets a main-label match win over an exact-case alias", () => {
+    const [r] = wd.parseArtists({
+      results: {
+        bindings: [
+          row("Q1", "Jan de Bray", "Jan de Bray", "alias"),
+          row("Q2", "Jan de Bray", "Jan De Bray", "label"),
+        ],
+      },
+    });
+    expect(r.wikidata).toBe("http://www.wikidata.org/entity/Q2");
+  });
+});

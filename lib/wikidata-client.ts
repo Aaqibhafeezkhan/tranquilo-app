@@ -79,12 +79,31 @@ const ART_OCCUPATIONS = [
 // Facts plus the two citable URLs. The Wikidata item is the fact source; the
 // Wikipedia article is where the narrative material lives, which is the half
 // that actually makes a Tea Voice caption rather than a wall label.
+// Every word capitalised: "Rembrandt van Rijn" -> "Rembrandt Van Rijn".
+// Wikidata matches labels and aliases case-sensitively, and catalogues
+// disagree about particles (van, de, della), so a lower-case particle on
+// our side can miss an alias that capitalises it.
+function capitalisedVariant(name: string): string {
+  return name
+    .split(" ")
+    .map((w) => (w ? w.charAt(0).toUpperCase() + w.slice(1) : w))
+    .join(" ");
+}
+
 function artistQuery(names: any): string {
+  // (?asked ?name) pairs: the catalogue's name, and each spelling tried for
+  // it. ?asked travels with every match so it's filed under our spelling.
+  const lit = (s: any) => `"${sparqlString(s)}"@en`;
   const values = (names || [])
-    .map((n: any) => `"${sparqlString(n)}"@en`)
+    .flatMap((n: any) => {
+      const variant = capitalisedVariant(String(n));
+      const pairs = [`(${lit(n)} ${lit(n)})`];
+      if (variant !== n) pairs.push(`(${lit(n)} ${lit(variant)})`);
+      return pairs;
+    })
     .join(" ");
   return [
-    "SELECT ?name ?via ?artist ?artistLabel ?artistDescription ?birth ?death",
+    "SELECT ?asked ?name ?via ?artist ?artistLabel ?artistDescription ?birth ?death",
     "       ?nationalityLabel ?movementLabel ?article ?image WHERE {",
     // The catalogue's name for an artist is often an alias rather than
     // Wikidata's main English label ("Rembrandt van Rijn" vs "Rembrandt"),
@@ -93,7 +112,7 @@ function artistQuery(names: any): string {
     // did not, and scanned every alias (WDQS 504s even at 3 names).
     // ?via then says which matched, so parseArtists() can prefer a
     // main-label match when deciding between people.
-    `  VALUES ?name { ${values} }`,
+    `  VALUES (?asked ?name) { ${values} }`,
     "  ?artist rdfs:label|skos:altLabel ?name .",
     "  ?artist wdt:P31 wd:Q5 .", // human: a museum must not match a name
     // and an artist, not a badminton player. FILTER EXISTS rather than a
@@ -146,7 +165,8 @@ function parseArtists(json: any): any[] {
   const byName = new Map<string, Map<string, any>>();
   rows.forEach((b: any) => {
     const v = (k: any) => (b[k]?.value ? b[k].value : null);
-    const name = v("name") || v("artistLabel");
+    // Old-style rows (no ?asked/?name) are label matches on the label.
+    const name = v("asked") || v("name") || v("artistLabel");
     const key = v("artist") || v("artistLabel");
     if (!name || !key) return;
 
@@ -174,12 +194,15 @@ function parseArtists(json: any): any[] {
         image: httpsify(v("image")),
         found: true,
         fetched_at: new Date().toISOString(),
-        // Internal: did any row match this person on the main label?
+        // Internal: did any row match this person on the main label, and
+        // did any match our spelling exactly (not a capitalised variant)?
         _byLabel: false,
+        _exact: false,
       };
       people.set(key, rec);
     }
     if ((v("via") || "label") === "label") rec._byLabel = true;
+    if (!v("asked") || v("asked") === v("name")) rec._exact = true;
     // Later rows may carry a value an earlier one lacked.
     if (!rec.article) rec.article = v("article");
     if (!rec.image) rec.image = httpsify(v("image"));
@@ -194,17 +217,21 @@ function parseArtists(json: any): any[] {
   });
 
   // Two painters can share a name. Main-label matches outrank alias-only
-  // matches: exactly one person whose label IS the name resolves it, even
-  // if others carry it as an alias. Otherwise exactly one alias match
-  // resolves it. Anything else is recorded as ambiguous, with every
-  // contender kept and no facts of its own, rather than silently picking.
+  // matches, and within either, our exact spelling outranks a capitalised
+  // variant: exactly one person left at the top tier resolves it.
+  // Anything else is recorded as ambiguous, with every contender kept and
+  // no facts of its own, rather than silently picking.
   const out: any[] = [];
   byName.forEach((people, name) => {
     const all = Array.from(people.values());
     const byLabel = all.filter((r: any) => r._byLabel);
-    const contenders = byLabel.length ? byLabel : all;
-    contenders.forEach((r: any) => {
+    const tier = byLabel.length ? byLabel : all;
+    // Within that tier, our exact spelling outranks a capitalised variant.
+    const exact = tier.filter((r: any) => r._exact);
+    const contenders = exact.length ? exact : tier;
+    all.forEach((r: any) => {
       delete r._byLabel;
+      delete r._exact;
     });
     if (contenders.length === 1) {
       out.push(contenders[0]);
