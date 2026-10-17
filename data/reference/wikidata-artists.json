@@ -2386,5 +2386,163 @@
     "name": "Pierre Jean David d'Angers",
     "found": false,
     "fetched_at": "2026-10-13T11:46:17.702Z"
+  },
+  "Lucas Cranach the Elder": {
+    "name": "Lucas Cranach the Elder",
+    "wikidata": "http://www.wikidata.org/entity/Q191748",
+    "description": "German painter and printmaker (1472–1553)",
+    "birth": "1472",
+    "death": "1553",
+    "nationality": [
+      "Holy Roman Empire",
+      "Germany"
+    ],
+    "movement": [
+      "German Renaissance"
+    ],
+    "article": "https://en.wikipedia.org/wiki/Lucas_Cranach_the_Elder",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Lucas%20Cranach%20d.%20%C3%84.%20063.jpg",
+    "found": true,
+    "fetched_at": "2026-10-17T10:30:28.557Z"
+  },
+  "Thomas Eakins": {
+    "name": "Thomas Eakins",
+    "wikidata": "http://www.wikidata.org/entity/Q214905",
+    "description": "American painter (1844–1916)",
+    "birth": "1844",
+    "death": "1916",
+    "nationality": [
+      "United States"
+    ],
+    "movement": [
+      "French Realism"
+    ],
+    "article": "https://en.wikipedia.org/wiki/Thomas_Eakins",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Eakins%20selfportrait.jpg",
+    "found": true,
+    "fetched_at": "2026-10-17T10:30:28.557Z"
+  },
+  "Jan Goeree": {
+    "name": "Jan Goeree",
+    "wikidata": "http://www.wikidata.org/entity/Q2618528",
+    "description": "Dutch poet and engraver (1670–1731)",
+    "birth": "1670",
+    "death": "1731",
+    "nationality": [
+      "Dutch Republic"
+    ],
+    "movement": [],
+    "article": null,
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Portret%20van%20Jan%20Goeree%20Jan%20Goeree%20%28titel%20op%20object%29%2C%20RP-P-OB-48.768.jpg",
+    "found": true,
+    "fetched_at": "2026-10-17T10:30:28.557Z"
+  },
+  "Isidore Pils": {
+    "name": "Isidore Pils",
+    "wikidata": "http://www.wikidata.org/entity/Q708968",
+    "description": "French painter (1815–1875)",
+    "birth": "1815",
+    "death": "1875",
+    "nationality": [
+      "France"
+    ],
+    "movement": [
+      "Orientalism"
+    ],
+    "article": "https://en.wikipedia.org/wiki/Isidore_Pils",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Isidore%20Pils%20-%20Maurice%20Leloir.jpg",
+    "found": true,
+    "fetched_at": "2026-10-17T10:30:28.557Z"
+  },
+  "Auguste Brouet": {
+    "name": "Auguste Brouet",
+    "wikidata": "http://www.wikidata.org/entity/Q766222",
+    "description": "French artist (1872-1941)",
+    "birth": "1872",
+    "death": "1941",
+    "nationality": [
+      "France"
+    ],
+    "movement": [],
+    "article": "https://en.wikipedia.org/wiki/Auguste_Brouet",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Selfportrait%20Auguste%20Brouet.jpg",
+    "found": true,
+    "fetched_at": "2026-10-17T10:30:28.557Z"
+  },
+  "John Sell Cotman": {
+    "name": "John Sell Cotman",
+    "wikidata": "http://www.wikidata.org/entity/Q1288248",
+    "description": "British artist (1782-1842)",
+    "birth": "1782",
+    "death": "1842",
+    "nationality": [
+      "United Kingdom of Great Britain and Ireland",
+      "Kingdom of Great Britain",
+      "United Kingdom"
+    ],
+    "movement": [],
+    "article": "https://en.wikipedia.org/wiki/John_Sell_Cotman",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Cotman%2C%20Selfportrait.jpg",
+    "found": true,
+    "fetched_at": "2026-10-17T10:30:28.558Z"
+  },
+  "William Nicholson": {
+    "name": "William Nicholson",
+    "found": true,
+    "ambiguous": true,
+    "candidates": [
+      {
+        "wikidata": "http://www.wikidata.org/entity/Q2066520",
+        "description": "British painter, engraver and illustrator (1872-1949)",
+        "birth": "1872",
+        "death": "1949",
+        "article": "https://en.wikipedia.org/wiki/William_Nicholson_(artist,_born_1872)"
+      },
+      {
+        "wikidata": "http://www.wikidata.org/entity/Q18736121",
+        "description": "English portrait painter and etcher (1781-1844)",
+        "birth": "1781",
+        "death": "1844",
+        "article": "https://en.wikipedia.org/wiki/William_Nicholson_(artist,_born_1781)"
+      }
+    ],
+    "fetched_at": "2026-10-17T10:30:28.561Z"
+  },
+  "Henri Rivière": {
+    "name": "Henri Rivière",
+    "wikidata": "http://www.wikidata.org/entity/Q2731112",
+    "description": "French artist and designer (1864-1951)",
+    "birth": "1864",
+    "death": "1951",
+    "nationality": [
+      "France"
+    ],
+    "movement": [
+      "Pont-Aven School"
+    ],
+    "article": "https://en.wikipedia.org/wiki/Henri_Rivi%C3%A8re_(painter)",
+    "image": "https://commons.wikimedia.org/wiki/Special:FilePath/Henri.riviere.jpg",
+    "found": true,
+    "fetched_at": "2026-10-17T10:30:28.559Z"
+  },
+  "Thomas Shotter Boys": {
+    "name": "Thomas Shotter Boys",
+    "wikidata": "http://www.wikidata.org/entity/Q7793956",
+    "description": "British artist (1803-1874)",
+    "birth": "1803",
+    "death": "1874",
+    "nationality": [
+      "United Kingdom of Great Britain and Ireland"
+    ],
+    "movement": [],
+    "article": "https://en.wikipedia.org/wiki/Thomas_Shotter_Boys",
+    "image": null,
+    "found": true,
+    "fetched_at": "2026-10-17T10:30:28.559Z"
+  },
+  "Hubert François Bourguignon Gravelot": {
+    "name": "Hubert François Bourguignon Gravelot",
+    "found": false,
+    "fetched_at": "2026-10-17T10:30:28.562Z"
   }
 }
