@@ -19,6 +19,15 @@ export const EXPORT_SOURCE_NAMES: Record<string, string> = {
   tainacan: "Brazilian museum collections",
 };
 
+// The full name of the institution an item belongs to: per museum for the
+// umbrella sources, per source otherwise. Shared by the CSV export and the
+// detail panel's citations, so the two can't credit a work differently.
+export function institutionName(item: any): string {
+  if (item?.source === "smithsonian") return smithsonianMuseum(item.url);
+  if (item?.source === "tainacan") return tainacanMuseum(item.url);
+  return EXPORT_SOURCE_NAMES[item?.source || "met"] || item?.source || "";
+}
+
 function csvField(value: unknown): string {
   const s = value == null ? "" : String(value);
   return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
@@ -33,11 +42,7 @@ export class ExportService {
         isRealArtist(item.artist) ? item.artist : "Unknown",
         item.date || "",
         item.category || "",
-        item.source === "smithsonian"
-          ? smithsonianMuseum(item.url)
-          : item.source === "tainacan"
-            ? tainacanMuseum(item.url)
-            : EXPORT_SOURCE_NAMES[item.source || "met"] || item.source || "",
+        institutionName(item),
         item.url || "",
       ]
         .map(csvField)

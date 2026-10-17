@@ -20,6 +20,7 @@
 // Renders into light DOM, not a shadow root: every style already lives in
 // css/style.css.
 
+import { type CitationStyle, formatCitation } from "../app/citation";
 import { licenseLabel } from "../app/licenseLabels";
 import { currentLocale, facetLabel, type MessageKey, t } from "../i18n/index";
 import { isRealArtist as isRealArtistLogic } from "../logic/logic";
@@ -388,6 +389,60 @@ function sourceHostLabel(url: string): string {
   }
 }
 
+// "Cite this work": MLA, APA and ABNT (the Brazilian standard), each with
+// its own Copy button. Collapsed until asked for. Offered only alongside a Tea caption, the reviewed tier whose
+// readers (educators, students) are the ones asking for citations.
+const CITATION_STYLES: { style: CitationStyle; label: string }[] = [
+  { style: "mla", label: "MLA" },
+  { style: "apa", label: "APA" },
+  { style: "abnt", label: "ABNT" },
+];
+
+function citeButtonHtml(item: Item): string {
+  if (!item.caption_tea) return "";
+  return `<button class="btn-cite" type="button" aria-expanded="false">${escapeHtml(t("detail.cite.button"))}</button>`;
+}
+
+function citePanelHtml(item: Item): string {
+  if (!item.caption_tea) return "";
+  return `<div class="cite-panel" hidden>${CITATION_STYLES.map(
+    ({ style, label }) =>
+      `<div class="cite-row" data-style="${style}"><span class="cite-style">${label}</span>` +
+      `<p class="cite-text">${escapeHtml(formatCitation(item, style))}</p>` +
+      `<button class="cite-copy" type="button">${escapeHtml(t("detail.cite.copy"))}</button></div>`,
+  ).join("")}</div>`;
+}
+
+function wireCite(container: HTMLElement): void {
+  const btn = container.querySelector<HTMLButtonElement>(".btn-cite");
+  const panel = container.querySelector<HTMLElement>(".cite-panel");
+  if (!btn || !panel) return;
+  on(btn, () => {
+    panel.hidden = !panel.hidden;
+    btn.setAttribute("aria-expanded", String(!panel.hidden));
+  });
+  for (const row of panel.querySelectorAll<HTMLElement>(".cite-row")) {
+    const copy = row.querySelector<HTMLButtonElement>(".cite-copy");
+    const text = row.querySelector(".cite-text")?.textContent ?? "";
+    if (!copy) continue;
+    // The button's own label confirms the copy (then resets), so the
+    // click is never indistinguishable from a no-op.
+    const flash = (key: MessageKey) => {
+      copy.textContent = t(key);
+      setTimeout(() => {
+        copy.textContent = t("detail.cite.copy");
+      }, 2000);
+    };
+    on(copy, () => {
+      if (!navigator.clipboard?.writeText) return flash("detail.cite.failed");
+      navigator.clipboard.writeText(text).then(
+        () => flash("detail.cite.copied"),
+        () => flash("detail.cite.failed"),
+      );
+    });
+  }
+}
+
 function buildTeaSourcesHtml(item: Item): string {
   // Only Tea-tier captions have grounding. A Basic-tier item deliberately
   // has no caption_tea and no claims, and must not sprout an empty source
@@ -646,9 +701,10 @@ export class TranquiloDetailModal extends HTMLElement {
         // ingestion, so anything reaching here has earned the label.
       }${metaRow(t("detail.meta.provenance"), item.credit)}${metaRow(t("detail.meta.tagged"), item.tags)}${
         licenseRow(item)
+        // Actions, not metadata: grouped after a divider (.detail-actions).
         // sourceLinkLabel() rather than an inline lookup, so this and the
         // lightbox's link can't drift into naming the institution two ways.
-      }<div style="margin-top:14px;"><a class="source-link" href="${item.url}" target="_blank" rel="noopener"><span class="link-text">View ${escapeHtml(host.sourceLinkPreposition(item))} ${escapeHtml(host.sourceLinkLabel(item))}</span><span class="link-arrow" aria-hidden="true">&rarr;</span></a></div>` +
+      }<div class="detail-actions"><div class="detail-actions-row"><a class="source-link" href="${item.url}" target="_blank" rel="noopener"><span class="link-text">View ${escapeHtml(host.sourceLinkPreposition(item))} ${escapeHtml(host.sourceLinkLabel(item))}</span><span class="link-arrow" aria-hidden="true">&rarr;</span></a>${citeButtonHtml(item)}</div>${citePanelHtml(item)}</div>` +
       `</div>`
     );
   }
@@ -680,6 +736,7 @@ export class TranquiloDetailModal extends HTMLElement {
     const shareBtn = container.querySelector<HTMLButtonElement>(".btn-share");
     if (shareBtn) on(shareBtn, () => host.shareItem(item));
     wireReportMenu(container, item, host);
+    wireCite(container);
 
     const storylineChipBtn =
       container.querySelector<HTMLButtonElement>(".storyline-chip");
