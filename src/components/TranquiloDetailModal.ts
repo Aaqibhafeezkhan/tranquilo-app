@@ -23,7 +23,7 @@
 import { type CitationStyle, formatCitation } from "../app/citation";
 import { licenseLabel } from "../app/licenseLabels";
 import { currentLocale, facetLabel, type MessageKey, t } from "../i18n/index";
-import { isRealArtist as isRealArtistLogic } from "../logic/logic";
+import { isNamedMaker } from "../logic/logic";
 import type { ITranquiloDetailModalHost } from "../types/ITranquiloDetailModalHost";
 import type { Item } from "../types/Item";
 import { on } from "../utils/on";
@@ -630,9 +630,10 @@ export class TranquiloDetailModal extends HTMLElement {
 
   private buildDetailContentHtml(item: Item): string {
     const host = this.requireApp();
-    const isRealArtist = isRealArtistLogic(item.artist);
+    // A culture or period label ("Italian 16th Century") stays plain text,
+    // like "Unknown": many makers, so there is no one author to show more of.
     let artistLine = item.artist
-      ? isRealArtist
+      ? isNamedMaker(item.artist)
         ? `<button class="artist-link" type="button">${escapeHtml(item.artist)}</button>`
         : `<span>${escapeHtml(item.artist)}</span>`
       : "";

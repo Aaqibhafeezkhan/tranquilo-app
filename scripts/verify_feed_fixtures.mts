@@ -103,7 +103,7 @@ function checkInvariants(list: any[], checkCategory: boolean) {
   for (let i = 1; i < list.length; i++) {
     const a = list[i - 1],
       b = list[i];
-    if (logic.isRealArtist(a.artist) && a.artist === b.artist) {
+    if (logic.isNamedMaker(a.artist) && a.artist === b.artist) {
       violations.push(`consecutive same artist at ${i}: ${a.artist}`);
     }
     if (checkCategory && a.category === b.category) {

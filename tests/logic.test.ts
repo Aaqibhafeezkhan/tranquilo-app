@@ -18,6 +18,8 @@ import {
   hexToRgb,
   hslToRgb,
   IMAGE_FAILURE_REPORT_CAP,
+  isCollectiveAttribution,
+  isNamedMaker,
   isRealArtist,
   levenshtein,
   matchConcept,
@@ -414,6 +416,77 @@ describe("shouldSkipAutomaticLoad", () => {
     expect(
       shouldSkipAutomaticLoad("cleveland:2", false, new Set(["cleveland:1"])),
     ).toBe(false);
+  });
+});
+
+describe("isNamedMaker: a culture or period label is not one artist", () => {
+  // "Italian 16th Century" is many makers under one label. Treated as one
+  // artist it became a "More by" button presenting unrelated works as
+  // sharing an author, a "Browse by" artist chip, and a same-artist
+  // adjacency the feed spent swaps avoiding. Same cases as the ingestion
+  // side's tests (python/ingest/tests/test_scope_and_artist_cap.py), so the
+  // two copies of the rule are checked against the same real names.
+  const COLLECTIVE = [
+    "Chinese Qing Dynasty",
+    "Italian 16th Century",
+    "North Italian 16th Century",
+    "French early 16th Century",
+    "Italian 15th/16th Century",
+    "Netherlandish 17th or 18th Century",
+    "Florentine 15th Century, probably after a model by Desiderio da Settignano",
+    "Style of Egyptian Ptolemaic Period",
+  ];
+  // Real people whose records give the century they were active in -- a
+  // loose "contains a century" match exempted all of these.
+  const NAMED_WITH_DATES = [
+    "Sheng Nian 盛年 (active 17th century)",
+    "Traditionally attributed to Ma Yuan 馬遠 (active late 12th-early 13th century)",
+    "Follower of Rogier van der Weyden (Master of the Saint Ursula Legend Group, " +
+      "Netherlandish, active late 15th century)",
+    "Master of Flémalle active 15th century",
+  ];
+
+  COLLECTIVE.forEach((name) => {
+    it(`treats ${JSON.stringify(name.slice(0, 40))} as a label, not a maker`, () => {
+      expect(isCollectiveAttribution(name)).toBe(true);
+      expect(isNamedMaker(name)).toBe(false);
+    });
+  });
+
+  NAMED_WITH_DATES.forEach((name) => {
+    it(`still treats ${JSON.stringify(name.slice(0, 40))} as one maker`, () => {
+      expect(isCollectiveAttribution(name)).toBe(false);
+      expect(isNamedMaker(name)).toBe(true);
+    });
+  });
+
+  it("is false for every 'no known artist' spelling and true for plain names", () => {
+    expect(isNamedMaker("Unknown Artist")).toBe(false);
+    expect(isNamedMaker("Anonymous, French, 18th century")).toBe(false);
+    expect(isNamedMaker("")).toBe(false);
+    expect(isNamedMaker(null)).toBe(false);
+    expect(isNamedMaker("George Catlin")).toBe(true);
+    expect(isNamedMaker("Claude Monet")).toBe(true);
+  });
+
+  it("declusterOrder leaves two works under the same label next to each other", () => {
+    const arr = [
+      { artist: "Italian 16th Century", category: "Sculpture & Objects" },
+      { artist: "Italian 16th Century", category: "Sculpture & Objects" },
+      { artist: "Claude Monet", category: "Paintings & Portraits" },
+    ];
+    expect(declusterOrder(arr, false)).toEqual(arr);
+  });
+
+  it("declusterOrder still separates a real artist", () => {
+    const arr = [
+      { artist: "Claude Monet", category: "Paintings & Portraits" },
+      { artist: "Claude Monet", category: "Paintings & Portraits" },
+      { artist: "Italian 16th Century", category: "Sculpture & Objects" },
+    ];
+    const out = declusterOrder(arr, false);
+    expect(out[0].artist).toBe("Claude Monet");
+    expect(out[1].artist).not.toBe("Claude Monet");
   });
 });
 

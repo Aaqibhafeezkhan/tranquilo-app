@@ -23,7 +23,7 @@
 import { type FacetField, facetLabel, t } from "../i18n/index";
 import {
   findDidYouMean,
-  isRealArtist,
+  isNamedMaker,
   normalizeForSearch,
   shuffled,
 } from "../logic/logic";
@@ -309,7 +309,7 @@ export class TranquiloSearchBar extends HTMLElement {
       field: FacetField | null,
     ) => (entries || []).map((e) => ({ value: e.value, field }));
     const artistPool = hints(this.facets.artist, null).filter((h) =>
-      isRealArtist(h.value),
+      isNamedMaker(h.value),
     );
     const categoryPool = hints(this.facets.categories, "category");
     // Facet groups as /api/items?shape=facets names them: era is the

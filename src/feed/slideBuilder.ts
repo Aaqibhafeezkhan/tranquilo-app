@@ -21,7 +21,7 @@ import { facetLabel, t } from "../i18n/index";
 import {
   deriveTint,
   hexToRgb,
-  isRealArtist,
+  isNamedMaker,
   rgbToHsl,
   shouldLogFailure,
   shouldSkipAutomaticLoad,
@@ -462,10 +462,11 @@ export function createSlideBuilder(
 
     // A real artist's name is a button into "More by <artist>"; a
     // placeholder ("Unknown", "Anonymous") stays plain text, as in the
-    // detail panel -- there's no one to show more of.
+    // detail panel -- there's no one to show more of. So does a culture or
+    // period label ("Italian 16th Century"): many makers, not one author.
     const artistLine = !item.artist
       ? ""
-      : isRealArtist(item.artist)
+      : isNamedMaker(item.artist)
         ? `<button type="button" class="artist" aria-label="${escapeHtml(t("filter.moreBy", { artist: item.artist }))}">${escapeHtml(item.artist)}</button>`
         : `<span class="artist">${escapeHtml(item.artist)}</span>`;
     const dateLine = item.date
