@@ -37,6 +37,45 @@ export function isRealArtist(name: string | null | undefined): boolean {
   return !UNKNOWN_ARTIST_RE.test(String(name));
 }
 
+// A culture or period standing in for the maker: "Italian 16th Century",
+// "Chinese Qing Dynasty", "Florentine 15th Century, probably after a model
+// by ...". Many makers under one label, so it must not become a "More by"
+// button, an artist browse chip, or a same-artist adjacency.
+//
+// Anchored on purpose: the label must OPEN with one to four plain place
+// words and then the century, dynasty or period. A looser "contains a
+// century" test caught real people whose records give the century they were
+// active in ("Sheng Nian 盛年 (active 17th century)").
+//
+// Mirrors python's harmonize/attribution.py is_collective_attribution();
+// both test files check the same real names. Kept separate from
+// isRealArtist() because a citation or export can still name a culture as
+// the creator, which is how museums credit these works.
+const ORDINAL = String.raw`\d{1,2}(?:st|nd|rd|th)`;
+const COLLECTIVE_ATTRIBUTION_RE = new RegExp(
+  String.raw`^(?:(?!(?:active|master|follower|workshop|circle|attributed|traditionally)\b)` +
+    String.raw`[A-Za-zÀ-ÿ'/-]+\s+){1,4}` +
+    `(?:${ORDINAL}` +
+    String.raw`(?:\s*[/-]\s*` +
+    `${ORDINAL})?` +
+    String.raw`(?:\s+(?:or|and|to)\s+` +
+    `${ORDINAL})?` +
+    String.raw`\s+century|dynasty|period)\b`,
+  "i",
+);
+
+export function isCollectiveAttribution(
+  name: string | null | undefined,
+): boolean {
+  return !!name && COLLECTIVE_ATTRIBUTION_RE.test(String(name).trim());
+}
+
+// One identifiable maker: a real artist name that isn't a culture or period
+// label. What decides "More by", artist browse chips and same-artist spacing.
+export function isNamedMaker(name: string | null | undefined): boolean {
+  return isRealArtist(name) && !isCollectiveAttribution(name);
+}
+
 export function shuffled<T>(arr: readonly T[]): T[] {
   const a = arr.slice();
   for (let i = a.length - 1; i > 0; i--) {
@@ -63,7 +102,7 @@ export function declusterOrder<T extends Pick<Item, "artist" | "category">>(
 ): T[] {
   const a = arr.slice();
   function violates(x: T, y: T): boolean {
-    if (isRealArtist(x.artist) && x.artist === y.artist) return true;
+    if (isNamedMaker(x.artist) && x.artist === y.artist) return true;
     if (checkCategory && x.category === y.category) return true;
     return false;
   }
