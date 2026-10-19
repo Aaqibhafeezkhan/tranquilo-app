@@ -196,7 +196,7 @@ async function sendStorylinePage(
       renderPage({
         title: "Tranquilo",
         description:
-          "Browse public-domain art from The Met, one piece at a time.",
+          "A calm, ad-free digital museum and open-source art platform.",
         ogTitle: "Tranquilo",
         ogImage: null,
         canonicalUrl: canonicalUrl,
@@ -289,7 +289,7 @@ export default async function handler(req: any, res: any) {
       renderPage({
         title: "Tranquilo",
         description:
-          "Browse public-domain art from The Met, one piece at a time.",
+          "A calm, ad-free digital museum and open-source art platform.",
         ogTitle: "Tranquilo",
         ogImage: null,
         canonicalUrl: `${origin}/v/${escapeHtml(slug)}`,

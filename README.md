@@ -11,7 +11,7 @@ the Free Software Foundation, either version 3 of the License, or
 [![Vitest coverage](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/tranquilo-art/tranquilo-app/main/badges/coverage.json)](https://github.com/tranquilo-art/tranquilo-app/actions/workflows/test.yml)
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](LICENSE)
 
-A calm, ad-free, infinite-scroll feed of public-domain art.
+A calm, ad-free digital museum and open-source art platform.
 
 **Live:** [tranquilo.art](https://tranquilo.art)
 

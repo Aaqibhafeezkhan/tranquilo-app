@@ -382,6 +382,11 @@ describe("SEO metadata", () => {
     );
   });
 
+  it("the share-link fallback description no longer says Met-only", () => {
+    // Same leftover as the homepage's, in the not-found previews.
+    expect(slugSource).not.toContain("public-domain art from The Met");
+  });
+
   it("a /v/{slug} page strips the homepage's tags before adding its own", () => {
     // api/v/[slug].js serves index.html in place, which already has its
     // own canonical/og:title -- without stripping first, an artwork page

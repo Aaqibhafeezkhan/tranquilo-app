@@ -2,8 +2,8 @@
 
 Thank you for taking the time to contribute to Tranquilo! 🌿
 
-Tranquilo is a privacy-first, ad-free digital space designed as a calm,
-anti-scrolling alternative for exploring public domain art. Because this
+Tranquilo is a calm, ad-free digital museum and open-source art platform
+for exploring public domain art, built privacy-first. Because this
 project serves as a public good, we value code that is intentional,
 lightweight, and respectful of both user privacy and the cultural
 institutions that host these artworks.
