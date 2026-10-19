@@ -95,6 +95,11 @@ export const en = {
   "detail.meta.provenance": "Provenance",
   "detail.meta.tagged": "Tagged",
   "detail.meta.license": "License",
+  // The link to the institution's own page for the work (also on the error
+  // page). "on" for a domain, "at" for a named institution: see
+  // SOURCE_LINK_PREPOSITIONS in src/app/sourceLinks.ts.
+  "detail.sourceLink.on": "View on {institution}",
+  "detail.sourceLink.at": "View at {institution}",
   "detail.cite.button": "Cite this work",
   "detail.cite.copy": "Copy",
   "detail.cite.copied": "Copied",

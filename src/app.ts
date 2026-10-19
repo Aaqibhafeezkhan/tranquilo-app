@@ -20,7 +20,7 @@ import { SlugCodec } from "./app/SlugCodec";
 import {
   isAggregatorSource,
   sourceLinkLabel,
-  sourceLinkPreposition,
+  sourceLinkText,
 } from "./app/sourceLinks";
 import type { ArtistProfile } from "./data/artist-profiles";
 import {
@@ -395,7 +395,7 @@ class TranquiloApp {
         shareItem(item);
       },
       sourceLinkLabel: (item: any) => sourceLinkLabel(item),
-      sourceLinkPreposition: (item: any) => sourceLinkPreposition(item),
+      sourceLinkText: (item: any) => sourceLinkText(item),
       setArtistFilter: (artist: any) => {
         setArtistFilter(artist);
       },

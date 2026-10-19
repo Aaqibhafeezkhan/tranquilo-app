@@ -75,6 +75,8 @@ export const ptBR: Dictionary = {
   "detail.meta.provenance": "Procedência",
   "detail.meta.tagged": "Marcadores",
   "detail.meta.license": "Licença",
+  "detail.sourceLink.on": "Ver em {institution}",
+  "detail.sourceLink.at": "Ver em {institution}",
   "detail.cite.button": "Citar esta obra",
   "detail.cite.copy": "Copiar",
   "detail.cite.copied": "Copiado",

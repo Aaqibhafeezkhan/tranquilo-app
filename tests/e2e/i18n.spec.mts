@@ -4,7 +4,7 @@
 // useful case: a browser asking for it must stay in English, and someone
 // who explicitly opts in must get English fallbacks, not blanks or keys.
 import { expect, test } from "@playwright/test";
-import { gotoFeed, stubBackend } from "./harness.mts";
+import { gotoArtwork, gotoFeed, ITEMS, stubBackend } from "./harness.mts";
 
 test("an English browser gets lang=en and real toast copy", async ({
   page,
@@ -150,6 +150,27 @@ test.describe("a ?lang=pt-BR link", () => {
     await expect(page.locator('button.chip[data-category="All"]')).toHaveText(
       "All",
     );
+  });
+});
+
+// The detail panel's link to the institution's own page was assembled from
+// English words around the institution's name, so it stayed English in
+// every locale.
+test.describe("the detail panel's source link with pt-BR opted in", () => {
+  test("reads in Portuguese", async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem("tranquilo:locale", "pt-BR");
+    });
+    const item = ITEMS.find((i: any) => i.title && i.url && i.source === "met");
+    await gotoArtwork(page, "met", item.id);
+    await page
+      .locator(`#feed .slide[data-slug$="-${String(item.id)}"] .art-title-btn`)
+      .first()
+      .click();
+    await expect(page.locator("#detailModal")).toHaveClass(/open/);
+    await expect(
+      page.locator("#detailModal a.source-link .link-text"),
+    ).toHaveText("Ver em metmuseum.org");
   });
 });
 
