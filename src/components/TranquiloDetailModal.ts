@@ -698,6 +698,10 @@ export class TranquiloDetailModal extends HTMLElement {
         // object, labelled separately so it never reads as the creation date.
       }${
         metaRow(t("detail.meta.photographDate"), item.photograph_date)
+        // Who photographed the work, credited apart from its maker. Absent
+        // for most rows, and metaRow() then renders nothing.
+      }${
+        metaRow(t("detail.meta.photographer"), item.photographer)
         // "Provenance", not "Credit" -- non-provenance text is blanked at
         // ingestion, so anything reaching here has earned the label.
       }${metaRow(t("detail.meta.provenance"), item.credit)}${metaRow(t("detail.meta.tagged"), item.tags)}${
