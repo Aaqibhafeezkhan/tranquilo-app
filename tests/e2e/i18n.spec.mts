@@ -98,8 +98,49 @@ test.describe("a ?lang=pt-BR link", () => {
       return [document.body.innerText, ...attrs].join("\n");
     });
     const keyLike =
-      /\b(?:intro|topbar|slide|detail|search|support|shelves|storyline|chips|common|facet|filter|error|lightbox|export|share|collection|upsell|artistCard|setOfWorks)\.[a-zA-Z][\w-]*(?:\.[\w-]+)*/g;
+      /\b(?:intro|topbar|slide|detail|search|support|shelves|storyline|chips|common|facet|filter|error|lightbox|export|share|collection|upsell|artistCard|setOfWorks|newsletter|form)\.[a-zA-Z][\w-]*(?:\.[\w-]+)*/g;
     expect(text.match(keyLike) ?? []).toEqual([]);
+  });
+
+  test("the newsletter modal is in pt-BR and tags the signup pt-BR", async ({
+    page,
+  }) => {
+    const posted: { locale?: string } = {};
+    await gotoFeed(page, "?lang=pt-BR");
+    // Added after gotoFeed's stubBackend() so this handler runs first.
+    await page.route("**/api/subscribe", async (route) => {
+      Object.assign(posted, JSON.parse(route.request().postData() || "{}"));
+      await route.fulfill({ status: 204 });
+    });
+    await page.locator("#feed [data-open-newsletter]").click();
+    const dialog = page.locator("#newsletterDialog");
+    await expect(dialog).toHaveClass(/open/);
+    await expect(dialog.locator("#newsletterDialogTitle")).toHaveText(
+      "Um momento de arte por mês",
+    );
+    await expect(dialog.locator("[data-newsletter-close]")).toHaveAttribute(
+      "aria-label",
+      "Fechar",
+    );
+    await expect(dialog.locator("#newsletterEmail")).toHaveAttribute(
+      "placeholder",
+      "voce@exemplo.com",
+    );
+
+    // An invalid address shows the Portuguese validation message.
+    await page.fill("#newsletterEmail", "not-an-email");
+    await page.click("#newsletterSubmitBtn");
+    await expect(dialog.locator(".field.error .error-msg")).toHaveText(
+      "Digite um endereço de e-mail válido.",
+    );
+
+    await page.fill("#newsletterEmail", "leitora@example.com");
+    await page.click("#newsletterSubmitBtn");
+    await expect(page.locator("#newsletterSuccess")).toBeVisible();
+    await expect(page.locator("#newsletterSuccess")).toContainText(
+      "Você está na lista",
+    );
+    expect(posted.locale).toBe("pt-BR");
   });
 
   test("?lang=en switches back", async ({ page }) => {

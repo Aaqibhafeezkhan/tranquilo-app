@@ -196,7 +196,18 @@ export const en = {
   // Email sign-up forms on static pages (src/pages/*.ts).
   "form.joining": "Joining…",
   "form.error": "Something went wrong — please try again in a moment.",
+  "form.email": "Email",
+  "form.emailPlaceholder": "you@example.com",
+  "form.emailInvalid": "Please enter a valid email address.",
   "about.notify.cta": "Notify me",
+
+  // The homepage newsletter dialog (TranquiloNewsletterModal.ts); its
+  // email field and status messages use the form.* keys above.
+  "newsletter.close": "Close",
+  "newsletter.title": "Enjoy a monthly art moment",
+  "newsletter.body": "A monthly note with curated art. No spam.",
+  "newsletter.subscribe": "Subscribe",
+  "newsletter.success": "You're on the list — look out for our next note.",
 
   // <tranquilo-topbar>
   "topbar.shareBanner.text": "Tranquilo is open source and volunteer-run.",
