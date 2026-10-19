@@ -167,7 +167,17 @@ export const ptBR: Dictionary = {
 
   "form.joining": "Inscrevendo…",
   "form.error": "Algo deu errado — tente de novo em instantes.",
+  "form.email": "E-mail",
+  "form.emailPlaceholder": "voce@exemplo.com",
+  "form.emailInvalid": "Digite um endereço de e-mail válido.",
   "about.notify.cta": "Quero receber",
+
+  "newsletter.close": "Fechar",
+  "newsletter.title": "Um momento de arte por mês",
+  "newsletter.body": "Uma mensagem por mês com arte selecionada. Sem spam.",
+  "newsletter.subscribe": "Inscrever-se",
+  "newsletter.success":
+    "Você está na lista. Fique de olho na nossa próxima mensagem.",
 
   "topbar.shareBanner.text":
     "O Tranquilo é de código aberto e mantido por voluntários.",

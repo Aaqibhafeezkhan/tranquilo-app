@@ -8,27 +8,29 @@
 // Posts to the same /api/subscribe endpoint as pages/about.html's "Notify
 // me" form and pages/pro.html's waitlist, tagged with its own `source` so
 // Resend segments can tell the three apart.
-import { currentLocale } from "../i18n/index";
+import { currentLocale, t, tHtml } from "../i18n/index";
 import { fieldWrap, isValidEmail } from "../utils/formValidation";
 import { on } from "../utils/on";
 
 const NEWSLETTER_SOURCE = "homepage_newsletter";
 
+// Every string is escaped by tHtml(): translations are contributed text and
+// end up in innerHTML here, attributes included.
 function dialogHtml(): string {
   return `<div class="support-dialog-inner" role="document">
-<button type="button" class="support-dialog-close" data-newsletter-close aria-label="Close">&times;</button>
-<h2 id="newsletterDialogTitle" class="support-dialog-title">Enjoy a monthly art moment</h2>
-<p class="support-dialog-body">A monthly note with curated art. No spam.</p>
+<button type="button" class="support-dialog-close" data-newsletter-close aria-label="${tHtml("newsletter.close")}">&times;</button>
+<h2 id="newsletterDialogTitle" class="support-dialog-title">${tHtml("newsletter.title")}</h2>
+<p class="support-dialog-body">${tHtml("newsletter.body")}</p>
 <form class="mkt-form" id="newsletterForm" novalidate>
 <div class="field" data-field="newsletterEmail">
-<label for="newsletterEmail">Email</label>
-<input type="email" id="newsletterEmail" name="newsletterEmail" placeholder="you@example.com">
-<div class="error-msg">Please enter a valid email address.</div>
+<label for="newsletterEmail">${tHtml("form.email")}</label>
+<input type="email" id="newsletterEmail" name="newsletterEmail" placeholder="${tHtml("form.emailPlaceholder")}">
+<div class="error-msg">${tHtml("form.emailInvalid")}</div>
 </div>
-<button class="btn-primary block" type="submit" id="newsletterSubmitBtn">Subscribe</button>
+<button class="btn-primary block" type="submit" id="newsletterSubmitBtn">${tHtml("newsletter.subscribe")}</button>
 <p class="submit-error-msg" id="newsletterErrorMsg"></p>
 </form>
-<p class="form-note" id="newsletterSuccess" style="display:none;">You're on the list &mdash; look out for our next note.</p>
+<p class="form-note" id="newsletterSuccess" style="display:none;">${tHtml("newsletter.success")}</p>
 </div>`;
 }
 
@@ -54,7 +56,7 @@ function wireForm(form: HTMLFormElement): void {
 
     errorMsg.classList.remove("show");
     submitBtn.disabled = true;
-    submitBtn.textContent = "Joining…";
+    submitBtn.textContent = t("form.joining");
 
     fetch("/api/subscribe", {
       method: "POST",
@@ -71,11 +73,10 @@ function wireForm(form: HTMLFormElement): void {
         success.style.display = "block";
       })
       .catch(() => {
-        errorMsg.textContent =
-          "Something went wrong — please try again in a moment.";
+        errorMsg.textContent = t("form.error");
         errorMsg.classList.add("show");
         submitBtn.disabled = false;
-        submitBtn.textContent = "Subscribe";
+        submitBtn.textContent = t("newsletter.subscribe");
       });
   });
 }
