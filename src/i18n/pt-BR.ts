@@ -53,15 +53,15 @@ export const ptBR: Dictionary = {
   "slide.collect.remove": "Remover da coleção",
 
   "detail.close": "Fechar",
-  "detail.shelfPrev": "Anterior nesta estante",
-  "detail.shelfNext": "Próxima nesta estante",
+  "detail.shelfPrev": "Anterior nesta prateleira",
+  "detail.shelfNext": "Próxima nesta prateleira",
   "detail.source": "Fonte",
   "detail.sourceHost": "Fonte: {host}",
   "detail.sources": "Fontes",
   "detail.twist": "A reviravolta",
   "detail.cast.title": "Conheça os personagens",
   "detail.cast.possibly": "Possivelmente {name}",
-  "detail.cast.noDetail": "Ainda não há detalhes verificados.",
+  "detail.cast.noDetail": "Ainda sem detalhes verificados.",
   "detail.fact.didYouKnow": "Você sabia?",
   "detail.fact.basic": "Informações básicas",
   "detail.meta.artist": "Artista",
@@ -101,7 +101,7 @@ export const ptBR: Dictionary = {
   "search.didYouMean":
     "Nenhum resultado para “{query}”. Você quis dizer {suggestion}?",
 
-  "filter.moreBy": "Mais de {artist}",
+  "filter.moreBy": "Mais por {artist}",
   "filter.collection": "{title} ({count})",
   "collection.toast.empty": "Nada salvo ainda",
 
@@ -110,23 +110,23 @@ export const ptBR: Dictionary = {
 
   "error.heading": "Estamos com um problema agora, mas voltaremos em breve.",
   "error.retry": "Tentar de novo",
-  "error.home": "Voltar ao Tranquilo",
+  "error.home": "Voltar para Tranquilo",
 
   "support.strip.line":
-    "O Tranquilo é mantido por apoio direto, não por anúncios.",
+    "Tranquilo é mantido por apoio direto, não por anúncios.",
   "support.strip.unavailable":
-    "As doações estão indisponíveis por um momento. Agradecemos a vontade de ajudar — tente de novo em breve.",
+    "As doações estão indisponíveis por um momento. Agradecemos a sua boa vontade — tente de novo em breve.",
   "support.strip.soon": "As doações abrem em breve.",
   "support.strip.donate": "Doar",
   "support.dialog.close": "Fechar",
-  "support.dialog.title": "Apoie o Tranquilo",
+  "support.dialog.title": "Apoie Tranquilo",
   "support.dialog.body":
     "Cada contribuição vai para a hospedagem e para o custo silencioso de manter tudo funcionando.",
   "support.dialog.once": "Doação única",
   "support.dialog.monthly": "Doação mensal",
   "support.dialog.perMonth": "por mês",
   "support.dialog.note":
-    "O pagamento é feito pelo Stripe — o Tranquilo nunca vê os dados do seu cartão. Os valores aparecem na sua moeda no momento do pagamento.",
+    "O pagamento é feito pelo Stripe — Tranquilo nunca vê os dados do seu cartão. Os valores aparecem na sua moeda no momento do pagamento.",
   "support.once.note": "Escolha o valor",
 
   "shelves.home": "Tranquilo, voltar à página inicial",
@@ -134,7 +134,7 @@ export const ptBR: Dictionary = {
   "shelves.close": "Fechar Descobrir",
   "shelves.storylines.title": "Narrativas",
   "shelves.storylines.subtitle": "Histórias selecionadas por trás da arte",
-  "shelves.moods.title": "Estantes, feitas à mão",
+  "shelves.moods.title": "Prateleiras, feitas à mão",
   "shelves.moods.subtitle": "Escolha um clima e aproveite",
 
   "storyline.close": "Fechar a narrativa",
@@ -160,8 +160,8 @@ export const ptBR: Dictionary = {
   "nav.about": "Sobre",
   "nav.submit": "Enviar acervo",
   "nav.getInvolved": "Participe",
-  "nav.support": "Apoie",
-  "footer.feedback": "Comentários",
+  "nav.support": "Nos apoie",
+  "footer.feedback": "Dê sua opinião",
   "footer.legal": "Termos e Privacidade",
   "footer.pro": "Lista de espera do Pro",
 
@@ -180,14 +180,14 @@ export const ptBR: Dictionary = {
     "Você está na lista. Fique de olho na nossa próxima mensagem.",
 
   "topbar.shareBanner.text":
-    "O Tranquilo é de código aberto e mantido por voluntários.",
+    "Tranquilo é de código aberto e mantido por voluntários.",
   "topbar.shareBanner.newsletter": "Receber a newsletter",
   "topbar.shareBanner.involved": "Participe",
   "topbar.shareBanner.dismiss": "Fechar",
   "topbar.home": "Tranquilo, voltar ao início",
   "topbar.music": "Ligar ou desligar a música",
   "topbar.search": "Buscar",
-  "topbar.discover": "Descobrir estantes",
+  "topbar.discover": "Descobrir prateleiras",
   "topbar.collection.label": "Minha coleção",
   "topbar.collection.empty": "Minha coleção, vazia",
   "topbar.collection.count.one": "Minha coleção, {count} obra",
@@ -195,15 +195,15 @@ export const ptBR: Dictionary = {
   "topbar.filter.export": "Exportar",
   "topbar.filter.clear": "Mostrar tudo",
   "artistCard.wikipedia": "Leia mais na Wikipédia",
-  "artistCard.wikidata": "Ver no Wikidata",
+  "artistCard.wikidata": "Ver na Wikidata",
 
   "chips.all": "Todos",
-  "chips.storyline": "Narrativas",
+  "chips.storyline": "Narrativa",
   "chips.more": "Mais",
 
   "facet.category.paintings-portraits": "Pinturas e retratos",
   "facet.category.sculpture-objects": "Esculturas e objetos",
-  "facet.category.works-on-paper": "Obras sobre papel",
+  "facet.category.works-on-paper": "Obras em papel",
   "facet.category.arms-armor": "Armas e armaduras",
   "facet.category.photography": "Fotografia",
 
