@@ -263,7 +263,7 @@ test.describe("pt-BR static pages", () => {
   test("the About page is Portuguese, chrome included", async ({ page }) => {
     await page.goto("/pages/pt-BR/about.html");
     await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
-    await expect(page.locator("h1")).toHaveText("Por que o Tranquilo existe");
+    await expect(page.locator("h1")).toHaveText("Por que Tranquilo existe");
     await expect(page.locator(".mkt-nav-links a.current")).toHaveText("Sobre");
     await expect(
       page.locator('.mkt-footer a[href="/pages/about.html?lang=en"]'),
