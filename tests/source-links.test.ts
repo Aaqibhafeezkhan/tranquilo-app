@@ -3,6 +3,7 @@ import {
   isAggregatorSource,
   sourceLinkLabel,
   sourceLinkPreposition,
+  sourceLinkText,
 } from "../src/app/sourceLinks";
 
 describe("Smithsonian items", () => {
@@ -126,5 +127,20 @@ describe("Tainacan items", () => {
 
   it("read 'View at', since the label is a museum's name", () => {
     expect(sourceLinkPreposition(at())).toBe("at");
+  });
+});
+
+// The link's whole wording, not just its parts: a translation needs the
+// verb, preposition and name as one sentence, since word order and
+// prepositions don't carry over between languages.
+describe("sourceLinkText", () => {
+  it("reads 'View on' a domain", () => {
+    expect(sourceLinkText({ source: "met" })).toBe("View on metmuseum.org");
+  });
+
+  it("reads 'View at' a named institution", () => {
+    expect(sourceLinkText({ source: "npm" })).toBe(
+      "View at National Palace Museum",
+    );
   });
 });

@@ -1,3 +1,5 @@
+import { t } from "../i18n/index";
+
 // Domain-style labels for the detail view's "View on X" source link.
 // Separate from ExportService's EXPORT_SOURCE_NAMES, which holds full
 // institutional names for a CSV rather than the actual host item.url points at.
@@ -42,6 +44,19 @@ const SOURCE_LINK_PREPOSITIONS: Record<string, string> = {
 
 export function sourceLinkPreposition(item: any): string {
   return SOURCE_LINK_PREPOSITIONS[item?.source] || "on";
+}
+
+// The link's whole visible wording ("View on metmuseum.org"). One
+// dictionary entry per preposition rather than "View" + preposition +
+// label, since another language may need different word order or a
+// single preposition for both.
+export function sourceLinkText(item: any): string {
+  return t(
+    sourceLinkPreposition(item) === "at"
+      ? "detail.sourceLink.at"
+      : "detail.sourceLink.on",
+    { institution: sourceLinkLabel(item) },
+  );
 }
 
 // Europeana aggregates rather than holds: its `url` lands on a portal

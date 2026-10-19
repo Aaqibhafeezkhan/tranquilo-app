@@ -6,7 +6,7 @@
 // -- whichever way they hit trouble, and a future third failure mode
 // reuses this instead of growing its own markup.
 import { licenseLabel } from "./app/licenseLabels";
-import { sourceLinkLabel, sourceLinkPreposition } from "./app/sourceLinks";
+import { sourceLinkText } from "./app/sourceLinks";
 import { pickRandomErrorArt } from "./data/errorArt";
 import { t } from "./i18n/index";
 
@@ -32,8 +32,6 @@ export interface ErrorStateOptions {
 export function renderErrorState(opts: ErrorStateOptions): HTMLElement {
   const art = pickRandomErrorArt();
   const { label: licenseText, deed } = licenseLabel(art.license, art.url);
-  const sourceLabel = sourceLinkLabel(art);
-  const preposition = sourceLinkPreposition(art);
 
   const el = document.createElement("div");
   el.className = "error-state";
@@ -54,7 +52,7 @@ export function renderErrorState(opts: ErrorStateOptions): HTMLElement {
             : escapeHtml(licenseText)
         }</div>`
       : "") +
-    `<div style="margin-top:14px;"><a class="source-link" href="${escapeHtml(art.url)}" target="_blank" rel="noopener"><span class="link-text">View ${escapeHtml(preposition)} ${escapeHtml(sourceLabel)}</span><span class="link-arrow" aria-hidden="true">&rarr;</span></a></div>` +
+    `<div style="margin-top:14px;"><a class="source-link" href="${escapeHtml(art.url)}" target="_blank" rel="noopener"><span class="link-text">${escapeHtml(sourceLinkText(art))}</span><span class="link-arrow" aria-hidden="true">&rarr;</span></a></div>` +
     `</div>` +
     `</div>` +
     (opts.onRetry

@@ -705,7 +705,7 @@ export class TranquiloDetailModal extends HTMLElement {
         // Actions, not metadata: grouped after a divider (.detail-actions).
         // sourceLinkLabel() rather than an inline lookup, so this and the
         // lightbox's link can't drift into naming the institution two ways.
-      }<div class="detail-actions"><div class="detail-actions-row"><a class="source-link" href="${item.url}" target="_blank" rel="noopener"><span class="link-text">View ${escapeHtml(host.sourceLinkPreposition(item))} ${escapeHtml(host.sourceLinkLabel(item))}</span><span class="link-arrow" aria-hidden="true">&rarr;</span></a>${citeButtonHtml(item)}</div>${citePanelHtml(item)}</div>` +
+      }<div class="detail-actions"><div class="detail-actions-row"><a class="source-link" href="${item.url}" target="_blank" rel="noopener"><span class="link-text">${escapeHtml(host.sourceLinkText(item))}</span><span class="link-arrow" aria-hidden="true">&rarr;</span></a>${citeButtonHtml(item)}</div>${citePanelHtml(item)}</div>` +
       `</div>`
     );
   }
