@@ -46,6 +46,10 @@ export interface Item {
   culture_period: string | null;
   date: string | null;
   photograph_date: string | null;
+  // Who photographed the work, when that's someone other than its maker
+  // (e.g. the Commons contributor who photographed a painting). Optional:
+  // rows and fixtures from before the column existed don't carry it.
+  photographer?: string | null;
   medium: string | null;
   credit: string | null;
   tags: string | null;

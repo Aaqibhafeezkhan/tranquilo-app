@@ -72,6 +72,7 @@ export const ptBR: Dictionary = {
   "detail.meta.origin": "Origem",
   "detail.meta.culture": "Cultura",
   "detail.meta.photographDate": "Data da fotografia",
+  "detail.meta.photographer": "Fotografia",
   "detail.meta.provenance": "Procedência",
   "detail.meta.tagged": "Marcadores",
   "detail.meta.license": "Licença",

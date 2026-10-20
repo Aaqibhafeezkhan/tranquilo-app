@@ -92,6 +92,7 @@ export const en = {
   "detail.meta.origin": "Origin",
   "detail.meta.culture": "Culture",
   "detail.meta.photographDate": "Date of photograph",
+  "detail.meta.photographer": "Photographer",
   "detail.meta.provenance": "Provenance",
   "detail.meta.tagged": "Tagged",
   "detail.meta.license": "License",

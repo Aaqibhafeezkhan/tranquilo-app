@@ -80,6 +80,7 @@ function serializeRow(row: any): any {
     culture_period: row.culture_period,
     date: row.date,
     photograph_date: row.photograph_date,
+    photographer: row.photographer,
     medium: row.medium,
     credit: row.credit,
     tags: row.tags,

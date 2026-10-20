@@ -649,6 +649,10 @@ components:
         date: { type: string, nullable: true }
         medium: { type: string, nullable: true }
         credit: { type: string, nullable: true }
+        photographer:
+          type: string
+          nullable: true
+          description: Who photographed the work, when that's someone other than its maker (e.g. the contributor who photographed a painting). Null for most items.
         tags: { type: array, items: { type: string } }
         img:
           type: string
