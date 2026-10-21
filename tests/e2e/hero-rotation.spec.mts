@@ -36,6 +36,7 @@ test("a first-time visitor gets the hand-picked opening", async ({ page }) => {
 
 test("a returning visitor goes straight into the catalogue", async ({
   page,
+  browser,
 }) => {
   await page.addInitScript((k) => {
     localStorage.setItem(k, "1");
@@ -44,11 +45,16 @@ test("a returning visitor goes straight into the catalogue", async ({
   const titles = await openingTitles(page, 3);
   expect(titles.length).toBeGreaterThan(0); // the feed still renders
 
-  const firstVisit = await page.context().newPage();
+  // A fresh context, not page.context().newPage(): pages in one context
+  // share localStorage, so a second page there would read the flag set
+  // above and be a returning visitor too, comparing two random openings
+  // that sometimes match.
+  const ctx = await browser.newContext();
+  const firstVisit = await ctx.newPage();
   await gotoFeed(firstVisit);
   const heroTitles = await openingTitles(firstVisit, 3);
   expect(titles.join("|")).not.toBe(heroTitles.join("|"));
-  await firstVisit.close();
+  await ctx.close();
 });
 
 test("two sessions do not open on the same artwork", async ({ browser }) => {
