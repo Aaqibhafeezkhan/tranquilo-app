@@ -128,7 +128,7 @@ export const ptBR: Dictionary = {
   "support.dialog.monthly": "Doação mensal",
   "support.dialog.perMonth": "por mês",
   "support.dialog.note":
-    "O pagamento é feito pelo Stripe — Tranquilo nunca vê os dados do seu cartão. Os valores aparecem na sua moeda no momento do pagamento.",
+    "O pagamento é feito por Stripe — Tranquilo nunca vê os dados do seu cartão. Os valores aparecem na sua moeda no momento do pagamento.",
   "support.once.note": "Escolha o valor",
 
   "shelves.home": "Tranquilo, voltar à página inicial",
@@ -136,7 +136,7 @@ export const ptBR: Dictionary = {
   "shelves.close": "Fechar Descobrir",
   "shelves.storylines.title": "Narrativas",
   "shelves.storylines.subtitle": "Histórias selecionadas por trás da arte",
-  "shelves.moods.title": "Prateleiras, feitas à mão",
+  "shelves.moods.title": "Prateleiras, curadas à mão",
   "shelves.moods.subtitle": "Escolha um clima e aproveite",
 
   "storyline.close": "Fechar a narrativa",
@@ -172,7 +172,7 @@ export const ptBR: Dictionary = {
   "form.email": "E-mail",
   "form.emailPlaceholder": "voce@exemplo.com",
   "form.emailInvalid": "Digite um endereço de e-mail válido.",
-  "about.notify.cta": "Quero receber",
+  "about.notify.cta": "Notifique-me",
 
   "newsletter.close": "Fechar",
   "newsletter.title": "Um momento de arte por mês",
