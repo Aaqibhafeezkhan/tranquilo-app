@@ -34,7 +34,7 @@ export const ptBR: Dictionary = {
 
   // AI disclosure: draft awaiting approval (see en.ts) -- not shown yet.
   "ai.disclosure.text":
-    "Redigido com ajuda de IA; editado e revisado por uma pessoa.",
+    "Redigido com ajuda de IA; editado e revisado por um indivíduo.",
   "ai.disclosure.errorPrompt": "Encontrou um erro?",
   "ai.disclosure.badgeLabel": "Como este texto foi escrito",
 
@@ -65,14 +65,14 @@ export const ptBR: Dictionary = {
   "detail.fact.didYouKnow": "Você sabia?",
   "detail.fact.basic": "Informações básicas",
   "detail.meta.artist": "Artista",
-  "detail.meta.created": "Criação",
+  "detail.meta.created": "Criado em",
   "detail.meta.material": "Material",
   "detail.meta.artistOrigin": "Origem do artista",
   "detail.meta.objectOrigin": "Origem do objeto",
   "detail.meta.origin": "Origem",
   "detail.meta.culture": "Cultura",
   "detail.meta.photographDate": "Data da fotografia",
-  "detail.meta.photographer": "Fotografia",
+  "detail.meta.photographer": "Fotografia por",
   "detail.meta.provenance": "Procedência",
   "detail.meta.tagged": "Marcadores",
   "detail.meta.license": "Licença",
