@@ -56,7 +56,10 @@ test("the URL follows the slide you are looking at", async ({ page }) => {
     const m = /^\/([0-9]+)\/(.+)$/.exec(idPart);
     if (m) idPart = `${m[1]}-${m[2]}`;
   }
-  const encoded = `/v/${source}-${encodeURIComponent(idPart)}`;
+  // Only the characters encodeSlugId() escapes: a comma or other sub-delim
+  // stays literal in the path, so encodeURIComponent() would fail this on
+  // any id that happens to contain one.
+  const encoded = `/v/${source}-${idPart.replace(/[%/#?\s]/g, encodeURIComponent)}`;
   // The URL only reflects the active slide after syncUrlToActiveSlide()'s
   // own debounce (TranquiloFeed.ts's URL_SYNC_DEBOUNCE_MS) fires, which
   // resets on every scroll-driven recycle-window frame -- under CI's
