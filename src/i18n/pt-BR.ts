@@ -12,6 +12,8 @@ export const ptBR: Dictionary = {
   "upsell.cta": "Entrar na lista de espera",
   "upsell.dismiss": "Fechar",
 
+  "feed.scrollHint": "role para explorar",
+
   "intro.heading": "Um jeito mais calmo de navegar.",
   // Portuguese treats 0 and 1 as singular ("0 acervo"), so .one covers both.
   "intro.tagline.one":

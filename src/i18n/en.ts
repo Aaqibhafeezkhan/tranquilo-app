@@ -19,6 +19,9 @@ export const en = {
   "upsell.cta": "Join the waitlist",
   "upsell.dismiss": "Dismiss",
 
+  // The first-scroll cue under the feed (#scrollHint in index.html).
+  "feed.scrollHint": "scroll to explore",
+
   // Intro slide (src/feed/introSlides.ts). {works} is a rounded count like
   // "10k+"; {count} is the number of sources.
   "intro.heading": "A calmer way to scroll.",

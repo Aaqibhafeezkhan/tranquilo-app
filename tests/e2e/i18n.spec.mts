@@ -68,6 +68,13 @@ test.describe("a ?lang=pt-BR link", () => {
     await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
   });
 
+  test("the scroll hint is in pt-BR", async ({ page }) => {
+    // Plain markup in index.html rather than a component, so it is easy to
+    // miss when converting text to dictionary keys.
+    await gotoFeed(page, "?lang=pt-BR");
+    await expect(page.locator("#scrollHint")).toHaveText("role para explorar");
+  });
+
   test("the top bar, drawn while modules load, is already in pt-BR", async ({
     page,
   }) => {
