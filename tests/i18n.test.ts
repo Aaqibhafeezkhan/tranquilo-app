@@ -379,8 +379,11 @@ describe("runtime (src/i18n/index.ts)", () => {
       expect(i18n.pagePath("about.html")).toBe("/pages/about.html");
       i18n.setLocale("pt-BR");
       expect(i18n.pagePath("about.html")).toBe("/pages/pt-BR/about.html");
-      // Not translated: the English page, never a dead link.
-      expect(i18n.pagePath("terms.html")).toBe("/pages/terms.html");
+      // Not translated: the English page, never a dead link. (Every real
+      // page has a pt-BR translation now, so this uses a made-up one.)
+      expect(i18n.pagePath("not-translated.html")).toBe(
+        "/pages/not-translated.html",
+      );
     });
   });
 
