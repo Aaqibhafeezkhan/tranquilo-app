@@ -58,8 +58,12 @@ describe("a pt-BR page", () => {
     const nav = html.slice(html.indexOf("<header"), html.indexOf("</header>"));
     expect(nav).toContain('href="/pages/pt-BR/about.html" class="current"');
     expect(nav).toContain('href="/pages/pt-BR/get-involved.html"');
-    expect(nav).toContain('href="/pages/submit.html"');
+    expect(nav).toContain('href="/pages/pt-BR/submit.html"');
     expect(nav).not.toContain(">About<");
+    // Terms has no translation yet, so its footer link stays English.
+    const footer = html.slice(html.indexOf("<footer"));
+    expect(footer).toContain('href="/pages/terms.html"');
+    expect(footer).toContain('href="/pages/pt-BR/feedback.html"');
   });
 
   it("adopts its language at runtime, whatever the page's own script loads", async () => {

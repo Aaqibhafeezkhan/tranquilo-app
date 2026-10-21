@@ -209,6 +209,17 @@ export const en = {
   "form.emailPlaceholder": "you@example.com",
   "form.emailInvalid": "Please enter a valid email address.",
   "about.notify.cta": "Notify me",
+  "curator.cta": "Join the waitlist",
+
+  // The Feedback and Submit forms' busy and failure text (src/pages/*.ts).
+  "feedback.sending": "Sending…",
+  "feedback.submit": "Send feedback",
+  "feedback.error":
+    "That didn't send. Your message is still here — try again in a moment.",
+  "submit.sending": "Submitting…",
+  "submit.submit": "Submit for review",
+  "submit.error":
+    "Something went wrong sending this — please try again in a moment.",
 
   // The homepage newsletter dialog (TranquiloNewsletterModal.ts); its
   // email field and status messages use the form.* keys above.

@@ -3,7 +3,7 @@
 // raw keys. pt-BR is a draft locale with no strings yet, which makes it the
 // useful case: a browser asking for it must stay in English, and someone
 // who explicitly opts in must get English fallbacks, not blanks or keys.
-import { expect, test } from "@playwright/test";
+import { expect, type Page, test } from "@playwright/test";
 import { gotoArtwork, gotoFeed, ITEMS, stubBackend } from "./harness.mts";
 
 test("an English browser gets lang=en and real toast copy", async ({
@@ -333,6 +333,79 @@ test.describe("pt-BR static pages", () => {
         '.slide.intro a.action-card-btn[href="/pages/pt-BR/get-involved.html"]',
       ),
     ).toHaveText("Participe");
+  });
+
+  // The forms' busy and error text is set from each page's script rather
+  // than its HTML, so a translated page can still fall back to English
+  // exactly when something goes wrong. Each test fails the request to see it.
+  const failApi = (page: Page, path: string) =>
+    page.route(`**${path}**`, (route) =>
+      route.fulfill({ status: 500, body: "{}" }),
+    );
+
+  test("the Feedback page and its form messages are Portuguese", async ({
+    page,
+  }) => {
+    await failApi(page, "/api/submit-collection");
+    await page.goto("/pages/pt-BR/feedback.html");
+    await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
+    await page.fill("#message", "Teste");
+    await page.click("#submitBtn");
+    await expect(page.locator("#submitErrorMsg")).toContainText(
+      "não foi enviada",
+    );
+    await expect(page.locator("#submitBtn")).toHaveText("Enviar opinião");
+  });
+
+  test("the Submit page and its form messages are Portuguese", async ({
+    page,
+  }) => {
+    await failApi(page, "/api/submit-collection");
+    await page.goto("/pages/pt-BR/submit.html");
+    await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
+    await page.fill("#collectionName", "Acervo de teste");
+    await page.fill("#submitterName", "Pessoa Teste");
+    await page.fill("#submitterEmail", "teste@exemplo.com");
+    await page.fill("#collectionLink", "https://exemplo.com");
+    await page.selectOption("#licenseType", "CC0");
+    await page.fill("#licenseVerificationLink", "https://exemplo.com/licenca");
+    await page.fill("#description", "Descrição");
+    await page.check("#confirmLicense");
+    await page.click("#submitBtn");
+    await expect(page.locator("#submitErrorMsg")).toContainText(
+      "Algo deu errado",
+    );
+    await expect(page.locator("#submitBtn")).toHaveText(
+      "Enviar para avaliação",
+    );
+  });
+
+  test("the Tranquilo Curator page and its form messages are Portuguese", async ({
+    page,
+  }) => {
+    await failApi(page, "/api/subscribe");
+    await page.goto("/pages/pt-BR/curator.html");
+    await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
+    await page.fill("#waitlistEmail", "teste@exemplo.com");
+    await page.click("#waitlistSubmitBtn");
+    await expect(page.locator("#waitlistErrorMsg")).toContainText(
+      "Algo deu errado",
+    );
+    await expect(page.locator("#waitlistSubmitBtn")).toHaveText(
+      "Entrar na lista de espera",
+    );
+  });
+
+  test("the Thank-you page is Portuguese and leads back to the art", async ({
+    page,
+  }) => {
+    await page.goto("/pages/pt-BR/thank-you.html");
+    await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
+    await expect(page.locator("h1")).toHaveText("Agradecemos o seu apoio");
+    await expect(page.locator("main a.btn-primary")).toHaveAttribute(
+      "href",
+      "/",
+    );
   });
 
   test("English pages don't point at the draft translation", async ({

@@ -1,0 +1,117 @@
+<extends src="_base.html">
+<block name="head" type="append">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>Enviar um acervo — Tranquilo</title>
+<meta name="description" content="Envie um acervo com licença aberta para avaliação no Tranquilo.">
+</block>
+
+<block name="main">
+  <main class="mkt-main narrow">
+
+    <section class="mkt-section">
+      <div class="mkt-eyebrow">Enviar um acervo</div>
+      <h1 class="mkt-h1">Envie um acervo aberto para avaliação</h1>
+
+      <div class="mkt-callout">
+        <div class="icon-chip" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        </div>
+        <p>Só aceitamos acervos com licença aberta: CC0, CC-BY, domínio público ou equivalente. Nada com direitos restritos ou sem licença.</p>
+      </div>
+    </section>
+
+    <section class="mkt-section" id="formSection">
+      <form class="mkt-form" id="submitForm" novalidate>
+
+        <div class="field" data-field="collectionName">
+          <label for="collectionName">Nome do acervo *</label>
+          <input type="text" id="collectionName" name="collectionName" placeholder="ex.: Highsmith Street Photography">
+          <div class="error-msg">Informe o nome do acervo.</div>
+        </div>
+
+        <div class="field" data-field="submitterName">
+          <label for="submitterName">Seu nome *</label>
+          <input type="text" id="submitterName" name="submitterName" placeholder="Nome completo">
+          <div class="error-msg">Informe o seu nome.</div>
+        </div>
+
+        <div class="field" data-field="submitterEmail">
+          <label for="submitterEmail">Seu e-mail *</label>
+          <input type="email" id="submitterEmail" name="submitterEmail" placeholder="voce@exemplo.com">
+          <div class="error-msg">Digite um endereço de e-mail válido.</div>
+        </div>
+
+        <div class="field" data-field="collectionLink">
+          <label for="collectionLink">Link do acervo *</label>
+          <input type="url" id="collectionLink" name="collectionLink" placeholder="https://">
+          <div class="field-hint">Site, repositório ou API onde o acervo está.</div>
+          <div class="error-msg">Informe um link válido, começando com http:// ou https://</div>
+        </div>
+
+        <div class="field" data-field="licenseType">
+          <label for="licenseType">Tipo de licença *</label>
+          <select id="licenseType" name="licenseType">
+            <option value="">Selecione uma licença&hellip;</option>
+            <option value="CC0">CC0</option>
+            <option value="CC-BY">CC-BY</option>
+            <option value="CC-BY-SA">CC-BY-SA</option>
+            <option value="Public Domain">Domínio público</option>
+            <option value="Other">Outra licença aberta</option>
+          </select>
+          <div class="error-msg">Selecione um tipo de licença.</div>
+        </div>
+
+        <div class="field" id="licenseOtherField" data-field="licenseOther" style="display:none;">
+          <label for="licenseOther">Descreva a licença *</label>
+          <input type="text" id="licenseOther" name="licenseOther" placeholder="Informe a licença aberta usada">
+          <div class="error-msg">Descreva a licença.</div>
+        </div>
+
+        <div class="field" data-field="licenseVerificationLink">
+          <label for="licenseVerificationLink">Link de verificação da licença *</label>
+          <input type="url" id="licenseVerificationLink" name="licenseVerificationLink" placeholder="Onde essa licença está documentada">
+          <div class="error-msg">Informe um link válido, começando com http:// ou https://</div>
+        </div>
+
+        <div class="field" data-field="description">
+          <label for="description">Descrição curta *</label>
+          <textarea id="description" name="description" placeholder="O que há neste acervo?"></textarea>
+          <div class="error-msg">Adicione uma descrição curta.</div>
+        </div>
+
+        <div class="field" data-field="estimatedSize">
+          <label for="estimatedSize">Tamanho estimado (número de obras)</label>
+          <input type="number" id="estimatedSize" name="estimatedSize" min="1" placeholder="Opcional">
+        </div>
+
+        <div class="field-check" data-field="confirm">
+          <input type="checkbox" id="confirmLicense" name="confirmLicense">
+          <label for="confirmLicense">Confirmo que este acervo tem licença aberta e que tenho o direito de enviá-lo.</label>
+        </div>
+        <div class="error-msg" id="confirmError" style="display:none; margin-top:-12px;">Confirme a declaração sobre a licença antes de enviar.</div>
+
+        <div class="field-check" data-field="newsletterOptIn">
+          <input type="checkbox" id="newsletterOptIn" name="newsletterOptIn">
+          <label for="newsletterOptIn">Quero receber novidades do Tranquilo de vez em quando: novos acervos, funcionalidades e próximos passos. Sem spam; cancele quando quiser.</label>
+        </div>
+
+        <button type="submit" class="btn-primary block" id="submitBtn">Enviar para avaliação</button>
+        <p class="submit-error-msg" id="submitErrorMsg"></p>
+
+        <p class="form-note">Avaliamos cada envio e retornaremos com uma decisão. Não podemos prometer um prazo, mas vamos dar notícias.</p>
+      </form>
+    </section>
+
+    <section class="form-success" id="formSuccess">
+      <div class="icon-chip" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      </div>
+      <h2 class="mkt-h2">Envio recebido</h2>
+      <p style="font-family:var(--sans); font-weight:300; font-size:0.92rem; line-height:1.6; color:var(--ink-soft); max-width:380px; margin:0 auto;">Recebemos e vamos avaliar. Não podemos prometer um prazo, mas vamos dar notícias.</p>
+    </section>
+
+  </main>
+</block>
+
+<block name="script"><script type="module" src="../../src/pages/submit.ts"></script></block>
+</extends>

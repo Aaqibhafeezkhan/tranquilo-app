@@ -1,7 +1,7 @@
 // pages/curator.html's Tranquilo Curator waitlist form -- posts to api/subscribe.js, tagged
 // source: "pro_waitlist". Cloudflare beacon is a side-effect import
 // rather than its own <script> tag.
-import { currentLocale } from "../i18n/index";
+import { currentLocale, t } from "../i18n/index";
 import { fieldWrap, isValidEmail } from "../utils/formValidation";
 import "../analytics/cloudflareBeacon";
 
@@ -24,7 +24,7 @@ form.addEventListener("submit", (e) => {
 
   errorMsg.classList.remove("show");
   submitBtn.disabled = true;
-  submitBtn.textContent = "Joining…";
+  submitBtn.textContent = t("form.joining");
 
   fetch("/api/subscribe", {
     method: "POST",
@@ -41,10 +41,9 @@ form.addEventListener("submit", (e) => {
       success.style.display = "block";
     })
     .catch(() => {
-      errorMsg.textContent =
-        "Something went wrong — please try again in a moment.";
+      errorMsg.textContent = t("form.error");
       errorMsg.classList.add("show");
       submitBtn.disabled = false;
-      submitBtn.textContent = "Join the waitlist";
+      submitBtn.textContent = t("curator.cta");
     });
 });
