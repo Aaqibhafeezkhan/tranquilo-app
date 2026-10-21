@@ -9,7 +9,15 @@
 // dictionary keys: prose doesn't translate well fragment by fragment.
 
 export const TRANSLATED_PAGES: Readonly<Record<string, readonly string[]>> = {
-  "pt-BR": ["about.html", "get-involved.html", "support.html"],
+  "pt-BR": [
+    "about.html",
+    "curator.html",
+    "feedback.html",
+    "get-involved.html",
+    "submit.html",
+    "support.html",
+    "thank-you.html",
+  ],
 };
 
 /**

@@ -1,5 +1,5 @@
 // pages/feedback.html's bug report / feedback form.
-import { currentLocale } from "../i18n/index";
+import { currentLocale, t } from "../i18n/index";
 import {
   isNonEmpty,
   isValidEmail,
@@ -54,7 +54,7 @@ form.addEventListener("submit", (e) => {
 
   submitErrorMsg.classList.remove("show");
   submitBtn.disabled = true;
-  submitBtn.textContent = "Sending…";
+  submitBtn.textContent = t("feedback.sending");
 
   fetch("/api/submit-collection", {
     method: "POST",
@@ -78,12 +78,11 @@ form.addEventListener("submit", (e) => {
     })
     .catch(() => {
       submitBtn.disabled = false;
-      submitBtn.textContent = "Send feedback";
+      submitBtn.textContent = t("feedback.submit");
       // The written message is still sitting in the textarea, deliberately --
       // clearing the form on a network error would destroy the one thing the
       // person actually spent effort on.
-      submitErrorMsg.textContent =
-        "That didn't send. Your message is still here — try again in a moment.";
+      submitErrorMsg.textContent = t("feedback.error");
       submitErrorMsg.classList.add("show");
     });
 });

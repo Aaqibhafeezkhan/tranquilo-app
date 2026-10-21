@@ -176,6 +176,15 @@ export const ptBR: Dictionary = {
   "form.emailPlaceholder": "voce@exemplo.com",
   "form.emailInvalid": "Digite um endereço de e-mail válido.",
   "about.notify.cta": "Notifique-me",
+  "curator.cta": "Entrar na lista de espera",
+
+  "feedback.sending": "Enviando…",
+  "feedback.submit": "Enviar opinião",
+  "feedback.error":
+    "Sua mensagem não foi enviada, mas continua aqui. Tente de novo em instantes.",
+  "submit.sending": "Enviando…",
+  "submit.submit": "Enviar para avaliação",
+  "submit.error": "Algo deu errado no envio. Tente de novo em instantes.",
 
   "newsletter.close": "Fechar",
   "newsletter.title": "Um momento de arte por mês",

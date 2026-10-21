@@ -1,0 +1,74 @@
+<extends src="_base.html">
+<block name="head" type="append">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>Dê sua opinião — Tranquilo</title>
+<meta name="description" content="Relate um erro ou sugira algo para o Tranquilo. Não é preciso criar conta, e o e-mail é opcional.">
+</block>
+
+<block name="main">
+  <main class="mkt-main narrow">
+
+    <section class="mkt-section">
+      <div class="mkt-eyebrow">Dê sua opinião</div>
+      <h1 class="mkt-h1">Algo não funciona, ou está faltando alguma coisa?</h1>
+
+      <div class="mkt-callout">
+        <div class="icon-chip" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        </div>
+        <p>Só a mensagem é obrigatória. O e-mail é opcional: se preferir não se identificar, deixe em branco. Só não vamos conseguir responder.</p>
+      </div>
+    </section>
+
+    <section class="mkt-section" id="formSection">
+      <form class="mkt-form" id="feedbackForm" novalidate>
+
+        <div class="field" data-field="feedbackType">
+          <label for="feedbackType">Do que se trata?</label>
+          <select id="feedbackType" name="feedbackType">
+            <option value="Bug">Algo não funciona</option>
+            <option value="Feature idea">Uma ideia de funcionalidade</option>
+            <option value="Content">Algo sobre uma obra específica</option>
+            <option value="Something else">Outra coisa</option>
+          </select>
+        </div>
+
+        <div class="field" data-field="message">
+          <label for="message">O que aconteceu? *</label>
+          <textarea id="message" name="message" rows="7" placeholder="Quanto mais detalhes, melhor: o que você estava fazendo, o que esperava e o que aconteceu. Para um erro, o seu dispositivo e navegador ajudam muito (ex.: iPhone 14, Safari 17)."></textarea>
+          <div class="error-msg">Conte o que aconteceu.</div>
+        </div>
+
+        <div class="field" data-field="context">
+          <label for="context">Onde você estava?</label>
+          <input type="text" id="context" name="context" placeholder="ex.: o feed, a página de uma obra, este formulário">
+          <div class="field-hint">Preenchido automaticamente se você veio do app. Edite ou apague à vontade.</div>
+        </div>
+
+        <div class="field" data-field="email">
+          <label for="email">Seu e-mail (opcional)</label>
+          <input type="email" id="email" name="email" placeholder="Só se quiser uma resposta">
+          <div class="field-hint">Usamos apenas para responder a você sobre isso.</div>
+          <div class="error-msg">Esse e-mail não parece válido. Corrija ou apague o campo para enviar sem se identificar.</div>
+        </div>
+
+        <button type="submit" class="btn-primary block" id="submitBtn">Enviar opinião</button>
+        <p class="submit-error-msg" id="submitErrorMsg"></p>
+
+        <p class="form-note">As opiniões chegam a uma pessoa de verdade, não a uma fila de chamados. Lemos tudo e agimos a partir de padrões, não de casos isolados. Então, se algo importa para você, vale dizer, mesmo que ache que outra pessoa já disse.</p>
+      </form>
+    </section>
+
+    <section class="form-success" id="formSuccess">
+      <div class="icon-chip" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      </div>
+      <h2 class="mkt-h2">Pronto, recebemos</h2>
+      <p style="font-family:var(--sans); font-weight:300; font-size:0.92rem; line-height:1.6; color:var(--ink-soft); max-width:380px; margin:0 auto;">Lemos cada mensagem. Se você deixou um e-mail, responderemos quando houver algo a dizer.</p>
+    </section>
+
+  </main>
+</block>
+
+<block name="script"><script type="module" src="../../src/pages/feedback.ts"></script></block>
+</extends>

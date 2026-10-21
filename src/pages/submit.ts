@@ -3,7 +3,7 @@
 // This is pages/submit.html's single entry point -- the Cloudflare beacon
 // is a side-effect import rather than its own <script> tag, same pattern
 // as src/app.ts's own imports.
-import { currentLocale } from "../i18n/index";
+import { currentLocale, t } from "../i18n/index";
 import {
   clearFieldError,
   isNonEmpty,
@@ -99,7 +99,7 @@ form.addEventListener("submit", (e) => {
 
   submitErrorMsg.classList.remove("show");
   submitBtn.disabled = true;
-  submitBtn.textContent = "Submitting…";
+  submitBtn.textContent = t("submit.sending");
 
   const payload = {
     collectionName: (
@@ -167,10 +167,9 @@ form.addEventListener("submit", (e) => {
       }
     })
     .catch(() => {
-      submitErrorMsg.textContent =
-        "Something went wrong sending this — please try again in a moment.";
+      submitErrorMsg.textContent = t("submit.error");
       submitErrorMsg.classList.add("show");
       submitBtn.disabled = false;
-      submitBtn.textContent = "Submit for review";
+      submitBtn.textContent = t("submit.submit");
     });
 });
