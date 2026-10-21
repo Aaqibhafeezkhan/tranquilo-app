@@ -71,6 +71,19 @@ test.describe("a ?lang=pt-BR link", () => {
     await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
   });
 
+  test("the top-right buttons have pt-BR hover tooltips", async ({ page }) => {
+    // Icon-only buttons: the tooltip is the only visible name on hover.
+    await gotoFeed(page, "?lang=pt-BR");
+    for (const [id, tip] of [
+      ["searchToggle", "Buscar"],
+      ["discoverToggle", "Descobrir prateleiras"],
+      ["collectionToggle", "Minha coleção"],
+      ["musicToggle", "Ligar ou desligar a música"],
+    ]) {
+      await expect(page.locator(`#${id}`), id).toHaveAttribute("title", tip);
+    }
+  });
+
   test("the scroll hint is in pt-BR", async ({ page }) => {
     // Plain markup in index.html rather than a component, so it is easy to
     // miss when converting text to dictionary keys.
