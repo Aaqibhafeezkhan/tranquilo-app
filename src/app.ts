@@ -270,6 +270,8 @@ class TranquiloApp {
     const feedEl = document.getElementById("feed") as any;
     const lightboxEl = document.getElementById("lightbox") as any;
     const scrollHint = document.getElementById("scrollHint") as any;
+    // index.html carries the English text as a no-JS fallback.
+    scrollHint.textContent = t("feed.scrollHint");
     const detailModalEl = document.getElementById("detailModal") as any;
     // Kept outside the topbar host so SearchController's outside-click
     // check can reference it directly.
