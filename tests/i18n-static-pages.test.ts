@@ -13,7 +13,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { LOCALES } from "../src/i18n/locales";
-import { TRANSLATED_PAGES } from "../src/i18n/pages";
+import { localizedPagePath, TRANSLATED_PAGES } from "../src/i18n/pages";
 import { expandBaseTemplate } from "../vite-plugins/base-template.mts";
 import { expandHeadPartial } from "../vite-plugins/head-partial.mts";
 
@@ -60,10 +60,20 @@ describe("a pt-BR page", () => {
     expect(nav).toContain('href="/pages/pt-BR/get-involved.html"');
     expect(nav).toContain('href="/pages/pt-BR/submit.html"');
     expect(nav).not.toContain(">About<");
-    // Terms has no translation yet, so its footer link stays English.
     const footer = html.slice(html.indexOf("<footer"));
-    expect(footer).toContain('href="/pages/terms.html"');
+    expect(footer).toContain('href="/pages/pt-BR/terms.html"');
     expect(footer).toContain('href="/pages/pt-BR/feedback.html"');
+  });
+
+  it("falls back to the English page where no translation exists", () => {
+    // Every current page is translated into pt-BR, so this is checked on
+    // the rule itself rather than on a rendered link.
+    expect(localizedPagePath("pt-BR", "not-translated.html")).toBe(
+      "/pages/not-translated.html",
+    );
+    expect(localizedPagePath("pt-BR", "terms.html")).toBe(
+      "/pages/pt-BR/terms.html",
+    );
   });
 
   it("adopts its language at runtime, whatever the page's own script loads", async () => {

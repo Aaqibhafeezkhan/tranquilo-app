@@ -14,8 +14,10 @@ export const TRANSLATED_PAGES: Readonly<Record<string, readonly string[]>> = {
     "curator.html",
     "feedback.html",
     "get-involved.html",
+    "privacy.html",
     "submit.html",
     "support.html",
+    "terms.html",
     "thank-you.html",
   ],
 };

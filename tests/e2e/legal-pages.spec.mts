@@ -217,3 +217,73 @@ test.describe("the licence claim in Terms §3 is true of the product", () => {
     ).toEqual([]);
   });
 });
+
+// The pt-BR translations of Terms and Privacy. The English text is the
+// binding version, and each translation must say so; beyond that, the same
+// checkable claims as the English pages have to hold in Portuguese too.
+test.describe("pt-BR Terms and Privacy", () => {
+  test.beforeEach(async ({ page }) => {
+    await stubBackend(page);
+  });
+
+  const donationsOn = (page: import("@playwright/test").Page) =>
+    page.evaluate(() => {
+      const el = document.querySelector("[data-donations]");
+      return el ? el.checkVisibility() : true;
+    });
+
+  for (const file of ["terms.html", "privacy.html"]) {
+    test(`${file} says the English version prevails, and links to it`, async ({
+      page,
+    }) => {
+      await page.goto(`/pages/pt-BR/${file}`);
+      await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
+      const meta = page.locator("main .legal-meta");
+      await expect(meta).toContainText("prevalece a versão em inglês");
+      await expect(meta.locator("a")).toHaveAttribute("href", `/pages/${file}`);
+    });
+
+    test(`${file} has the same sections as the English page`, async ({
+      page,
+    }) => {
+      await page.goto(`/pages/${file}`);
+      const english = await page.locator("main h2:visible").count();
+      await page.goto(`/pages/pt-BR/${file}`);
+      await expect(page.locator("main h2:visible")).toHaveCount(english);
+    });
+  }
+
+  test("Terms names the operating entity and the last-updated date", async ({
+    page,
+  }) => {
+    await page.goto("/pages/pt-BR/terms.html");
+    const main = await page.locator("main").innerText();
+    expect(main).toContain("Cora Studios ME");
+    expect(main).toContain("Belo Horizonte");
+    expect(main).toContain("15 de agosto de 2026");
+    await expect(page.locator('main a[href="feedback.html"]')).toHaveCount(1);
+    await expect(page.locator('main a[href="privacy.html"]')).toHaveCount(1);
+  });
+
+  test("Privacy names every processor, the ANPD, and the US transfer", async ({
+    page,
+  }) => {
+    await page.goto("/pages/pt-BR/privacy.html");
+    const main = await page.locator("main").innerText();
+    for (const p of ["Cloudflare", "Vercel", "Neon", "Resend", "PostHog"]) {
+      expect(main, `${p} not disclosed`).toContain(p);
+    }
+    expect(main).toContain("ANPD");
+    expect(main).toContain("13 de setembro de 2026");
+    expect(main).toMatch(/processadas fora do Brasil/);
+    expect(main).toMatch(/Estados Unidos/);
+    expect(main).toMatch(/termos de busca/i);
+    if (await donationsOn(page)) {
+      expect(main).toContain("Stripe");
+    } else {
+      expect(main, "Stripe named while donations are closed").not.toContain(
+        "Stripe",
+      );
+    }
+  });
+});
