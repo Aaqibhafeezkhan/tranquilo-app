@@ -36,7 +36,9 @@ function escapeHtml(str: unknown): string {
 
 // Built when the element mounts (not at module load) and escaped on the way
 // in: text comes from src/i18n, and translations are contributed text that
-// must never be parsed as markup.
+// must never be parsed as markup. The icon buttons repeat their label as a
+// title so a pointer user gets a hover tooltip; the collection button's
+// aria-label later gains a count (setCollectionCount), its title doesn't.
 const h = (s: string) => escapeHtml(s);
 const topbarMarkup = () => `
 <div class="share-banner" id="shareBanner" style="display:none;">
@@ -50,16 +52,16 @@ const topbarMarkup = () => `
 <div class="topbar-row1">
   <a class="wordmark" href="/" aria-label="${h(t("topbar.home"))}"><img class="wordmark-mark" src="${tranquiloFlowerVioletUrl}" alt="" width="30" height="41" aria-hidden="true"><span>Tranquilo</span></a>
   <div class="topbar-icons" role="group">
-    <button class="search-toggle" id="searchToggle" type="button" aria-label="${h(t("topbar.search"))}">
+    <button class="search-toggle" id="searchToggle" type="button" aria-label="${h(t("topbar.search"))}" title="${h(t("topbar.search"))}">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
     </button>
-    <button class="discover-toggle" id="discoverToggle" type="button" aria-label="${h(t("topbar.discover"))}">
+    <button class="discover-toggle" id="discoverToggle" type="button" aria-label="${h(t("topbar.discover"))}" title="${h(t("topbar.discover"))}">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
     </button>
-    <button class="collection-toggle" id="collectionToggle" type="button" aria-label="${h(t("topbar.collection.label"))}">
+    <button class="collection-toggle" id="collectionToggle" type="button" aria-label="${h(t("topbar.collection.label"))}" title="${h(t("topbar.collection.label"))}">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg><span class="collection-count" id="collectionCount" aria-hidden="true"></span>
     </button>
-    <button class="music-toggle" id="musicToggle" type="button" aria-pressed="false" aria-label="${h(t("topbar.music"))}">
+    <button class="music-toggle" id="musicToggle" type="button" aria-pressed="false" aria-label="${h(t("topbar.music"))}" title="${h(t("topbar.music"))}">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
     </button>
   </div>
