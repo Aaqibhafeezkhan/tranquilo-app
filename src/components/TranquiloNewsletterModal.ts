@@ -6,7 +6,7 @@
 // be torn down and rebuilt, but the dialog itself must not be.
 //
 // Posts to the same /api/subscribe endpoint as pages/about.html's "Notify
-// me" form and pages/pro.html's waitlist, tagged with its own `source` so
+// me" form and pages/curator.html's waitlist, tagged with its own `source` so
 // Resend segments can tell the three apart.
 import { currentLocale, t, tHtml } from "../i18n/index";
 import { fieldWrap, isValidEmail } from "../utils/formValidation";

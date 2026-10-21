@@ -1,7 +1,7 @@
 // Navigation links must survive the URL changing under them. The bug this
 // prevents: the feed pushState()s to /v/{slug} without going through
 // api/v/[slug].js, so its injected <base href="/"> is absent, and a relative
-// href like "pages/pro.html" resolves against /v/cleveland-108401 and 404s.
+// href like "pages/curator.html" resolves against /v/cleveland-108401 and 404s.
 // Invisible on a fresh page load, so every earlier e2e test passed.
 import { expect, test } from "@playwright/test";
 import { gotoFeed, scrollToSlide } from "./harness.mts";
@@ -37,7 +37,7 @@ test("nav links still resolve after the feed has rewritten the URL", async ({
 test("the Collect upsell CTA points at the waitlist, not into /v/", async ({
   page,
 }) => {
-  // Checked by resolution, not string match: "pages/pro.html" looks right in
+  // Checked by resolution, not string match: "pages/curator.html" looks right in
   // the markup and is only wrong relative to where the browser thinks it is.
   await gotoFeed(page);
   await scrollToSlide(page, 4);
@@ -52,7 +52,7 @@ test("the Collect upsell CTA points at the waitlist, not into /v/", async ({
       ? new URL(cta.getAttribute("href")!, document.baseURI).pathname
       : null;
   });
-  expect(target).toBe("/pages/pro.html");
+  expect(target).toBe("/pages/curator.html");
 });
 
 test("the menu's links survive it too", async ({ page }) => {

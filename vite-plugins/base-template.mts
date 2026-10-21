@@ -43,7 +43,7 @@ const NAV_LINKS: Array<{ href: string; label: string; donationGated?: boolean }>
 const FOOTER_LINKS: Array<{ href: string; label: string }> = [
   { href: "feedback.html", label: "footer.feedback" },
   { href: "terms.html", label: "footer.legal" },
-  { href: "pro.html", label: "footer.pro" },
+  { href: "curator.html", label: "footer.curator" },
 ];
 
 const AVAILABLE: ReadonlySet<string> = new Set(Object.keys(DICTIONARIES));

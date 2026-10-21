@@ -8,7 +8,7 @@ import type { Dictionary } from "./en.ts";
 
 export const ptBR: Dictionary = {
   "upsell.body":
-    "Salvo temporariamente neste navegador. Coleções permanentes e organização fazem parte do Pro, que ainda está tomando forma.",
+    "Salvo temporariamente neste navegador. Coleções permanentes e organização fazem parte do Tranquilo Curator, que ainda está tomando forma.",
   "upsell.cta": "Entrar na lista de espera",
   "upsell.dismiss": "Fechar",
 
@@ -153,7 +153,7 @@ export const ptBR: Dictionary = {
 
   "export.title": "Seu CSV está sendo baixado",
   "export.body":
-    "Sincronizar entre dispositivos, organizar listas e compartilhar fazem parte do Pro, que ainda está tomando forma.",
+    "Sincronizar entre dispositivos, organizar listas e compartilhar fazem parte do Tranquilo Curator, que ainda está tomando forma.",
 
   "lightbox.loading": "Carregando em resolução máxima…",
   "lightbox.sourceRecord": "Registro original: {institution}",
@@ -166,7 +166,7 @@ export const ptBR: Dictionary = {
   "nav.support": "Nos apoie",
   "footer.feedback": "Dê sua opinião",
   "footer.legal": "Termos e Privacidade",
-  "footer.pro": "Lista de espera do Pro",
+  "footer.curator": "Lista de espera do Tranquilo Curator",
 
   "form.joining": "Inscrevendo…",
   "form.error": "Algo deu errado — tente de novo em instantes.",

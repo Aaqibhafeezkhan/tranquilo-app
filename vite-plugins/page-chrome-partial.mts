@@ -23,7 +23,7 @@ const FOOTER = `<footer class="mkt-footer">
     <div class="mkt-footer-links">
       <a href="feedback.html">Feedback</a>
       <a href="terms.html">Terms &amp; Privacy</a>
-      <a href="pro.html">Pro Waitlist</a>
+      <a href="curator.html">Tranquilo Curator Waitlist</a>
     </div>
   </footer>`;
 

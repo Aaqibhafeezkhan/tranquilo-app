@@ -223,7 +223,7 @@ paths:
       summary: Add an email to a Resend audience
       operationId: subscribe
       description: >-
-        One capture endpoint for every "leave your email" entry point (Pro
+        One capture endpoint for every "leave your email" entry point (Tranquilo Curator
         waitlist, feature-notify, newsletter opt-in, homepage newsletter),
         distinguished by
         `source`. Re-subscribing under a second source merges into a

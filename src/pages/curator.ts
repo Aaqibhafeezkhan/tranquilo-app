@@ -1,4 +1,4 @@
-// pages/pro.html's Pro waitlist form -- posts to api/subscribe.js, tagged
+// pages/curator.html's Tranquilo Curator waitlist form -- posts to api/subscribe.js, tagged
 // source: "pro_waitlist". Cloudflare beacon is a side-effect import
 // rather than its own <script> tag.
 import { currentLocale } from "../i18n/index";

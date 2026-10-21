@@ -15,7 +15,7 @@
 export const en = {
   // <tranquilo-upsell-toast>
   "upsell.body":
-    "Saved temporarily in this browser. Permanent collections and organization are part of Pro, still taking shape.",
+    "Saved temporarily in this browser. Permanent collections and organization are part of Tranquilo Curator, still taking shape.",
   "upsell.cta": "Join the waitlist",
   "upsell.dismiss": "Dismiss",
 
@@ -182,7 +182,7 @@ export const en = {
   // Collection export confirmation.
   "export.title": "Your CSV is downloading",
   "export.body":
-    "Syncing across devices, organized lists, and sharing are part of Pro, still taking shape.",
+    "Syncing across devices, organized lists, and sharing are part of Tranquilo Curator, still taking shape.",
 
   // Lightbox. {institution} is the source's display name.
   "lightbox.loading": "Loading full resolution…",
@@ -197,7 +197,7 @@ export const en = {
   "nav.support": "Support us",
   "footer.feedback": "Feedback",
   "footer.legal": "Terms & Privacy",
-  "footer.pro": "Pro Waitlist",
+  "footer.curator": "Tranquilo Curator Waitlist",
 
   // Email sign-up forms on static pages (src/pages/*.ts).
   "form.joining": "Joining…",

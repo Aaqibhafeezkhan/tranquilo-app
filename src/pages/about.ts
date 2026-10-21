@@ -1,5 +1,5 @@
 // pages/about.html's "notify me about new features" form -- same
-// api/subscribe.js endpoint as pro.html, tagged source: "feature_notify".
+// api/subscribe.js endpoint as curator.html, tagged source: "feature_notify".
 import { fieldWrap, isValidEmail } from "../utils/formValidation";
 import "../analytics/cloudflareBeacon";
 import { currentLocale, t } from "../i18n/index";

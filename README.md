@@ -60,7 +60,7 @@ Both suites run in CI on every push and pull request against `main` ([`.github/w
 ## Project layout
 
 - `index.html` — the landing page and scrolling feed.
-- `pages/` — the drill-in pages: about, submit-a-collection, Tranquilo Pro, privacy, terms, and others.
+- `pages/` — the drill-in pages: about, submit-a-collection, Tranquilo Curator (waitlist), privacy, terms, and others.
 - `src/` — browser-side TypeScript: components, page entry modules, feed logic, analytics, and shared utilities.
 - `api/` — Vercel serverless functions.
 - `lib/` — shared server-side TypeScript imported by `api/`.

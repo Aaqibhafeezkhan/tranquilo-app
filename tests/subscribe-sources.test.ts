@@ -12,7 +12,7 @@ const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const CLIENT_FILES = [
   "src/components/TranquiloNewsletterModal.ts",
   "src/pages/about.ts",
-  "src/pages/pro.ts",
+  "src/pages/curator.ts",
   "src/pages/submit.ts",
 ];
 

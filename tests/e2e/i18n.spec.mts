@@ -15,6 +15,9 @@ test("an English browser gets lang=en and real toast copy", async ({
   await expect(toast.locator(".upsell-body")).toContainText(
     "Saved temporarily in this browser",
   );
+  await expect(toast.locator(".upsell-body")).toContainText(
+    "part of Tranquilo Curator",
+  );
   await expect(toast.locator("#upsellCta")).toHaveText("Join the waitlist");
   await expect(toast.locator("#upsellClose")).toHaveAttribute(
     "aria-label",

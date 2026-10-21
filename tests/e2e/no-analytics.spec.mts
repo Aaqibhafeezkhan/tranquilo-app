@@ -31,7 +31,7 @@ test("every page carrying an analytics beacon guards it by hostname", () => {
   const pages = [
     "../../index.html",
     "../../pages/about.html",
-    "../../pages/pro.html",
+    "../../pages/curator.html",
     "../../pages/submit.html",
     "../../pages/privacy.html",
     "../../pages/terms.html",
