@@ -1,5 +1,5 @@
 // Cloudflare Web Analytics -- loaded on index.html, pages/about.html,
-// pages/pro.html and pages/submit.html. Conditionally injected: skipped on
+// pages/curator.html and pages/submit.html. Conditionally injected: skipped on
 // a team member's own opted-out device and everywhere but the production
 // hostname (see trafficGate.ts).
 import { isRealExternalTraffic, syncInternalTrafficFlag } from "./trafficGate";

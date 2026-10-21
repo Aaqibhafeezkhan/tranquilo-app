@@ -1,5 +1,5 @@
 // The Collect upsell toast ("Saved temporarily in this browser...", with a
-// Pro waitlist link). No host object -- gating and display never need
+// Tranquilo Curator waitlist link). No host object -- gating and display never need
 // app.js's private state, so app.js just calls its public methods.
 //
 // SESSION_TOAST_KEY/LAST_TOAST_KEY are duplicated (not imported) from
@@ -22,7 +22,7 @@ const UPSELL_MIN_SAVED = 3;
 const UPSELL_TOAST_MARKUP = `
 <button class="upsell-close" id="upsellClose" type="button">&times;</button>
 <p class="upsell-body"></p>
-<a class="upsell-cta" id="upsellCta" href="/pages/pro.html"></a>
+<a class="upsell-cta" id="upsellCta" href="/pages/curator.html"></a>
 `;
 
 export class TranquiloUpsellToast extends HTMLElement {

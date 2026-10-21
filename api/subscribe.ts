@@ -1,4 +1,4 @@
-// One capture endpoint for multiple entry points (Pro waitlist, feature
+// One capture endpoint for multiple entry points (Tranquilo Curator waitlist, feature
 // notify, newsletter opt-in on submit, homepage newsletter), distinguished by a `source` property rather than
 // separate systems per entry point.
 //

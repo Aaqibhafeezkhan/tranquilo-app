@@ -1,4 +1,4 @@
-// The export confirmation modal ("Your CSV is downloading" plus a Pro
+// The export confirmation modal ("Your CSV is downloading" plus a Tranquilo Curator
 // waitlist link). Purely static, so its host only needs the shared
 // overlay-history mechanism; the actual CSV export stays app.js's job,
 // this element just owns the confirmation UI shown after. Light DOM, not
@@ -14,7 +14,7 @@ const exportModalMarkup = () => `
   <button class="export-modal-close" id="exportModalClose" type="button" aria-label="${escapeHtml(t("detail.close"))}">&times;</button>
   <h2>${escapeHtml(t("export.title"))}</h2>
   <p>${escapeHtml(t("export.body"))}</p>
-  <a class="upsell-cta" href="/pages/pro.html">${escapeHtml(t("upsell.cta"))}</a>
+  <a class="upsell-cta" href="/pages/curator.html">${escapeHtml(t("upsell.cta"))}</a>
 </div>
 `;
 

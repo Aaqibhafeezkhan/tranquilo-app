@@ -1,7 +1,7 @@
 /* Collect-upsell toast's own box. .upsell-cta itself is shared with the export modal and stays in css/style.css.
    Rules shared with other components stay in css/style.css. */
 
-/* ---------- Upsell toast (collect -> Tranquilo Pro upgrade) ---------- */
+/* ---------- Upsell toast (collect -> Tranquilo Curator upgrade) ---------- */
 .upsell-toast{
   position:fixed;
   left:50%;

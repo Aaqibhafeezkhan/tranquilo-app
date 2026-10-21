@@ -363,7 +363,7 @@ describe("SEO metadata", () => {
       "../index.html",
       "../pages/about.html",
       "../pages/privacy.html",
-      "../pages/pro.html",
+      "../pages/curator.html",
       "../pages/submit.html",
       "../pages/terms.html",
     ]) {

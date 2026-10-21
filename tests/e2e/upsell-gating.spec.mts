@@ -68,7 +68,7 @@ test("its CTA points at the waitlist", async ({ page }) => {
         document.baseURI,
       ).pathname,
   );
-  expect(target).toBe("/pages/pro.html");
+  expect(target).toBe("/pages/curator.html");
 });
 
 test("?resetUpsell=1 re-arms it without emptying the collection", async ({

@@ -47,10 +47,10 @@ export default defineConfig({
         // any unmatched path with a real 404 status, no rewrite needed.
         notFound: resolve(import.meta.dirname, "404.html"),
         about: resolve(import.meta.dirname, "pages/about.html"),
+        curator: resolve(import.meta.dirname, "pages/curator.html"),
         getInvolved: resolve(import.meta.dirname, "pages/get-involved.html"),
         feedback: resolve(import.meta.dirname, "pages/feedback.html"),
         privacy: resolve(import.meta.dirname, "pages/privacy.html"),
-        pro: resolve(import.meta.dirname, "pages/pro.html"),
         submit: resolve(import.meta.dirname, "pages/submit.html"),
         support: resolve(import.meta.dirname, "pages/support.html"),
         terms: resolve(import.meta.dirname, "pages/terms.html"),

@@ -354,7 +354,7 @@ test.describe("site navigation after the nav/footer trim", () => {
     "about",
     "submit",
     "get-involved",
-    "pro",
+    "curator",
     "terms",
     "privacy",
     "support",
@@ -377,7 +377,7 @@ test.describe("site navigation after the nav/footer trim", () => {
       await expect(page.locator(".mkt-footer-links a")).toHaveText([
         "Feedback",
         "Terms & Privacy",
-        "Pro Waitlist",
+        "Tranquilo Curator Waitlist",
       ]);
 
       // A stray mailto: would quietly reinstate an address nobody is watching.
@@ -400,6 +400,18 @@ test.describe("site navigation after the nav/footer trim", () => {
     await through.click();
     await expect(page).toHaveURL(/privacy\.html/);
   });
+});
+
+test("the waitlist page names the paid tier Tranquilo Curator", async ({
+  page,
+}) => {
+  // The tier was renamed from "Pro", and its page moved from pro.html.
+  await stubBackend(page);
+  await page.goto("/pages/curator.html");
+  await expect(page).toHaveTitle("Tranquilo Curator");
+  await expect(page.locator("h1")).toContainText("Tranquilo Curator");
+  const main = await page.locator("main").innerText();
+  expect(main).not.toMatch(/\bPro\b/);
 });
 
 test.describe("About page", () => {
@@ -537,7 +549,7 @@ test.describe("logo", () => {
     "about",
     "submit",
     "get-involved",
-    "pro",
+    "curator",
     "terms",
     "privacy",
     "support",
