@@ -83,9 +83,16 @@ describe("a pt-BR page", () => {
     expect(html).toContain('src="/src/i18n/adoptPageLocale.ts"');
   });
 
-  it("links back to the English version", async () => {
+  it("offers the same page in each other language, marking its own", async () => {
     const html = await built("pages/pt-BR/about.html");
-    expect(html).toContain('href="/pages/about.html?lang=en"');
+    const footer = html.slice(html.indexOf("<footer"));
+    // ?lang= makes the switch an explicit, remembered choice, so the feed
+    // afterwards is in English too rather than the adopted pt-BR.
+    expect(footer).toContain('href="/pages/about.html?lang=en"');
+    expect(footer).toMatch(/<a[^>]*hreflang="en"[^>]*>English<\/a>/);
+    expect(footer).toMatch(
+      /<span[^>]*aria-current="true"[^>]*>Português \(Brasil\)<\/span>/,
+    );
   });
 
   it("stays out of search engines while the locale is a draft", async () => {
@@ -111,6 +118,16 @@ describe("an English page", () => {
     expect(html).not.toContain("/pages/pt-BR/");
     expect(html).not.toContain("adoptPageLocale");
     expect(html).toContain('href="../css/style.css"');
+    // Only one shipped language, so no switcher.
+    expect(html).not.toContain("mkt-footer-langs");
+  });
+
+  it("honours a ?lang= link even when its own script never touches src/i18n", async () => {
+    // terms.html has no script of its own. Without this, "English" from a
+    // translated page would land here but leave pt-BR stored, and the feed
+    // afterwards would still be in Portuguese.
+    const html = await built("pages/terms.html");
+    expect(html).toContain('src="/src/i18n/honourLocaleLink.ts"');
   });
 });
 

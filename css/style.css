@@ -1773,6 +1773,19 @@ html,body{
   text-decoration:none;
 }
 .mkt-footer-links a:hover{ color:var(--text); }
+/* The static pages' language switcher, under the footer links. */
+.mkt-footer-langs{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:8px 18px;
+  margin:0 0 14px;
+  font-family:var(--sans);
+  font-size:0.82rem;
+}
+.mkt-footer-langs a{ color:var(--ink-soft); text-decoration:none; }
+.mkt-footer-langs a:hover{ color:var(--text); }
+.mkt-footer-langs [aria-current]{ color:var(--text); }
 .mkt-footer p{
   font-family:var(--sans);
   font-size:0.76rem;
@@ -2392,7 +2405,8 @@ html,body{
   transform:translateY(2px);
 }
 
-#chipsMoreMenu{
+#chipsMoreMenu,
+#languageMenu{
   position:absolute;
   /* top/left are set in JS at open time, anchored to the More button -- see
      positionChipsMenu(). These are only the pre-measurement fallback. */
@@ -2413,7 +2427,8 @@ html,body{
   backdrop-filter: blur(8px);
   box-shadow:0 18px 40px rgba(0,0,0,0.45);
 }
-#chipsMoreMenu[hidden]{ display:none; }
+#chipsMoreMenu[hidden],
+#languageMenu[hidden]{ display:none; }
 /* Left-aligned and full width in here: this is a list to read down, not a row
    to scan across, so the pill shape the row uses would be the wrong affordance.
 
@@ -2422,7 +2437,8 @@ html,body{
    outlines saying the same thing. The border stays in the box model as
    transparent rather than being removed, so hovering does not shift the row by
    a pixel. */
-#chipsMoreMenu .chip{
+#chipsMoreMenu .chip,
+#languageMenu .chip{
   width:100%;
   text-align:left;
   border-radius:8px;
@@ -2431,7 +2447,8 @@ html,body{
   background:transparent;
   backdrop-filter:none;
 }
-#chipsMoreMenu .chip:hover{
+#chipsMoreMenu .chip:hover,
+#languageMenu .chip:hover{
   background:rgba(255,255,255,0.08);
   border-color:transparent;
   color:#fff;
@@ -2442,6 +2459,13 @@ html,body{
   background:var(--gold);
   border-color:var(--gold);
 }
+/* The language the page is in now, like the active filter above. */
+#languageMenu .chip.active{
+  background:var(--gold);
+  border-color:var(--gold);
+}
+/* A short list of names: no need for the More menu's 200px minimum. */
+#languageMenu{ min-width:0; }
 
 /* The bookmark is the only route into the collection, so it carries the
    count the old "My Collection (n)" chip used to show. */

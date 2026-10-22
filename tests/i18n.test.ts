@@ -17,6 +17,7 @@ import {
   matchLocale,
   pluralKey,
   resolveLocale,
+  switcherLocales,
 } from "../src/i18n/core";
 import { en } from "../src/i18n/en";
 import { DEFAULT_LOCALE, LOCALES, type LocaleInfo } from "../src/i18n/locales";
@@ -128,6 +129,23 @@ describe("resolveLocale", () => {
         locales: FIXTURE_LOCALES,
       }),
     ).toBe("pt-BR");
+  });
+});
+
+describe("switcherLocales", () => {
+  const codes = (current: string) =>
+    switcherLocales(current, FIXTURE_LOCALES).map((l) => l.code);
+
+  it("offers the shipped locales, in registry order", () => {
+    expect(codes("en")).toEqual(["en", "pt-BR"]);
+    expect(codes("pt-BR")).toEqual(["en", "pt-BR"]);
+  });
+
+  it("keeps a draft out unless it's the one being read", () => {
+    // A reviewer on a ?lang= preview must see where they are and be able
+    // to get back; everyone else never learns the draft exists.
+    expect(codes("en")).not.toContain("es-419");
+    expect(codes("es-419")).toEqual(["en", "pt-BR", "es-419"]);
   });
 });
 
@@ -311,6 +329,19 @@ describe("runtime (src/i18n/index.ts)", () => {
     expect(i18n.formatNumber(1234)).toBe("1,234");
     i18n.setLocale("pt-BR");
     expect(i18n.formatNumber(1234)).toBe("1.234");
+  });
+
+  it("switcherLocales() follows the active locale", async () => {
+    const i18n = await loadWith({});
+    const codes = () => i18n.switcherLocales().map((l) => l.code);
+    // While every other locale is a draft, an English visitor has nothing
+    // to switch to -- which is what hides the switcher.
+    expect(codes()).toEqual(
+      LOCALES.filter((l) => l.status === "shipped").map((l) => l.code),
+    );
+    i18n.setLocale("pt-BR");
+    expect(codes()).toContain("pt-BR");
+    expect(codes()).toContain("en");
   });
 
   it("shippedLocales() lists only shipped locales, for the switcher", async () => {

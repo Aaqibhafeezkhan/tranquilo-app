@@ -169,6 +169,7 @@ export const ptBR: Dictionary = {
   "footer.feedback": "Dê sua opinião",
   "footer.legal": "Termos e Privacidade",
   "footer.curator": "Lista de espera do Tranquilo Curator",
+  "language.label": "Idioma",
 
   "form.joining": "Inscrevendo…",
   "form.error": "Algo deu errado — tente de novo em instantes.",

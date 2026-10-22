@@ -19,7 +19,15 @@
 // once bundled. This gives the real, current URL either way.
 import tranquiloFlowerVioletUrl from "../../assets/tranquilo-flower-violet.svg";
 import type { ArtistProfile } from "../data/artist-profiles";
-import { facetLabel, pagePath, t, tn } from "../i18n/index";
+import {
+  currentLocale,
+  facetLabel,
+  pagePath,
+  setLocale,
+  switcherLocales,
+  t,
+  tn,
+} from "../i18n/index";
 import type { ITopbarHost } from "../types/ITopbarHost";
 import { on } from "../utils/on";
 
@@ -63,7 +71,7 @@ const topbarMarkup = () => `
     </button>
     <button class="music-toggle" id="musicToggle" type="button" aria-pressed="false" aria-label="${h(t("topbar.music"))}" title="${h(t("topbar.music"))}">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
-    </button>
+    </button>${languageToggleMarkup()}
   </div>
 </div>
 <nav class="chips" id="chips"></nav>
@@ -74,6 +82,33 @@ const topbarMarkup = () => `
 </div>
 <div class="filter-banner-card" id="filterBannerCard" style="display:none;"></div>
 `;
+
+// The language switcher's globe closes the icon group. Icon-only, like its
+// neighbours, so a longer translation can't push the top bar onto another
+// line on a phone; the menu lists languages by their own names (never
+// flags, which name countries), so it grows to any number of them. Not
+// rendered at all when there is nothing to switch to -- see
+// switcherLocales() for which languages appear.
+function languageToggleMarkup(): string {
+  if (switcherLocales().length < 2) return "";
+  const name = h(t("language.label"));
+  return `
+    <button class="language-toggle" id="languageToggle" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="languageMenu" aria-label="${name}" title="${name}">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+    </button>`;
+}
+
+// Text already on screen was drawn in the old language and components
+// don't re-render on a locale change, so a switch reloads the page.
+// ?lang= is dropped first: on a preview link it would otherwise win again
+// on the reload and undo the choice just made.
+function switchLanguage(code: string): void {
+  setLocale(code);
+  const url = new URL(location.href);
+  url.searchParams.delete("lang");
+  history.replaceState(history.state, "", url);
+  location.reload();
+}
 
 export class TranquiloTopbar extends HTMLElement {
   app: ITopbarHost | null = null;
@@ -146,6 +181,7 @@ export class TranquiloTopbar extends HTMLElement {
     const filterBannerClearEl =
       this.requireEl<HTMLButtonElement>("#filterBannerClear");
 
+    this.setUpLanguageMenu();
     on(this.musicToggleEl, () => this.app?.onMusicToggle());
     on(this.searchToggleEl, () => this.app?.onSearchToggle());
     on(discoverToggleEl, () => this.app?.onDiscoverToggle());
@@ -208,6 +244,87 @@ export class TranquiloTopbar extends HTMLElement {
         this.positionChipsMenu();
       }, 120);
     });
+  }
+
+  // ---- Language menu ----
+
+  // Appended to the host rather than inside .topbar-icons, which clips its
+  // overflow -- same reason the chips' More menu lives here.
+  private setUpLanguageMenu(): void {
+    const toggle = this.querySelector<HTMLButtonElement>("#languageToggle");
+    if (!toggle) return;
+    // Not <html lang>: this runs while modules are still evaluating, which
+    // can be before startup has set it.
+    const current = currentLocale();
+    const menu = document.createElement("div");
+    menu.id = "languageMenu";
+    menu.hidden = true;
+    menu.setAttribute("aria-label", t("language.label"));
+    for (const { code, nativeName } of switcherLocales()) {
+      const item = document.createElement("button");
+      item.type = "button";
+      item.className = "chip";
+      item.lang = code;
+      item.textContent = nativeName;
+      if (code === current) {
+        item.classList.add("active");
+        item.setAttribute("aria-current", "true");
+      }
+      on(item, () => {
+        if (code === current) this.closeLanguageMenu();
+        else switchLanguage(code);
+      });
+      menu.appendChild(item);
+    }
+    this.appendChild(menu);
+
+    on(toggle, (e) => {
+      e.stopPropagation();
+      if (menu.hidden) this.openLanguageMenu();
+      else this.closeLanguageMenu();
+    });
+    on(document, (e) => {
+      if (menu.hidden || menu.contains(e.target as Node)) return;
+      this.closeLanguageMenu();
+    });
+    on(document, "keydown", (e) => {
+      if (e.key !== "Escape" || menu.hidden) return;
+      this.closeLanguageMenu();
+      toggle.focus();
+    });
+    on(window, "resize", () => this.positionLanguageMenu());
+  }
+
+  private openLanguageMenu(): void {
+    const menu = this.querySelector<HTMLElement>("#languageMenu");
+    const toggle = this.querySelector<HTMLElement>("#languageToggle");
+    if (!menu || !toggle) return;
+    menu.hidden = false;
+    toggle.setAttribute("aria-expanded", "true");
+    this.positionLanguageMenu();
+    menu.querySelector<HTMLElement>("[aria-current]")?.focus();
+  }
+
+  private closeLanguageMenu(): void {
+    const menu = this.querySelector<HTMLElement>("#languageMenu");
+    if (menu) menu.hidden = true;
+    this.querySelector("#languageToggle")?.setAttribute(
+      "aria-expanded",
+      "false",
+    );
+  }
+
+  // Right-aligned under the globe: it sits at the screen's right edge, so a
+  // left-anchored panel would run off it.
+  private positionLanguageMenu(): void {
+    const menu = this.querySelector<HTMLElement>("#languageMenu");
+    const toggle = this.querySelector<HTMLElement>("#languageToggle");
+    if (!menu || !toggle || menu.hidden) return;
+    const btn = toggle.getBoundingClientRect();
+    const bar = this.getBoundingClientRect();
+    menu.style.top = `${btn.bottom - bar.top + 6}px`;
+    menu.style.left = "auto";
+    menu.style.right = `${bar.right - btn.right}px`;
   }
 
   // ---- Chips ----

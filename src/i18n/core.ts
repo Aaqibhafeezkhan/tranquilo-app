@@ -66,6 +66,20 @@ export function resolveLocale(opts: {
   return matchLocale(browser, shipped) ?? DEFAULT_LOCALE;
 }
 
+/**
+ * The languages a switcher offers, in registry order: every shipped
+ * locale, plus `current` if it's a draft -- a reviewer on a preview link
+ * needs to see where they are and how to get back, while nobody else
+ * learns the draft exists. Fewer than two entries means there is nothing
+ * to switch between, and callers hide the switcher.
+ */
+export function switcherLocales<L extends LocaleInfo>(
+  current: string,
+  locales: readonly L[],
+): L[] {
+  return locales.filter((l) => l.status === "shipped" || l.code === current);
+}
+
 /** Where a missing key is looked up next: region -> base language -> English. */
 export function fallbackChain(
   locale: string,
