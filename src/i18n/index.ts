@@ -24,6 +24,7 @@ import {
   lookup,
   pluralKey,
   resolveLocale,
+  switcherLocales as switcherLocalesFor,
 } from "./core";
 import { DICTIONARIES } from "./dictionaries";
 import type { MessageKey } from "./en";
@@ -137,6 +138,11 @@ function adoptPageLocale(): void {
  */
 export function pagePath(file: string): string {
   return localizedPagePath(currentLocale(), file);
+}
+
+/** What the language switcher lists (see switcherLocales in core.ts). */
+export function switcherLocales(): readonly LocaleInfo[] {
+  return switcherLocalesFor(currentLocale(), LOCALES);
 }
 
 /** Locales visible to visitors, e.g. for a language switcher. */

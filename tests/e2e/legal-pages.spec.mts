@@ -14,7 +14,7 @@ test.describe("Terms of Service", () => {
     page,
   }) => {
     const main = await page.locator("main").innerText();
-    expect(main).toContain("Cora Studios ME");
+    expect(main).toContain("Cora Studios LTDA");
     expect(main).toContain("Belo Horizonte");
     expect(main).toMatch(/Last updated: 15 August 2026/);
   });
@@ -258,7 +258,7 @@ test.describe("pt-BR Terms and Privacy", () => {
   }) => {
     await page.goto("/pages/pt-BR/terms.html");
     const main = await page.locator("main").innerText();
-    expect(main).toContain("Cora Studios ME");
+    expect(main).toContain("Cora Studios LTDA");
     expect(main).toContain("Belo Horizonte");
     expect(main).toContain("15 de agosto de 2026");
     await expect(page.locator('main a[href="feedback.html"]')).toHaveCount(1);
@@ -287,3 +287,26 @@ test.describe("pt-BR Terms and Privacy", () => {
     }
   });
 });
+
+// A translated legal page points at its English original from the
+// "last updated" line, which sits outside the body copy. Its link must
+// still look like every other link in the prose, not the browser default.
+for (const file of ["terms.html", "privacy.html"]) {
+  test(`pt-BR ${file}: the link to the English original is styled like body links`, async ({
+    page,
+  }) => {
+    await stubBackend(page);
+    await page.goto(`/pages/pt-BR/${file}`);
+    const styleOf = (selector: string) =>
+      page
+        .locator(selector)
+        .first()
+        .evaluate((a) => {
+          const s = getComputedStyle(a);
+          return { color: s.color, decoration: s.textDecorationColor };
+        });
+    expect(await styleOf(".legal-meta a")).toEqual(
+      await styleOf(".about-body a"),
+    );
+  });
+}

@@ -37,7 +37,7 @@ export const LOCALES = [
     code: "pt-BR",
     nativeName: "Português (Brasil)",
     dir: "ltr",
-    status: "draft",
+    status: "shipped",
   },
 ] as const satisfies readonly LocaleInfo[];
 

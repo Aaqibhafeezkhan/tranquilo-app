@@ -14,7 +14,12 @@
 import path from "node:path";
 import { createRequire } from "node:module";
 import type { Plugin } from "vite";
-import { escapeHtml, fallbackChain, lookup } from "../src/i18n/core.ts";
+import {
+  escapeHtml,
+  fallbackChain,
+  lookup,
+  switcherLocales,
+} from "../src/i18n/core.ts";
 import { DICTIONARIES } from "../src/i18n/dictionaries.ts";
 import { LOCALES } from "../src/i18n/locales.ts";
 import { localizedPagePath, TRANSLATED_PAGES } from "../src/i18n/pages.ts";
@@ -100,24 +105,38 @@ function injectComputedNav(
 }
 
 // Computed for the same reason as the nav: its labels follow the page's
-// locale. A translated page also links back to its English original --
-// but English pages don't advertise a draft translation (see
-// localeAttributes below).
+// locale. It also carries the static pages' language switcher: this same
+// page in each language switcherLocales() offers, by native name. English
+// pages don't advertise a draft translation, so while English is the only
+// shipped locale they get no switcher at all (see localeAttributes below).
 function buildFooter(currentFile: string, locale: string): string {
   const links = FOOTER_LINKS.map(
     ({ href, label: key }) =>
       `<a href="${localizedPagePath(locale, href)}">${label(locale, key)}</a>`,
   );
-  if (locale !== "en") {
-    links.push(
-      `<a href="/pages/${currentFile}?lang=en" lang="en" hreflang="en">English</a>`,
-    );
-  }
   return `<footer class="mkt-footer">
     <div class="mkt-footer-links">
       ${links.join("\n      ")}
-    </div>
+    </div>${buildLanguageLinks(currentFile, locale)}
   </footer>`;
+}
+
+// ?lang= on every link makes the switch an explicit, remembered choice
+// (honourLocaleLink.ts / adoptPageLocale.ts pick it up), so the feed
+// afterwards is in the language picked here. The current language is a
+// span, not a link to itself.
+function buildLanguageLinks(currentFile: string, locale: string): string {
+  const options = switcherLocales(locale, LOCALES);
+  if (options.length < 2) return "";
+  const items = options.map(({ code, nativeName }) =>
+    code === locale
+      ? `<span lang="${code}" aria-current="true">${escapeHtml(nativeName)}</span>`
+      : `<a href="${localizedPagePath(code, currentFile)}?lang=${code}" lang="${code}" hreflang="${code}">${escapeHtml(nativeName)}</a>`,
+  );
+  return `
+    <nav class="mkt-footer-langs" aria-label="${label(locale, "language.label")}">
+      ${items.join("\n      ")}
+    </nav>`;
 }
 
 // pages/<locale>/<file>.html -> { locale, file }; pages/<file>.html -> en.
@@ -137,7 +156,12 @@ function pageLocale(relPath: string): { locale: string; file: string } {
 // draft locale's pages are kept out of search engines until it ships --
 // they're for sharing by link while the translation is reviewed.
 function localeAttributes(html: string, locale: string): string {
-  if (locale === "en") return html;
+  if (locale === "en") {
+    return html.replace(
+      "</body>",
+      '<script type="module" src="/src/i18n/honourLocaleLink.ts"></script>\n</body>',
+    );
+  }
   const draft = LOCALES.find((l) => l.code === locale)?.status !== "shipped";
   let out = html.replace(
     /<html lang="en">/,

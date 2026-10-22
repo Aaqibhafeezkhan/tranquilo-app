@@ -1028,19 +1028,25 @@ test.describe("responsive overflow", () => {
       ).toBeLessThanOrEqual(0);
     });
 
-    test(`${w}px: all four top-bar icons fit`, async ({ page }) => {
+    test(`${w}px: every top-bar icon fits`, async ({ page }) => {
       // The bookmark overflowed by 56px at 320: the wordmark grew from
       // plain "Tranquilo" to a tulip plus letterspaced caps and took the
       // collection button's space with it.
       await page.setViewportSize({ width: w, height: 800 });
       await gotoFeed(page);
-      const shown = await page.evaluate(() => {
+      // Counted against however many there are -- the language globe
+      // joined the original four.
+      const { shown, total } = await page.evaluate(() => {
         const vw = window.innerWidth;
-        return [...document.querySelectorAll(".topbar-icons button")].filter(
-          (b) => b.getBoundingClientRect().right <= vw + 0.5,
-        ).length;
+        const all = [...document.querySelectorAll(".topbar-icons button")];
+        return {
+          total: all.length,
+          shown: all.filter((b) => b.getBoundingClientRect().right <= vw + 0.5)
+            .length,
+        };
       });
-      expect(shown, `an icon is off-screen at ${w}px`).toBe(4);
+      expect(total).toBeGreaterThan(0);
+      expect(shown, `an icon is off-screen at ${w}px`).toBe(total);
     });
   }
 

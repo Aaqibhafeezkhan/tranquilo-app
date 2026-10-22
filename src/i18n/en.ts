@@ -201,6 +201,8 @@ export const en = {
   "footer.feedback": "Feedback",
   "footer.legal": "Terms & Privacy",
   "footer.curator": "Tranquilo Curator Waitlist",
+  // The language switcher's accessible name (top bar menu, page footer).
+  "language.label": "Language",
 
   // Email sign-up forms on static pages (src/pages/*.ts).
   "form.joining": "Joining…",
