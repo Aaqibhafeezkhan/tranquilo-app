@@ -275,9 +275,18 @@ describe("runtime (src/i18n/index.ts)", () => {
     expect(out).toBe(en["upsell.cta"]);
   });
 
-  it("a browser asking for draft pt-BR still gets English", async () => {
-    const i18n = await loadWith({ languages: ["pt-BR", "pt"] });
-    expect(i18n.currentLocale()).toBe("en");
+  // Derived from the registry, so these hold either side of a status flip.
+  // The draft rule itself is pinned on fixtures in resolveLocale above.
+  const ptShipped =
+    LOCALES.find((l) => l.code === "pt-BR")?.status === "shipped";
+
+  it("a Portuguese browser gets pt-BR only once it has shipped", async () => {
+    for (const languages of [["pt-BR"], ["pt-PT", "pt"]]) {
+      const i18n = await loadWith({ languages });
+      expect(i18n.currentLocale(), languages.join()).toBe(
+        ptShipped ? "pt-BR" : "en",
+      );
+    }
   });
 
   it("setLocale() persists an explicit choice and switches lookups", async () => {
@@ -313,10 +322,10 @@ describe("runtime (src/i18n/index.ts)", () => {
   });
 
   it("applyDocumentLocale() sets lang and dir to the resolved locale", async () => {
-    const i18n = await loadWith({ languages: ["pt-BR"] });
+    const i18n = await loadWith({ languages: ["fr-FR"] });
     const el = { lang: "", dir: "" };
     i18n.applyDocumentLocale(el);
-    // pt-BR is draft, so the page is English and must say so.
+    // Nothing serves French, so the page is English and must say so.
     expect(el).toEqual({ lang: "en", dir: "ltr" });
 
     i18n.setLocale("pt-BR");

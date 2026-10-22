@@ -1,8 +1,9 @@
 // The i18n layer in a real browser: <html lang> must name the language
 // actually rendered, and converted components must show real text, never
-// raw keys. pt-BR is a draft locale with no strings yet, which makes it the
-// useful case: a browser asking for it must stay in English, and someone
-// who explicitly opts in must get English fallbacks, not blanks or keys.
+// raw keys. pt-BR is the shipped second language: a Portuguese browser is
+// served it automatically, and an explicit choice wins over the browser
+// either way. (That a draft locale is never picked automatically is pinned
+// on fixtures in tests/i18n.test.ts.)
 import { expect, type Page, test } from "@playwright/test";
 import { gotoArtwork, gotoFeed, ITEMS, stubBackend } from "./harness.mts";
 
@@ -25,12 +26,23 @@ test("an English browser gets lang=en and real toast copy", async ({
   );
 });
 
-test.describe("a browser asking for draft pt-BR", () => {
+test.describe("a browser asking for pt-BR", () => {
   test.use({ locale: "pt-BR" });
 
-  test("is not switched automatically -- the page says lang=en", async ({
+  test("is served pt-BR automatically -- the page says lang=pt-BR", async ({
     page,
   }) => {
+    await gotoFeed(page);
+    await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
+    await expect(page.locator('button.chip[data-category="All"]')).toHaveText(
+      "Todos",
+    );
+  });
+
+  test("still gets English after choosing it", async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem("tranquilo:locale", "en");
+    });
     await gotoFeed(page);
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
   });
@@ -408,11 +420,13 @@ test.describe("pt-BR static pages", () => {
     );
   });
 
-  test("English pages don't point at the draft translation", async ({
-    page,
-  }) => {
+  test("English pages offer the same page in Portuguese", async ({ page }) => {
     await page.goto("/pages/about.html");
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
-    await expect(page.locator('a[href*="/pages/pt-BR/"]')).toHaveCount(0);
+    await expect(
+      page.locator(
+        '.mkt-footer-langs a[href="/pages/pt-BR/about.html?lang=pt-BR"]',
+      ),
+    ).toHaveText("Português (Brasil)");
   });
 });

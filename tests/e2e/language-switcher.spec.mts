@@ -1,8 +1,8 @@
 // The language switcher: a globe button closing the top bar's icon group,
 // opening a menu of languages by native name, plus the same choice in the
 // static pages' footer. The guarantees:
-//   - nobody is shown a switcher with nothing to switch to, and a draft
-//     language is never advertised to someone who isn't already reading it
+//   - a draft language is never advertised to someone who isn't already
+//     reading it (pinned on fixtures in tests/i18n.test.ts)
 //   - a reviewer on a ?lang= preview can see where they are and get back
 //   - a switch is remembered: the next page, and the feed, follow it
 //   - icon-only, so a longer translation can't push the top bar onto a
@@ -10,13 +10,18 @@
 import { expect, test } from "@playwright/test";
 import { gotoFeed, stubBackend } from "./harness.mts";
 
-test("an English visitor has nothing to switch to, so sees no switcher", async ({
-  page,
-}) => {
-  // Every other locale is a draft today. When one ships this flips, and
-  // the test should be rewritten to expect the switcher.
+test("an English visitor can switch to Portuguese", async ({ page }) => {
+  // That a draft language is never listed is pinned on fixtures in
+  // tests/i18n.test.ts (switcherLocales); this is the shipped case.
   await gotoFeed(page);
-  await expect(page.locator("#languageToggle")).toBeHidden();
+  await page.locator("#languageToggle").click();
+  const menu = page.locator("#languageMenu");
+  await expect(menu.locator("[aria-current=true]")).toHaveAttribute(
+    "lang",
+    "en",
+  );
+  await menu.locator("[lang=pt-BR]").click();
+  await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
 });
 
 test.describe("on a ?lang=pt-BR preview", () => {
@@ -81,10 +86,14 @@ test.describe("on a ?lang=pt-BR preview", () => {
 });
 
 test.describe("a static page's footer", () => {
-  test("an English page offers no draft translation", async ({ page }) => {
+  test("an English page offers itself in Portuguese", async ({ page }) => {
     await stubBackend(page);
     await page.goto("/pages/terms.html");
-    await expect(page.locator(".mkt-footer-langs")).toHaveCount(0);
+    const langs = page.locator(".mkt-footer-langs");
+    await expect(langs.locator("[aria-current=true]")).toHaveText("English");
+    await langs.locator("a[lang=pt-BR]").click();
+    await expect(page).toHaveURL(/\/pages\/pt-BR\/terms\.html/);
+    await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
   });
 
   test("English from a translated page sticks, even on a page with no script", async ({

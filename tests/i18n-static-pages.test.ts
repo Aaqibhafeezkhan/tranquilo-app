@@ -13,6 +13,11 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { LOCALES } from "../src/i18n/locales";
+
+// Derived from the registry, so these tests hold either side of pt-BR's
+// draft -> shipped flip rather than being rewritten at it.
+const ptShipped = LOCALES.find((l) => l.code === "pt-BR")?.status === "shipped";
+
 import { localizedPagePath, TRANSLATED_PAGES } from "../src/i18n/pages";
 import { expandBaseTemplate } from "../vite-plugins/base-template.mts";
 import { expandHeadPartial } from "../vite-plugins/head-partial.mts";
@@ -95,9 +100,11 @@ describe("a pt-BR page", () => {
     );
   });
 
-  it("stays out of search engines while the locale is a draft", async () => {
+  it("stays out of search engines only while the locale is a draft", async () => {
     const html = await built("pages/pt-BR/about.html");
-    expect(html).toContain('<meta name="robots" content="noindex">');
+    expect(html.includes('<meta name="robots" content="noindex">')).toBe(
+      !ptShipped,
+    );
   });
 
   it("resolves shared assets and its canonical URL from two levels deep", async () => {
@@ -110,16 +117,19 @@ describe("a pt-BR page", () => {
 });
 
 describe("an English page", () => {
-  it("is unchanged by a draft translation existing", async () => {
+  it("stays English, and points at a translation only once it has shipped", async () => {
     const html = await built("pages/about.html");
     expect(html).toMatch(/<html lang="en">/);
     expect(html).not.toContain("data-locale");
     expect(html).not.toContain("noindex");
-    expect(html).not.toContain("/pages/pt-BR/");
     expect(html).not.toContain("adoptPageLocale");
     expect(html).toContain('href="../css/style.css"');
-    // Only one shipped language, so no switcher.
-    expect(html).not.toContain("mkt-footer-langs");
+    // Landing here must not claim the visitor for English, but the footer
+    // offers the translation once the public can be sent to it.
+    expect(html.includes("mkt-footer-langs")).toBe(ptShipped);
+    expect(html.includes('href="/pages/pt-BR/about.html?lang=pt-BR"')).toBe(
+      ptShipped,
+    );
   });
 
   it("honours a ?lang= link even when its own script never touches src/i18n", async () => {
