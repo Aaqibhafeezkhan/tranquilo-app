@@ -45,16 +45,17 @@ function parseJsonbField(value: any): any {
   return value;
 }
 
-// Builds a /img proxy URL carrying the real origin URL as a query
-// param; "" (not a broken URL) when the row has no source image.
+// Builds a /img proxy URL; "" (not a broken URL) when the row has no
+// source image. The source URL itself isn't passed along -- the proxy
+// reads it from the row, never from the request.
 function imgProxyUrl(
   source: string,
   nativeId: string,
   tier: string,
-  originUrl?: string | null,
+  sourceImgUrl?: string | null,
 ): string {
-  if (!originUrl) return "";
-  return `/img/${encodeURIComponent(source)}/${encodeURIComponent(nativeId)}/${tier}?origin=${encodeURIComponent(originUrl)}`;
+  if (!sourceImgUrl) return "";
+  return `/img/${encodeURIComponent(source)}/${encodeURIComponent(nativeId)}/${tier}`;
 }
 
 function teaVoiceSources(claims: any): any[] | null {
