@@ -14,7 +14,7 @@ test.describe("Terms of Service", () => {
     page,
   }) => {
     const main = await page.locator("main").innerText();
-    expect(main).toContain("Cora Studios ME");
+    expect(main).toContain("Cora Studios LTDA");
     expect(main).toContain("Belo Horizonte");
     expect(main).toMatch(/Last updated: 15 August 2026/);
   });
@@ -258,7 +258,7 @@ test.describe("pt-BR Terms and Privacy", () => {
   }) => {
     await page.goto("/pages/pt-BR/terms.html");
     const main = await page.locator("main").innerText();
-    expect(main).toContain("Cora Studios ME");
+    expect(main).toContain("Cora Studios LTDA");
     expect(main).toContain("Belo Horizonte");
     expect(main).toContain("15 de agosto de 2026");
     await expect(page.locator('main a[href="feedback.html"]')).toHaveCount(1);
