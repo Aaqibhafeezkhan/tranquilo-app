@@ -49,6 +49,7 @@ import * as objectKeys from "../../../../lib/img-object-key.ts";
 import * as s3 from "../../../../lib/img-s3.ts";
 import * as store from "../../../../lib/img-store.ts";
 import { rateLimitOrRespond } from "../../../../lib/img-visitor-rate-limit.ts";
+import { LIVE_ITEMS_AND } from "../../../../lib/items-sql.ts";
 // Imported as a module object, not destructured -- a destructured
 // binding is captured at require time, which vi.mock() in
 // tests/img-proxy.test.ts can't intercept.
@@ -183,6 +184,27 @@ function isAllowedOrigin(
   if (source === "europeana" && tier === "lightbox") return true;
   if (!isImgSource(source)) return false;
   return ALLOWED_ORIGIN_HOSTS[source].indexOf(parsed.hostname) !== -1;
+}
+
+// The URL to fetch on a miss, read from the item's own row -- never from
+// the request. `?origin=` used to be trusted here, which let anyone cache
+// an image of their choosing under a real item's key. Same column choice
+// as api/items.ts's imgProxyUrl() calls. null for an unknown or non-live
+// item.
+async function lookupOriginUrl(
+  sql: any,
+  source: any,
+  id: any,
+  tier: ImgTier,
+): Promise<string | null> {
+  if (!sql) return null;
+  const rows = await sql.query(
+    `SELECT img, full_img FROM items WHERE source = $1 AND native_id = $2 ${LIVE_ITEMS_AND} LIMIT 1`,
+    [String(source), String(id)],
+  );
+  const row = rows[0];
+  if (!row) return null;
+  return (tier === "lightbox" ? row.full_img || row.img : row.img) || null;
 }
 
 function pathnameFor(source: any, id: any, tier: any) {
@@ -476,7 +498,13 @@ export default async function handler(req: any, res: any) {
   const source = req.query.source;
   const id = req.query.id;
   const tier = req.query.tier;
-  const originUrl = req.query.origin;
+  // Set from the item's row (lookupOriginUrl()) only once a request
+  // actually needs it -- the miss path, or the no-Blob redirect. A hit
+  // never pays for the lookup, and never depends on this source being in
+  // the allowlist: one missing entry (npm's) once 400'd every one of that
+  // source's requests even though the objects were already cached in S3.
+  // The request's own `?origin=` is ignored; see lookupOriginUrl().
+  let originUrl: any = null;
 
   if (!source || !id || !isImgTier(tier)) {
     res.statusCode = 400;
@@ -485,14 +513,6 @@ export default async function handler(req: any, res: any) {
     });
     return;
   }
-  // Deliberately NOT validated here. `origin` is only ever needed to fetch
-  // the source ourselves on a cache miss (see isAllowedOrigin() below,
-  // checked right before the miss path begins) -- every display-tier item
-  // is cached on ingestion, so a hit is the overwhelmingly common case and
-  // must never depend on this source being in the allowlist. It used to be
-  // checked here unconditionally, which meant one missing allowlist entry
-  // (npm's) 400'd every one of that source's requests even though the
-  // objects were already sitting in S3, correctly cached.
 
   // Per visitor IP, checked before even a cache-hit lookup -- see
   // lib/img-visitor-rate-limit.ts for why this is a hand-rolled token
@@ -564,6 +584,12 @@ export default async function handler(req: any, res: any) {
       "blob-unconfigured",
       "BLOB_READ_WRITE_TOKEN is not set -- every image request is hotlinking the source directly",
     );
+    originUrl = await lookupOriginUrl(getSql(), source, id, tier);
+    if (!originUrl) {
+      res.statusCode = 404;
+      res.json({ error: "No such image" });
+      return;
+    }
     redirectToOrigin();
     return;
   }
@@ -652,10 +678,17 @@ export default async function handler(req: any, res: any) {
 
     // ---- Cache miss. Everything below decides whether WE fetch the
     // origin, or the visitor does -- the first point anything here
-    // actually needs `origin`, so this is the first point it's validated.
-    if (!originUrl || !isAllowedOrigin(source, tier, originUrl)) {
+    // actually needs the origin URL, so this is where it's looked up.
+    // isAllowedOrigin() stays as a second check on what ingestion stored.
+    originUrl = await lookupOriginUrl(getSql(), source, id, tier);
+    if (!originUrl) {
+      res.statusCode = 404;
+      res.json({ error: "No such image" });
+      return;
+    }
+    if (!isAllowedOrigin(source, tier, originUrl)) {
       res.statusCode = 400;
-      res.json({ error: "Missing or disallowed origin URL" });
+      res.json({ error: "Disallowed origin URL" });
       return;
     }
 
@@ -951,6 +984,7 @@ export {
   isAllowedOrigin,
   isCacheMissError,
   LIGHTBOX_MAX_DIMENSION,
+  lookupOriginUrl,
   MAX_ORIGIN_BYTES,
   RESERVE_USAGE_SQL,
   shedPlan,

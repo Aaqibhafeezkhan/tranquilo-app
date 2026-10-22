@@ -477,15 +477,6 @@ paths:
           in: path
           required: true
           schema: { type: string, enum: [display, lightbox] }
-        - name: origin
-          in: query
-          required: true
-          description: >-
-            The real source-CDN URL to fetch/cache, supplied by
-            api/items.ts's own serialization. Must be https and match an
-            allowlisted host for `source` (Europeana's lightbox tier is the
-            one documented exception -- see the handler's own comment).
-          schema: { type: string, format: uri }
       responses:
         "302":
           description: >-
@@ -505,7 +496,11 @@ paths:
           content:
             image/webp: { schema: { type: string, format: binary } }
         "400":
-          description: Missing/invalid `source`/`id`/`tier`, or a missing/disallowed `origin`.
+          description: Missing/invalid `source`/`id`/`tier`, or the item's stored image URL isn't on an allowlisted host.
+          content:
+            application/json: { schema: { $ref: "#/components/schemas/Error" } }
+        "404":
+          description: An uncached image for an item that doesn't exist or isn't live.
           content:
             application/json: { schema: { $ref: "#/components/schemas/Error" } }
         "502":
