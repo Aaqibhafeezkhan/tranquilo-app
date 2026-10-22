@@ -10,7 +10,9 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const TXT = readFileSync(path.join(__dirname, "../robots.txt"), "utf8");
+// Must live in public/: Vite copies only public/ into dist/, and a copy at the
+// repo root builds cleanly but is never served (production returned 404).
+const TXT = readFileSync(path.join(__dirname, "../public/robots.txt"), "utf8");
 
 // Parse into groups the way a crawler does: consecutive User-agent lines share
 // the rules that follow, until the next User-agent line starts a new group.
