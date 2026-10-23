@@ -152,6 +152,8 @@ const ALLOWED_ORIGIN_HOSTS: Record<string, string[]> = {
   // full_img both). Missed at launch: the display tier was cached at
   // ingest, so only cache misses -- mostly the lightbox -- 400'd.
   tepapa: ["media.tepapa.govt.nz"],
+  // mia.py's image cache, which serves both the 800 and full renditions.
+  mia: ["1.api.artsmia.org"],
   // tainacan.py reads each museum's own WordPress site, which serves its
   // own uploads; one host per instance in the adapter's INSTANCES. Added
   // before the first ingestion run, as with wellcome above.

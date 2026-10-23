@@ -15,6 +15,7 @@ export const EXPORT_SOURCE_NAMES: Record<string, string> = {
   wellcome: "Wellcome Collection",
   nga: "National Gallery of Art",
   tepapa: "Museum of New Zealand Te Papa Tongarewa",
+  mia: "Minneapolis Institute of Art",
   // Per item rather than per source -- see tainacanMuseum().
   tainacan: "Brazilian museum collections",
 };

@@ -51,6 +51,10 @@ export const LIVE_SOURCES: Record<string, { image: string; page: string }> = {
     image: "https://media.tepapa.govt.nz/collection/271820/full",
     page: "https://collections.tepapa.govt.nz/object/1130277",
   },
+  mia: {
+    image: "https://1.api.artsmia.org/800/1509.jpg",
+    page: "https://collections.artsmia.org/art/1509",
+  },
   // Taken from a dry run against the museum's own site, ahead of the first
   // ingestion, the same way nga was added.
   tainacan: {

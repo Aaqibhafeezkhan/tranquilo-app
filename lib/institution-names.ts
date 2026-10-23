@@ -13,6 +13,7 @@ const INSTITUTION_NAMES: Record<string, string> = {
   wellcome: "Wellcome Collection",
   nga: "National Gallery of Art",
   tepapa: "Museum of New Zealand Te Papa Tongarewa",
+  mia: "Minneapolis Institute of Art",
 };
 
 // The Smithsonian is an umbrella over many museums, each with its own

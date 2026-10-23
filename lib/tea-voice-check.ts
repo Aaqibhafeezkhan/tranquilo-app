@@ -32,6 +32,7 @@ const INSTITUTION_HOSTS = [
   "wellcomecollection.org",
   "nga.gov",
   "tepapa.govt.nz",
+  "artsmia.org",
   "acervo.margs.rs.gov.br",
   "museus.gov.br",
 ];
