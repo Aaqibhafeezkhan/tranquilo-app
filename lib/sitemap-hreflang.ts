@@ -1,4 +1,8 @@
-import { DEFAULT_LOCALE, LOCALES, type LocaleInfo } from "../src/i18n/locales.ts";
+import {
+  DEFAULT_LOCALE,
+  LOCALES,
+  type LocaleInfo,
+} from "../src/i18n/locales.ts";
 import { TRANSLATED_PAGES } from "../src/i18n/pages.ts";
 
 type TranslatedPages = Readonly<Record<string, readonly string[]>>;
