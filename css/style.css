@@ -1716,13 +1716,38 @@ html,body{
   padding:18px 0;
 }
 .faq-item:first-child{ padding-top:0; }
+.faq-item summary{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  cursor:pointer;
+  list-style:none;
+}
+.faq-item summary::-webkit-details-marker{ display:none; }
+.faq-item summary::after{
+  content:"";
+  flex:none;
+  width:8px;
+  height:8px;
+  border-right:2px solid var(--ink-soft);
+  border-bottom:2px solid var(--ink-soft);
+  transform:translateY(-2px) rotate(45deg);
+  transition:transform .2s ease;
+}
+.faq-item[open] summary::after{ transform:translateY(2px) rotate(-135deg); }
+@media (prefers-reduced-motion: reduce){
+  .faq-item summary::after{ transition:none; }
+}
+.faq-item summary:focus-visible{ outline:2px solid var(--gold-soft); outline-offset:4px; }
 .faq-item h3{
   font-family:var(--sans);
   font-weight:600;
   font-size:0.94rem;
-  margin:0 0 8px;
+  margin:0;
   color:var(--text);
 }
+.faq-item[open] summary{ margin-bottom:8px; }
 .faq-item p{
   font-family:var(--sans);
   font-weight:300;
