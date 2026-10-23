@@ -3,7 +3,9 @@
   "projectOwner": "tranquilo-art",
   "repoType": "github",
   "repoHost": "https://github.com",
-  "files": ["README.md"],
+  "files": [
+    "README.md"
+  ],
   "imageSize": 64,
   "contributorsPerLine": 7,
   "contributorsSortAlphabetically": false,
@@ -11,5 +13,42 @@
   "commit": false,
   "linkToUsage": false,
   "skipCi": false,
-  "contributors": []
+  "contributors": [
+    {
+      "login": "loveycakes",
+      "name": "Mel",
+      "avatar_url": "https://avatars.githubusercontent.com/u/309486746?v=4",
+      "profile": "https://github.com/loveycakes",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "mockdeep",
+      "name": "Robert Fletcher",
+      "avatar_url": "https://avatars.githubusercontent.com/u/80543?v=4",
+      "profile": "https://boon.gl/",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "elaous",
+      "name": "Sam Aouar",
+      "avatar_url": "https://avatars.githubusercontent.com/u/118211557?v=4",
+      "profile": "https://github.com/elaous",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "pollychen-lab",
+      "name": "Polly Labs",
+      "avatar_url": "https://avatars.githubusercontent.com/u/265131177?v=4",
+      "profile": "https://github.com/pollychen-lab",
+      "contributions": [
+        "code"
+      ]
+    }
+  ]
 }

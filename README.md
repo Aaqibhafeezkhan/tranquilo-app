@@ -108,6 +108,16 @@ Thanks to everyone who has helped with code, design, documentation and ideas ([e
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/loveycakes"><img src="https://avatars.githubusercontent.com/u/309486746?v=4?s=64" width="64px;" alt="Mel"/><br /><sub><b>Mel</b></sub></a><br /><a href="https://github.com/tranquilo-art/tranquilo-app/commits?author=loveycakes" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://boon.gl/"><img src="https://avatars.githubusercontent.com/u/80543?v=4?s=64" width="64px;" alt="Robert Fletcher"/><br /><sub><b>Robert Fletcher</b></sub></a><br /><a href="https://github.com/tranquilo-art/tranquilo-app/commits?author=mockdeep" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/elaous"><img src="https://avatars.githubusercontent.com/u/118211557?v=4?s=64" width="64px;" alt="Sam Aouar"/><br /><sub><b>Sam Aouar</b></sub></a><br /><a href="https://github.com/tranquilo-art/tranquilo-app/commits?author=elaous" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/pollychen-lab"><img src="https://avatars.githubusercontent.com/u/265131177?v=4?s=64" width="64px;" alt="Polly Labs"/><br /><sub><b>Polly Labs</b></sub></a><br /><a href="https://github.com/tranquilo-art/tranquilo-app/commits?author=pollychen-lab" title="Code">💻</a></td>
+    </tr>
+  </tbody>
+</table>
 
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
