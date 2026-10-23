@@ -207,7 +207,8 @@ export const en = {
   // About page community section (vite-plugins/community-partial.mts).
   // {handle} is a GitHub handle such as "@octocat".
   "community.title": "Community",
-  "community.intro": "Tranquilo is built in the open, with help from these people. Thank you.",
+  "community.intro":
+    "Tranquilo is built in the open, with help from these people. Thank you.",
   "community.contributors": "Contributors on GitHub",
   "community.donors": "Supporters",
   "community.avatarAlt": "{handle} on GitHub",

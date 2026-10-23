@@ -172,7 +172,8 @@ export const ptBR: Dictionary = {
   "language.label": "Idioma",
 
   "community.title": "Comunidade",
-  "community.intro": "Tranquilo é feito de forma aberta, com a ajuda destas pessoas. Agradecemos de coração.",
+  "community.intro":
+    "Tranquilo é feito de forma aberta, com a ajuda destas pessoas. Agradecemos de coração.",
   "community.contributors": "Contribuições no GitHub",
   "community.donors": "Apoio financeiro",
   "community.avatarAlt": "{handle} no GitHub",
