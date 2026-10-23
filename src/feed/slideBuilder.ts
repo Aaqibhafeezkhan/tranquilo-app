@@ -25,6 +25,7 @@ import {
   rgbToHsl,
   shouldLogFailure,
   shouldSkipAutomaticLoad,
+  withRetryAttempt,
 } from "../logic/logic";
 import type { Item } from "../types/Item";
 import type { SetOfWorkIndexEntry } from "../types/SetOfWork";
@@ -214,11 +215,33 @@ export function createSlideBuilder(
     frame.appendChild(overlay);
   }
 
-  // source:id known to have failed this session -- without this, switching
-  // category/search or reopening the detail modal rebuilds the <img> from
-  // scratch and re-triggers both a fresh analytics event and a fresh
-  // network request against a resource that doesn't recover on retry.
+  // source:id:tier already reported this page load -- dedups analytics and
+  // bounds them via IMAGE_FAILURE_REPORT_CAP.
   const reportedImageFailures = new Set<string>();
+  // Keys whose automatic loads are skipped until connectivity plausibly
+  // returns (online, or the tab becoming visible again). Without the skip, a
+  // category switch or detail-modal reopen re-requests a known-bad image;
+  // without the reset, a network blip on wake breaks the image for the
+  // rest of the session.
+  const skippedImageLoads = new Set<string>();
+  // Browsers can answer a re-set of the same failed src from the page's
+  // own memory cache, or queue it behind a stalled request, so every load
+  // after a failure gets a distinct URL.
+  const failedImageAttempts = new Map<string, number>();
+  const recoverableImages = new Set<() => void>();
+
+  function recoverFailedImages(): void {
+    skippedImageLoads.clear();
+    recoverableImages.forEach((recover) => {
+      recover();
+    });
+  }
+  if (typeof window !== "undefined") {
+    window.addEventListener("online", recoverFailedImages);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") recoverFailedImages();
+    });
+  }
   // frame/detail-modal <img>s are always fresh elements; the lightbox's
   // is the one persistent, reused <img> across every open, which is why
   // its listeners need explicit cleanup below.
@@ -278,6 +301,8 @@ export function createSlideBuilder(
       // exempt: that's a click on a still-connected frame by definition.
       if (!isManualRetry && !img.isConnected) return;
       renderFailedUI();
+      skippedImageLoads.add(key);
+      failedImageAttempts.set(key, (failedImageAttempts.get(key) ?? 0) + 1);
       if (shouldLogFailure(key, isManualRetry, reportedImageFailures)) {
         reportedImageFailures.add(key);
         host.trackEvent("image_load_failed", {
@@ -300,11 +325,12 @@ export function createSlideBuilder(
       // single persistent element reused across every open.
       skeleton.hidden = true;
       reportedImageFailures.delete(key); // a later real success un-fails it for the rest of the session
+      skippedImageLoads.delete(key);
       onLoaded?.();
     }
 
     function startLoad(isManualRetry: boolean): void {
-      if (shouldSkipAutomaticLoad(key, isManualRetry, reportedImageFailures)) {
+      if (shouldSkipAutomaticLoad(key, isManualRetry, skippedImageLoads)) {
         renderFailedUI();
         return;
       }
@@ -317,8 +343,17 @@ export function createSlideBuilder(
         () => markFailed(isManualRetry, "timeout"),
         IMAGE_LOAD_TIMEOUT_MS,
       );
-      img.src = src;
+      img.src = withRetryAttempt(src, failedImageAttempts.get(key) ?? 0);
     }
+
+    function recover(): void {
+      if (!frame.isConnected) {
+        recoverableImages.delete(recover);
+        return;
+      }
+      if (frame.classList.contains("failed")) startLoad(false);
+    }
+    recoverableImages.add(recover);
 
     // Removes any listeners a previous call attached to this same <img> --
     // a no-op for fresh feed/detail-modal images, but required for the
@@ -346,6 +381,7 @@ export function createSlideBuilder(
       isFailed: () => frame.classList.contains("failed"),
       retry: () => startLoad(true),
       cancel: () => {
+        recoverableImages.delete(recover);
         if (timeoutId) {
           clearTimeout(timeoutId);
           timeoutId = null;
