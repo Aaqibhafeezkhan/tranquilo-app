@@ -17,6 +17,7 @@ import { escapeHtml } from "../../lib/html-escape.ts";
 import { institutionName } from "../../lib/institution-names.ts";
 import { LIVE_ITEMS_AND } from "../../lib/items-sql.ts";
 import { getOrigin } from "../../lib/request-origin.ts";
+import { safeHttpUrl } from "../../lib/safe-url.ts";
 import { reportError } from "../../lib/sentry.ts";
 // Also serves /s/{id}, rewritten as slug "s-{id}" -- a storyline
 // borrows this route rather than getting its own (Vercel Hobby's
@@ -150,7 +151,9 @@ function renderPage(opts: any) {
     <p>${opts.statusNote} <a href="${escapeHtml(opts.redirectUrl)}">${redirectLabel}</a>.</p>
     ${
       opts.redirectUrl
-        ? `<script>location.replace(${JSON.stringify(opts.redirectUrl)});</script>`
+        ? // JSON.stringify leaves "<" alone, so a "</script>" inside the
+          // URL would close this tag early -- \u003c keeps it inert.
+          `<script>location.replace(${JSON.stringify(opts.redirectUrl).replace(/</g, "\\u003c")});</script>`
         : ""
     }
     </body>
@@ -268,7 +271,9 @@ export default async function handler(req: any, res: any) {
     // (our own editorial decisions, not obligated to keep tracking).
     // items.url is already public, so surfacing it discloses nothing
     // new. Best-effort: a failed lookup here still falls through to the
-    // ordinary not-found page.
+    // ordinary not-found page. A non-http(s) url (e.g. javascript:) would
+    // run on our origin via renderPage's location.replace(), so it's
+    // treated as absent.
     fallbackUrl = null;
     if (parsed && client) {
       try {
@@ -276,7 +281,7 @@ export default async function handler(req: any, res: any) {
           `SELECT url FROM items WHERE source = $1 AND native_id = $2 AND review_status = 'delisted' LIMIT 1`,
           [parsed.source, parsed.nativeId],
         );
-        fallbackUrl = hiddenRows[0]?.url || null;
+        fallbackUrl = safeHttpUrl(hiddenRows[0]?.url);
       } catch (err) {
         console.error("v/[slug]: fallback-url query failed", err);
         await reportError(err);
