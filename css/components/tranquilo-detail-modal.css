@@ -230,7 +230,8 @@
   text-transform:uppercase;
   color:rgba(203,184,136,0.55);
 }
-.detail-modal-inner .fact-box a.tea-source{
+.detail-modal-inner .fact-box a.tea-source,
+.detail-modal-inner .fact-box a.tea-book-source{
   display:inline-flex;
   align-items:center;
   justify-content:center;
@@ -243,7 +244,9 @@
   transition:opacity 0.2s ease, color 0.2s ease, background-color 0.2s ease;
 }
 .detail-modal-inner .fact-box a.tea-source:hover,
-.detail-modal-inner .fact-box a.tea-source:focus-visible{
+.detail-modal-inner .fact-box a.tea-source:focus-visible,
+.detail-modal-inner .fact-box a.tea-book-source:hover,
+.detail-modal-inner .fact-box a.tea-book-source:focus-visible{
   opacity:1;
   color:#fff;
   background:rgba(203,184,136,0.14);
@@ -251,7 +254,8 @@
 /* Keyboard users get the same affordance -- these are real links and the
    tooltip is not reachable without a pointer, so the focus ring has to be
    visible rather than relying on the hover state alone. */
-.detail-modal-inner .fact-box a.tea-source:focus-visible{
+.detail-modal-inner .fact-box a.tea-source:focus-visible,
+.detail-modal-inner .fact-box a.tea-book-source:focus-visible{
   outline:2px solid var(--gold-soft);
   outline-offset:2px;
 }

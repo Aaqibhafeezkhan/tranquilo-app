@@ -677,7 +677,19 @@ components:
           nullable: true
           items:
             type: object
-            properties: { text: { type: string }, url: { type: string } }
+            properties:
+              text: { type: string }
+              url: { type: string }
+              publication:
+                type: object
+                description: A book the claim draws on. Present only with a link to where a reader can get it.
+                properties:
+                  title: { type: string }
+                  author: { type: string, nullable: true }
+                  publisher: { type: string, nullable: true }
+                  year: { type: integer, nullable: true }
+                  pages: { type: string, nullable: true }
+                  url: { type: string, description: Publisher page if in print, otherwise a library catalogue record. }
         cast: {}
         cast_context: {}
         cast_tier: { type: string, nullable: true }

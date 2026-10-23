@@ -20,12 +20,16 @@
 // Renders into light DOM, not a shadow root: every style already lives in
 // css/style.css.
 
-import { type CitationStyle, formatCitation } from "../app/citation";
+import {
+  type CitationStyle,
+  formatCitation,
+  publicationLabel,
+} from "../app/citation";
 import { licenseLabel } from "../app/licenseLabels";
 import { currentLocale, facetLabel, type MessageKey, t } from "../i18n/index";
 import { isNamedMaker } from "../logic/logic";
 import type { ITranquiloDetailModalHost } from "../types/ITranquiloDetailModalHost";
-import type { Item } from "../types/Item";
+import type { Item, TeaVoiceSource } from "../types/Item";
 import { on } from "../utils/on";
 
 // Built when the element mounts, with text from src/i18n escaped on the way
@@ -380,6 +384,28 @@ const TEA_SOURCE_SVG =
   '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>' +
   '<path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>';
 
+// A book behind a claim gets its own icon, linking to where a reader can
+// get it.
+const TEA_BOOK_SVG =
+  '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" ' +
+  'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+  '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>' +
+  '<path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>';
+
+function teaBookSourceHtml(src: TeaVoiceSource): string {
+  const pub = src.publication;
+  if (!pub?.url) return "";
+  const label = publicationLabel(pub);
+  const tip = src.text ? `${src.text} — ${label}` : label;
+  return (
+    `<a class="tea-book-source" href="${escapeHtml(pub.url)}" ` +
+    'target="_blank" rel="noopener noreferrer" ' +
+    `title="${escapeHtml(tip)}" ` +
+    `aria-label="${escapeHtml(t("detail.bookSource", { title: pub.title }))}">` +
+    `${TEA_BOOK_SVG}</a>`
+  );
+}
+
 function sourceHostLabel(url: string): string {
   try {
     return new URL(url).hostname.replace(/^www\./, "");
@@ -456,6 +482,9 @@ function buildTeaSourcesHtml(item: Item): string {
     `<span class="tea-sources-label">${escapeHtml(t("detail.sources"))}</span>${sources
       .map((src) => {
         if (!src?.url) return "";
+        const book = teaBookSourceHtml(src);
+        // A claim whose source is the book itself needs only the book icon.
+        if (book && src.publication?.url === src.url) return book;
         // The tooltip carries the claim this link actually backs, plus the
         // host -- "show the source on hover" is only useful if it says
         // WHICH part of the caption it supports.
@@ -466,7 +495,7 @@ function buildTeaSourcesHtml(item: Item): string {
           'target="_blank" rel="noopener noreferrer" ' +
           `title="${escapeHtml(tip)}" ` +
           `aria-label="${escapeHtml(t("detail.sourceHost", { host }))}">` +
-          `${TEA_SOURCE_SVG}</a>`
+          `${TEA_SOURCE_SVG}</a>${book}`
         );
       })
       .join("")}</div>`

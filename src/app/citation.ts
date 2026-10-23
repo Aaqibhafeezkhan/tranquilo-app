@@ -21,6 +21,24 @@ import { institutionName } from "./ExportService";
 
 export type CitationStyle = "mla" | "apa" | "abnt";
 
+export interface Publication {
+  title: string;
+  author?: string | null;
+  publisher?: string | null;
+  year?: number | null;
+  pages?: string | null;
+}
+
+// A book behind a caption claim, as one line: "Author, Title (Publisher,
+// Year), pp. 1-2". Missing fields are dropped.
+export function publicationLabel(pub: Publication): string {
+  const imprint = [pub.publisher, pub.year].filter(Boolean).join(", ");
+  let label = [pub.author, pub.title].filter(Boolean).join(", ");
+  if (imprint) label += ` (${imprint})`;
+  if (pub.pages) label += `, ${/[-\u2013]/.test(pub.pages) ? "pp." : "p."} ${pub.pages}`;
+  return label;
+}
+
 export interface CitableItem {
   source?: string | null;
   title?: string | null;

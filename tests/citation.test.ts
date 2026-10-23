@@ -4,7 +4,7 @@
 // missing fields are dropped rather than printed as blanks, and nothing
 // is invented (no "Unknown" artist, no guessed date).
 import { describe, expect, it } from "vitest";
-import { formatCitation } from "../src/app/citation.ts";
+import { formatCitation, publicationLabel } from "../src/app/citation.ts";
 
 const ACCESSED = new Date(2026, 9, 17); // 17 Oct 2026, local time
 
@@ -123,5 +123,34 @@ describe("every style", () => {
       ACCESSED,
     );
     expect(c).toContain("Who Goes There? 1889");
+  });
+});
+
+describe("publicationLabel", () => {
+  const book = {
+    title: "Te Ata o Tū",
+    author: "Rebecca Rice",
+    publisher: "Te Papa Press",
+    year: 2024,
+    pages: "282-285",
+  };
+
+  it("names author, title, publisher, year and page range", () => {
+    expect(publicationLabel(book)).toBe(
+      "Rebecca Rice, Te Ata o Tū (Te Papa Press, 2024), pp. 282-285",
+    );
+  });
+
+  it("uses p. for a single page", () => {
+    expect(publicationLabel({ ...book, pages: "60" })).toBe(
+      "Rebecca Rice, Te Ata o Tū (Te Papa Press, 2024), p. 60",
+    );
+  });
+
+  it("drops whatever is missing rather than printing a blank", () => {
+    expect(publicationLabel({ title: "Art at Te Papa", year: 2009 })).toBe(
+      "Art at Te Papa (2009)",
+    );
+    expect(publicationLabel({ title: "Art at Te Papa" })).toBe("Art at Te Papa");
   });
 });

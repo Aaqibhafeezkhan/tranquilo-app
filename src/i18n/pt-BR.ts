@@ -60,6 +60,7 @@ export const ptBR: Dictionary = {
   "detail.source": "Fonte",
   "detail.sourceHost": "Fonte: {host}",
   "detail.sources": "Fontes",
+  "detail.bookSource": "Livro: {title}",
   "detail.twist": "A reviravolta",
   "detail.cast.title": "Conheça os personagens",
   "detail.cast.possibly": "Possivelmente {name}",

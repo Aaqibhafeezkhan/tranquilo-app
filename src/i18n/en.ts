@@ -81,6 +81,8 @@ export const en = {
   // aria-label on a caption source icon; {host} is e.g. "metmuseum.org".
   "detail.sourceHost": "Source: {host}",
   "detail.sources": "Sources",
+  // aria-label on a caption's book icon; {title} is the book's title.
+  "detail.bookSource": "Book: {title}",
   "detail.twist": "The Twist",
   "detail.cast.title": "Meet the Cast",
   "detail.cast.possibly": "Possibly {name}",
