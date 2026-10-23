@@ -8,7 +8,7 @@
 //   - a draft locale's pages stay out of search engines (noindex) and
 //     aren't advertised from English pages; they're reachable by link only
 //   - shared assets resolve from a page two directories deep
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
@@ -48,6 +48,51 @@ describe("the translated-pages registry", () => {
         ).toBe(true);
       }
     }
+  });
+});
+
+// Underscore files are layout partials, not pages.
+const ENGLISH_PAGES = readdirSync(path.join(ROOT, "pages"))
+  .filter((file) => file.endsWith(".html") && !file.startsWith("_"))
+  .sort();
+
+function untranslatedPages(
+  englishPages: readonly string[],
+  translated: readonly string[] = [],
+): string[] {
+  return englishPages.filter((file) => !translated.includes(file));
+}
+
+const NON_ENGLISH_LOCALES = LOCALES.filter((l) => l.code !== "en");
+
+describe("static page coverage", () => {
+  for (const locale of NON_ENGLISH_LOCALES.filter(
+    (l) => l.status === "draft",
+  )) {
+    for (const file of untranslatedPages(
+      ENGLISH_PAGES,
+      TRANSLATED_PAGES[locale.code],
+    )) {
+      it.todo(`${locale.code}: page not translated — ${file}`);
+    }
+  }
+
+  it.each(NON_ENGLISH_LOCALES.filter((l) => l.status === "shipped"))(
+    "$code has every static page",
+    (locale) => {
+      expect(
+        untranslatedPages(ENGLISH_PAGES, TRANSLATED_PAGES[locale.code]),
+      ).toEqual([]);
+    },
+  );
+
+  it("reports an English page with no translation", () => {
+    expect(
+      untranslatedPages(["about.html", "new.html"], ["about.html"]),
+    ).toEqual(["new.html"]);
+    expect(untranslatedPages(["about.html"], undefined)).toEqual([
+      "about.html",
+    ]);
   });
 });
 
