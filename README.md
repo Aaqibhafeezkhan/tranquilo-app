@@ -101,6 +101,19 @@ Tranquilo is an early-stage project — there are no user accounts or cross-devi
 
 Bug fixes, accessibility improvements, and documentation updates are welcome directly via pull request. For anything larger — a new feature or a structural change — please open an issue first. See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for community expectations.
 
+### Contributors
+
+Thanks to everyone who has helped with code, design, documentation and ideas ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
 Found a security issue? Please see [SECURITY.md](SECURITY.md) rather than opening a public issue.
 
 ## Documentation

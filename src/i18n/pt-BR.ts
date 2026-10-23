@@ -172,6 +172,13 @@ export const ptBR: Dictionary = {
   "footer.curator": "Lista de espera do Tranquilo Curator",
   "language.label": "Idioma",
 
+  "community.title": "Comunidade",
+  "community.intro":
+    "Tranquilo é feito de forma aberta, com a ajuda destas pessoas. Agradecemos de coração.",
+  "community.contributors": "Contribuições no GitHub",
+  "community.donors": "Apoio financeiro",
+  "community.avatarAlt": "{handle} no GitHub",
+
   "form.joining": "Inscrevendo…",
   "form.error": "Algo deu errado — tente de novo em instantes.",
   "form.email": "E-mail",
