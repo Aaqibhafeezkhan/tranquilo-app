@@ -273,12 +273,20 @@ describe("book citations in claims", () => {
   };
   const run = (claim: any) =>
     check
-      .checkItem({ ...item, caption_tea: "A caption.", tea_voice_claims: [claim] }, item)
+      .checkItem(
+        { ...item, caption_tea: "A caption.", tea_voice_claims: [claim] },
+        item,
+      )
       .filter((f: any) => f.level === "error");
 
   it("accepts an extract claim citing the object page and its book", () => {
     expect(
-      run({ text: "x", status: "grounded", source_url: item.url, publication: BOOK }),
+      run({
+        text: "x",
+        status: "grounded",
+        source_url: item.url,
+        publication: BOOK,
+      }),
     ).toHaveLength(0);
   });
 
@@ -306,14 +314,26 @@ describe("book citations in claims", () => {
 
   it("refuses a publication with no title", () => {
     const { title: _, ...untitled } = BOOK;
-    const errors = run({ text: "x", status: "grounded", source_url: item.url, publication: untitled });
+    const errors = run({
+      text: "x",
+      status: "grounded",
+      source_url: item.url,
+      publication: untitled,
+    });
     expect(errors.some((e: any) => /title/.test(e.message))).toBe(true);
   });
 
   it("refuses a publication with no link to get the book", () => {
     const { acquisition_url: _, ...unlinked } = BOOK;
-    const errors = run({ text: "x", status: "grounded", source_url: item.url, publication: unlinked });
-    expect(errors.some((e: any) => /acquisition_url/.test(e.message))).toBe(true);
+    const errors = run({
+      text: "x",
+      status: "grounded",
+      source_url: item.url,
+      publication: unlinked,
+    });
+    expect(errors.some((e: any) => /acquisition_url/.test(e.message))).toBe(
+      true,
+    );
   });
 
   it("refuses a book link that is not http(s)", () => {
@@ -323,6 +343,8 @@ describe("book citations in claims", () => {
       source_url: item.url,
       publication: { ...BOOK, acquisition_url: "javascript:alert(1)" },
     });
-    expect(errors.some((e: any) => /acquisition_url/.test(e.message))).toBe(true);
+    expect(errors.some((e: any) => /acquisition_url/.test(e.message))).toBe(
+      true,
+    );
   });
 });

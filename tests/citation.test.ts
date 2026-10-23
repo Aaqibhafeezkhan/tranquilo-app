@@ -151,6 +151,8 @@ describe("publicationLabel", () => {
     expect(publicationLabel({ title: "Art at Te Papa", year: 2009 })).toBe(
       "Art at Te Papa (2009)",
     );
-    expect(publicationLabel({ title: "Art at Te Papa" })).toBe("Art at Te Papa");
+    expect(publicationLabel({ title: "Art at Te Papa" })).toBe(
+      "Art at Te Papa",
+    );
   });
 });

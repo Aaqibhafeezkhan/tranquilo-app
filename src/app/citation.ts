@@ -35,7 +35,8 @@ export function publicationLabel(pub: Publication): string {
   const imprint = [pub.publisher, pub.year].filter(Boolean).join(", ");
   let label = [pub.author, pub.title].filter(Boolean).join(", ");
   if (imprint) label += ` (${imprint})`;
-  if (pub.pages) label += `, ${/[-\u2013]/.test(pub.pages) ? "pp." : "p."} ${pub.pages}`;
+  if (pub.pages)
+    label += `, ${/[-\u2013]/.test(pub.pages) ? "pp." : "p."} ${pub.pages}`;
   return label;
 }
 

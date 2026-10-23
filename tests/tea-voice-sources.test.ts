@@ -17,9 +17,7 @@ const first = (claims: any[]) => (items.teaVoiceSources(claims) as any[])[0];
 
 describe("teaVoiceSources", () => {
   it("sends a plain grounded claim as text and url only", () => {
-    const src = first([
-      { text: "a", status: "grounded", source_url: PAGE },
-    ]);
+    const src = first([{ text: "a", status: "grounded", source_url: PAGE }]);
     expect(src).toEqual({ text: "a", url: PAGE });
   });
 
@@ -51,7 +49,9 @@ describe("teaVoiceSources", () => {
 
   it("never sends an ungrounded claim", () => {
     expect(
-      items.teaVoiceSources([{ text: "a", status: "ungrounded", source_url: PAGE }]),
+      items.teaVoiceSources([
+        { text: "a", status: "ungrounded", source_url: PAGE },
+      ]),
     ).toBeNull();
   });
 });

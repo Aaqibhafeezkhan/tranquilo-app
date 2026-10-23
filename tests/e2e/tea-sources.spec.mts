@@ -99,7 +99,9 @@ test("a claim drawn from a book shows a book link beside its source", async ({
   const book = item.tea_voice_sources[0].publication;
   await openDetailFor(page, item);
 
-  await expect(page.locator("#detailModal .fact-box .tea-source")).toHaveCount(1);
+  await expect(page.locator("#detailModal .fact-box .tea-source")).toHaveCount(
+    1,
+  );
   const bookLink = page.locator("#detailModal .fact-box .tea-book-source");
   await expect(bookLink).toHaveCount(1);
   await expect(bookLink).toHaveAttribute("href", book.url);
@@ -113,7 +115,9 @@ test("a claim whose source is the book itself shows only the book link", async (
   const item = byId("23332");
   await openDetailFor(page, item);
 
-  await expect(page.locator("#detailModal .fact-box .tea-source")).toHaveCount(2);
+  await expect(page.locator("#detailModal .fact-box .tea-source")).toHaveCount(
+    2,
+  );
   await expect(
     page.locator("#detailModal .fact-box .tea-book-source"),
   ).toHaveCount(1);

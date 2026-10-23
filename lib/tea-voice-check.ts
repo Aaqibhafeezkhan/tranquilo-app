@@ -165,12 +165,20 @@ function checkPublication(claim: any, i: number): any[] {
   const pub = claim?.publication;
   if (!pub) {
     return claim?.source_kind === "book"
-      ? [{ level: "error", message: `claim ${i + 1} is a book claim with no publication` }]
+      ? [
+          {
+            level: "error",
+            message: `claim ${i + 1} is a book claim with no publication`,
+          },
+        ]
       : [];
   }
   const out: any[] = [];
   if (!pub.title) {
-    out.push({ level: "error", message: `claim ${i + 1}'s publication has no title` });
+    out.push({
+      level: "error",
+      message: `claim ${i + 1}'s publication has no title`,
+    });
   }
   if (!/^https?:\/\//i.test(String(pub.acquisition_url || ""))) {
     out.push({
