@@ -2,7 +2,7 @@
 // /img/** to a 1x1 PNG so every image always succeeds elsewhere; the stub
 // isn't removed here (see its own header on the Commons rate-limit hold) --
 // it gains a failure switch instead.
-import { expect, test } from "@playwright/test";
+import { expect, type Page, test } from "@playwright/test";
 import { failImages, gotoFeed, ITEMS, scrollToSlide } from "./harness.mts";
 
 // Slugs (slide data-slug, source-id) of fixture items that carry a
@@ -81,4 +81,83 @@ test("one broken image does not break the feed", async ({ page }) => {
   );
   expect(slides).toBeGreaterThan(5);
   expect(failed, "the failure leaked to other slides").toBeLessThan(slides / 2);
+});
+
+async function firstFailedFrame(page: Page) {
+  const feed = page.locator("#feed");
+  const frame = feed.locator(".slide .art-frame.failed").first();
+  await expect(frame).toBeVisible({ timeout: 15000 });
+  return frame;
+}
+
+function imageRequests(page: Page): string[] {
+  const urls: string[] = [];
+  page.on("request", (r) => {
+    if (r.url().includes("/img/")) urls.push(r.url());
+  });
+  return urls;
+}
+
+test("tapping a failed image fetches it again and shows it", async ({
+  page,
+}) => {
+  failImages(page, () => true);
+  await gotoFeed(page);
+  const frame = await firstFailedFrame(page);
+  const slug = await frame.evaluate(
+    (el) => (el.closest(".slide") as HTMLElement).dataset.slug,
+  );
+
+  const requests = imageRequests(page);
+  failImages(page, () => false);
+  await frame.click();
+
+  const slide = page.locator(`#feed .slide[data-slug="${slug}"]`);
+  await expect(slide.locator(".art-frame")).not.toHaveClass(/failed/, {
+    timeout: 10000,
+  });
+  await expect(slide.locator(".art-frame")).not.toHaveClass(/loading/);
+  expect(requests.length, "the retry made no network request").toBeGreaterThan(
+    0,
+  );
+});
+
+test("failed images recover without a tap when the connection returns", async ({
+  page,
+}) => {
+  failImages(page, () => true);
+  await gotoFeed(page);
+  await firstFailedFrame(page);
+
+  failImages(page, () => false);
+  await page.evaluate(() => window.dispatchEvent(new Event("online")));
+
+  await expect(page.locator("#feed .slide .art-frame.failed")).toHaveCount(0, {
+    timeout: 10000,
+  });
+});
+
+test("failed images recover when the tab becomes visible again", async ({
+  page,
+}) => {
+  failImages(page, () => true);
+  await gotoFeed(page);
+  await firstFailedFrame(page);
+
+  failImages(page, () => false);
+  await page.evaluate(() => {
+    const setState = (s: string) =>
+      Object.defineProperty(document, "visibilityState", {
+        configurable: true,
+        get: () => s,
+      });
+    setState("hidden");
+    document.dispatchEvent(new Event("visibilitychange"));
+    setState("visible");
+    document.dispatchEvent(new Event("visibilitychange"));
+  });
+
+  await expect(page.locator("#feed .slide .art-frame.failed")).toHaveCount(0, {
+    timeout: 10000,
+  });
 });

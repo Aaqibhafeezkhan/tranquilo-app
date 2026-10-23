@@ -36,6 +36,7 @@ import {
   shuffled,
   TEXT_RGB,
   UNKNOWN_ARTIST_PREFIXES as TranquiloLogicPrefixes,
+  withRetryAttempt,
 } from "../src/logic/logic";
 
 function parseRgbString(s: string): [number, number, number] {
@@ -390,6 +391,31 @@ describe("shouldLogFailure", () => {
 
   it("logs a manual retry for a key not seen before too", () => {
     expect(shouldLogFailure("cleveland:1", true, new Set())).toBe(true);
+  });
+});
+
+describe("withRetryAttempt", () => {
+  it("leaves a never-failed URL untouched", () => {
+    expect(withRetryAttempt("/img/met/1/display", 0)).toBe(
+      "/img/met/1/display",
+    );
+  });
+
+  it("gives each attempt after a failure a distinct URL", () => {
+    const urls = [1, 2, 3].map((n) =>
+      withRetryAttempt("/img/met/1/display", n),
+    );
+    expect(new Set(urls).size).toBe(3);
+    expect(urls).not.toContain("/img/met/1/display");
+  });
+
+  it("keeps an existing query string intact", () => {
+    const url = new URL(
+      withRetryAttempt("/img/met/1/lightbox?w=2200", 1),
+      "https://x.test",
+    );
+    expect(url.pathname).toBe("/img/met/1/lightbox");
+    expect(url.searchParams.get("w")).toBe("2200");
   });
 });
 

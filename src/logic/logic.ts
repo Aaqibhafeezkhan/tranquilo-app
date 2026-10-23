@@ -565,6 +565,11 @@ export function shouldLogFailure(
   return isManualRetry || !reportedFailures.has(key);
 }
 
+export function withRetryAttempt(src: string, attempt: number): string {
+  if (attempt <= 0) return src;
+  return `${src}${src.includes("?") ? "&" : "?"}retry=${attempt}`;
+}
+
 export function shouldSkipAutomaticLoad(
   key: string,
   isManualRetry: boolean,
