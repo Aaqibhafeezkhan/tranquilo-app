@@ -186,7 +186,7 @@ export class TranquiloShelvesMode extends HTMLElement {
       // at a glance.
       const storyline =
         shelf.id === "storylines" ? host.storylineFor(item) : null;
-      const imgHtml = `<img src="${item.img}" alt="${escapeHtml(item.title || "Untitled")}">`;
+      const imgHtml = `<img src="${item.img}" alt="${escapeHtml(item.title || "Untitled")}" loading="lazy" decoding="async">`;
       btn.innerHTML = `${
         storyline
           ? `<div class="shelf-item-stack"><div class="shelf-item-stack-ghost layer-1"></div><div class="shelf-item-stack-ghost layer-2"></div>${imgHtml}</div>`
