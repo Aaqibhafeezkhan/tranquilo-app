@@ -155,7 +155,37 @@ function checkClaims(claims: any): any[] {
         ).slice(0, 60)}`,
       });
     }
+    out.push(...checkPublication(c, i));
   });
+  return out;
+}
+
+/** A cited book needs a title and a link to where a reader can get it. */
+function checkPublication(claim: any, i: number): any[] {
+  const pub = claim?.publication;
+  if (!pub) {
+    return claim?.source_kind === "book"
+      ? [
+          {
+            level: "error",
+            message: `claim ${i + 1} is a book claim with no publication`,
+          },
+        ]
+      : [];
+  }
+  const out: any[] = [];
+  if (!pub.title) {
+    out.push({
+      level: "error",
+      message: `claim ${i + 1}'s publication has no title`,
+    });
+  }
+  if (!/^https?:\/\//i.test(String(pub.acquisition_url || ""))) {
+    out.push({
+      level: "error",
+      message: `claim ${i + 1}'s publication needs an http(s) acquisition_url, where a reader can get the book`,
+    });
+  }
   return out;
 }
 

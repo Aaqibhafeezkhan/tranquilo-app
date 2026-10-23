@@ -11,9 +11,19 @@ export type MediaType = (typeof vocabulary.media_types)[number];
 export type Palette = (typeof vocabulary.palettes)[number];
 export type SubjectType = (typeof vocabulary.subject_types)[number];
 
+export interface TeaVoicePublication {
+  title: string;
+  author: string | null;
+  publisher: string | null;
+  year: number | null;
+  pages: string | null;
+  url: string;
+}
+
 export interface TeaVoiceSource {
   text: string;
   url: string;
+  publication?: TeaVoicePublication;
 }
 
 export interface CastMember {

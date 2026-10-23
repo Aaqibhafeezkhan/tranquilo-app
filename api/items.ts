@@ -66,8 +66,27 @@ function teaVoiceSources(claims: any): any[] | null {
     .filter(
       (c: any) => c && c.status === "grounded" && safeHttpUrl(c.source_url),
     )
-    .map((c: any) => ({ text: c.text || "", url: c.source_url }));
+    .map((c: any) => {
+      const source: any = { text: c.text || "", url: c.source_url };
+      const publication = teaVoicePublication(c.publication);
+      if (publication) source.publication = publication;
+      return source;
+    });
   return out.length ? out : null;
+}
+
+// A book is only worth showing with a link to where a reader can get it.
+function teaVoicePublication(pub: any): any {
+  const url = pub && safeHttpUrl(pub.acquisition_url);
+  if (!url || !pub.title) return null;
+  return {
+    title: pub.title,
+    author: pub.author || null,
+    publisher: pub.publisher || null,
+    year: pub.year || null,
+    pages: pub.pages || null,
+    url,
+  };
 }
 
 // Drops a non-http(s) source_url from each person rather than the person,
@@ -930,4 +949,5 @@ export {
   decodeShuffleCursor,
   encodeCursor,
   encodeShuffleCursor,
+  teaVoiceSources,
 };

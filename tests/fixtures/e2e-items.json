@@ -2278,6 +2278,16 @@
       {
         "text": "carried by crossbowmen and other foot soldiers... fitted with a prop so it could stand upright... let an archer shelter behind it while reloading",
         "url": "https://www.medievalchronicles.com/medieval-armour/medieval-shields/pavise-shield/"
+      },
+      {
+        "text": "Pavises were carried by crossbowmen across Central Europe",
+        "url": "https://search.worldcat.org/isbn/9780000000001",
+        "publication": {
+          "title": "Shields of Central Europe",
+          "publisher": "Example Press",
+          "year": 1990,
+          "url": "https://search.worldcat.org/isbn/9780000000001"
+        }
       }
     ]
   },
@@ -2326,7 +2336,15 @@
     "tea_voice_sources": [
       {
         "text": "Latin quote on the hilt's head reading: \"Here virtue will find its reward\"",
-        "url": "https://www.metmuseum.org/art/collection/search/23367"
+        "url": "https://www.metmuseum.org/art/collection/search/23367",
+        "publication": {
+          "title": "Arms and Armor in the Metropolitan Museum",
+          "author": "A. Curator",
+          "publisher": "Example Press",
+          "year": 2015,
+          "pages": "112",
+          "url": "https://books.example.org/arms-and-armor"
+        }
       }
     ]
   },
