@@ -16,6 +16,7 @@ import { getSql } from "../lib/db.ts";
 import { LIVE_ITEMS_WHERE } from "../lib/items-sql.ts";
 import { getOrigin } from "../lib/request-origin.ts";
 import { reportError } from "../lib/sentry.ts";
+import { renderStaticPageHreflangLinks } from "../lib/sitemap-hreflang.ts";
 
 // XML has five predefined entities and a URL can legitimately contain three of
 // them -- Commons filenames are the realistic source, since they are arbitrary
@@ -100,7 +101,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     xml = `
       <?xml version="1.0" encoding="UTF-8"?>
-      <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+      <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
         <url>
           <loc>${escapeXml(origin)}/</loc>
           <changefreq>daily</changefreq>
@@ -110,6 +111,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           (page: { path: string; priority: string }) => `
           <url>
             <loc>${escapeXml(origin + page.path)}</loc>
+${renderStaticPageHreflangLinks(page.path, origin)}
             <changefreq>yearly</changefreq>
             <priority>${page.priority}</priority>
           </url>`,
