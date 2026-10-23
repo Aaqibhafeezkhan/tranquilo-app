@@ -414,6 +414,14 @@ test("the waitlist page names the paid tier Tranquilo Curator", async ({
   expect(main).not.toMatch(/\bPro\b/);
 });
 
+// Answers are collapsed; read them the way a visitor would, opened.
+async function openFaqText(page: Page): Promise<string> {
+  for (const question of await page.locator(".faq-item summary").all()) {
+    await question.click();
+  }
+  return page.locator(".faq-list").innerText();
+}
+
 test.describe("About page", () => {
   test.beforeEach(async ({ page }) => {
     await stubBackend(page);
@@ -456,7 +464,7 @@ test.describe("About page", () => {
   test("bug reports route to the feedback form, not an email", async ({
     page,
   }) => {
-    const faq = await page.locator(".faq-list").innerText();
+    const faq = await openFaqText(page);
     expect(faq).toMatch(/feedback form/i);
     await expect(page.locator("main a[href^='mailto:']")).toHaveCount(0);
   });
@@ -466,7 +474,7 @@ test.describe("About page", () => {
   }) => {
     // If the FAQ omits a licence the form accepts, someone self-rejects a
     // valid collection.
-    const faq = await page.locator(".faq-list").innerText();
+    const faq = await openFaqText(page);
     await page.goto("/pages/submit.html");
     const offered = await page
       .locator("#licenseType option")
