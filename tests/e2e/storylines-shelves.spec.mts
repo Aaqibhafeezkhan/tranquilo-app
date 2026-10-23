@@ -156,6 +156,20 @@ test("Shelves: tapping a shelf item opens it", async ({ page }) => {
     );
   expect(Math.max(...perShelf, 0)).toBeLessThanOrEqual(12);
 
+  // Off-screen tiles must not spend the per-IP image budget on open.
+  const eagerTiles = await page
+    .locator("#shelvesBody .shelf-item img")
+    .evaluateAll((els) =>
+      els
+        .filter(
+          (e) =>
+            (e as HTMLImageElement).loading !== "lazy" ||
+            (e as HTMLImageElement).decoding !== "async",
+        )
+        .map((e) => e.getAttribute("src")),
+    );
+  expect(eagerTiles, "shelf tiles that load eagerly").toEqual([]);
+
   const card = page.locator("#shelvesBody img").first();
   await expect(card).toBeVisible();
   await card.click();
