@@ -12,7 +12,7 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import { LOCALES } from "../src/i18n/locales";
+import { LOCALES, type LocaleInfo } from "../src/i18n/locales";
 
 // Derived from the registry, so these tests hold either side of pt-BR's
 // draft -> shipped flip rather than being rewritten at it.
@@ -63,7 +63,9 @@ function untranslatedPages(
   return englishPages.filter((file) => !translated.includes(file));
 }
 
-const NON_ENGLISH_LOCALES = LOCALES.filter((l) => l.code !== "en");
+const NON_ENGLISH_LOCALES: readonly LocaleInfo[] = LOCALES.filter(
+  (l) => l.code !== "en",
+);
 
 describe("static page coverage", () => {
   for (const locale of NON_ENGLISH_LOCALES.filter(
