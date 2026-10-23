@@ -194,7 +194,7 @@ function buildCastSectionHtml(item: Item): string {
         person.status === "grounded" && person.tidbit
           ? `<p>${escapeHtml(person.tidbit)}</p>${
               person.source_url
-                ? `<a class="source-link" href="${person.source_url}" target="_blank" rel="noopener"><span class="link-text">${escapeHtml(t("detail.source"))}</span><span class="link-arrow" aria-hidden="true">&rarr;</span></a>`
+                ? `<a class="source-link" href="${escapeHtml(person.source_url)}" target="_blank" rel="noopener"><span class="link-text">${escapeHtml(t("detail.source"))}</span><span class="link-arrow" aria-hidden="true">&rarr;</span></a>`
                 : ""
             }`
           : `<p class="cast-no-tidbit">${escapeHtml(t("detail.cast.noDetail"))}</p>`;
@@ -360,7 +360,7 @@ function wireReportMenu(
 function buildTwistSectionHtml(item: Item): string {
   if (!item.twist_category) return "";
   const sourceLinkHtml = item.twist_source_url
-    ? `<a class="source-link" href="${item.twist_source_url}" target="_blank" rel="noopener"><span class="link-text">${escapeHtml(t("detail.source"))}</span><span class="link-arrow" aria-hidden="true">&rarr;</span></a>`
+    ? `<a class="source-link" href="${escapeHtml(item.twist_source_url)}" target="_blank" rel="noopener"><span class="link-text">${escapeHtml(t("detail.source"))}</span><span class="link-arrow" aria-hidden="true">&rarr;</span></a>`
     : "";
   return (
     `<div class="twist-box">` +
@@ -709,7 +709,7 @@ export class TranquiloDetailModal extends HTMLElement {
         // Actions, not metadata: grouped after a divider (.detail-actions).
         // sourceLinkLabel() rather than an inline lookup, so this and the
         // lightbox's link can't drift into naming the institution two ways.
-      }<div class="detail-actions"><div class="detail-actions-row"><a class="source-link" href="${item.url}" target="_blank" rel="noopener"><span class="link-text">${escapeHtml(host.sourceLinkText(item))}</span><span class="link-arrow" aria-hidden="true">&rarr;</span></a>${citeButtonHtml(item)}</div>${citePanelHtml(item)}</div>` +
+      }<div class="detail-actions"><div class="detail-actions-row"><a class="source-link" href="${escapeHtml(item.url ?? "")}" target="_blank" rel="noopener"><span class="link-text">${escapeHtml(host.sourceLinkText(item))}</span><span class="link-arrow" aria-hidden="true">&rarr;</span></a>${citeButtonHtml(item)}</div>${citePanelHtml(item)}</div>` +
       `</div>`
     );
   }

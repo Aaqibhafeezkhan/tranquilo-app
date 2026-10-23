@@ -22,6 +22,7 @@ import { getSql } from "../lib/db.ts";
 import { getHeroPool } from "../lib/hero-items.ts";
 import { LIVE_ITEMS_PREDICATE } from "../lib/items-sql.ts";
 import { getMusicBuckets } from "../lib/music.ts";
+import { safeHttpUrl } from "../lib/safe-url.ts";
 import { reportError } from "../lib/sentry.ts";
 import { getSetOfWork, getSetOfWorksIndex } from "../lib/setOfWorks.ts";
 import { getShelves } from "../lib/shelves.ts";
@@ -62,9 +63,23 @@ function teaVoiceSources(claims: any): any[] | null {
   const parsed = parseJsonbField(claims);
   if (!Array.isArray(parsed)) return null;
   const out = parsed
-    .filter((c: any) => c && c.status === "grounded" && c.source_url)
+    .filter(
+      (c: any) => c && c.status === "grounded" && safeHttpUrl(c.source_url),
+    )
     .map((c: any) => ({ text: c.text || "", url: c.source_url }));
   return out.length ? out : null;
+}
+
+// Drops a non-http(s) source_url from each person rather than the person,
+// so the name and tidbit still render -- just without the link.
+function castWithSafeLinks(cast: any): any {
+  const parsed = parseJsonbField(cast);
+  if (!Array.isArray(parsed)) return parsed;
+  return parsed.map((person: any) =>
+    person && typeof person === "object" && "source_url" in person
+      ? { ...person, source_url: safeHttpUrl(person.source_url) }
+      : person,
+  );
 }
 
 function serializeRow(row: any): any {
@@ -104,7 +119,7 @@ function serializeRow(row: any): any {
     // server-side ranking inputs (see vibeSearchQuery() above), not
     // something the client renders.
     vibe_tags: row.vibe_tags,
-    url: row.url,
+    url: safeHttpUrl(row.url),
     license: row.license,
     category: row.category,
     region_primary: row.region_primary,
@@ -122,7 +137,7 @@ function serializeRow(row: any): any {
     tea_voice_eligible: row.tea_voice_eligible,
     // Only grounded claims with a URL, trimmed to what the UI renders.
     tea_voice_sources: teaVoiceSources(row.tea_voice_claims),
-    cast: parseJsonbField(row.cast),
+    cast: castWithSafeLinks(row.cast),
     cast_context: parseJsonbField(row.cast_context),
     cast_tier: row.cast_tier,
     storyline_ids: row.storyline_ids,
@@ -131,7 +146,7 @@ function serializeRow(row: any): any {
     twist_hook: row.twist_hook,
     twist_story: row.twist_story,
     twist_confidence: row.twist_confidence,
-    twist_source_url: row.twist_source_url,
+    twist_source_url: safeHttpUrl(row.twist_source_url),
     music_mood: row.music_mood,
     shuffle_key: row.shuffle_key,
   };
