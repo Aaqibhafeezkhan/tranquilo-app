@@ -95,6 +95,12 @@ describe("sourceLinkPreposition", () => {
     expect(sourceLinkPreposition({ source: "wellcome" })).toBe("at");
   });
 
+  it("is 'at' for mia, a named institution", () => {
+    expect(sourceLinkText({ source: "mia" })).toBe(
+      "View at Minneapolis Institute of Art",
+    );
+  });
+
   it("is 'at' for nga, a named institution", () => {
     expect(sourceLinkPreposition({ source: "nga" })).toBe("at");
   });
