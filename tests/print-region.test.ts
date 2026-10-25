@@ -84,3 +84,40 @@ describe("?shape=print_region", () => {
     expect(res.body).toEqual({ country: "BR", region: null });
   });
 });
+
+describe("a local development country", () => {
+  const saved = {
+    dev: process.env.PRINT_REGION_DEV_COUNTRY,
+    env: process.env.VERCEL_ENV,
+  };
+  afterEach(() => {
+    for (const [k, v] of [
+      ["PRINT_REGION_DEV_COUNTRY", saved.dev],
+      ["VERCEL_ENV", saved.env],
+    ] as const) {
+      if (v === undefined) delete process.env[k];
+      else process.env[k] = v;
+    }
+  });
+
+  it("stands in for the missing header outside production", async () => {
+    process.env.PRINT_REGION_DEV_COUNTRY = "US";
+    process.env.VERCEL_ENV = "development";
+    const res = await get({});
+    expect(res.body).toEqual({ country: "US", region: "us_ca" });
+  });
+
+  it("never overrides a real header", async () => {
+    process.env.PRINT_REGION_DEV_COUNTRY = "US";
+    process.env.VERCEL_ENV = "development";
+    const res = await get({ "x-vercel-ip-country": "BR" });
+    expect(res.body).toEqual({ country: "BR", region: null });
+  });
+
+  it("is ignored in production", async () => {
+    process.env.PRINT_REGION_DEV_COUNTRY = "US";
+    process.env.VERCEL_ENV = "production";
+    const res = await get({});
+    expect(res.body).toEqual({ country: null, region: null });
+  });
+});

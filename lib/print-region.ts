@@ -16,7 +16,12 @@ export function regionForCountry(country: unknown): string | null {
 }
 
 export function printRegionFromHeaders(headers: Record<string, unknown>) {
-  const raw = headers["x-vercel-ip-country"];
+  // vercel dev sends no geolocation header.
+  const raw =
+    headers["x-vercel-ip-country"] ??
+    (process.env.VERCEL_ENV === "development"
+      ? process.env.PRINT_REGION_DEV_COUNTRY
+      : undefined);
   const country =
     typeof raw === "string" && COUNTRY_CODE.test(raw)
       ? raw.toUpperCase()
