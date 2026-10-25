@@ -19,6 +19,7 @@ import {
   buildCanonicalMap,
   type CanonicalGroup,
   chooseCanonical,
+  excludedVariants,
   type SpellingCount,
 } from "../lib/artist-canonical.ts";
 
@@ -66,20 +67,37 @@ for (const [name, info] of Object.entries(artists)) {
   for (const v of info.variants || []) g.variants.add(v);
 }
 
-const ambiguous = new Set(
-  Object.entries(artists)
-    .filter(([, info]) => info.ambiguous)
-    .map(([name]) => name),
+const excluded = excludedVariants(
+  [...byId.values()],
+  new Set(
+    Object.entries(artists)
+      .filter(([, info]) => info.ambiguous)
+      .map(([name]) => name),
+  ),
 );
+const previous: Record<string, string> = fs.existsSync(OUT)
+  ? JSON.parse(fs.readFileSync(OUT, "utf8"))
+  : {};
 const resolved: CanonicalGroup[] = [];
 
 for (const g of byId.values()) {
   const ourNames = [...g.ourNames];
+  const safeVariants = [...g.variants].filter((v) => !excluded.has(v));
+  // Rows a merge rewrote now sit under a variant or a previous canonical.
+  const held = [
+    ...new Set([
+      ...ourNames,
+      ...safeVariants,
+      ...[...ourNames, ...safeVariants]
+        .map((n) => previous[n])
+        .filter((p): p is string => Boolean(p)),
+    ]),
+  ];
   const rows = await sql.query(
     `SELECT artist, count(*)::int n FROM items
       WHERE artist = ANY($1) AND review_status NOT IN ('quarantined','rejected')
       GROUP BY 1`,
-    [ourNames],
+    [held],
   );
   const canonical = chooseCanonical(rows as SpellingCount[], g.variants);
   if (!canonical) continue;
@@ -87,7 +105,7 @@ for (const g of byId.values()) {
   resolved.push({ canonical, ourNames, variants: [...g.variants] });
 }
 
-const map = buildCanonicalMap(resolved, ambiguous);
+const map = buildCanonicalMap(resolved, excluded);
 fs.writeFileSync(OUT, `${JSON.stringify(map, null, 2)}\n`);
 console.log(
   `${resolved.length} group(s) -> ${Object.keys(map).length} name(s) mapped`,

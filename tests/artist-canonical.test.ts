@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildCanonicalMap,
   chooseCanonical,
+  excludedVariants,
   flipSurnameFirst,
   planFromMap,
 } from "../lib/artist-canonical.ts";
@@ -108,6 +109,23 @@ describe("planFromMap", () => {
   });
 });
 
+describe("excludedVariants", () => {
+  it("excludes variants two subjects claim, hedges, and ambiguous names", () => {
+    const excluded = excludedVariants(
+      [
+        { variants: ["Maris", "Jacob Maris", "After Jacob Maris"] },
+        { variants: ["Maris", "Willem Maris"] },
+      ],
+      new Set(["Canaletto"]),
+    );
+    expect([...excluded].sort()).toEqual([
+      "After Jacob Maris",
+      "Canaletto",
+      "Maris",
+    ]);
+  });
+});
+
 describe("buildCanonicalMap", () => {
   it("maps our names and every variant to the group's canonical", () => {
     expect(
@@ -125,6 +143,28 @@ describe("buildCanonicalMap", () => {
       "Bril, Paul": "Paul Bril",
       "Paul Bril": "Paul Bril",
       "Bril, P.": "Paul Bril",
+    });
+  });
+
+  it("never maps a hedged attribution onto the artist", () => {
+    const map = buildCanonicalMap(
+      [
+        {
+          canonical: "Anthony van Dyck",
+          ourNames: ["Anthony van Dyck"],
+          variants: [
+            "After Van Dyck",
+            "school of van dyck",
+            "Follower of Anthony van Dyck",
+            "Van Dyck",
+          ],
+        },
+      ],
+      new Set(),
+    );
+    expect(map).toEqual({
+      "Anthony van Dyck": "Anthony van Dyck",
+      "Van Dyck": "Anthony van Dyck",
     });
   });
 

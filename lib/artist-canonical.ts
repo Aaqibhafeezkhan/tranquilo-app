@@ -68,6 +68,26 @@ export interface CanonicalGroup {
   variants: string[];
 }
 
+const HEDGED =
+  /^(after|attributed to|circle of|copy after|copy of|follower of|formerly attributed to|imitator of|manner of|school of|studio of|style of|workshop of)\b/i;
+
+// Computed over every ULAN subject, not only those we currently hold.
+export function excludedVariants(
+  subjects: { variants: Iterable<string> }[],
+  ambiguous: Set<string>,
+): Set<string> {
+  const owners = new Map<string, number>();
+  const excluded = new Set(ambiguous);
+  for (const s of subjects) {
+    for (const v of new Set(s.variants)) {
+      owners.set(v, (owners.get(v) ?? 0) + 1);
+      if (HEDGED.test(v.trim())) excluded.add(v);
+    }
+  }
+  for (const [v, n] of owners) if (n > 1) excluded.add(v);
+  return excluded;
+}
+
 // A variant naming two artists maps to neither.
 export function buildCanonicalMap(
   groups: CanonicalGroup[],
@@ -84,6 +104,7 @@ export function buildCanonicalMap(
   const map: Record<string, string> = {};
   for (const g of groups) {
     for (const v of g.variants) {
+      if (HEDGED.test(v.trim())) continue;
       if (ambiguous.has(v) || (claims.get(v)?.size ?? 0) > 1) continue;
       map[v] = g.canonical;
     }
