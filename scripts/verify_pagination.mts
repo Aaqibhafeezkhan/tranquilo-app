@@ -17,7 +17,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const { resolveApi, fetchManifest } = await import(
+const { resolveApi, fetchManifest, apiFetch } = await import(
   path.join(__dirname, "../lib/catalogue.ts")
 );
 
@@ -40,7 +40,7 @@ let stuck: string | null = null;
 
 while (pages < MAX_PAGES) {
   const url: string = `${API}?limit=${LIMIT}${cursor ? `&cursor=${encodeURIComponent(cursor)}` : ""}`;
-  const res: Response = await fetch(url);
+  const res: Response = await apiFetch(url);
   if (!res.ok) throw new Error(`${url} responded ${res.status}`);
   const body: any = await res.json();
   pages++;

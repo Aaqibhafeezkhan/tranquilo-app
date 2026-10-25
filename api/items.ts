@@ -267,6 +267,28 @@ function serializeRow(row: ItemRow) {
 // nudity gate, the twist flag). Search stays server-side (?q=) rather
 // than joining the manifest, since matchesQuery() needs most of the
 // payload anyway. ~259KB raw / 20KB gzipped vs. the full 1.85MB/266KB.
+//
+// MANIFEST_COLUMNS must cover every field serializeManifestRow reads.
+const MANIFEST_COLUMNS = [
+  "id",
+  "source",
+  "native_id",
+  "title",
+  "artist",
+  "category",
+  "timeframe",
+  "palette",
+  "media_type",
+  "region_primary",
+  "region_alt",
+  "subject_type",
+  "storyline_ids",
+  "set_of_work_id",
+  "contains_nudity",
+  "twist_category",
+  "shuffle_key",
+];
+
 function serializeManifestRow(row: ItemRow) {
   return {
     id: row.native_id,
@@ -727,9 +749,12 @@ function buildQuery(params: QueryParams): BuiltQuery {
 
   // ORDER BY must match the index column-for-column or the planner
   // sorts anyway -- see sql/017_items_shuffle_key.sql.
-  let text = `SELECT *, created_at::text AS cursor_ts FROM items WHERE ${where.join(
-    " AND ",
-  )}${
+  // The unpaged manifest spans the whole catalogue; SELECT * there outgrows
+  // the driver's 64 MB response cap.
+  const columns = manifest
+    ? MANIFEST_COLUMNS.join(", ")
+    : "*, created_at::text AS cursor_ts";
+  let text = `SELECT ${columns} FROM items WHERE ${where.join(" AND ")}${
     shuffled
       ? " ORDER BY shuffle_key ASC, native_id ASC"
       : " ORDER BY created_at ASC, native_id ASC"
