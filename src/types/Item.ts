@@ -71,6 +71,8 @@ export interface Item {
   // as optional, not assume every item carries them.
   img_width: number | null;
   img_height: number | null;
+  master_width?: number | null;
+  master_height?: number | null;
   palette_hex: string[] | null;
   // Every distinct hue bucket among palette_hex's several colors (the
   // real color filter) -- see classify_palette_buckets() in the ingestion

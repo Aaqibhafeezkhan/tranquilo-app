@@ -64,6 +64,16 @@ export class ItemsApiClient {
     return this.fetchJson(this.apiUrl({ shape: "facets" }), "facets");
   }
 
+  fetchPrintRegion(): Promise<{
+    country: string | null;
+    region: string | null;
+  }> {
+    return this.fetchJson(
+      this.apiUrl({ shape: "print_region" }),
+      "print region",
+    );
+  }
+
   // The eager half of storylines -- id/cover_item_id/chapter id+position
   // for every storyline, small enough to fetch once at startup. No title,
   // intro_caption or chapter captions -- those are the lazy half, fetched

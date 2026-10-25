@@ -469,6 +469,37 @@ function wireCite(container: HTMLElement): void {
   }
 }
 
+function wirePrint(
+  container: HTMLElement,
+  item: Item,
+  host: ITranquiloDetailModalHost,
+): void {
+  const btn = container.querySelector<HTMLButtonElement>(".btn-print");
+  const panel = container.querySelector<HTMLElement>(".print-panel");
+  if (!btn || !panel) return;
+  host.printOptionsFor(item).then((products) => {
+    if (!products.length) return;
+    panel.innerHTML =
+      products
+        .map(
+          (p) =>
+            `<div class="print-option" data-product="${p}">` +
+            `<span class="print-name">${escapeHtml(t(`print.product.${p}` as MessageKey))}</span>` +
+            `<span class="print-size">${escapeHtml(t(`print.size.${p}` as MessageKey))}</span></div>`,
+        )
+        .join("") +
+      `<p class="print-soon">${escapeHtml(t("detail.print.soon"))}</p>`;
+    btn.hidden = false;
+  });
+  on(btn, () => {
+    panel.hidden = !panel.hidden;
+    btn.setAttribute("aria-expanded", String(!panel.hidden));
+    if (!panel.hidden) {
+      host.trackEvent("print_panel_open", { category: item.category ?? null });
+    }
+  });
+}
+
 function buildTeaSourcesHtml(item: Item): string {
   // Only Tea-tier captions have grounding. A Basic-tier item deliberately
   // has no caption_tea and no claims, and must not sprout an empty source
@@ -738,7 +769,7 @@ export class TranquiloDetailModal extends HTMLElement {
         // Actions, not metadata: grouped after a divider (.detail-actions).
         // sourceLinkLabel() rather than an inline lookup, so this and the
         // lightbox's link can't drift into naming the institution two ways.
-      }<div class="detail-actions"><div class="detail-actions-row"><a class="source-link" href="${escapeHtml(item.url ?? "")}" target="_blank" rel="noopener"><span class="link-text">${escapeHtml(host.sourceLinkText(item))}</span><span class="link-arrow" aria-hidden="true">&rarr;</span></a>${citeButtonHtml(item)}</div>${citePanelHtml(item)}</div>` +
+      }<div class="detail-actions"><div class="detail-actions-row"><a class="source-link" href="${escapeHtml(item.url ?? "")}" target="_blank" rel="noopener"><span class="link-text">${escapeHtml(host.sourceLinkText(item))}</span><span class="link-arrow" aria-hidden="true">&rarr;</span></a>${citeButtonHtml(item)}<button class="btn-print" type="button" aria-expanded="false" hidden>${escapeHtml(t("detail.print.button"))}</button></div>${citePanelHtml(item)}<div class="print-panel" hidden></div></div>` +
       `</div>`
     );
   }
@@ -771,6 +802,7 @@ export class TranquiloDetailModal extends HTMLElement {
     if (shareBtn) on(shareBtn, () => host.shareItem(item));
     wireReportMenu(container, item, host);
     wireCite(container);
+    wirePrint(container, item, host);
 
     const storylineChipBtn =
       container.querySelector<HTMLButtonElement>(".storyline-chip");

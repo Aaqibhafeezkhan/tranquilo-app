@@ -139,6 +139,8 @@ function serializeRow(row: any): any {
     blur_placeholder: row.blur_placeholder,
     img_width: row.img_width,
     img_height: row.img_height,
+    master_width: row.master_width,
+    master_height: row.master_height,
     palette_hex: row.palette_hex,
     palette_buckets: row.palette_buckets,
     // curator_boost/palette_contrast_score deliberately absent -- pure

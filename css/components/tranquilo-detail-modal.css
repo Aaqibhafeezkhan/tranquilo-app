@@ -451,7 +451,8 @@
 /* The pill's border is its only line: no text underline on top of it
    (see tests/e2e/link-underlines.spec.mts). */
 .detail-modal-inner .detail-actions a.source-link,
-.detail-modal-inner .btn-cite{
+.detail-modal-inner .btn-cite,
+.detail-modal-inner .btn-print{
   display:inline-flex;
   align-items:center;
   gap:6px;
@@ -469,7 +470,8 @@
 }
 .detail-modal-inner .detail-actions a.source-link .link-text{ text-decoration:none; }
 .detail-modal-inner .detail-actions a.source-link:hover,
-.detail-modal-inner .btn-cite:hover{
+.detail-modal-inner .btn-cite:hover,
+.detail-modal-inner .btn-print:hover{
   color:#fff;
   border-color:var(--gold-soft);
   background:rgba(255,255,255,0.1);
@@ -477,13 +479,15 @@
 .detail-modal-inner .btn-cite[aria-expanded="true"]{ border-color:var(--gold-soft); }
 /* Expand indicator, keyed off aria-expanded so what a sighted visitor sees
    and what a screen reader announces can't disagree. */
-.detail-modal-inner .btn-cite::after{
+.detail-modal-inner .btn-cite::after,
+.detail-modal-inner .btn-print::after{
   content:"+";
   display:inline-block;
   width:1em;
   text-align:center;
 }
-.detail-modal-inner .btn-cite[aria-expanded="true"]::after{ content:"\2212"; }
+.detail-modal-inner .btn-cite[aria-expanded="true"]::after,
+.detail-modal-inner .btn-print[aria-expanded="true"]::after{ content:"\2212"; }
 .detail-modal-inner .cite-panel{
   margin-top:12px;
   display:grid;
@@ -527,3 +531,32 @@
   white-space:nowrap;
 }
 .detail-modal-inner .cite-copy:hover{ border-color:var(--gold-soft); }
+.detail-modal-inner .btn-print[hidden]{ display:none; }
+.detail-modal-inner .btn-print[aria-expanded="true"]{ border-color:var(--gold-soft); }
+.detail-modal-inner .print-panel{
+  margin-top:12px;
+  display:grid;
+  gap:8px;
+}
+.detail-modal-inner .print-panel[hidden]{ display:none; }
+.detail-modal-inner .print-option{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  gap:10px;
+  padding:10px 12px;
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:8px;
+  background:rgba(255,255,255,0.04);
+}
+.detail-modal-inner .print-name{ font-size:0.9rem; }
+.detail-modal-inner .print-size{
+  font-family:var(--sans);
+  font-size:0.72rem;
+  color:rgba(255,255,255,0.6);
+}
+.detail-modal-inner .print-soon{
+  margin:2px 0 0;
+  font-size:0.8rem;
+  color:rgba(255,255,255,0.6);
+}

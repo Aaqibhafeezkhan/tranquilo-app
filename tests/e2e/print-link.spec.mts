@@ -1,0 +1,105 @@
+import type { Page, Route } from "@playwright/test";
+import { expect, test } from "@playwright/test";
+import { ITEMS, stubBackend } from "./harness.mts";
+
+const BASE = ITEMS.find((i: any) => i.title && i.img);
+
+async function openDetail(
+  page: Page,
+  {
+    master,
+    region,
+    search = "?print=preview",
+  }: {
+    master: [number, number] | null;
+    region: string | null;
+    search?: string;
+  },
+) {
+  const item = {
+    ...BASE,
+    master_width: master?.[0] ?? null,
+    master_height: master?.[1] ?? null,
+  };
+  const items = ITEMS.map((i: any) => (i.id === BASE.id ? item : i));
+  await stubBackend(page, { items });
+  const regionRequests: string[] = [];
+  await page.route("**/api/items?shape=print_region**", (route: Route) => {
+    regionRequests.push(route.request().url());
+    return route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ country: region ? "US" : "BR", region }),
+    });
+  });
+  await page.goto(
+    `/v/${encodeURIComponent(`${BASE.source || "met"}-${BASE.id}`)}${search}`,
+  );
+  await page.waitForFunction(() => (window.__tranquiloFeedRenders || 0) > 0);
+  const slide = page
+    .locator(`#feed .slide[data-slug$="-${String(BASE.id)}"]`)
+    .first();
+  await slide.locator(".art-title-btn").click();
+  await expect(page.locator("#detailModal")).toHaveClass(/open/);
+  return regionRequests;
+}
+
+test("is hidden, and the region is never looked up, unless enabled", async ({
+  page,
+}) => {
+  const requests = await openDetail(page, {
+    master: [3192, 4000],
+    region: "us_ca",
+    search: "",
+  });
+  await expect(page.locator("#detailModal .detail-actions")).toBeVisible();
+  await expect(page.locator("#detailModal .btn-print")).toBeHidden();
+  expect(requests).toEqual([]);
+});
+
+test("offers every product for a large image in a print region", async ({
+  page,
+}) => {
+  await openDetail(page, { master: [3192, 4000], region: "us_ca" });
+  const btn = page.locator("#detailModal .btn-print");
+  const panel = page.locator("#detailModal .print-panel");
+  await expect(btn).toBeVisible();
+  await expect(panel).toBeHidden();
+  await expect(btn).toHaveAttribute("aria-expanded", "false");
+
+  await btn.click();
+  await expect(panel).toBeVisible();
+  await expect(btn).toHaveAttribute("aria-expanded", "true");
+  await expect(panel.locator("[data-product]")).toHaveCount(4);
+  await expect(panel.locator('[data-product="mini_print"]')).toContainText(
+    "Mini print",
+  );
+  await expect(panel).toContainText(/soon/i);
+});
+
+test("lists only the products a smaller image can fill", async ({ page }) => {
+  await openDetail(page, { master: [2000, 4000], region: "us_ca" });
+  await page.locator("#detailModal .btn-print").click();
+  const products = page.locator("#detailModal .print-panel [data-product]");
+  await expect(products).toHaveCount(2);
+  await expect(products.nth(0)).toHaveAttribute("data-product", "mini_print");
+  await expect(products.nth(1)).toHaveAttribute("data-product", "tote");
+});
+
+test("is not offered outside a print region", async ({ page }) => {
+  const requests = await openDetail(page, {
+    master: [3192, 4000],
+    region: null,
+  });
+  await expect.poll(() => requests.length).toBeGreaterThan(0);
+  await expect(page.locator("#detailModal .detail-actions")).toBeVisible();
+  await expect(page.locator("#detailModal .btn-print")).toBeHidden();
+});
+
+test("is not offered when the image's full size is unknown", async ({
+  page,
+}) => {
+  await openDetail(page, { master: null, region: "us_ca" });
+  await expect(page.locator("#detailModal .detail-actions")).toBeVisible();
+  await expect(page.locator("#detailModal .btn-print")).toBeHidden();
+});
