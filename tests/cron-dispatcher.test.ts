@@ -59,6 +59,29 @@ describe("api/cron/index.js dispatcher", () => {
     expect(res.body.known).toContain("db-backup");
   });
 
+  it.each(["constructor", "toString", "__proto__"])(
+    "rejects the inherited property name ?job=%s",
+    async (job) => {
+      const req = { query: { job }, headers: {} };
+      const res = fakeRes();
+
+      await dispatcher(req, res, { jobs: { "db-backup": vi.fn() } });
+
+      expect(res.statusCode).toBe(400);
+    },
+  );
+
+  it("rejects a repeated ?job (array-valued query) without calling any handler", async () => {
+    const spy = vi.fn();
+    const req = { query: { job: ["db-backup", "db-backup"] }, headers: {} };
+    const res = fakeRes();
+
+    await dispatcher(req, res, { jobs: { "db-backup": spy } });
+
+    expect(spy).not.toHaveBeenCalled();
+    expect(res.statusCode).toBe(400);
+  });
+
   it("exposes the real job map, wired to lib/cron/*.js, for Vercel's own invocation", () => {
     // Not calling these (they'd hit real Postgres/Sentry/Resend) -- just
     // confirming they're wired up, since an import-path typo would silently

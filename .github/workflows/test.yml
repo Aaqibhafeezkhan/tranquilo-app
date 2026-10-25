@@ -19,6 +19,9 @@ jobs:
           bun-version: "1.3.11"
       - run: bun install --frozen-lockfile
       - run: bun run lint
+      # Warnings never fail `bun run lint`; this fails when any area's count
+      # moves from lint-baseline.json (see scripts/lint-baseline.mts).
+      - run: bun run lint:ratchet
       # Comment-quality gate: a bare @ts-ignore/@ts-expect-error
       # silences a real type error with no record of why it's safe to
       # silence -- the next person to touch that line has no way to tell a

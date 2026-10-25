@@ -9,7 +9,7 @@
 // on user-controlled input (CodeQL js/polynomial-redos, api/subscribe.ts
 // and api/submit-collection.ts both carried a copy). Plain string ops have
 // no backtracking to exploit.
-export function isValidEmail(value: unknown): boolean {
+export function isValidEmail(value: unknown): value is string {
   if (typeof value !== "string") return false;
   const at = value.indexOf("@");
   if (at <= 0 || at !== value.lastIndexOf("@")) return false;

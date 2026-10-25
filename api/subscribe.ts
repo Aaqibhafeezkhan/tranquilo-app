@@ -56,9 +56,14 @@ function getContact(apiKey: string, email: string) {
 // string the way create-contact accepts one -- handles both a plain
 // string and an object wrapper, falling back to "no history" (safe) if
 // neither shape matches.
-function extractPropertyStringValue(raw: any): string | null {
+function extractPropertyStringValue(raw: unknown): string | null {
   if (typeof raw === "string") return raw;
-  if (raw && typeof raw === "object" && typeof raw.value === "string")
+  if (
+    raw &&
+    typeof raw === "object" &&
+    "value" in raw &&
+    typeof raw.value === "string"
+  )
     return raw.value;
   return null;
 }
@@ -166,7 +171,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  let properties: Record<string, string>, resendRes: any, errBody: any;
+  let properties: Record<string, string>, resendRes: Response, errBody: string;
   try {
     properties = await mergedProperties(apiKey, email, source, locale);
     resendRes = await createContact(apiKey, email, properties);
