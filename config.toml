@@ -94,3 +94,9 @@ thrash_window_days = 7
 # because wrongly leaving a source degraded suppresses a real alert later,
 # while wrongly calling one degraded only costs a spurious one now.
 degraded_after_consecutive_failures = 5
+
+[print.regions]
+# Print-on-demand launch regions as comma-separated ISO country codes.
+us_ca = "US,CA"
+eu_uk = "AT,BE,BG,HR,CY,CZ,DK,EE,FI,FR,DE,GR,HU,IE,IT,LV,LT,LU,MT,NL,PL,PT,RO,SK,SI,ES,SE,GB"
+au = "AU"

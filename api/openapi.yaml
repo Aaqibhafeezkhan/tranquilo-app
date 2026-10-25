@@ -56,10 +56,13 @@ paths:
             answers bounded by distinct-value count, not catalogue size;
             `storylines`/`storyline`/`shelves`/`music`/`heroes` dispatch to a
             different table entirely (see below) and take no other
-            catalogue filter.
+            catalogue filter. `print_region` returns the visitor's
+            country (from the request's geolocation) and the print-on-demand
+            region it belongs to, as `{ country, region }`, either of which
+            may be null; it is never cached at the edge.
           schema:
             type: string
-            enum: [manifest, facets, suggest, correction, count, storylines, storyline, shelves, music, heroes]
+            enum: [manifest, facets, suggest, correction, count, storylines, storyline, shelves, music, heroes, print_region]
         - name: ids
           in: query
           description: >-
