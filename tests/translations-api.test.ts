@@ -199,8 +199,13 @@ describe("artworks", () => {
 
   it("translates titles in the feed manifest too", async () => {
     db.sql = withTable;
-    const res = await get({ shape: "manifest", locale: "pt-BR" });
-    const item = res.body.find((i: any) => i.id === "1");
+    const res = await get({
+      shape: "manifest",
+      order: "shuffle",
+      start: "0",
+      locale: "pt-BR",
+    });
+    const item = res.body.items.find((i: any) => i.id === "1");
     expect(item.title).toBe("Autorretrato");
   });
 

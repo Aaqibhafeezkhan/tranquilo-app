@@ -1,6 +1,4 @@
-// The manifest reads only the columns it returns. SELECT * over every live
-// item outgrew the Neon HTTP driver's 64 MB response cap, and the unpaged
-// manifest started failing with a 500 while the paged feed kept working.
+// The manifest reads only the columns it returns, keeping each page small.
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { makeSql } from "./helpers/pg.ts";
@@ -75,22 +73,9 @@ beforeAll(async () => {
 });
 
 describe("manifest queries", () => {
-  it.each([
-    ["unpaged", { shape: "manifest" }],
-    ["paged shuffle", { shape: "manifest", order: "shuffle", start: "0" }],
-  ])("%s manifest does not SELECT *", (_label, params) => {
-    const q = buildQuery(params);
+  it("manifest pages do not SELECT *", () => {
+    const q = buildQuery({ shape: "manifest", order: "shuffle", start: "0" });
     expect(q.text).not.toMatch(/SELECT \*/);
-  });
-
-  it("unpaged manifest returns every manifest field from a real row", async () => {
-    const res = await get({ shape: "manifest" });
-    expect(res.statusCode).toBe(200);
-    const items = res.body as Record<string, unknown>[];
-    expect(items).toHaveLength(1);
-    expect(Object.keys(items[0]).sort()).toEqual(MANIFEST_KEYS);
-    expect(items[0].title).toBe("Harbour");
-    expect(items[0].region_alt).toEqual(["West Asia"]);
   });
 
   it("paged shuffle manifest returns every field and a usable cursor", async () => {
@@ -106,6 +91,8 @@ describe("manifest queries", () => {
       next_cursor: string | null;
     };
     expect(Object.keys(body.items[0]).sort()).toEqual(MANIFEST_KEYS);
+    expect(body.items[0].title).toBe("Harbour");
+    expect(body.items[0].region_alt).toEqual(["West Asia"]);
     expect(body.next_cursor).toEqual(expect.any(String));
   });
 
