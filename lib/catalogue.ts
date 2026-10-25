@@ -13,8 +13,17 @@ export function resolveApi(argv: string[] = process.argv): string {
   return process.env.FIXTURE_API || DEFAULT_API;
 }
 
+// Production's Bot Protection challenges scripted requests without this header.
+export function apiFetch(url: string): Promise<Response> {
+  const token = process.env.FIREWALL_BYPASS_TOKEN;
+  return fetch(
+    url,
+    token ? { headers: { "x-tranquilo-bypass": token } } : undefined,
+  );
+}
+
 export async function fetchManifest(api: string): Promise<any> {
-  const res = await fetch(`${api}?shape=manifest`);
+  const res = await apiFetch(`${api}?shape=manifest`);
   if (!res.ok) throw new Error(`${api}?shape=manifest responded ${res.status}`);
   return res.json();
 }
@@ -35,7 +44,7 @@ export async function fetchAllItems(
     const url: string = `${api}?limit=${limit}${
       cursor ? `&cursor=${encodeURIComponent(cursor)}` : ""
     }`;
-    const res: Response = await fetch(url);
+    const res: Response = await apiFetch(url);
     if (!res.ok) throw new Error(`${url} responded ${res.status}`);
     const body: any = await res.json();
     pages++;
