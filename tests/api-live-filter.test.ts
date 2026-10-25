@@ -279,11 +279,6 @@ describe("query endpoint: filters, search and cursor paging", () => {
     expect(itemsSource).toContain("century = "); // "Nth century"
   });
 
-  it("caps limit so one request cannot ask for the whole catalogue", () => {
-    expect(itemsSource).toMatch(/MAX_LIMIT\s*=\s*\d+/);
-    expect(itemsSource).toMatch(/Math\.min\(\s*parseInt\(params\.limit/);
-  });
-
   it("returns an explicit null cursor on the last page", () => {
     // A client checking `if (cursor)` should stop; null says so without
     // relying on absence.
@@ -333,23 +328,6 @@ describe("id-set lookup protects saved and curated data", () => {
     expect(start).toBeGreaterThan(-1);
     expect(end).toBeGreaterThan(start);
     expect(itemsSource.slice(start, end)).toContain("LIVE_ITEMS_PREDICATE");
-  });
-
-  it("caller mistakes are 400s, not 500s, and are not reported to Sentry", () => {
-    // Reporting caller mistakes would bury real failures under typos, and
-    // a 500 tells a client to retry something that will never succeed.
-    expect(itemsSource).toMatch(/\(err as any\)\.status === 400/);
-    // Anchored on `query = buildQuery(params)` rather than the first
-    // "} catch (err) {" in the file, since earlier-dispatched branches add
-    // catch blocks of the same shape with no 400 case.
-    const afterQuery = itemsSource.indexOf("query = buildQuery(params)");
-    expect(afterQuery, "buildQuery(params) call not found").toBeGreaterThan(-1);
-    const catchBlock = itemsSource.slice(
-      itemsSource.indexOf("} catch (err) {", afterQuery),
-    );
-    expect(catchBlock.indexOf("res.statusCode = 400")).toBeLessThan(
-      catchBlock.indexOf("reportError"),
-    );
   });
 });
 

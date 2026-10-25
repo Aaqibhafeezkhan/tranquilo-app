@@ -38,10 +38,59 @@ import {
   translateStoryline,
 } from "../lib/translations.ts";
 
+type QueryParams = Record<string, string | string[] | undefined>;
+
+// Only ?ids= may repeat; any other repeated param takes its first value.
+function scalar(value: string | string[] | undefined): string | undefined {
+  return Array.isArray(value) ? value[0] : value;
+}
+
+interface ItemRow {
+  id: string;
+  source: string;
+  native_id: string;
+  img?: string | null;
+  full_img?: string | null;
+  cursor_ts?: string;
+  shuffle_key?: number;
+  [column: string]: unknown;
+}
+
+interface FacetRow {
+  facet: string;
+  value: string;
+  n: number;
+}
+
+interface SuggestRow {
+  value: string;
+  type: string;
+  item_count: number;
+}
+
+interface BuiltQuery {
+  text: string | null;
+  params: unknown[];
+  facets?: true;
+  suggest?: true;
+  empty?: true;
+  correction?: true;
+  vibeSearch?: true;
+  counting?: true;
+  lookup?: true;
+  requestedIds?: string[];
+  paginated?: boolean;
+  limit?: number;
+  manifest?: boolean;
+  shuffled?: boolean;
+  start?: number | null;
+  wrapped?: boolean;
+}
+
 // A raw JSON string is handled defensively even though the driver
 // normally parses JSONB already -- fails soft instead of shipping a
 // stringified blob to the client.
-function parseJsonbField(value: any): any {
+function parseJsonbField(value: unknown): unknown {
   if (value == null) return value;
   if (typeof value === "string") {
     try {
@@ -66,15 +115,47 @@ function imgProxyUrl(
   return `/img/${encodeURIComponent(source)}/${encodeURIComponent(nativeId)}/${tier}`;
 }
 
-function teaVoiceSources(claims: any): any[] | null {
+interface RawPublication {
+  acquisition_url?: unknown;
+  title?: string;
+  author?: string;
+  publisher?: string;
+  year?: number | string;
+  pages?: number | string;
+}
+
+interface TeaVoiceClaim {
+  status?: string;
+  text?: string;
+  source_url?: string;
+  publication?: RawPublication | null;
+}
+
+interface TeaVoicePublication {
+  title: string;
+  author: string | null;
+  publisher: string | null;
+  year: number | string | null;
+  pages: number | string | null;
+  url: string;
+}
+
+interface TeaVoiceSource {
+  text: string;
+  url: string | undefined;
+  publication?: TeaVoicePublication;
+}
+
+function teaVoiceSources(claims: unknown): TeaVoiceSource[] | null {
   const parsed = parseJsonbField(claims);
   if (!Array.isArray(parsed)) return null;
-  const out = parsed
+  const out = (parsed as (TeaVoiceClaim | null)[])
     .filter(
-      (c: any) => c && c.status === "grounded" && safeHttpUrl(c.source_url),
+      (c): c is TeaVoiceClaim =>
+        !!c && c.status === "grounded" && !!safeHttpUrl(c.source_url),
     )
-    .map((c: any) => {
-      const source: any = { text: c.text || "", url: c.source_url };
+    .map((c) => {
+      const source: TeaVoiceSource = { text: c.text || "", url: c.source_url };
       const publication = teaVoicePublication(c.publication);
       if (publication) source.publication = publication;
       return source;
@@ -83,7 +164,9 @@ function teaVoiceSources(claims: any): any[] | null {
 }
 
 // A book is only worth showing with a link to where a reader can get it.
-function teaVoicePublication(pub: any): any {
+function teaVoicePublication(
+  pub: RawPublication | null | undefined,
+): TeaVoicePublication | null {
   const url = pub && safeHttpUrl(pub.acquisition_url);
   if (!url || !pub.title) return null;
   return {
@@ -98,17 +181,17 @@ function teaVoicePublication(pub: any): any {
 
 // Drops a non-http(s) source_url from each person rather than the person,
 // so the name and tidbit still render -- just without the link.
-function castWithSafeLinks(cast: any): any {
+function castWithSafeLinks(cast: unknown): unknown {
   const parsed = parseJsonbField(cast);
   if (!Array.isArray(parsed)) return parsed;
-  return parsed.map((person: any) =>
+  return parsed.map((person: unknown) =>
     person && typeof person === "object" && "source_url" in person
       ? { ...person, source_url: safeHttpUrl(person.source_url) }
       : person,
   );
 }
 
-function serializeRow(row: any): any {
+function serializeRow(row: ItemRow) {
   return {
     id: row.native_id,
     source: row.source,
@@ -184,7 +267,7 @@ function serializeRow(row: any): any {
 // nudity gate, the twist flag). Search stays server-side (?q=) rather
 // than joining the manifest, since matchesQuery() needs most of the
 // payload anyway. ~259KB raw / 20KB gzipped vs. the full 1.85MB/266KB.
-function serializeManifestRow(row: any): any {
+function serializeManifestRow(row: ItemRow) {
   return {
     id: row.native_id,
     // Without source, slugFor() falls back to "met" for every item
@@ -228,14 +311,17 @@ const MAX_IDS = 500;
 // truncates to milliseconds while Postgres stores microseconds, which
 // once made every page return the same rows (a cursor compared as
 // "not greater than itself").
-function encodeCursor(createdAtText: any, nativeId: any): string {
+function encodeCursor(
+  createdAtText: string | undefined,
+  nativeId: string,
+): string {
   return Buffer.from(
     `${String(createdAtText)}\u0000${nativeId}`,
     "utf8",
   ).toString("base64url");
 }
 
-function decodeCursor(cursor: any) {
+function decodeCursor(cursor: string) {
   const parts = Buffer.from(String(cursor), "base64url")
     .toString("utf8")
     .split("\u0000");
@@ -260,10 +346,10 @@ function decodeCursor(cursor: any) {
 // off by one ULP would make `> cursor` true for the row it points at
 // and repeat the page forever (this shipped once).
 function encodeShuffleCursor(
-  shuffleKey: any,
-  nativeId: any,
-  start: any,
-  wrapped: any,
+  shuffleKey: number | undefined,
+  nativeId: string,
+  start: number | null | undefined,
+  wrapped: boolean | undefined,
 ): string {
   return Buffer.from(
     [
@@ -276,7 +362,7 @@ function encodeShuffleCursor(
   ).toString("base64url");
 }
 
-function decodeShuffleCursor(cursor: any) {
+function decodeShuffleCursor(cursor: string) {
   const parts = Buffer.from(String(cursor), "base64url")
     .toString("utf8")
     .split("\u0000");
@@ -297,8 +383,8 @@ function decodeShuffleCursor(cursor: any) {
   };
 }
 
-function parseStart(value: any): number {
-  const start = parseFloat(value);
+function parseStart(value: string | undefined): number {
+  const start = parseFloat(String(value));
   if (!Number.isFinite(start) || start < 0 || start >= 1) {
     throw Object.assign(
       new Error(`start must be a number in [0,1), got: ${value}`),
@@ -333,7 +419,7 @@ const FACETS = [
 // grows with the catalogue.
 const BROWSE_ARTIST_POOL = 50;
 
-function facetsQuery(): any {
+function facetsQuery(): BuiltQuery {
   const live = LIVE_ITEMS_PREDICATE;
   const group = (label: string, col: string, having?: number, limit?: number) =>
     `(SELECT '${label}' AS facet, ${col}::text AS value, count(*)::int AS n` +
@@ -381,8 +467,8 @@ function facetsQuery(): any {
 const SUGGEST_LIMIT = 8;
 const SUGGEST_MIN_CHARS = 2;
 
-function suggestQuery(params: any): any {
-  const q = String(params.q == null ? "" : params.q).trim();
+function suggestQuery(params: QueryParams): BuiltQuery {
+  const q = (scalar(params.q) ?? "").trim();
   if (q.length < SUGGEST_MIN_CHARS) {
     return { suggest: true, empty: true, text: null, params: [] };
   }
@@ -402,14 +488,14 @@ function suggestQuery(params: any): any {
 // per keystroke, unlike suggestQuery(). Uses pg_trgm's similarity()
 // (fuzzystrmatch's levenshtein() isn't installed on this database);
 // the client still scores candidates with its own findDidYouMean().
-function correctionQuery(params: any): any {
+function correctionQuery(params: QueryParams): BuiltQuery {
   return {
     text:
       "SELECT word, similarity(word, immutable_unaccent(lower($1))) AS score " +
       "  FROM items_vocab_words " +
       " WHERE similarity(word, immutable_unaccent(lower($1))) > 0.3 " +
       " ORDER BY score DESC LIMIT 25",
-    params: [String(params.q || "").trim()],
+    params: [(scalar(params.q) || "").trim()],
     correction: true,
   };
 }
@@ -435,8 +521,8 @@ const VIBE_SEARCH_MAX_LIMIT = 100;
 // whole catalogue, so this ORDER BY is not the kind of per-query dynamic
 // sort this repo's shuffle_key architecture exists to avoid -- it's
 // sorting dozens of rows, not the catalogue.
-function vibeSearchQuery(params: any): any {
-  const raw = String(params.vibe_tags_any || "").trim();
+function vibeSearchQuery(params: QueryParams): BuiltQuery {
+  const raw = (scalar(params.vibe_tags_any) || "").trim();
   const tags = raw
     ? raw
         .split(",")
@@ -451,7 +537,10 @@ function vibeSearchQuery(params: any): any {
   }
   const limit = Math.min(
     VIBE_SEARCH_MAX_LIMIT,
-    Math.max(1, parseInt(params.limit, 10) || VIBE_SEARCH_DEFAULT_LIMIT),
+    Math.max(
+      1,
+      parseInt(scalar(params.limit) ?? "", 10) || VIBE_SEARCH_DEFAULT_LIMIT,
+    ),
   );
   return {
     // No cursor_ts alias -- unlike the paginated shapes below, this never
@@ -468,24 +557,24 @@ function vibeSearchQuery(params: any): any {
   };
 }
 
-function buildQuery(params: any): any {
-  let ids: any, clauses: any, lowered: any, era: any, s: any, c: any;
-  const counting = params.shape === "count";
+function buildQuery(params: QueryParams): BuiltQuery {
+  const shape = scalar(params.shape);
+  const counting = shape === "count";
 
-  if (params.shape === "facets") return facetsQuery();
-  if (params.shape === "suggest") return suggestQuery(params);
-  if (params.shape === "correction") return correctionQuery(params);
-  if (params.shape === "vibe_search") return vibeSearchQuery(params);
+  if (shape === "facets") return facetsQuery();
+  if (shape === "suggest") return suggestQuery(params);
+  if (shape === "correction") return correctionQuery(params);
+  if (shape === "vibe_search") return vibeSearchQuery(params);
 
   const where = [LIVE_ITEMS_PREDICATE];
-  const values: any[] = [];
+  const values: unknown[] = [];
 
   if (params.ids !== undefined) {
     // Repeated params (?ids=a&ids=b), NOT comma-joined -- 41 live
     // Commons items have a comma in their native_id, and splitting on
     // it silently produced blank slides for those items.
-    ids = (Array.isArray(params.ids) ? params.ids : [params.ids])
-      .map((s: any) => String(s).trim())
+    const ids = (Array.isArray(params.ids) ? params.ids : [params.ids])
+      .map((s) => String(s).trim())
       .filter(Boolean);
     if (!ids.length) {
       throw Object.assign(new Error("ids was empty"), { status: 400 });
@@ -506,7 +595,7 @@ function buildQuery(params: any): any {
     };
   }
 
-  function bind(value: any): string {
+  function bind(value: unknown): string {
     values.push(value);
     return `$${values.length}`;
   }
@@ -515,16 +604,16 @@ function buildQuery(params: any): any {
   // lowercased substring test across search_text, OR'd with the
   // century rule from matchesTimeframe(). Verified against
   // tests/fixtures/feed-modes.json's 18 pinned terms.
-  const q = (params.q || "").trim();
+  const q = (scalar(params.q) || "").trim();
   if (q) {
-    clauses = [
+    const clauses = [
       `search_text LIKE '%' || immutable_unaccent(lower(${bind(q)})) || '%'`,
     ];
-    lowered = q.toLowerCase();
+    const lowered = q.toLowerCase();
     if (lowered.indexOf("ancient") !== -1) {
       clauses.push("(century IS NOT NULL AND century <= 10)");
     }
-    era = lowered.match(/(\d{1,2})(?:st|nd|rd|th)\s*century/);
+    const era = lowered.match(/(\d{1,2})(?:st|nd|rd|th)\s*century/);
     if (era) {
       clauses.push(`century = ${bind(parseInt(era[1], 10))}`);
     }
@@ -532,8 +621,8 @@ function buildQuery(params: any): any {
   }
 
   FACETS.forEach((facet: string) => {
-    const value = params[facet];
-    let bound: any;
+    const value = scalar(params[facet]);
+    let bound: string;
     if (value === undefined || value === "") return;
     if (facet === "region_primary") {
       // Matches alternates too (GIN index, sql/006_items_region_alt.sql)
@@ -557,11 +646,12 @@ function buildQuery(params: any): any {
     where.push(`${facet} = ${bind(value)}`);
   });
 
-  if (params.artist) {
-    where.push(`artist = ${bind(params.artist)}`);
+  const artist = scalar(params.artist);
+  if (artist) {
+    where.push(`artist = ${bind(artist)}`);
   }
 
-  if (params.has_storyline === "1") {
+  if (scalar(params.has_storyline) === "1") {
     where.push(
       "storyline_ids IS NOT NULL AND array_length(storyline_ids, 1) > 0",
     );
@@ -569,22 +659,23 @@ function buildQuery(params: any): any {
 
   let paginated = params.limit !== undefined || params.cursor !== undefined;
   const limit = Math.min(
-    parseInt(params.limit, 10) || DEFAULT_LIMIT,
+    parseInt(scalar(params.limit) ?? "", 10) || DEFAULT_LIMIT,
     MAX_LIMIT,
   );
+  const cursor = scalar(params.cursor);
 
   // Ignores cursor/limit: the manifest must be the complete live set
   // for declusterOrder()'s global ordering to be meaningful.
-  const manifest = params.shape === "manifest";
+  const manifest = shape === "manifest";
 
   // Unless the order itself is global via the precomputed shuffle_key,
   // in which case a page of it is still meaningful.
-  const shuffled = params.order === "shuffle";
+  const shuffled = scalar(params.order) === "shuffle";
   if (shuffled) {
     paginated = true;
   } else if (manifest) {
     paginated = false;
-    if (params.cursor) {
+    if (cursor) {
       throw Object.assign(
         new Error("cursor is not valid with shape=manifest"),
         { status: 400 },
@@ -592,15 +683,15 @@ function buildQuery(params: any): any {
     }
   }
 
-  let start = null;
+  let start: number | null = null;
   let wrapped = false;
 
   if (shuffled) {
     // Phase 1 runs from the session's start offset to the top of the
     // key space; phase 2 wraps to the bottom and stops at that same
     // offset, so each live item is seen exactly once.
-    if (params.cursor) {
-      s = decodeShuffleCursor(params.cursor);
+    if (cursor) {
+      const s = decodeShuffleCursor(cursor);
       start = s.start;
       wrapped = s.wrapped;
       where.push(
@@ -609,7 +700,7 @@ function buildQuery(params: any): any {
         )})`,
       );
     } else {
-      start = parseStart(params.start);
+      start = parseStart(scalar(params.start));
       where.push(
         `(shuffle_key, native_id) > (${bind(start)}::float8, ${bind("")})`,
       );
@@ -617,8 +708,8 @@ function buildQuery(params: any): any {
     if (wrapped) {
       where.push(`shuffle_key < ${bind(start)}::float8`);
     }
-  } else if (!manifest && params.cursor) {
-    c = decodeCursor(params.cursor);
+  } else if (!manifest && cursor) {
+    const c = decodeCursor(cursor);
     where.push(
       `(created_at, native_id) > (${bind(c.createdAt)}::timestamptz, ${bind(
         c.nativeId,
@@ -674,22 +765,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   const client = getSql();
-  let index: any,
-    storyline: any,
-    setOfWorksIndex: any,
-    setOfWork: any,
-    shelves: any,
-    buckets: any,
-    heroes: any,
-    query: any,
-    rows: any,
-    POOL_NAMES: Record<string, string>,
-    out: { categories: any[]; sources: any[]; [key: string]: any },
-    lastRow: any,
-    nextCursor: any,
-    items: any,
-    found: Record<string, boolean>,
-    last: any;
   if (!client) {
     console.error("items: missing DATABASE_URL env var");
     res.statusCode = 500;
@@ -697,7 +772,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  const params = req.query || {};
+  const params: QueryParams = req.query || {};
+  const shape = scalar(params.shape);
 
   // ?locale= asks for translated content; absent means source text only.
   let locale: string | null;
@@ -712,9 +788,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Storylines/set-of-works: different tables, dispatched before
   // buildQuery(). Each has an eager index shape (small, always fetched)
   // and a lazy detail shape (fetched only when opened).
-  if (params.shape === "storylines") {
+  if (shape === "storylines") {
     try {
-      index = await getStorylineIndex(client);
+      const index = await getStorylineIndex(client);
       res.setHeader("Cache-Control", "public, max-age=60, s-maxage=300");
       res.json(index);
     } catch (err) {
@@ -725,12 +801,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
     return;
   }
-  if (params.shape === "storyline") {
+  if (shape === "storyline") {
     try {
-      storyline = await getStoryline(
-        client,
-        params.id == null ? params.id : String(params.id),
-      );
+      const storyline = await getStoryline(client, scalar(params.id));
       if (!storyline) {
         res.statusCode = 404;
         res.json({ error: "No such storyline" });
@@ -748,9 +821,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  if (params.shape === "set_of_works") {
+  if (shape === "set_of_works") {
     try {
-      setOfWorksIndex = await getSetOfWorksIndex(client);
+      const setOfWorksIndex = await getSetOfWorksIndex(client);
       res.setHeader("Cache-Control", "public, max-age=60, s-maxage=300");
       res.json(setOfWorksIndex);
     } catch (err) {
@@ -761,12 +834,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
     return;
   }
-  if (params.shape === "set_of_work") {
+  if (shape === "set_of_work") {
     try {
-      setOfWork = await getSetOfWork(
-        client,
-        params.id == null ? params.id : String(params.id),
-      );
+      const setOfWork = await getSetOfWork(client, scalar(params.id));
       if (!setOfWork) {
         res.statusCode = 404;
         res.json({ error: "No such set of works" });
@@ -785,9 +855,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   // Shelves/music/heroes: small, fixed-size collections fetched once
   // at feed-init time (see app.ts's init Promise.all()).
-  if (params.shape === "shelves") {
+  if (shape === "shelves") {
     try {
-      shelves = await getShelves(client);
+      const shelves = await getShelves(client);
       if (locale) await translateShelves(client, shelves, locale);
       res.setHeader("Cache-Control", "public, max-age=60, s-maxage=300");
       res.json(shelves);
@@ -799,9 +869,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
     return;
   }
-  if (params.shape === "music") {
+  if (shape === "music") {
     try {
-      buckets = await getMusicBuckets(client);
+      const buckets = await getMusicBuckets(client);
       res.setHeader("Cache-Control", "public, max-age=60, s-maxage=300");
       res.json(buckets);
     } catch (err) {
@@ -812,9 +882,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
     return;
   }
-  if (params.shape === "heroes") {
+  if (shape === "heroes") {
     try {
-      heroes = await getHeroPool(client);
+      const heroes = await getHeroPool(client);
       res.setHeader("Cache-Control", "public, max-age=60, s-maxage=300");
       res.json(heroes);
     } catch (err) {
@@ -827,15 +897,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    query = buildQuery(params);
+    const query = buildQuery(params);
 
-    if (query.empty) {
+    if (query.empty || query.text === null) {
       res.setHeader("Cache-Control", "public, max-age=60, s-maxage=300");
       res.json({ suggestions: [] });
       return;
     }
 
-    rows = await client.query(query.text, query.params);
+    const rows = await client.query(query.text, query.params);
 
     res.setHeader("Cache-Control", "public, max-age=60, s-maxage=300");
     res.statusCode = 200;
@@ -846,23 +916,29 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     if (query.facets) {
-      POOL_NAMES = { category: "categories", source: "sources" };
-      out = { categories: [], sources: [] };
-      rows.forEach((row: any) => {
+      const POOL_NAMES: Record<string, string> = {
+        category: "categories",
+        source: "sources",
+      };
+      const pools: Record<string, { value: string; count: number }[]> = {
+        categories: [],
+        sources: [],
+      };
+      (rows as FacetRow[]).forEach((row) => {
         const key = POOL_NAMES[row.facet] || row.facet;
-        if (!out[key]) out[key] = [];
-        out[key].push({ value: row.value, count: row.n });
+        if (!pools[key]) pools[key] = [];
+        pools[key].push({ value: row.value, count: row.n });
       });
       // Summed over categories (partition the catalogue exactly once);
       // summing anything with alternates (e.g. region) would over-count.
-      out.total = out.categories.reduce((a: number, c: any) => a + c.count, 0);
-      res.json(out);
+      const total = pools.categories.reduce((a, c) => a + c.count, 0);
+      res.json({ ...pools, total });
       return;
     }
 
     if (query.suggest) {
       res.json({
-        suggestions: rows.map((row: any) => ({
+        suggestions: (rows as SuggestRow[]).map((row) => ({
           value: row.value,
           type: row.type,
           itemCount: row.item_count,
@@ -872,15 +948,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     if (query.correction) {
-      res.json({ candidates: rows.map((row: any) => row.word) });
+      res.json({ candidates: rows.map((row) => row.word as string) });
       return;
     }
+
+    const itemRows = rows as ItemRow[];
 
     // A shuffle-ordered manifest is a page, so it gets the paged
     // envelope rather than a bare array.
     if (query.manifest && query.shuffled) {
-      lastRow = rows[rows.length - 1];
-      if (rows.length === query.limit && lastRow) {
+      const lastRow = itemRows[itemRows.length - 1];
+      let nextCursor: string | null;
+      if (itemRows.length === query.limit && lastRow) {
         nextCursor = encodeShuffleCursor(
           lastRow.shuffle_key,
           lastRow.native_id,
@@ -892,8 +971,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       } else {
         nextCursor = null;
       }
-      items = rows.map(serializeManifestRow);
-      if (locale) await translateItems(client, rows, items, locale);
+      const items = itemRows.map(serializeManifestRow);
+      if (locale) await translateItems(client, itemRows, items, locale);
       res.json({
         items: items,
         next_cursor: nextCursor,
@@ -902,14 +981,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     if (query.manifest) {
-      items = rows.map(serializeManifestRow);
-      if (locale) await translateItems(client, rows, items, locale);
+      const items = itemRows.map(serializeManifestRow);
+      if (locale) await translateItems(client, itemRows, items, locale);
       res.json(items);
       return;
     }
 
-    items = rows.map(serializeRow);
-    if (locale) await translateItems(client, rows, items, locale);
+    const items = itemRows.map(serializeRow);
+    if (locale) await translateItems(client, itemRows, items, locale);
 
     // Bounded and ranked, not paginated -- no cursor, same shape as the
     // My Collection / storyline-chapter / set-of-works lookups, which are
@@ -924,13 +1003,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // a caller can fail loudly instead of silently degrading (a short
     // CSV export, a blank storyline chapter slide).
     if (query.lookup) {
-      found = {};
-      rows.forEach((row: any) => {
+      const found: Record<string, boolean> = {};
+      itemRows.forEach((row) => {
         found[row.native_id] = true;
       });
       res.json({
         items: items,
-        missing: query.requestedIds.filter((id: string) => !found[id]),
+        missing: (query.requestedIds ?? []).filter((id) => !found[id]),
       });
       return;
     }
@@ -948,19 +1027,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         { status: 400 },
       );
     }
-    last = rows[rows.length - 1];
+    const last = itemRows[itemRows.length - 1];
     res.json({
       items: items,
       next_cursor:
-        rows.length === query.limit && last
+        itemRows.length === query.limit && last
           ? encodeCursor(last.cursor_ts, last.native_id)
           : null,
     });
   } catch (err) {
     // 400s are the caller's mistake -- reported to the client, not Sentry.
-    if (err && (err as any).status === 400) {
+    if (err && (err as { status?: number }).status === 400) {
       res.statusCode = 400;
-      res.json({ error: (err as any).message });
+      res.json({ error: (err as Error).message });
       return;
     }
     console.error("items: query failed", err);

@@ -58,7 +58,8 @@ describe("?shape=vibe_search", () => {
       shape: "vibe_search",
       vibe_tags_any: "Serene",
     });
-    const order = q.text.slice(q.text.indexOf("ORDER BY"));
+    const text = q.text ?? "";
+    const order = text.slice(text.indexOf("ORDER BY"));
     expect(order.indexOf("curator_boost")).toBeLessThan(
       order.indexOf("palette_contrast_score"),
     );
