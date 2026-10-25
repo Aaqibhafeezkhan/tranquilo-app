@@ -477,18 +477,46 @@ function wirePrint(
   const btn = container.querySelector<HTMLButtonElement>(".btn-print");
   const panel = container.querySelector<HTMLElement>(".print-panel");
   if (!btn || !panel) return;
+  const orientation =
+    (item.master_width ?? 0) > (item.master_height ?? 0) ? "hor" : "ver";
+  const mockup = (p: string) =>
+    `<div class="mockup mockup-${p}" data-orientation="${orientation}">` +
+    `<div class="mockup-surface"><img src="${escapeHtml(item.img)}" alt="" loading="lazy" decoding="async"></div></div>`;
   host.printOptionsFor(item).then((products) => {
     if (!products.length) return;
     panel.innerHTML =
       products
-        .map(
-          (p) =>
+        .map((p) => {
+          const name = t(`print.product.${p}` as MessageKey);
+          return (
             `<div class="print-option" data-product="${p}">` +
-            `<span class="print-name">${escapeHtml(t(`print.product.${p}` as MessageKey))}</span>` +
-            `<span class="print-size">${escapeHtml(t(`print.size.${p}` as MessageKey))}</span></div>`,
-        )
+            `<button class="print-thumb" type="button" aria-expanded="false" aria-label="${escapeHtml(t("detail.print.showMockup", { product: name }))}">${mockup(p)}</button>` +
+            `<span class="print-name">${escapeHtml(name)}</span>` +
+            `<span class="print-size">${escapeHtml(t(`print.size.${p}` as MessageKey))}</span>` +
+            `<div class="print-mockup-large" hidden>${mockup(p)}` +
+            `<p class="print-mockup-note">${escapeHtml(t("detail.print.mockupNote"))}</p></div></div>`
+          );
+        })
         .join("") +
       `<p class="print-soon">${escapeHtml(t("detail.print.soon"))}</p>`;
+    const rows = [...panel.querySelectorAll<HTMLElement>(".print-option")];
+    for (const row of rows) {
+      const thumb = row.querySelector<HTMLButtonElement>(".print-thumb");
+      const large = row.querySelector<HTMLElement>(".print-mockup-large");
+      if (!thumb || !large) continue;
+      on(thumb, () => {
+        const opening = large.hidden;
+        for (const other of rows) {
+          other.querySelector<HTMLElement>(".print-mockup-large")!.hidden =
+            true;
+          other
+            .querySelector(".print-thumb")!
+            .setAttribute("aria-expanded", "false");
+        }
+        large.hidden = !opening;
+        thumb.setAttribute("aria-expanded", String(opening));
+      });
+    }
     btn.hidden = false;
   });
   on(btn, () => {

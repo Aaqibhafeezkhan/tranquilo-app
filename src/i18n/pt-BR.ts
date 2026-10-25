@@ -87,6 +87,8 @@ export const ptBR: Dictionary = {
   "detail.cite.failed": "Não foi possível copiar",
   "detail.print.button": "Comprar impressão",
   "detail.print.soon": "A compra abre em breve.",
+  "detail.print.showMockup": "Ver a prévia: {product}",
+  "detail.print.mockupNote": "Uma prévia. As cores e bordas impressas podem variar um pouco.",
   "print.product.mini_print": "Mini impressão",
   "print.product.poster": "Pôster",
   "print.product.framed": "Pôster emoldurado",

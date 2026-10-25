@@ -10,14 +10,17 @@ async function openDetail(
     master,
     region,
     search = "?print=preview",
+    extra = {},
   }: {
     master: [number, number] | null;
     region: string | null;
     search?: string;
+    extra?: Record<string, unknown>;
   },
 ) {
   const item = {
     ...BASE,
+    ...extra,
     master_width: master?.[0] ?? null,
     master_height: master?.[1] ?? null,
   };
@@ -102,4 +105,76 @@ test("is not offered when the image's full size is unknown", async ({
   await openDetail(page, { master: null, region: "us_ca" });
   await expect(page.locator("#detailModal .detail-actions")).toBeVisible();
   await expect(page.locator("#detailModal .btn-print")).toBeHidden();
+});
+
+test("each product shows a thumbnail mock-up of the artwork", async ({
+  page,
+}) => {
+  await openDetail(page, { master: [3192, 4000], region: "us_ca" });
+  await page.locator("#detailModal .btn-print").click();
+  const rows = page.locator("#detailModal .print-panel [data-product]");
+  await expect(rows).toHaveCount(4);
+  for (let n = 0; n < 4; n++) {
+    const thumb = rows.nth(n).locator(".print-thumb");
+    await expect(thumb).toBeVisible();
+    await expect(thumb).toHaveAttribute("aria-expanded", "false");
+    await expect(thumb.locator("img")).toHaveAttribute("src", /.+/);
+  }
+});
+
+test("a thumbnail opens a larger mock-up, one at a time", async ({ page }) => {
+  await openDetail(page, { master: [3192, 4000], region: "us_ca" });
+  await page.locator("#detailModal .btn-print").click();
+  const poster = page.locator('#detailModal [data-product="poster"]');
+  const tote = page.locator('#detailModal [data-product="tote"]');
+
+  await expect(poster.locator(".print-mockup-large")).toBeHidden();
+  await poster.locator(".print-thumb").click();
+  await expect(poster.locator(".print-mockup-large")).toBeVisible();
+  await expect(poster.locator(".print-thumb")).toHaveAttribute(
+    "aria-expanded",
+    "true",
+  );
+  const thumbSrc = await poster.locator(".print-thumb img").getAttribute("src");
+  await expect(poster.locator(".print-mockup-large img")).toHaveAttribute(
+    "src",
+    thumbSrc!,
+  );
+
+  await tote.locator(".print-thumb").click();
+  await expect(tote.locator(".print-mockup-large")).toBeVisible();
+  await expect(poster.locator(".print-mockup-large")).toBeHidden();
+  await expect(poster.locator(".print-thumb")).toHaveAttribute(
+    "aria-expanded",
+    "false",
+  );
+
+  await tote.locator(".print-thumb").click();
+  await expect(tote.locator(".print-mockup-large")).toBeHidden();
+});
+
+test("the mock-up follows the artwork's orientation", async ({ page }) => {
+  await openDetail(page, { master: [4000, 3000], region: "us_ca" });
+  await page.locator("#detailModal .btn-print").click();
+  await expect(
+    page.locator('#detailModal [data-product="poster"] .mockup').first(),
+  ).toHaveAttribute("data-orientation", "hor");
+});
+
+test("mock-ups stay blurred while the artwork is behind the nudity gate", async ({
+  page,
+}) => {
+  await openDetail(page, {
+    master: [3192, 4000],
+    region: "us_ca",
+    extra: { category: "Photography", contains_nudity: true },
+  });
+  await page.locator("#detailModal .btn-print").click();
+  const thumbImg = page.locator(
+    '#detailModal [data-product="poster"] .print-thumb img',
+  );
+  const filter = () => thumbImg.evaluate((el) => getComputedStyle(el).filter);
+  expect(await filter()).toMatch(/blur/);
+  await page.locator("#detailModal .d-frame .nudity-gate-overlay").click();
+  await expect.poll(filter).toBe("none");
 });
