@@ -1,0 +1,6492 @@
+{
+  "applied_at": "2026-10-25T17:55:15.677Z",
+  "source": "Getty ULAN ulan_rel_0126 (ODC-BY 1.0)",
+  "rows": [
+    {
+      "source": "europeana",
+      "native_id": "/1416/_8E9161D57F494CD48ED52DE04428D851",
+      "from": "Gallen-Kallela, Akseli",
+      "to": "Akseli Gallen-Kallela"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/1416/_C673509CAE0F401B92D371EB0AE85E7D",
+      "from": "Gallen-Kallela, Akseli",
+      "to": "Akseli Gallen-Kallela"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/1416/_52F9AB42257A437388C3FDF761C5F129",
+      "from": "Gallen-Kallela, Akseli",
+      "to": "Akseli Gallen-Kallela"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/1416/_164FFA37CFD04CCAA6E1C38AAEFDC963",
+      "from": "Gallen-Kallela, Akseli",
+      "to": "Akseli Gallen-Kallela"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_A9A2F82F62FDE796FCF0CC9C87100AD9",
+      "from": "Gallen-Kallela, Akseli",
+      "to": "Akseli Gallen-Kallela"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_8704BD3D9FD6574494048E536AE64CC7",
+      "from": "Gallen-Kallela, Akseli",
+      "to": "Akseli Gallen-Kallela"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/1416/_756C7515838349CDB7EE867B49AE311A",
+      "from": "Gallen-Kallela, Akseli",
+      "to": "Akseli Gallen-Kallela"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/1416/_1075FF36F891453087AE0D9F2EBE2B51",
+      "from": "Gallen-Kallela, Akseli",
+      "to": "Akseli Gallen-Kallela"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/1416/_378785FB4D4A419D85D78FF0AEF74EAD",
+      "from": "Gallen-Kallela, Akseli",
+      "to": "Akseli Gallen-Kallela"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/1416/_73CBFAF1D0B949C1B05556A3116A4727",
+      "from": "Gallen-Kallela, Akseli",
+      "to": "Akseli Gallen-Kallela"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/1416/_08A56F18AE8B49B3AF8AE5296DE8A5AE",
+      "from": "Gallen-Kallela, Akseli",
+      "to": "Akseli Gallen-Kallela"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_3FA889A7EC86ED60CE6877AF87BC5035",
+      "from": "Gallen-Kallela, Akseli",
+      "to": "Akseli Gallen-Kallela"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/1416/_28153ABC84744E5EB8E5C24873DDDBFB",
+      "from": "Gallen-Kallela, Akseli",
+      "to": "Akseli Gallen-Kallela"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/1416/_5360BEFA9C3B402D84ED7EF346E65C37",
+      "from": "Gallen-Kallela, Akseli",
+      "to": "Akseli Gallen-Kallela"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/1416/_4D58EBDC4CBE4B44A51EB143A47D820A",
+      "from": "Gallen-Kallela, Akseli",
+      "to": "Akseli Gallen-Kallela"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_A4FA51A2558F52890C43F2812E38C9EC",
+      "from": "Gallen-Kallela, Akseli",
+      "to": "Akseli Gallen-Kallela"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/1416/_194A96B8E5884B798AA0EF84F83B06A4",
+      "from": "Gallen-Kallela, Akseli",
+      "to": "Akseli Gallen-Kallela"
+    },
+    {
+      "source": "met",
+      "native_id": "339332",
+      "from": "Picart, Bernard",
+      "to": "Bernard Picart"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/RP_P_OB_51_789",
+      "from": "Picart, Bernard",
+      "to": "Bernard Picart"
+    },
+    {
+      "source": "met",
+      "native_id": "339330",
+      "from": "Picart, Bernard",
+      "to": "Bernard Picart"
+    },
+    {
+      "source": "met",
+      "native_id": "339333",
+      "from": "Picart, Bernard",
+      "to": "Bernard Picart"
+    },
+    {
+      "source": "met",
+      "native_id": "817129",
+      "from": "Picart, Bernard",
+      "to": "Bernard Picart"
+    },
+    {
+      "source": "met",
+      "native_id": "339335",
+      "from": "Picart, Bernard",
+      "to": "Bernard Picart"
+    },
+    {
+      "source": "nga",
+      "native_id": "73505",
+      "from": "Picart, Bernard",
+      "to": "Bernard Picart"
+    },
+    {
+      "source": "nga",
+      "native_id": "143843",
+      "from": "Picart, Bernard",
+      "to": "Bernard Picart"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "145216",
+      "from": "Picart, Bernard",
+      "to": "Bernard Picart"
+    },
+    {
+      "source": "met",
+      "native_id": "339331",
+      "from": "Picart, Bernard",
+      "to": "Bernard Picart"
+    },
+    {
+      "source": "nga",
+      "native_id": "204084",
+      "from": "Picart, Bernard",
+      "to": "Bernard Picart"
+    },
+    {
+      "source": "nga",
+      "native_id": "53106",
+      "from": "Picart, Bernard",
+      "to": "Bernard Picart"
+    },
+    {
+      "source": "met",
+      "native_id": "339334",
+      "from": "Picart, Bernard",
+      "to": "Bernard Picart"
+    },
+    {
+      "source": "nga",
+      "native_id": "37689",
+      "from": "Picart, Bernard",
+      "to": "Bernard Picart"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/RP_P_OB_51_157",
+      "from": "Picart, Bernard",
+      "to": "Bernard Picart"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "166640",
+      "from": "Picart, Bernard",
+      "to": "Bernard Picart"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_0DEEEAAB0236C556E42F8225A723DE0A",
+      "from": "Edelfelt, Albert",
+      "to": "Albert Edelfelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_316E401FE353BCCF434BF05447D8ACBE",
+      "from": "Edelfelt, Albert",
+      "to": "Albert Edelfelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_74F974DC0E63044B05EED0F292D9190C",
+      "from": "Edelfelt, Albert",
+      "to": "Albert Edelfelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_FA91833872F21366D9322EB72AD34D08",
+      "from": "Edelfelt, Albert",
+      "to": "Albert Edelfelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_29C4B714CB4F551E77BA8D1338FC0EC5",
+      "from": "Edelfelt, Albert",
+      "to": "Albert Edelfelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_865CEF6155AB8D6D06F6A9B2E233854A",
+      "from": "Edelfelt, Albert",
+      "to": "Albert Edelfelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_4727BABA942630B48D90A8375B555282",
+      "from": "Edelfelt, Albert",
+      "to": "Albert Edelfelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_1330C79712D55C67663C0E18B145BA0E",
+      "from": "Edelfelt, Albert",
+      "to": "Albert Edelfelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_43FAE8711EC538279B7DB0C9401758D4",
+      "from": "Edelfelt, Albert",
+      "to": "Albert Edelfelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_72AB5A4E8725267B23E321039680CDE5",
+      "from": "Edelfelt, Albert",
+      "to": "Albert Edelfelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_1368460390A6D3E63F9DE5033A547123",
+      "from": "Edelfelt, Albert",
+      "to": "Albert Edelfelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_2F4D462DA7F92F1E4A67E8BFF73C6684",
+      "from": "Edelfelt, Albert",
+      "to": "Albert Edelfelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_0ABC005C738F2E665B91693D7CB9A1A2",
+      "from": "Edelfelt, Albert",
+      "to": "Albert Edelfelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_09B2A7051E2CDC3384BA2A3A4A5C638F",
+      "from": "Edelfelt, Albert",
+      "to": "Albert Edelfelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_971279A5387E9B65DEA77ACC0C7CC31A",
+      "from": "Edelfelt, Albert",
+      "to": "Albert Edelfelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_7E474ABEB64BD7C2730D52A2C6AA3973",
+      "from": "Edelfelt, Albert",
+      "to": "Albert Edelfelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/K_11157",
+      "from": "Mednyánszky, Ladislav",
+      "to": "Ladislav Mednyánszky"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_4928",
+      "from": "Mednyánszky, Ladislav",
+      "to": "Ladislav Mednyánszky"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_4991",
+      "from": "Mednyánszky, Ladislav",
+      "to": "Ladislav Mednyánszky"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_4935",
+      "from": "Mednyánszky, Ladislav",
+      "to": "Ladislav Mednyánszky"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_2456",
+      "from": "Mednyánszky, Ladislav",
+      "to": "Ladislav Mednyánszky"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_5021_a",
+      "from": "Mednyánszky, Ladislav",
+      "to": "Ladislav Mednyánszky"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_2901",
+      "from": "Mednyánszky, Ladislav",
+      "to": "Ladislav Mednyánszky"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_1660",
+      "from": "Mednyánszky, Ladislav",
+      "to": "Ladislav Mednyánszky"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_2457",
+      "from": "Mednyánszky, Ladislav",
+      "to": "Ladislav Mednyánszky"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_4138",
+      "from": "Mednyánszky, Ladislav",
+      "to": "Ladislav Mednyánszky"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_2535",
+      "from": "Mednyánszky, Ladislav",
+      "to": "Ladislav Mednyánszky"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_3096",
+      "from": "Mednyánszky, Ladislav",
+      "to": "Ladislav Mednyánszky"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_2704",
+      "from": "Mednyánszky, Ladislav",
+      "to": "Ladislav Mednyánszky"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_2902",
+      "from": "Mednyánszky, Ladislav",
+      "to": "Ladislav Mednyánszky"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_81",
+      "from": "Mednyánszky, Ladislav",
+      "to": "Ladislav Mednyánszky"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/BK_C_2007_1_A",
+      "from": "Wit, Jacob de",
+      "to": "Jacob de Wit"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3900",
+      "from": "Wit, Jacob de",
+      "to": "Jacob de Wit"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "540586",
+      "from": "Wit, Jacob de",
+      "to": "Jacob de Wit"
+    },
+    {
+      "source": "met",
+      "native_id": "335882",
+      "from": "Wit, Jacob de",
+      "to": "Jacob de Wit"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_1577",
+      "from": "Wit, Jacob de",
+      "to": "Jacob de Wit"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4100",
+      "from": "Wit, Jacob de",
+      "to": "Jacob de Wit"
+    },
+    {
+      "source": "nga",
+      "native_id": "63054",
+      "from": "Wit, Jacob de",
+      "to": "Jacob de Wit"
+    },
+    {
+      "source": "nga",
+      "native_id": "73469",
+      "from": "Wit, Jacob de",
+      "to": "Jacob de Wit"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4659",
+      "from": "Wit, Jacob de",
+      "to": "Jacob de Wit"
+    },
+    {
+      "source": "nga",
+      "native_id": "143721",
+      "from": "Wit, Jacob de",
+      "to": "Jacob de Wit"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_07FDF10A54E38A769B4B6178E110AA85",
+      "from": "Järnefelt, Eero",
+      "to": "Eero Järnefelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_336076B98E08DDEF7778F60807E17FEB",
+      "from": "Järnefelt, Eero",
+      "to": "Eero Järnefelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_190A7926352E2FC0EFD2B9F4D251AF3C",
+      "from": "Järnefelt, Eero",
+      "to": "Eero Järnefelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_435EC3DE8EAA11DF731D27A5CF19D680",
+      "from": "Järnefelt, Eero",
+      "to": "Eero Järnefelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/862/_170896140928300",
+      "from": "Järnefelt, Eero",
+      "to": "Eero Järnefelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_965FCC7BD6B0F8A897A870B41DC65E3D",
+      "from": "Järnefelt, Eero",
+      "to": "Eero Järnefelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_0257026CDB3AA24CFB0B1F4892C900F1",
+      "from": "Järnefelt, Eero",
+      "to": "Eero Järnefelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/862/_170896148181400",
+      "from": "Järnefelt, Eero",
+      "to": "Eero Järnefelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/862/_170896151048000",
+      "from": "Järnefelt, Eero",
+      "to": "Eero Järnefelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_12FBF704A5EAAD4FD03178BBED81BEDB",
+      "from": "Järnefelt, Eero",
+      "to": "Eero Järnefelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_B0DCBD6C837706A2E2D2334D274EDB54",
+      "from": "Järnefelt, Eero",
+      "to": "Eero Järnefelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/862/_170896142181000",
+      "from": "Järnefelt, Eero",
+      "to": "Eero Järnefelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_142017F1B2A38E9DF088470CA006015B",
+      "from": "Järnefelt, Eero",
+      "to": "Eero Järnefelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_66C40074AF71BE6B33AE9130559DB965",
+      "from": "Wiik, Maria",
+      "to": "Maria Wiik"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/117/_93A29DA5_1BD1_466D_90E3_4BEFA87994ED",
+      "from": "Wiik, Maria",
+      "to": "Maria Wiik"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_A45F88893D88A4EFFA1D9472F58FEC2E",
+      "from": "Wiik, Maria",
+      "to": "Maria Wiik"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_EA2FD83A1DE7F47E9066A6EAC86A0148",
+      "from": "Wiik, Maria",
+      "to": "Maria Wiik"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_53FF69929384A0FED7A1047329F52CB7",
+      "from": "Wiik, Maria",
+      "to": "Maria Wiik"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_9CD8CA0B53F77B6C5F1F0CE83B22316D",
+      "from": "Wiik, Maria",
+      "to": "Maria Wiik"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_10A5902083ED5641C43E029B61979E0B",
+      "from": "Wiik, Maria",
+      "to": "Maria Wiik"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_448E4CEB8A296331FFCA08752B597906",
+      "from": "Wiik, Maria",
+      "to": "Maria Wiik"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_0DF8B8AE82BF224BAFE949683B331B4B",
+      "from": "Wiik, Maria",
+      "to": "Maria Wiik"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_74B26D0C5399C4E16127762C30160F95",
+      "from": "Wiik, Maria",
+      "to": "Maria Wiik"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_55CEDA4CE41F8ED6E6C1D05CF175B01B",
+      "from": "Wiik, Maria",
+      "to": "Maria Wiik"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_0D6AFE79A77DEB0360643AD8E8335495",
+      "from": "Wiik, Maria",
+      "to": "Maria Wiik"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_BB17784594101A2EE875A10F23714215",
+      "from": "Wiik, Maria",
+      "to": "Maria Wiik"
+    },
+    {
+      "source": "met",
+      "native_id": "335058",
+      "from": "Bakhuysen, Ludolf",
+      "to": "Ludolf Bakhuysen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1465",
+      "from": "Bakhuysen, Ludolf",
+      "to": "Ludolf Bakhuysen"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "106833",
+      "from": "Bakhuysen, Ludolf",
+      "to": "Ludolf Bakhuysen"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "106837",
+      "from": "Bakhuysen, Ludolf",
+      "to": "Ludolf Bakhuysen"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "106835",
+      "from": "Bakhuysen, Ludolf",
+      "to": "Ludolf Bakhuysen"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "106832",
+      "from": "Bakhuysen, Ludolf",
+      "to": "Ludolf Bakhuysen"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "106839",
+      "from": "Bakhuysen, Ludolf",
+      "to": "Ludolf Bakhuysen"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "106836",
+      "from": "Bakhuysen, Ludolf",
+      "to": "Ludolf Bakhuysen"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "106831",
+      "from": "Bakhuysen, Ludolf",
+      "to": "Ludolf Bakhuysen"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "106838",
+      "from": "Bakhuysen, Ludolf",
+      "to": "Ludolf Bakhuysen"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "106829",
+      "from": "Bakhuysen, Ludolf",
+      "to": "Ludolf Bakhuysen"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "106830",
+      "from": "Bakhuysen, Ludolf",
+      "to": "Ludolf Bakhuysen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_017EDE8332CB7AAFA4C39D7180D6F40A",
+      "from": "Ekman, Robert Wilhelm",
+      "to": "Robert Wilhelm Ekman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_AA056287E051B1EC5F5D1289FDE521D8",
+      "from": "Ekman, Robert Wilhelm",
+      "to": "Robert Wilhelm Ekman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_D4C6F048E0D9B6075DA120A25CFABA5B",
+      "from": "Ekman, Robert Wilhelm",
+      "to": "Robert Wilhelm Ekman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_1B0D13E189C6984592A164D6E5F56A19",
+      "from": "Ekman, Robert Wilhelm",
+      "to": "Robert Wilhelm Ekman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_57B585E173B560A40437E0BFBA7878A8",
+      "from": "Ekman, Robert Wilhelm",
+      "to": "Robert Wilhelm Ekman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/117/_E50DB06F_7763_468D_92EF_E06820ABB7B3",
+      "from": "Ekman, Robert Wilhelm",
+      "to": "Robert Wilhelm Ekman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_A7B8AE09811DD678EF8C45B235CF763D",
+      "from": "Ekman, Robert Wilhelm",
+      "to": "Robert Wilhelm Ekman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_166F9B4F0E84340692BDBC7978D572EE",
+      "from": "Ekman, Robert Wilhelm",
+      "to": "Robert Wilhelm Ekman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_676FE3A57B8F80C176920406B64D9C2B",
+      "from": "Ekman, Robert Wilhelm",
+      "to": "Robert Wilhelm Ekman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_1F9FB7DFBD8F1C31524C16FE5097E0FD",
+      "from": "Ekman, Robert Wilhelm",
+      "to": "Robert Wilhelm Ekman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_AEC33BD91EE766049B95A05CD07C48F7",
+      "from": "Ekman, Robert Wilhelm",
+      "to": "Robert Wilhelm Ekman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_BA40A4B6B68C5CDCD4AA3BB7A1ED174A",
+      "from": "Ekman, Robert Wilhelm",
+      "to": "Robert Wilhelm Ekman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_EBA2BA3F4CD0E0BD2A21F47C540F6EC4",
+      "from": "Wright, Ferdinand von",
+      "to": "Ferdinand von Wright"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_39CDC3C13B4A916112E6B92CFD86C5C2",
+      "from": "Wright, Ferdinand von",
+      "to": "Ferdinand von Wright"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_2F6F10ACCACA364B662AB35BA07C3428",
+      "from": "Wright, Ferdinand von",
+      "to": "Ferdinand von Wright"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_668BD84C41878BC75491484CD5164708",
+      "from": "Wright, Ferdinand von",
+      "to": "Ferdinand von Wright"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_12EC77C8289AD11A722CF77C91F0B966",
+      "from": "Wright, Ferdinand von",
+      "to": "Ferdinand von Wright"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021009/_9E10BE3D3F24F5135666DCC5162F5064",
+      "from": "Wright, Ferdinand von",
+      "to": "Ferdinand von Wright"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_668E2A21D0197AF1BC2A0ABD5E8CE151",
+      "from": "Wright, Ferdinand von",
+      "to": "Ferdinand von Wright"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_43BB30A0DA9FCE1C023A7241D8EADB42",
+      "from": "Wright, Ferdinand von",
+      "to": "Ferdinand von Wright"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_5B980EC22A4465F8C6DBA8E6FFEAF575",
+      "from": "Wright, Ferdinand von",
+      "to": "Ferdinand von Wright"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_22008",
+      "from": "Wright, Ferdinand von",
+      "to": "Ferdinand von Wright"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_54DB4608E7E0397DD2914A084EB5AA9B",
+      "from": "Wright, Ferdinand von",
+      "to": "Ferdinand von Wright"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_254",
+      "from": "Mierevelt, Michiel Jansz van",
+      "to": "Michiel Jansz van Mierevelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3953",
+      "from": "Mierevelt, Michiel Jansz van",
+      "to": "Michiel Jansz van Mierevelt"
+    },
+    {
+      "source": "met",
+      "native_id": "437086",
+      "from": "Mierevelt, Michiel Jansz van",
+      "to": "Michiel Jansz van Mierevelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_260",
+      "from": "Mierevelt, Michiel Jansz van",
+      "to": "Michiel Jansz van Mierevelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_580",
+      "from": "Mierevelt, Michiel Jansz van",
+      "to": "Michiel Jansz van Mierevelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_256",
+      "from": "Mierevelt, Michiel Jansz van",
+      "to": "Michiel Jansz van Mierevelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_180",
+      "from": "Mierevelt, Michiel Jansz van",
+      "to": "Michiel Jansz van Mierevelt"
+    },
+    {
+      "source": "met",
+      "native_id": "437085",
+      "from": "Mierevelt, Michiel Jansz van",
+      "to": "Michiel Jansz van Mierevelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_253",
+      "from": "Mierevelt, Michiel Jansz van",
+      "to": "Michiel Jansz van Mierevelt"
+    },
+    {
+      "source": "met",
+      "native_id": "437087",
+      "from": "Mierevelt, Michiel Jansz van",
+      "to": "Michiel Jansz van Mierevelt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1418",
+      "from": "Mierevelt, Michiel Jansz van",
+      "to": "Michiel Jansz van Mierevelt"
+    },
+    {
+      "source": "met",
+      "native_id": "359446",
+      "from": "Heemskerck, Maarten van",
+      "to": "Maarten van Heemskerck"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "153603",
+      "from": "Heemskerck, Maarten van",
+      "to": "Maarten van Heemskerck"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_507",
+      "from": "Heemskerck, Maarten van",
+      "to": "Maarten van Heemskerck"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "674083",
+      "from": "Heemskerck, Maarten van",
+      "to": "Maarten van Heemskerck"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3519",
+      "from": "Heemskerck, Maarten van",
+      "to": "Maarten van Heemskerck"
+    },
+    {
+      "source": "met",
+      "native_id": "436638",
+      "from": "Heemskerck, Maarten van",
+      "to": "Maarten van Heemskerck"
+    },
+    {
+      "source": "nga",
+      "native_id": "71499",
+      "from": "Heemskerck, Maarten van",
+      "to": "Maarten van Heemskerck"
+    },
+    {
+      "source": "nga",
+      "native_id": "52460",
+      "from": "Heemskerck, Maarten van",
+      "to": "Maarten van Heemskerck"
+    },
+    {
+      "source": "met",
+      "native_id": "459282",
+      "from": "Heemskerck, Maarten van",
+      "to": "Maarten van Heemskerck"
+    },
+    {
+      "source": "met",
+      "native_id": "359491",
+      "from": "Heemskerck, Maarten van",
+      "to": "Maarten van Heemskerck"
+    },
+    {
+      "source": "nga",
+      "native_id": "131307",
+      "from": "Heemskerck, Maarten van",
+      "to": "Maarten van Heemskerck"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_3BBE37FEBD2DA7265EA3FCFE104149D8",
+      "from": "Enckell, Magnus",
+      "to": "Magnus Enckell"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_A2EB2DF6D4763B7C01FA858523D5D1E2",
+      "from": "Enckell, Magnus",
+      "to": "Magnus Enckell"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_2D6EC0E3425867A8D933F0890701D979",
+      "from": "Enckell, Magnus",
+      "to": "Magnus Enckell"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_E6413EC9F6C32C9DAC6608B229851707",
+      "from": "Enckell, Magnus",
+      "to": "Magnus Enckell"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_98A9D704E787A0531FA767D80B1013A1",
+      "from": "Enckell, Magnus",
+      "to": "Magnus Enckell"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_027E75352A297797F9726DB5E7F074FA",
+      "from": "Enckell, Magnus",
+      "to": "Magnus Enckell"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_0C2DE33B965C9E23ED2007AEC40A5BC1",
+      "from": "Enckell, Magnus",
+      "to": "Magnus Enckell"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_603120EC1978CEE9186A4EF8CD65FD1B",
+      "from": "Enckell, Magnus",
+      "to": "Magnus Enckell"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_7A17D056D9CC1B2E9E2FF0E859DDCC17",
+      "from": "Enckell, Magnus",
+      "to": "Magnus Enckell"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_BE5FA341FE58242D4CC63F8D7B1182A1",
+      "from": "Enckell, Magnus",
+      "to": "Magnus Enckell"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_7062A540C8D84AD551CDBF7C7DD84B6A",
+      "from": "Enckell, Magnus",
+      "to": "Magnus Enckell"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021672/resource_document_mauritshuis_139",
+      "from": "Ravesteyn, Jan Antonisz van",
+      "to": "Jan Antonisz van Ravesteyn"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021672/resource_document_mauritshuis_421",
+      "from": "Ravesteyn, Jan Antonisz van",
+      "to": "Jan Antonisz van Ravesteyn"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_553",
+      "from": "Ravesteyn, Jan Antonisz van",
+      "to": "Jan Antonisz van Ravesteyn"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_552",
+      "from": "Ravesteyn, Jan Antonisz van",
+      "to": "Jan Antonisz van Ravesteyn"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_538",
+      "from": "Ravesteyn, Jan Antonisz van",
+      "to": "Jan Antonisz van Ravesteyn"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "95286",
+      "from": "Ravesteyn, Jan Antonisz van",
+      "to": "Jan Antonisz van Ravesteyn"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_544",
+      "from": "Ravesteyn, Jan Antonisz van",
+      "to": "Jan Antonisz van Ravesteyn"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1950",
+      "from": "Ravesteyn, Jan Antonisz van",
+      "to": "Jan Antonisz van Ravesteyn"
+    },
+    {
+      "source": "met",
+      "native_id": "437374",
+      "from": "Ravesteyn, Jan Antonisz van",
+      "to": "Jan Antonisz van Ravesteyn"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2024903/photography_ProvidedCHO_KU_Leuven_9990715660101488",
+      "from": "Ravesteyn, Jan Antonisz van",
+      "to": "Jan Antonisz van Ravesteyn"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_259",
+      "from": "Ravesteyn, Jan Antonisz van",
+      "to": "Jan Antonisz van Ravesteyn"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_539",
+      "from": "Ravesteyn, Jan Antonisz van",
+      "to": "Jan Antonisz van Ravesteyn"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_477",
+      "from": "Wouwerman, Philips",
+      "to": "Philips Wouwerman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_17716",
+      "from": "Wouwerman, Philips",
+      "to": "Philips Wouwerman"
+    },
+    {
+      "source": "nga",
+      "native_id": "117959",
+      "from": "Wouwerman, Philips",
+      "to": "Philips Wouwerman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021672/resource_document_mauritshuis_221",
+      "from": "Wouwerman, Philips",
+      "to": "Philips Wouwerman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_271",
+      "from": "Wouwerman, Philips",
+      "to": "Philips Wouwerman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1610",
+      "from": "Wouwerman, Philips",
+      "to": "Philips Wouwerman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_485",
+      "from": "Wouwerman, Philips",
+      "to": "Philips Wouwerman"
+    },
+    {
+      "source": "met",
+      "native_id": "437953",
+      "from": "Wouwerman, Philips",
+      "to": "Philips Wouwerman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_273",
+      "from": "Wouwerman, Philips",
+      "to": "Philips Wouwerman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_476",
+      "from": "Wouwerman, Philips",
+      "to": "Philips Wouwerman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_194",
+      "from": "Netscher, Caspar",
+      "to": "Caspar Netscher"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3977",
+      "from": "Netscher, Caspar",
+      "to": "Caspar Netscher"
+    },
+    {
+      "source": "nga",
+      "native_id": "163917",
+      "from": "Netscher, Caspar",
+      "to": "Caspar Netscher"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4128",
+      "from": "Netscher, Caspar",
+      "to": "Caspar Netscher"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021672/resource_document_mauritshuis_127",
+      "from": "Netscher, Caspar",
+      "to": "Caspar Netscher"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_183",
+      "from": "Netscher, Caspar",
+      "to": "Caspar Netscher"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2666",
+      "from": "Netscher, Caspar",
+      "to": "Caspar Netscher"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3331",
+      "from": "Netscher, Caspar",
+      "to": "Caspar Netscher"
+    },
+    {
+      "source": "met",
+      "native_id": "437218",
+      "from": "Netscher, Caspar",
+      "to": "Caspar Netscher"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_729",
+      "from": "Netscher, Caspar",
+      "to": "Caspar Netscher"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_45CC085E0A2BAEACCE51F5D35FED338A",
+      "from": "Schjerfbeck, Helene",
+      "to": "Helene Schjerfbeck"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_10826B46D7BED735E4047F903E441B2E",
+      "from": "Schjerfbeck, Helene",
+      "to": "Helene Schjerfbeck"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_3C83091EBD464D2DAF2D480CFF578E78",
+      "from": "Schjerfbeck, Helene",
+      "to": "Helene Schjerfbeck"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_CADBE0378B1CD40C567D946061B0784C",
+      "from": "Schjerfbeck, Helene",
+      "to": "Helene Schjerfbeck"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_CBB841847D6EA17DCB5BFA331FF0F0B5",
+      "from": "Schjerfbeck, Helene",
+      "to": "Helene Schjerfbeck"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_23DE3C9E0BACF32A395DC7D4A6475B88",
+      "from": "Schjerfbeck, Helene",
+      "to": "Helene Schjerfbeck"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_838CBEF1C0D722E9353DD7A9CDE91398",
+      "from": "Schjerfbeck, Helene",
+      "to": "Helene Schjerfbeck"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_CD454B478600DC2B0E32A32BE7FDE302",
+      "from": "Schjerfbeck, Helene",
+      "to": "Helene Schjerfbeck"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_63A9FF0241227D74EA908798E84E557E",
+      "from": "Schjerfbeck, Helene",
+      "to": "Helene Schjerfbeck"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_07117202FFD629C5E91F92627BAFCB5E",
+      "from": "Thomé, Verner",
+      "to": "Verner Thomé"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_2E1956B5BB58C05E52CE1AC6981C32C4",
+      "from": "Thomé, Verner",
+      "to": "Verner Thomé"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_1FB5BB17B14209D878F43A6F55F67367",
+      "from": "Thomé, Verner",
+      "to": "Verner Thomé"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_247BD540FAD3C7C0519B4560C1B75C13",
+      "from": "Thomé, Verner",
+      "to": "Verner Thomé"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_60BB38ED8200D3F20472CD296E120632",
+      "from": "Thomé, Verner",
+      "to": "Verner Thomé"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_1899373F2A992BFC23FAD33BD719DAEB",
+      "from": "Thomé, Verner",
+      "to": "Verner Thomé"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_698014B7A6B1FE01823D471C61F879CF",
+      "from": "Thomé, Verner",
+      "to": "Verner Thomé"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_042C071333FEEF906856F09319F948A4",
+      "from": "Thomé, Verner",
+      "to": "Verner Thomé"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_7606952F8DF4A5B1FD470696E60F7F0E",
+      "from": "Thomé, Verner",
+      "to": "Verner Thomé"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_520",
+      "from": "Honthorst, Gerard van",
+      "to": "Gerard van Honthorst"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_873",
+      "from": "Honthorst, Gerard van",
+      "to": "Gerard van Honthorst"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3569",
+      "from": "Honthorst, Gerard van",
+      "to": "Gerard van Honthorst"
+    },
+    {
+      "source": "nga",
+      "native_id": "163184",
+      "from": "Honthorst, Gerard van",
+      "to": "Gerard van Honthorst"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "329320",
+      "from": "Honthorst, Gerard van",
+      "to": "Gerard van Honthorst"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_179",
+      "from": "Honthorst, Gerard van",
+      "to": "Gerard van Honthorst"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_574",
+      "from": "Honthorst, Gerard van",
+      "to": "Gerard van Honthorst"
+    },
+    {
+      "source": "nga",
+      "native_id": "169174",
+      "from": "Honthorst, Gerard van",
+      "to": "Gerard van Honthorst"
+    },
+    {
+      "source": "nga",
+      "native_id": "169173",
+      "from": "Honthorst, Gerard van",
+      "to": "Gerard van Honthorst"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_1695C714456DA0A4C134F54915D7070E",
+      "from": "Churberg, Fanny",
+      "to": "Fanny Churberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_57F2049F0CCB2E54D636E850FF7EFA72",
+      "from": "Churberg, Fanny",
+      "to": "Fanny Churberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_2651F8E9D0ECD94136C0B22B0B8DF24A",
+      "from": "Churberg, Fanny",
+      "to": "Fanny Churberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_2317E2596480CCADE51358A3390DCA94",
+      "from": "Churberg, Fanny",
+      "to": "Fanny Churberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_03C597F3F60E742EFC154389B6FFAB6C",
+      "from": "Churberg, Fanny",
+      "to": "Fanny Churberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_1C124298E35DAD8D6A2DB44BC6BBF79A",
+      "from": "Churberg, Fanny",
+      "to": "Fanny Churberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_2F2E768DF5A83D550BC878988A2D3F56",
+      "from": "Churberg, Fanny",
+      "to": "Fanny Churberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_15DA3982C4AA0BDF2AEF6E0F21192BEE",
+      "from": "Churberg, Fanny",
+      "to": "Fanny Churberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3247",
+      "from": "Avercamp, Hendrick",
+      "to": "Hendrick Avercamp"
+    },
+    {
+      "source": "nga",
+      "native_id": "57653",
+      "from": "Avercamp, Hendrick",
+      "to": "Hendrick Avercamp"
+    },
+    {
+      "source": "nga",
+      "native_id": "75822",
+      "from": "Avercamp, Hendrick",
+      "to": "Hendrick Avercamp"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "675348",
+      "from": "Avercamp, Hendrick",
+      "to": "Hendrick Avercamp"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_1705",
+      "from": "Avercamp, Hendrick",
+      "to": "Hendrick Avercamp"
+    },
+    {
+      "source": "nga",
+      "native_id": "50721",
+      "from": "Avercamp, Hendrick",
+      "to": "Hendrick Avercamp"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "675346",
+      "from": "Avercamp, Hendrick",
+      "to": "Hendrick Avercamp"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "675347",
+      "from": "Avercamp, Hendrick",
+      "to": "Hendrick Avercamp"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2009",
+      "from": "Vanmour, Jean Baptiste",
+      "to": "Jean Baptiste Vanmour"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2014",
+      "from": "Vanmour, Jean Baptiste",
+      "to": "Jean Baptiste Vanmour"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4084",
+      "from": "Vanmour, Jean Baptiste",
+      "to": "Jean Baptiste Vanmour"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2043",
+      "from": "Vanmour, Jean Baptiste",
+      "to": "Jean Baptiste Vanmour"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2025",
+      "from": "Vanmour, Jean Baptiste",
+      "to": "Jean Baptiste Vanmour"
+    },
+    {
+      "source": "met",
+      "native_id": "828300",
+      "from": "Vanmour, Jean Baptiste",
+      "to": "Jean Baptiste Vanmour"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2028",
+      "from": "Vanmour, Jean Baptiste",
+      "to": "Jean Baptiste Vanmour"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2023",
+      "from": "Vanmour, Jean Baptiste",
+      "to": "Jean Baptiste Vanmour"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_18F3787B9EA57C26CD467AD5356D8BEC",
+      "from": "Becker, Adolf von",
+      "to": "Adolf von Becker"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_CB6490F4631E7A11327236681CF20D86",
+      "from": "Becker, Adolf von",
+      "to": "Adolf von Becker"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_8D9D42EF4FDC4BC2FF52613B3DF40C82",
+      "from": "Becker, Adolf von",
+      "to": "Adolf von Becker"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_2A7D2E95D1C3407CF9AFE32D03CFFE96",
+      "from": "Becker, Adolf von",
+      "to": "Adolf von Becker"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_27B29C3BCA76038A92CD0E34D3583C40",
+      "from": "Becker, Adolf von",
+      "to": "Adolf von Becker"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_E3DA1DBA5DFCC9C6F7690636A34E2463",
+      "from": "Becker, Adolf von",
+      "to": "Adolf von Becker"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_99C5A6789E1C55C3968AFDDCEB33B108",
+      "from": "Becker, Adolf von",
+      "to": "Adolf von Becker"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_04356419EF0FF145FE2249D0F03AC0F7",
+      "from": "Becker, Adolf von",
+      "to": "Adolf von Becker"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_CA1F12114D439C005226C32E2DB0E8D4",
+      "from": "Halonen, Pekka",
+      "to": "Pekka Halonen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_5CCF73EA860C3D81C296CA11D75741C0",
+      "from": "Halonen, Pekka",
+      "to": "Pekka Halonen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_419E454123E44752C491DC56AE756E6B",
+      "from": "Halonen, Pekka",
+      "to": "Pekka Halonen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_FDA123193DEC35B1CE1DA8B95F16C93B",
+      "from": "Halonen, Pekka",
+      "to": "Pekka Halonen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_7EE881C9000E034541BEB133E6D4C392",
+      "from": "Halonen, Pekka",
+      "to": "Pekka Halonen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_DACA08747C976CF9980F8DE4E0FE1D61",
+      "from": "Halonen, Pekka",
+      "to": "Pekka Halonen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_DCF6E42A1CF784E693932DE867BA63A3",
+      "from": "Halonen, Pekka",
+      "to": "Pekka Halonen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_D1EA1D68D8E44CD79CDC4F8453674F5C",
+      "from": "Halonen, Pekka",
+      "to": "Pekka Halonen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_2605",
+      "from": "Galanda, Mikuláš",
+      "to": "Mikuláš Galanda"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_1312",
+      "from": "Galanda, Mikuláš",
+      "to": "Mikuláš Galanda"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_532",
+      "from": "Galanda, Mikuláš",
+      "to": "Mikuláš Galanda"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_1932",
+      "from": "Galanda, Mikuláš",
+      "to": "Mikuláš Galanda"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_2607",
+      "from": "Galanda, Mikuláš",
+      "to": "Mikuláš Galanda"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_3356",
+      "from": "Galanda, Mikuláš",
+      "to": "Mikuláš Galanda"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/K_3061",
+      "from": "Galanda, Mikuláš",
+      "to": "Mikuláš Galanda"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_2942",
+      "from": "Galanda, Mikuláš",
+      "to": "Mikuláš Galanda"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_5FD670148E6B4DBF6FE0B95402E23316",
+      "from": "Jansson, Karl Emanuel",
+      "to": "Karl Emanuel Jansson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_273478882BD963C5811815545DC6D87F",
+      "from": "Jansson, Karl Emanuel",
+      "to": "Karl Emanuel Jansson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_06EF113F4BFCBBCCB9C3F64A97228C57",
+      "from": "Jansson, Karl Emanuel",
+      "to": "Karl Emanuel Jansson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_705198AA77911B17DBB909F43F3DE605",
+      "from": "Jansson, Karl Emanuel",
+      "to": "Karl Emanuel Jansson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_E7482FFC6E4A70A19982565F5B56511D",
+      "from": "Jansson, Karl Emanuel",
+      "to": "Karl Emanuel Jansson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_C47ABA31975244230F549C57AD169B90",
+      "from": "Jansson, Karl Emanuel",
+      "to": "Karl Emanuel Jansson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_22BD56780709C79A1E7D602C588D0FD5",
+      "from": "Jansson, Karl Emanuel",
+      "to": "Karl Emanuel Jansson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_20939D09638F2F8E49824B99E00E1321",
+      "from": "Jansson, Karl Emanuel",
+      "to": "Karl Emanuel Jansson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_5C1846014B63F10E07CDD90E6D4F5EE4",
+      "from": "Wright, Magnus von",
+      "to": "Magnus von Wright"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_650F3F03DE48F491376A8EEA04B750CE",
+      "from": "Wright, Magnus von",
+      "to": "Magnus von Wright"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/117/_BB6F900E_79C6_42B0_9ABF_8758F0E575CC",
+      "from": "Wright, Magnus von",
+      "to": "Magnus von Wright"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_D92FC51589AD3328D721E1C2FAF7EF56",
+      "from": "Wright, Magnus von",
+      "to": "Magnus von Wright"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/117/_0F19A7D2_7E91_4032_9E7A_2AAAB18EC958",
+      "from": "Wright, Magnus von",
+      "to": "Magnus von Wright"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_1CBD54A68B007FD454188029CFE02F5B",
+      "from": "Wright, Magnus von",
+      "to": "Magnus von Wright"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_39B386A8541DF190016C2475CA9B53D6",
+      "from": "Wright, Magnus von",
+      "to": "Magnus von Wright"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_497F9697365EBD40A4DFD3ED05E538A4",
+      "from": "Wright, Magnus von",
+      "to": "Magnus von Wright"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "123345",
+      "from": "Dujardin, Karel",
+      "to": "Karel Dujardin"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "132502",
+      "from": "Dujardin, Karel",
+      "to": "Karel Dujardin"
+    },
+    {
+      "source": "met",
+      "native_id": "399411",
+      "from": "Dujardin, Karel",
+      "to": "Karel Dujardin"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "132501",
+      "from": "Dujardin, Karel",
+      "to": "Karel Dujardin"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "132500",
+      "from": "Dujardin, Karel",
+      "to": "Karel Dujardin"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_190",
+      "from": "Dujardin, Karel",
+      "to": "Karel Dujardin"
+    },
+    {
+      "source": "met",
+      "native_id": "399420",
+      "from": "Dujardin, Karel",
+      "to": "Karel Dujardin"
+    },
+    {
+      "source": "nga",
+      "native_id": "54022",
+      "from": "Dujardin, Karel",
+      "to": "Karel Dujardin"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2927",
+      "from": "Maris, Jacob",
+      "to": "Jacob Maris"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2988",
+      "from": "Maris, Jacob",
+      "to": "Jacob Maris"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2469",
+      "from": "Maris, Jacob",
+      "to": "Jacob Maris"
+    },
+    {
+      "source": "met",
+      "native_id": "436974",
+      "from": "Maris, Jacob",
+      "to": "Jacob Maris"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2500",
+      "from": "Maris, Jacob",
+      "to": "Jacob Maris"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2274",
+      "from": "Maris, Jacob",
+      "to": "Jacob Maris"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/1417/https___archief_nl_id_foto_af5ba84e_d0b4_102d_bcf8_003048976d84",
+      "from": "Maris, Jacob",
+      "to": "Jacob Maris"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2459",
+      "from": "Maris, Jacob",
+      "to": "Jacob Maris"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_109",
+      "from": "Both, Jan",
+      "to": "Jan Both"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_51",
+      "from": "Both, Jan",
+      "to": "Jan Both"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "123310",
+      "from": "Both, Jan",
+      "to": "Jan Both"
+    },
+    {
+      "source": "nga",
+      "native_id": "52470",
+      "from": "Both, Jan",
+      "to": "Jan Both"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "123311",
+      "from": "Both, Jan",
+      "to": "Jan Both"
+    },
+    {
+      "source": "nga",
+      "native_id": "95517",
+      "from": "Both, Jan",
+      "to": "Jan Both"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_50",
+      "from": "Both, Jan",
+      "to": "Jan Both"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "123309",
+      "from": "Both, Jan",
+      "to": "Jan Both"
+    },
+    {
+      "source": "met",
+      "native_id": "435663",
+      "from": "Beyeren, Abraham Hendricksz. van",
+      "to": "Abraham Hendricksz. van Beyeren"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_3756",
+      "from": "Beyeren, Abraham Hendricksz. van",
+      "to": "Abraham Hendricksz. van Beyeren"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4073",
+      "from": "Beyeren, Abraham Hendricksz. van",
+      "to": "Abraham Hendricksz. van Beyeren"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "136509",
+      "from": "Beyeren, Abraham Hendricksz. van",
+      "to": "Abraham Hendricksz. van Beyeren"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3944",
+      "from": "Beyeren, Abraham Hendricksz. van",
+      "to": "Abraham Hendricksz. van Beyeren"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4952",
+      "from": "Beyeren, Abraham Hendricksz. van",
+      "to": "Abraham Hendricksz. van Beyeren"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3828",
+      "from": "Beyeren, Abraham Hendricksz. van",
+      "to": "Abraham Hendricksz. van Beyeren"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "151334",
+      "from": "Roussel, Ker Xavier",
+      "to": "Ker Xavier Roussel"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "150959",
+      "from": "Roussel, Ker Xavier",
+      "to": "Ker Xavier Roussel"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "676880",
+      "from": "Roussel, Ker Xavier",
+      "to": "Ker Xavier Roussel"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "123915",
+      "from": "Roussel, Ker Xavier",
+      "to": "Ker Xavier Roussel"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_C5BD5A6C92E5518CA9FF08D321263EF6",
+      "from": "Roussel, Ker Xavier",
+      "to": "Ker Xavier Roussel"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "84731",
+      "from": "Roussel, Ker Xavier",
+      "to": "Ker Xavier Roussel"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "133663",
+      "from": "Roussel, Ker Xavier",
+      "to": "Ker Xavier Roussel"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_10AAE01137CFBAD6C928CE0F0F8C9BC2",
+      "from": "Larsson, Carl",
+      "to": "Carl Larsson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_18965",
+      "from": "Larsson, Carl",
+      "to": "Carl Larsson"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "134917",
+      "from": "Larsson, Carl",
+      "to": "Carl Larsson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_24208",
+      "from": "Larsson, Carl",
+      "to": "Carl Larsson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_24214",
+      "from": "Larsson, Carl",
+      "to": "Carl Larsson"
+    },
+    {
+      "source": "nga",
+      "native_id": "129459",
+      "from": "Larsson, Carl",
+      "to": "Carl Larsson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_23935",
+      "from": "Larsson, Carl",
+      "to": "Carl Larsson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_330124011F688EB0C474704556513571",
+      "from": "Berndtson, Gunnar",
+      "to": "Gunnar Berndtson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_A9957FD181C5B2BABC6730A277266846",
+      "from": "Berndtson, Gunnar",
+      "to": "Gunnar Berndtson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/117/_7A2BC92D_F9AC_4009_9B94_F984F4155814",
+      "from": "Berndtson, Gunnar",
+      "to": "Gunnar Berndtson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_970297932317C84B2B66C4E455299D4F",
+      "from": "Berndtson, Gunnar",
+      "to": "Gunnar Berndtson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_C40F0D8EC5867A2696A3DBECD5A37395",
+      "from": "Berndtson, Gunnar",
+      "to": "Gunnar Berndtson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_A7AC89B565DB3BCF2C18A1B96355D372",
+      "from": "Berndtson, Gunnar",
+      "to": "Gunnar Berndtson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_D1474CA10F77ACD10FA9095CD01D1EDE",
+      "from": "Berndtson, Gunnar",
+      "to": "Gunnar Berndtson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_E02B13AA4EF22DCBDD6E12443563E390",
+      "from": "Simberg, Hugo",
+      "to": "Hugo Simberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_4803566FA72998AC0670897FBD42B67D",
+      "from": "Simberg, Hugo",
+      "to": "Hugo Simberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_1E1EBB07FCAF238F392C4F8DA47405E1",
+      "from": "Simberg, Hugo",
+      "to": "Hugo Simberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_DF3D173E8A4840718FA1D0D825B15357",
+      "from": "Simberg, Hugo",
+      "to": "Hugo Simberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_4BF3F59769CAACCBFDC3C03825EED567",
+      "from": "Simberg, Hugo",
+      "to": "Hugo Simberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_557e5416_f5ca_43e7_9a91_ae13f4af1a90",
+      "from": "Simberg, Hugo",
+      "to": "Hugo Simberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_8BF8841709E5611DEB8B6E5CD97E29B0",
+      "from": "Simberg, Hugo",
+      "to": "Hugo Simberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_22259",
+      "from": "Cederström, Gustaf",
+      "to": "Gustaf Cederström"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_39650",
+      "from": "Cederström, Gustaf",
+      "to": "Gustaf Cederström"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/916114/HeM_fotografi_285242",
+      "from": "Cederström, Gustaf",
+      "to": "Gustaf Cederström"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/916114/HeM_fotografi_286998",
+      "from": "Cederström, Gustaf",
+      "to": "Gustaf Cederström"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_18743",
+      "from": "Cederström, Gustaf",
+      "to": "Gustaf Cederström"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/91616/arme_object_AM007659",
+      "from": "Cederström, Gustaf",
+      "to": "Gustaf Cederström"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_62E8579B88C43749388636E74EA7407C",
+      "from": "Cederström, Gustaf",
+      "to": "Gustaf Cederström"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1270",
+      "from": "Quinkhard, Jan Maurits",
+      "to": "Jan Maurits Quinkhard"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4549",
+      "from": "Quinkhard, Jan Maurits",
+      "to": "Jan Maurits Quinkhard"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4521",
+      "from": "Quinkhard, Jan Maurits",
+      "to": "Jan Maurits Quinkhard"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4583",
+      "from": "Quinkhard, Jan Maurits",
+      "to": "Jan Maurits Quinkhard"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1354",
+      "from": "Quinkhard, Jan Maurits",
+      "to": "Jan Maurits Quinkhard"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4575",
+      "from": "Quinkhard, Jan Maurits",
+      "to": "Jan Maurits Quinkhard"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4863",
+      "from": "Quinkhard, Jan Maurits",
+      "to": "Jan Maurits Quinkhard"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_248",
+      "from": "Velde, Adriaen van de",
+      "to": "Adriaen van de Velde"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "142477",
+      "from": "Velde, Adriaen van de",
+      "to": "Adriaen van de Velde"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "125905",
+      "from": "Velde, Adriaen van de",
+      "to": "Adriaen van de Velde"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_442",
+      "from": "Velde, Adriaen van de",
+      "to": "Adriaen van de Velde"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "132503",
+      "from": "Velde, Adriaen van de",
+      "to": "Adriaen van de Velde"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "142285",
+      "from": "Velde, Adriaen van de",
+      "to": "Adriaen van de Velde"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_17FE6270BDA2C4DDB5D07A59AC73D2CD",
+      "from": "Schillmark, Nils",
+      "to": "Nils Schillmark"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/117/_2A5A95B3_6BEF_4E56_B2E7_818D6AE5EBBC",
+      "from": "Schillmark, Nils",
+      "to": "Nils Schillmark"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/117/_4320E582_B509_4F00_ACD7_DE3D8EAC7C1A",
+      "from": "Schillmark, Nils",
+      "to": "Nils Schillmark"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021009/_F23249D116E6F24041FD7F23E22E20EA",
+      "from": "Schillmark, Nils",
+      "to": "Nils Schillmark"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_371893BDDED2CE1917E4A5E245CCF0D3",
+      "from": "Schillmark, Nils",
+      "to": "Nils Schillmark"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021009/_71A22C8CEC14B8C187A18DEB47C69F07",
+      "from": "Schillmark, Nils",
+      "to": "Nils Schillmark"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "114535",
+      "from": "Toorop, Jan",
+      "to": "Jan Toorop"
+    },
+    {
+      "source": "nga",
+      "native_id": "226345",
+      "from": "Toorop, Jan",
+      "to": "Jan Toorop"
+    },
+    {
+      "source": "nga",
+      "native_id": "223451",
+      "from": "Toorop, Jan",
+      "to": "Jan Toorop"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/1417/https___archief_nl_id_foto_af5c50b4_d0b4_102d_bcf8_003048976d84",
+      "from": "Toorop, Jan",
+      "to": "Jan Toorop"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "117747",
+      "from": "Toorop, Jan",
+      "to": "Jan Toorop"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_1666",
+      "from": "Toorop, Jan",
+      "to": "Jan Toorop"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_61905FEE4965461063D0F00E82454731",
+      "from": "Lauréus, Alexander",
+      "to": "Alexander Lauréus"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_7A67D44724D0F09859564A8184F2EED4",
+      "from": "Lauréus, Alexander",
+      "to": "Alexander Lauréus"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_46088792E4A8C09807DD955146F8976F",
+      "from": "Lauréus, Alexander",
+      "to": "Alexander Lauréus"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_47F80753F2A1D4FEDA4F743FE81F89B6",
+      "from": "Lauréus, Alexander",
+      "to": "Alexander Lauréus"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_4ACFE1F62CB155E7507F7BBBFDD90E32",
+      "from": "Lauréus, Alexander",
+      "to": "Alexander Lauréus"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_251753EBAF1FC5BA8FA6713294433AD1",
+      "from": "Lauréus, Alexander",
+      "to": "Alexander Lauréus"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_52B8583108D58C44341EE6DB430DE6B2",
+      "from": "Aalto, Ilmari",
+      "to": "Ilmari Aalto"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_578D6CB92456EF6D5ADBC51A15021BF2",
+      "from": "Aalto, Ilmari",
+      "to": "Ilmari Aalto"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_48516BC723BB1243C8F001D6193F0ABA",
+      "from": "Aalto, Ilmari",
+      "to": "Ilmari Aalto"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_E880A6069CB7BBF88A0630922D829D2B",
+      "from": "Aalto, Ilmari",
+      "to": "Ilmari Aalto"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_E2022FC3DF91D0048895D2E6C3C8811C",
+      "from": "Aalto, Ilmari",
+      "to": "Ilmari Aalto"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_876D40B8DB3B4487DC616A9E596F49B3",
+      "from": "Aalto, Ilmari",
+      "to": "Ilmari Aalto"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_E3ACAC4209B8A8CB0E5363B77C01C79F",
+      "from": "Josephson, Ernst",
+      "to": "Ernst Josephson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_18879",
+      "from": "Josephson, Ernst",
+      "to": "Ernst Josephson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_8002566F383123AAE6A89C864A67E5BC",
+      "from": "Josephson, Ernst",
+      "to": "Ernst Josephson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_20656",
+      "from": "Josephson, Ernst",
+      "to": "Ernst Josephson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_19459",
+      "from": "Josephson, Ernst",
+      "to": "Ernst Josephson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_18914",
+      "from": "Josephson, Ernst",
+      "to": "Ernst Josephson"
+    },
+    {
+      "source": "nga",
+      "native_id": "103756",
+      "from": "Klein, Johann Adam",
+      "to": "Johann Adam Klein"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "320642",
+      "from": "Klein, Johann Adam",
+      "to": "Johann Adam Klein"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/G_12269",
+      "from": "Klein, Johann Adam",
+      "to": "Johann Adam Klein"
+    },
+    {
+      "source": "nga",
+      "native_id": "139111",
+      "from": "Klein, Johann Adam",
+      "to": "Johann Adam Klein"
+    },
+    {
+      "source": "nga",
+      "native_id": "62948",
+      "from": "Klein, Johann Adam",
+      "to": "Johann Adam Klein"
+    },
+    {
+      "source": "nga",
+      "native_id": "127372",
+      "from": "Klein, Johann Adam",
+      "to": "Johann Adam Klein"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_138A95176ADB56868891AF18FE671E3B",
+      "from": "Kleineh, Oscar",
+      "to": "Oscar Kleineh"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_C22F86B860CEDFDC0EC0BCFBAA09E85D",
+      "from": "Kleineh, Oscar",
+      "to": "Oscar Kleineh"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_C4F5F3D69991C63ED70B2E4D9E2AD854",
+      "from": "Kleineh, Oscar",
+      "to": "Oscar Kleineh"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_F9A5445968A86073B18F67F475632E6C",
+      "from": "Kleineh, Oscar",
+      "to": "Oscar Kleineh"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/117/_E2E0AFBF_A3A5_4517_8464_DFECC6AE3EF7",
+      "from": "Kleineh, Oscar",
+      "to": "Oscar Kleineh"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_14CBF34D4FBCCF1665EB0A871EC271B4",
+      "from": "Kleineh, Oscar",
+      "to": "Oscar Kleineh"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_24163",
+      "from": "Sandberg, Johan Gustaf",
+      "to": "Johan Gustaf Sandberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_8880235583354DCDF6F61BC11BCA9CC7",
+      "from": "Sandberg, Johan Gustaf",
+      "to": "Johan Gustaf Sandberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_39105",
+      "from": "Sandberg, Johan Gustaf",
+      "to": "Johan Gustaf Sandberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/91616/arme_object_AM065968",
+      "from": "Sandberg, Johan Gustaf",
+      "to": "Johan Gustaf Sandberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_39567",
+      "from": "Sandberg, Johan Gustaf",
+      "to": "Johan Gustaf Sandberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_39079",
+      "from": "Sandberg, Johan Gustaf",
+      "to": "Johan Gustaf Sandberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4495",
+      "from": "Werff, Pieter van der",
+      "to": "Pieter van der Werff"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4498",
+      "from": "Werff, Pieter van der",
+      "to": "Pieter van der Werff"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_267",
+      "from": "Werff, Pieter van der",
+      "to": "Pieter van der Werff"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4510",
+      "from": "Werff, Pieter van der",
+      "to": "Pieter van der Werff"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4511",
+      "from": "Werff, Pieter van der",
+      "to": "Pieter van der Werff"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4509",
+      "from": "Werff, Pieter van der",
+      "to": "Pieter van der Werff"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_BD5AD732EED0C21651421211B0FD1F51",
+      "from": "Finch, Alfred William",
+      "to": "Alfred William Finch"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/1355/_71B97B9B_CBBC_40F4_BC2F_B5B5D5BE1B63",
+      "from": "Finch, Alfred William",
+      "to": "Alfred William Finch"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_023809F6AC2FDBCB32BD8C3BBE9ED3BE",
+      "from": "Finch, Alfred William",
+      "to": "Alfred William Finch"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_C8190FDF0034A39787A988EF8BDA9E79",
+      "from": "Finch, Alfred William",
+      "to": "Alfred William Finch"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_03E4A2B364D98AE213841D455E2CE55F",
+      "from": "Finch, Alfred William",
+      "to": "Alfred William Finch"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_010D4B2B0B02970924A62639E01A3722",
+      "from": "Finch, Alfred William",
+      "to": "Alfred William Finch"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1747_C",
+      "from": "Poelenburch, Cornelis van",
+      "to": "Cornelis van Poelenburch"
+    },
+    {
+      "source": "nga",
+      "native_id": "131041",
+      "from": "Poelenburch, Cornelis van",
+      "to": "Cornelis van Poelenburch"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "329340",
+      "from": "Poelenburch, Cornelis van",
+      "to": "Cornelis van Poelenburch"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1747_D",
+      "from": "Poelenburch, Cornelis van",
+      "to": "Cornelis van Poelenburch"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1747_B",
+      "from": "Poelenburch, Cornelis van",
+      "to": "Cornelis van Poelenburch"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021672/resource_document_mauritshuis_134",
+      "from": "Poelenburch, Cornelis van",
+      "to": "Cornelis van Poelenburch"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_488",
+      "from": "Majerník, Cyprián",
+      "to": "Cyprián Majerník"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_5112",
+      "from": "Majerník, Cyprián",
+      "to": "Cyprián Majerník"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/K_7150",
+      "from": "Majerník, Cyprián",
+      "to": "Cyprián Majerník"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_2478",
+      "from": "Majerník, Cyprián",
+      "to": "Cyprián Majerník"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_1471",
+      "from": "Majerník, Cyprián",
+      "to": "Cyprián Majerník"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_1224",
+      "from": "Majerník, Cyprián",
+      "to": "Cyprián Majerník"
+    },
+    {
+      "source": "met",
+      "native_id": "362160",
+      "from": "Bril, Paul",
+      "to": "Paul Bril"
+    },
+    {
+      "source": "nga",
+      "native_id": "54151",
+      "from": "Bril, Paul",
+      "to": "Paul Bril"
+    },
+    {
+      "source": "nga",
+      "native_id": "52917",
+      "from": "Bril, Paul",
+      "to": "Paul Bril"
+    },
+    {
+      "source": "mia",
+      "native_id": "589",
+      "from": "Bril, Paul",
+      "to": "Paul Bril"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1314",
+      "from": "Bril, Paul",
+      "to": "Paul Bril"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2672",
+      "from": "Bril, Paul",
+      "to": "Paul Bril"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_5098",
+      "from": "Palugyay, Zolo",
+      "to": "Zolo Palugyay"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_5266",
+      "from": "Palugyay, Zolo",
+      "to": "Zolo Palugyay"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_647",
+      "from": "Palugyay, Zolo",
+      "to": "Zolo Palugyay"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_5749",
+      "from": "Palugyay, Zolo",
+      "to": "Zolo Palugyay"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_650",
+      "from": "Palugyay, Zolo",
+      "to": "Zolo Palugyay"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_1286",
+      "from": "Palugyay, Zolo",
+      "to": "Zolo Palugyay"
+    },
+    {
+      "source": "met",
+      "native_id": "771723",
+      "from": "Edelinck, Gérard",
+      "to": "Gérard Edelinck"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "122623",
+      "from": "Edelinck, Gérard",
+      "to": "Gérard Edelinck"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "127351",
+      "from": "Edelinck, Gérard",
+      "to": "Gérard Edelinck"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "122622",
+      "from": "Edelinck, Gérard",
+      "to": "Gérard Edelinck"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_7C7BF87C3F5F35D745A8324E452D5BDF",
+      "from": "Edelinck, Gérard",
+      "to": "Gérard Edelinck"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2024903/photography_ProvidedCHO_KU_Leuven_9991113700101488",
+      "from": "Edelinck, Gérard",
+      "to": "Gérard Edelinck"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "128854",
+      "from": "Edelinck, Gérard",
+      "to": "Gérard Edelinck"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/117/_11b48f59_b818_4c0c_80c3_b282b0fec391",
+      "from": "Lindh, Johan Erik",
+      "to": "Johan Erik Lindh"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021009/_052A111A747E29EF4951A4AC3A29858D",
+      "from": "Lindh, Johan Erik",
+      "to": "Johan Erik Lindh"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_04A6E275D82277C7089A77C076A02DF6",
+      "from": "Lindh, Johan Erik",
+      "to": "Johan Erik Lindh"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/117/_627EB550_E2C2_443A_9E06_16EBDAA7644E",
+      "from": "Lindh, Johan Erik",
+      "to": "Johan Erik Lindh"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/117/_c85fde0c_c372_4f68_a973_0e78b82cef3c",
+      "from": "Lindh, Johan Erik",
+      "to": "Johan Erik Lindh"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/117/_9500ABB9_A7D1_443B_974C_54D8470FF35A",
+      "from": "Lindh, Johan Erik",
+      "to": "Johan Erik Lindh"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_997C179CA731FF9A1BE620AF14655E70",
+      "from": "Lindholm, Berndt",
+      "to": "Berndt Lindholm"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_7FF0F3F1D10A05E93C0B8FD96C12B06E",
+      "from": "Lindholm, Berndt",
+      "to": "Berndt Lindholm"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_7B8FE09B68E1B8876A8B70BB6118336B",
+      "from": "Lindholm, Berndt",
+      "to": "Berndt Lindholm"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_236972079EE3D02BD83F77FB2CB5C34A",
+      "from": "Lindholm, Berndt",
+      "to": "Berndt Lindholm"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021009/_77efea0e_89f9_44d4_941b_e6a49d3b4ebc",
+      "from": "Lindholm, Berndt",
+      "to": "Berndt Lindholm"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_D44F6EF8513EFBC99C041C0656BF50FB",
+      "from": "Lindholm, Berndt",
+      "to": "Berndt Lindholm"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_F7BCDB3E65A88C2734B7BF16C12F551D",
+      "from": "Sipilä, Sulho",
+      "to": "Sulho Sipilä"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_D7B38B08AB43E9B09251766CDD162982",
+      "from": "Sipilä, Sulho",
+      "to": "Sulho Sipilä"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/117/_455E8876_8ADA_46C1_9557_55757316F81C",
+      "from": "Sipilä, Sulho",
+      "to": "Sulho Sipilä"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_DC7AA4B54C4718037D581881A570B34D",
+      "from": "Sipilä, Sulho",
+      "to": "Sulho Sipilä"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_5CB11B0251498BCE122B8991D3BBBA80",
+      "from": "Sipilä, Sulho",
+      "to": "Sulho Sipilä"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_5898D7A233EC91D59AA88A51D40073F5",
+      "from": "Sipilä, Sulho",
+      "to": "Sulho Sipilä"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_8DD6AC4766ECE87016BB589E97925BB4",
+      "from": "Allori, Alessandro",
+      "to": "Alessandro Allori"
+    },
+    {
+      "source": "met",
+      "native_id": "338091",
+      "from": "Allori, Alessandro",
+      "to": "Alessandro Allori"
+    },
+    {
+      "source": "nga",
+      "native_id": "134346",
+      "from": "Allori, Alessandro",
+      "to": "Alessandro Allori"
+    },
+    {
+      "source": "nga",
+      "native_id": "11384",
+      "from": "Allori, Alessandro",
+      "to": "Alessandro Allori"
+    },
+    {
+      "source": "met",
+      "native_id": "338084",
+      "from": "Allori, Alessandro",
+      "to": "Alessandro Allori"
+    },
+    {
+      "source": "nga",
+      "native_id": "73450",
+      "from": "Allori, Alessandro",
+      "to": "Alessandro Allori"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021672/resource_document_mauritshuis_48",
+      "from": "Heem, Jan Davidsz. de",
+      "to": "Jan Davidsz. de Heem"
+    },
+    {
+      "source": "met",
+      "native_id": "436636",
+      "from": "Heem, Jan Davidsz. de",
+      "to": "Jan Davidsz. de Heem"
+    },
+    {
+      "source": "met",
+      "native_id": "436637",
+      "from": "Heem, Jan Davidsz. de",
+      "to": "Jan Davidsz. de Heem"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2565",
+      "from": "Heem, Jan Davidsz. de",
+      "to": "Jan Davidsz. de Heem"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_138",
+      "from": "Heem, Jan Davidsz. de",
+      "to": "Jan Davidsz. de Heem"
+    },
+    {
+      "source": "nga",
+      "native_id": "46097",
+      "from": "Heem, Jan Davidsz. de",
+      "to": "Jan Davidsz. de Heem"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3347",
+      "from": "Steen, Jan Havicksz.",
+      "to": "Jan Havicksz. Steen"
+    },
+    {
+      "source": "nga",
+      "native_id": "195366",
+      "from": "Steen, Jan Havicksz.",
+      "to": "Jan Havicksz. Steen"
+    },
+    {
+      "source": "met",
+      "native_id": "437749",
+      "from": "Steen, Jan Havicksz.",
+      "to": "Jan Havicksz. Steen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_385",
+      "from": "Steen, Jan Havicksz.",
+      "to": "Jan Havicksz. Steen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_232",
+      "from": "Steen, Jan Havicksz.",
+      "to": "Jan Havicksz. Steen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021672/resource_document_mauritshuis_818",
+      "from": "Steen, Jan Havicksz.",
+      "to": "Jan Havicksz. Steen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4099",
+      "from": "Troost, Cornelis",
+      "to": "Cornelis Troost"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2158",
+      "from": "Troost, Cornelis",
+      "to": "Cornelis Troost"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3933",
+      "from": "Troost, Cornelis",
+      "to": "Cornelis Troost"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4089",
+      "from": "Troost, Cornelis",
+      "to": "Cornelis Troost"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3453",
+      "from": "Troost, Cornelis",
+      "to": "Cornelis Troost"
+    },
+    {
+      "source": "met",
+      "native_id": "437760",
+      "from": "Strij, Jacob van",
+      "to": "Jacob van Strij"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "137111",
+      "from": "Strij, Jacob van",
+      "to": "Jacob van Strij"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1141",
+      "from": "Strij, Jacob van",
+      "to": "Jacob van Strij"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_238",
+      "from": "Strij, Jacob van",
+      "to": "Jacob van Strij"
+    },
+    {
+      "source": "nga",
+      "native_id": "206539",
+      "from": "Strij, Jacob van",
+      "to": "Jacob van Strij"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1771",
+      "from": "Venne, Adriaen Pietersz. van de",
+      "to": "Adriaen Pietersz. van de Venne"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_18166",
+      "from": "Venne, Adriaen Pietersz. van de",
+      "to": "Adriaen Pietersz. van de Venne"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1931",
+      "from": "Venne, Adriaen Pietersz. van de",
+      "to": "Adriaen Pietersz. van de Venne"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_1343",
+      "from": "Venne, Adriaen Pietersz. van de",
+      "to": "Adriaen Pietersz. van de Venne"
+    },
+    {
+      "source": "met",
+      "native_id": "370472",
+      "from": "Venne, Adriaen Pietersz. van de",
+      "to": "Adriaen Pietersz. van de Venne"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2349",
+      "from": "Wijnants, Jan",
+      "to": "Jan Wijnants"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_491",
+      "from": "Wijnants, Jan",
+      "to": "Jan Wijnants"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "169673",
+      "from": "Wijnants, Jan",
+      "to": "Jan Wijnants"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_276",
+      "from": "Wijnants, Jan",
+      "to": "Jan Wijnants"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021672/resource_document_mauritshuis_212",
+      "from": "Wijnants, Jan",
+      "to": "Jan Wijnants"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_E86A8513D4085160764C0AAA5F166F6F",
+      "from": "Knutson, Johan",
+      "to": "Johan Knutson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_D1AC8B5A8C90DCF1701E66C931ACF1E4",
+      "from": "Knutson, Johan",
+      "to": "Johan Knutson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_344349AB5B2E49C12AF69383D6840C7A",
+      "from": "Knutson, Johan",
+      "to": "Johan Knutson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_E572A8F20FA1B699560B71660DF323FF",
+      "from": "Knutson, Johan",
+      "to": "Johan Knutson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_AC3CE2345D57B9D0B278F027DB317781",
+      "from": "Knutson, Johan",
+      "to": "Johan Knutson"
+    },
+    {
+      "source": "nga",
+      "native_id": "209297",
+      "from": "Witsen, Willem",
+      "to": "Willem Witsen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3568",
+      "from": "Witsen, Willem",
+      "to": "Willem Witsen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/RP_T_1964_237_34",
+      "from": "Witsen, Willem",
+      "to": "Willem Witsen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2948",
+      "from": "Witsen, Willem",
+      "to": "Willem Witsen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2956",
+      "from": "Witsen, Willem",
+      "to": "Willem Witsen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_94",
+      "from": "Dughet, Gaspard",
+      "to": "Gaspard Dughet"
+    },
+    {
+      "source": "met",
+      "native_id": "436229",
+      "from": "Dughet, Gaspard",
+      "to": "Gaspard Dughet"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_95",
+      "from": "Dughet, Gaspard",
+      "to": "Gaspard Dughet"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "145124",
+      "from": "Dughet, Gaspard",
+      "to": "Gaspard Dughet"
+    },
+    {
+      "source": "nga",
+      "native_id": "208199",
+      "from": "Dughet, Gaspard",
+      "to": "Gaspard Dughet"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_BCB7AFD5804CE7ACB878A699860B0A1A",
+      "from": "Ruokokoski, Jalmari",
+      "to": "Jalmari Ruokokoski"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_A92798806D3B4D4DF38A3CDDAEA75A01",
+      "from": "Ruokokoski, Jalmari",
+      "to": "Jalmari Ruokokoski"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_F984FC6162E491F54D6A6A168CF4FA98",
+      "from": "Ruokokoski, Jalmari",
+      "to": "Jalmari Ruokokoski"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_08A9332C273A23492557304D24A17FD8",
+      "from": "Ruokokoski, Jalmari",
+      "to": "Jalmari Ruokokoski"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_C7954492A2B7A76D84FF2387E7E1229E",
+      "from": "Ruokokoski, Jalmari",
+      "to": "Jalmari Ruokokoski"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_668",
+      "from": "Cornelisz van Oostsanen, Jacob",
+      "to": "Jacob Cornelisz van Oostsanen"
+    },
+    {
+      "source": "nga",
+      "native_id": "39458",
+      "from": "Cornelisz van Oostsanen, Jacob",
+      "to": "Jacob Cornelisz van Oostsanen"
+    },
+    {
+      "source": "nga",
+      "native_id": "39464",
+      "from": "Cornelisz van Oostsanen, Jacob",
+      "to": "Jacob Cornelisz van Oostsanen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2024903/photography_ProvidedCHO_KU_Leuven_9990681050101488",
+      "from": "Cornelisz van Oostsanen, Jacob",
+      "to": "Jacob Cornelisz van Oostsanen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1967",
+      "from": "Cornelisz van Oostsanen, Jacob",
+      "to": "Jacob Cornelisz van Oostsanen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3838",
+      "from": "Cornelisz van Oostsanen, Jacob",
+      "to": "Jacob Cornelisz van Oostsanen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_0C5F7082E637C0B0329714C08DF8FF01",
+      "from": "Löfgren, Erik Johan",
+      "to": "Erik Johan Löfgren"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_DE6C0E557A8771F40C203A9F0496EDF5",
+      "from": "Löfgren, Erik Johan",
+      "to": "Erik Johan Löfgren"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_482D6E730F6CB8A7E0F766061333E259",
+      "from": "Löfgren, Erik Johan",
+      "to": "Erik Johan Löfgren"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_4356f5cf_9c39_4c1f_b642_4a76a4c21ec2",
+      "from": "Löfgren, Erik Johan",
+      "to": "Erik Johan Löfgren"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_399A64BF87A33738DA2E761E39A44DA0",
+      "from": "Löfgren, Erik Johan",
+      "to": "Erik Johan Löfgren"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_22284",
+      "from": "Ehrenstrahl, David Klöcker",
+      "to": "David Klöcker Ehrenstrahl"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_15497",
+      "from": "Ehrenstrahl, David Klöcker",
+      "to": "David Klöcker Ehrenstrahl"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_15372",
+      "from": "Ehrenstrahl, David Klöcker",
+      "to": "David Klöcker Ehrenstrahl"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_174862",
+      "from": "Ehrenstrahl, David Klöcker",
+      "to": "David Klöcker Ehrenstrahl"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_99413C764D9114D975F516F86311B46D",
+      "from": "Ehrenstrahl, David Klöcker",
+      "to": "David Klöcker Ehrenstrahl"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021672/resource_document_mauritshuis_61",
+      "from": "Hondecoeter, Melchior d'",
+      "to": "Melchior d' Hondecoeter"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_169",
+      "from": "Hondecoeter, Melchior d'",
+      "to": "Melchior d' Hondecoeter"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_171",
+      "from": "Hondecoeter, Melchior d'",
+      "to": "Melchior d' Hondecoeter"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "153368",
+      "from": "Hondecoeter, Melchior d'",
+      "to": "Melchior d' Hondecoeter"
+    },
+    {
+      "source": "met",
+      "native_id": "436671",
+      "from": "Hondecoeter, Melchior d'",
+      "to": "Melchior d' Hondecoeter"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3024",
+      "from": "Palamedesz., Anthonie",
+      "to": "Anthonie Palamedesz."
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_861",
+      "from": "Palamedesz., Anthonie",
+      "to": "Anthonie Palamedesz."
+    },
+    {
+      "source": "met",
+      "native_id": "338789",
+      "from": "Palamedesz., Anthonie",
+      "to": "Anthonie Palamedesz."
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1616",
+      "from": "Palamedesz., Anthonie",
+      "to": "Anthonie Palamedesz."
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1906",
+      "from": "Palamedesz., Anthonie",
+      "to": "Anthonie Palamedesz."
+    },
+    {
+      "source": "nga",
+      "native_id": "58",
+      "from": "Hanneman, Adriaen",
+      "to": "Adriaen Hanneman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1622",
+      "from": "Hanneman, Adriaen",
+      "to": "Adriaen Hanneman"
+    },
+    {
+      "source": "met",
+      "native_id": "436630",
+      "from": "Hanneman, Adriaen",
+      "to": "Adriaen Hanneman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021672/resource_document_mauritshuis_241",
+      "from": "Hanneman, Adriaen",
+      "to": "Adriaen Hanneman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021672/resource_document_mauritshuis_693",
+      "from": "Hanneman, Adriaen",
+      "to": "Adriaen Hanneman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_277",
+      "from": "Moreelse, Paulus",
+      "to": "Paulus Moreelse"
+    },
+    {
+      "source": "met",
+      "native_id": "437154",
+      "from": "Moreelse, Paulus",
+      "to": "Paulus Moreelse"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "104786",
+      "from": "Moreelse, Paulus",
+      "to": "Paulus Moreelse"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_1440",
+      "from": "Moreelse, Paulus",
+      "to": "Paulus Moreelse"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021672/resource_document_mauritshuis_655",
+      "from": "Moreelse, Paulus",
+      "to": "Paulus Moreelse"
+    },
+    {
+      "source": "met",
+      "native_id": "436889",
+      "from": "Lingelbach, Johannes",
+      "to": "Johannes Lingelbach"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2327",
+      "from": "Lingelbach, Johannes",
+      "to": "Johannes Lingelbach"
+    },
+    {
+      "source": "met",
+      "native_id": "338783",
+      "from": "Lingelbach, Johannes",
+      "to": "Johannes Lingelbach"
+    },
+    {
+      "source": "met",
+      "native_id": "436890",
+      "from": "Lingelbach, Johannes",
+      "to": "Johannes Lingelbach"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_700",
+      "from": "Lingelbach, Johannes",
+      "to": "Johannes Lingelbach"
+    },
+    {
+      "source": "met",
+      "native_id": "438376",
+      "from": "Heda, Willem Claesz.",
+      "to": "Willem Claesz. Heda"
+    },
+    {
+      "source": "nga",
+      "native_id": "72869",
+      "from": "Heda, Willem Claesz.",
+      "to": "Willem Claesz. Heda"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_1694",
+      "from": "Heda, Willem Claesz.",
+      "to": "Willem Claesz. Heda"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4830",
+      "from": "Heda, Willem Claesz.",
+      "to": "Willem Claesz. Heda"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_927ED6E2111070F8B106515554D56D94",
+      "from": "Uden, Lucas van",
+      "to": "Lucas van Uden"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "150835",
+      "from": "Uden, Lucas van",
+      "to": "Lucas van Uden"
+    },
+    {
+      "source": "nga",
+      "native_id": "73846",
+      "from": "Uden, Lucas van",
+      "to": "Lucas van Uden"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "123402",
+      "from": "Uden, Lucas van",
+      "to": "Lucas van Uden"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_184",
+      "from": "Huchtenburg, Jan van",
+      "to": "Jan van Huchtenburg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_247",
+      "from": "Huchtenburg, Jan van",
+      "to": "Jan van Huchtenburg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_1226",
+      "from": "Huchtenburg, Jan van",
+      "to": "Jan van Huchtenburg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4061",
+      "from": "Huchtenburg, Jan van",
+      "to": "Jan van Huchtenburg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_3731F371FC137D0D317FB96D96532DFC",
+      "from": "Berndes, Anton Ulrik",
+      "to": "Anton Ulrik Berndes"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_FC63DFA4D87385D16425BE7E0D13FBBC",
+      "from": "Berndes, Anton Ulrik",
+      "to": "Anton Ulrik Berndes"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_56A06910ED66C4ED01894934BF59141B",
+      "from": "Berndes, Anton Ulrik",
+      "to": "Anton Ulrik Berndes"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_080E3C7A402A543A782DAFC6A72F6599",
+      "from": "Berndes, Anton Ulrik",
+      "to": "Anton Ulrik Berndes"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1486",
+      "from": "Post, Frans Jansz",
+      "to": "Frans Jansz Post"
+    },
+    {
+      "source": "met",
+      "native_id": "437323",
+      "from": "Post, Frans Jansz",
+      "to": "Frans Jansz Post"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4273",
+      "from": "Post, Frans Jansz",
+      "to": "Frans Jansz Post"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4271",
+      "from": "Post, Frans Jansz",
+      "to": "Frans Jansz Post"
+    },
+    {
+      "source": "met",
+      "native_id": "437633",
+      "from": "Schalcken, Godfried",
+      "to": "Godfried Schalcken"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2340",
+      "from": "Schalcken, Godfried",
+      "to": "Godfried Schalcken"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_900",
+      "from": "Schalcken, Godfried",
+      "to": "Godfried Schalcken"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_369",
+      "from": "Schalcken, Godfried",
+      "to": "Godfried Schalcken"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_B2028ABE17F5A221D4C271C404745134",
+      "from": "Cawén, Alvar",
+      "to": "Alvar Cawén"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_4b53b980_d171_4373_8c16_960d70106376",
+      "from": "Cawén, Alvar",
+      "to": "Alvar Cawén"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/117/_20FD3780_DEDA_4006_A831_E87E48199647",
+      "from": "Cawén, Alvar",
+      "to": "Alvar Cawén"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021009/_3ed1f839_81a5_4f8b_bec5_231da5882024",
+      "from": "Cawén, Alvar",
+      "to": "Alvar Cawén"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_24502",
+      "from": "Brenner, Elias",
+      "to": "Elias Brenner"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_AB356CA7EA7DC510E4699F9158F90870",
+      "from": "Brenner, Elias",
+      "to": "Elias Brenner"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_24509",
+      "from": "Brenner, Elias",
+      "to": "Elias Brenner"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_24494",
+      "from": "Brenner, Elias",
+      "to": "Elias Brenner"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_8D71E08E4BAEFEA70D22CA2B2587DFE7",
+      "from": "Liljelund, Arvid",
+      "to": "Arvid Liljelund"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/117/_0833C159_6F48_414F_9C05_CCD1B66BF234",
+      "from": "Liljelund, Arvid",
+      "to": "Arvid Liljelund"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_6A5B78DB84166000E8F9D4EF4E6AD57D",
+      "from": "Liljelund, Arvid",
+      "to": "Arvid Liljelund"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021009/_59997BB913FBC8BA4FEFCFDB8E18178C",
+      "from": "Liljelund, Arvid",
+      "to": "Arvid Liljelund"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_4B2DF3A940EF136BEF737C7B76B894BE",
+      "from": "Arenius, Olof",
+      "to": "Olof Arenius"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_15011",
+      "from": "Arenius, Olof",
+      "to": "Olof Arenius"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_16109",
+      "from": "Arenius, Olof",
+      "to": "Olof Arenius"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_15041",
+      "from": "Arenius, Olof",
+      "to": "Olof Arenius"
+    },
+    {
+      "source": "nga",
+      "native_id": "59",
+      "from": "Mor, Anthonis",
+      "to": "Anthonis Mor"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_1696",
+      "from": "Mor, Anthonis",
+      "to": "Anthonis Mor"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1560",
+      "from": "Mor, Anthonis",
+      "to": "Anthonis Mor"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2663",
+      "from": "Mor, Anthonis",
+      "to": "Anthonis Mor"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_422",
+      "from": "Veen, Otto van",
+      "to": "Otto van Veen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_431",
+      "from": "Veen, Otto van",
+      "to": "Otto van Veen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_426",
+      "from": "Veen, Otto van",
+      "to": "Otto van Veen"
+    },
+    {
+      "source": "met",
+      "native_id": "412570",
+      "from": "Veen, Otto van",
+      "to": "Otto van Veen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_132780",
+      "from": "Kreuger, Nils",
+      "to": "Nils Kreuger"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_159220",
+      "from": "Kreuger, Nils",
+      "to": "Nils Kreuger"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_C0AE3F8FF557BB65A81260B347A99629",
+      "from": "Kreuger, Nils",
+      "to": "Nils Kreuger"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_18486",
+      "from": "Kreuger, Nils",
+      "to": "Nils Kreuger"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_EAFA086DA2ED8A536CF8A6203F2CA3F4",
+      "from": "Repin, Ilja",
+      "to": "Ilja Repin"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_E2E390AA5CB1C16FE0F9B110BE82CEC0",
+      "from": "Repin, Ilja",
+      "to": "Ilja Repin"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_8585F0DDB3A0AFB916A0C5348B64682B",
+      "from": "Repin, Ilja",
+      "to": "Ilja Repin"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_09BF03DA7CA7E9AB97E22E21816ED2F3",
+      "from": "Repin, Ilja",
+      "to": "Ilja Repin"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_880",
+      "from": "Aved, Jacques-André-Joseph",
+      "to": "Jacques-André-Joseph Aved"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "141476",
+      "from": "Aved, Jacques-André-Joseph",
+      "to": "Jacques-André-Joseph Aved"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_6",
+      "from": "Aved, Jacques-André-Joseph",
+      "to": "Jacques-André-Joseph Aved"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021672/resource_document_mauritshuis_461",
+      "from": "Aved, Jacques-André-Joseph",
+      "to": "Jacques-André-Joseph Aved"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_C309DE43854E675C7474A746B94F21B2",
+      "from": "Arnberg, Elise",
+      "to": "Elise Arnberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_E52C5B7EED8ECF383C98FBE00EB9917F",
+      "from": "Arnberg, Elise",
+      "to": "Elise Arnberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_45C14239E82FB84D9085C04B0942EE9A",
+      "from": "Arnberg, Elise",
+      "to": "Elise Arnberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_B829B2E038645E89364085A2ABB8B36C",
+      "from": "Arnberg, Elise",
+      "to": "Elise Arnberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4624",
+      "from": "Nijmegen, Dionys van",
+      "to": "Dionys van Nijmegen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1459",
+      "from": "Nijmegen, Dionys van",
+      "to": "Dionys van Nijmegen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/RP_T_1968_322_R_",
+      "from": "Nijmegen, Dionys van",
+      "to": "Dionys van Nijmegen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1934",
+      "from": "Nijmegen, Dionys van",
+      "to": "Dionys van Nijmegen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2190",
+      "from": "Regters, Tibout",
+      "to": "Tibout Regters"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2671",
+      "from": "Regters, Tibout",
+      "to": "Tibout Regters"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_329",
+      "from": "Regters, Tibout",
+      "to": "Tibout Regters"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2421",
+      "from": "Regters, Tibout",
+      "to": "Tibout Regters"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4254_4",
+      "from": "Campen, Jacob van",
+      "to": "Jacob van Campen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4254_9",
+      "from": "Campen, Jacob van",
+      "to": "Jacob van Campen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4254_8",
+      "from": "Campen, Jacob van",
+      "to": "Jacob van Campen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4254_2",
+      "from": "Campen, Jacob van",
+      "to": "Jacob van Campen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_356",
+      "from": "Walscapelle, Jacob van",
+      "to": "Jacob van Walscapelle"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2346",
+      "from": "Walscapelle, Jacob van",
+      "to": "Jacob van Walscapelle"
+    },
+    {
+      "source": "nga",
+      "native_id": "119295",
+      "from": "Walscapelle, Jacob van",
+      "to": "Jacob van Walscapelle"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2074",
+      "from": "Mesdach, Salomon",
+      "to": "Salomon Mesdach"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_911",
+      "from": "Mesdach, Salomon",
+      "to": "Salomon Mesdach"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2068",
+      "from": "Mesdach, Salomon",
+      "to": "Salomon Mesdach"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_BF2373422981C3F085EC742820FAB41F",
+      "from": "Gillberg, Jacob Axel",
+      "to": "Jacob Axel Gillberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_5CCA2B4E5DEC3976E3719BAC2DD53CC6",
+      "from": "Gillberg, Jacob Axel",
+      "to": "Jacob Axel Gillberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_0A61B5FE6705BA2E17645707F2D72878",
+      "from": "Gillberg, Jacob Axel",
+      "to": "Jacob Axel Gillberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2788",
+      "from": "Schwartze, Thérèse",
+      "to": "Thérèse Schwartze"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1190",
+      "from": "Schwartze, Thérèse",
+      "to": "Thérèse Schwartze"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1703",
+      "from": "Schwartze, Thérèse",
+      "to": "Thérèse Schwartze"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "117024",
+      "from": "Verboeckhoven, Eugène Joseph",
+      "to": "Eugène Joseph Verboeckhoven"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1149",
+      "from": "Verboeckhoven, Eugène Joseph",
+      "to": "Eugène Joseph Verboeckhoven"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_FA00FD75CB75DBCBC0FADD415EC0DD5A",
+      "from": "Verboeckhoven, Eugène Joseph",
+      "to": "Eugène Joseph Verboeckhoven"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4927",
+      "from": "Tavenraat, Johannes",
+      "to": "Johannes Tavenraat"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/RP_T_2000_107_19_R_",
+      "from": "Tavenraat, Johannes",
+      "to": "Johannes Tavenraat"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4962",
+      "from": "Tavenraat, Johannes",
+      "to": "Johannes Tavenraat"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_726D6825D500326BB9286FFDF06460EB",
+      "from": "Winge, Mårten Eskil",
+      "to": "Mårten Eskil Winge"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_6E7178506DF941DCFCD736A2D4A1BA18",
+      "from": "Bolinder, Johan Erik",
+      "to": "Johan Erik Bolinder"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_73AFE312FC4C570F8335E02F997966C7",
+      "from": "Bolinder, Johan Erik",
+      "to": "Johan Erik Bolinder"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_CFAC29565C36FD8EAA1D96624455AB1D",
+      "from": "Bolinder, Johan Erik",
+      "to": "Johan Erik Bolinder"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_E4DCFD84358CAECFEF33820B8961F577",
+      "from": "Höyer, Cornelius",
+      "to": "Cornelius Höyer"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_6EA7380F4AE94B56FD1B38F8E49575D7",
+      "from": "Höyer, Cornelius",
+      "to": "Cornelius Höyer"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_7AE4ED838A3090352D56A0C096D54BB4",
+      "from": "Höyer, Cornelius",
+      "to": "Cornelius Höyer"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "100495",
+      "from": "Hodges, Charles Howard",
+      "to": "Charles Howard Hodges"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_653",
+      "from": "Hodges, Charles Howard",
+      "to": "Charles Howard Hodges"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "123055",
+      "from": "Hodges, Charles Howard",
+      "to": "Charles Howard Hodges"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "132124",
+      "from": "Kneller, Gottfried",
+      "to": "Gottfried Kneller"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1493",
+      "from": "Kneller, Gottfried",
+      "to": "Gottfried Kneller"
+    },
+    {
+      "source": "nga",
+      "native_id": "61075",
+      "from": "Kneller, Gottfried",
+      "to": "Gottfried Kneller"
+    },
+    {
+      "source": "met",
+      "native_id": "437757",
+      "from": "Stom, Matthias",
+      "to": "Matthias Stom"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_23887",
+      "from": "Stom, Matthias",
+      "to": "Matthias Stom"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4692",
+      "from": "Stom, Matthias",
+      "to": "Matthias Stom"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/783/item_RTBY7S5YMK2JJK7T4OT3P2O7L2JCRNRQ",
+      "from": "Scorel, Jan van",
+      "to": "Jan van Scorel"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_1618",
+      "from": "Scorel, Jan van",
+      "to": "Jan van Scorel"
+    },
+    {
+      "source": "met",
+      "native_id": "336285",
+      "from": "Scorel, Jan van",
+      "to": "Jan van Scorel"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2152",
+      "from": "Ast, Balthasar van der",
+      "to": "Balthasar van der Ast"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "329309",
+      "from": "Ast, Balthasar van der",
+      "to": "Balthasar van der Ast"
+    },
+    {
+      "source": "nga",
+      "native_id": "76207",
+      "from": "Ast, Balthasar van der",
+      "to": "Balthasar van der Ast"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_1535",
+      "from": "Troostwijk, Wouter Johannes van",
+      "to": "Wouter Johannes van Troostwijk"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1169",
+      "from": "Troostwijk, Wouter Johannes van",
+      "to": "Wouter Johannes van Troostwijk"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4857",
+      "from": "Troostwijk, Wouter Johannes van",
+      "to": "Wouter Johannes van Troostwijk"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "118679",
+      "from": "Bassano, Jacopo",
+      "to": "Jacopo Bassano"
+    },
+    {
+      "source": "nga",
+      "native_id": "57612",
+      "from": "Bassano, Jacopo",
+      "to": "Jacopo Bassano"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_2BA96604469312EB2D08ABB9C7A1E22E",
+      "from": "Bassano, Jacopo",
+      "to": "Jacopo Bassano"
+    },
+    {
+      "source": "mia",
+      "native_id": "2487",
+      "from": "Largillière, Nicolas de",
+      "to": "Nicolas de Largillière"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "145135",
+      "from": "Largillière, Nicolas de",
+      "to": "Nicolas de Largillière"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3461",
+      "from": "Largillière, Nicolas de",
+      "to": "Nicolas de Largillière"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4733",
+      "from": "Roland Holst, Richard",
+      "to": "Richard Roland Holst"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4746",
+      "from": "Roland Holst, Richard",
+      "to": "Richard Roland Holst"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/RP_T_1979_45",
+      "from": "Roland Holst, Richard",
+      "to": "Richard Roland Holst"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/410/S_KPS_object_M46840",
+      "from": "Hald, Edward",
+      "to": "Edward Hald"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/410/S_KPS_object_M21592",
+      "from": "Hald, Edward",
+      "to": "Edward Hald"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/410/S_KPS_object_M46500_11",
+      "from": "Hald, Edward",
+      "to": "Edward Hald"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3593",
+      "from": "Israels, Isaac",
+      "to": "Isaac Israels"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3594",
+      "from": "Israels, Isaac",
+      "to": "Isaac Israels"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3597",
+      "from": "Israels, Isaac",
+      "to": "Isaac Israels"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_9A36F46AB2539747D7E3872B699E9533",
+      "from": "Kunnas, Väinö",
+      "to": "Väinö Kunnas"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_1C6DA6DD0D3647FF3EE20338CCC01E46",
+      "from": "Kunnas, Väinö",
+      "to": "Väinö Kunnas"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_0DB80B770CDCCC61A1CD36E2DD57C0DC",
+      "from": "Kunnas, Väinö",
+      "to": "Väinö Kunnas"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3267",
+      "from": "Allebé, August",
+      "to": "August Allebé"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1731",
+      "from": "Allebé, August",
+      "to": "August Allebé"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3266",
+      "from": "Allebé, August",
+      "to": "August Allebé"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_47456EC53DBF2A388237BB2736FC3976",
+      "from": "Engberg, Gabriel",
+      "to": "Gabriel Engberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_64DEC7C498C2E1B56B9F4A380B2178CD",
+      "from": "Engberg, Gabriel",
+      "to": "Gabriel Engberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_39DAE94417FEDE9C918703665B25A36E",
+      "from": "Engberg, Gabriel",
+      "to": "Gabriel Engberg"
+    },
+    {
+      "source": "nga",
+      "native_id": "150499",
+      "from": "Denner, Balthasar",
+      "to": "Balthasar Denner"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1442",
+      "from": "Denner, Balthasar",
+      "to": "Balthasar Denner"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_17210",
+      "from": "Denner, Balthasar",
+      "to": "Balthasar Denner"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_3576",
+      "from": "Novopacký, Jan",
+      "to": "Jan Novopacký"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_3578",
+      "from": "Novopacký, Jan",
+      "to": "Jan Novopacký"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_3586",
+      "from": "Novopacký, Jan",
+      "to": "Jan Novopacký"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3361",
+      "from": "Zwart, Willem de",
+      "to": "Willem de Zwart"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3364",
+      "from": "Zwart, Willem de",
+      "to": "Willem de Zwart"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3506",
+      "from": "Zwart, Willem de",
+      "to": "Willem de Zwart"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_EC891D26A0A18DF2C42E647BB29BB561",
+      "from": "Favén, Antti",
+      "to": "Antti Favén"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_3782C59851BDE0A5C151056E6FECDC70",
+      "from": "Favén, Antti",
+      "to": "Antti Favén"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_B098B73ABC0C5CE280BC66100571E13F",
+      "from": "Favén, Antti",
+      "to": "Antti Favén"
+    },
+    {
+      "source": "met",
+      "native_id": "437282",
+      "from": "Pickenoy, Nicolaes Eliasz.",
+      "to": "Nicolaes Eliasz. Pickenoy"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1312",
+      "from": "Pickenoy, Nicolaes Eliasz.",
+      "to": "Nicolaes Eliasz. Pickenoy"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_699",
+      "from": "Pickenoy, Nicolaes Eliasz.",
+      "to": "Nicolaes Eliasz. Pickenoy"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_606",
+      "from": "Droochsloot, Joost Cornelisz.",
+      "to": "Joost Cornelisz. Droochsloot"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/9200579/vqsbf6u9",
+      "from": "Droochsloot, Joost Cornelisz.",
+      "to": "Joost Cornelisz. Droochsloot"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3227",
+      "from": "Droochsloot, Joost Cornelisz.",
+      "to": "Joost Cornelisz. Droochsloot"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "313461",
+      "from": "Khnopff, Fernand",
+      "to": "Fernand Khnopff"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_5042",
+      "from": "Khnopff, Fernand",
+      "to": "Fernand Khnopff"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_5043",
+      "from": "Khnopff, Fernand",
+      "to": "Fernand Khnopff"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2084",
+      "from": "Tischbein, Johann Friedrich August",
+      "to": "Johann Friedrich August Tischbein"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3785",
+      "from": "Tischbein, Johann Friedrich August",
+      "to": "Johann Friedrich August Tischbein"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2256",
+      "from": "Tischbein, Johann Friedrich August",
+      "to": "Johann Friedrich August Tischbein"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/RP_T_00_492_63A",
+      "from": "Ducros, Louis",
+      "to": "Louis Ducros"
+    },
+    {
+      "source": "nga",
+      "native_id": "124613",
+      "from": "Ducros, Louis",
+      "to": "Louis Ducros"
+    },
+    {
+      "source": "met",
+      "native_id": "334465",
+      "from": "Ducros, Louis",
+      "to": "Louis Ducros"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3897",
+      "from": "Schouman, Aert",
+      "to": "Aert Schouman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4157",
+      "from": "Schouman, Aert",
+      "to": "Aert Schouman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4280",
+      "from": "Schouman, Aert",
+      "to": "Aert Schouman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_18899",
+      "from": "Nordström, Karl",
+      "to": "Karl Nordström"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_21201",
+      "from": "Nordström, Karl",
+      "to": "Karl Nordström"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_DA5B01261FC6B5E27731B7E07876702E",
+      "from": "Nordström, Karl",
+      "to": "Karl Nordström"
+    },
+    {
+      "source": "nga",
+      "native_id": "72887",
+      "from": "Sirani, Elisabetta",
+      "to": "Elisabetta Sirani"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "172509",
+      "from": "Sirani, Elisabetta",
+      "to": "Elisabetta Sirani"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_824F846E2AF10C817027F251A05E701D",
+      "from": "Sirani, Elisabetta",
+      "to": "Elisabetta Sirani"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_ADE122D423A7B66488304CD633C570BD",
+      "from": "Lönnberg, William",
+      "to": "William Lönnberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_0B34A2D59C9773891C339021485917EA",
+      "from": "Lönnberg, William",
+      "to": "William Lönnberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_BB637D21D2FD4DEB241949D1AEC22FBC",
+      "from": "Lönnberg, William",
+      "to": "William Lönnberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/9200579/fa3c4euf",
+      "from": "Sustris, Lambert",
+      "to": "Lambert Sustris"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_5116",
+      "from": "Sustris, Lambert",
+      "to": "Lambert Sustris"
+    },
+    {
+      "source": "met",
+      "native_id": "437768",
+      "from": "Sustris, Lambert",
+      "to": "Lambert Sustris"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2338",
+      "from": "Ruysch, Rachel",
+      "to": "Rachel Ruysch"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_354",
+      "from": "Ruysch, Rachel",
+      "to": "Rachel Ruysch"
+    },
+    {
+      "source": "met",
+      "native_id": "875634",
+      "from": "Ruysch, Rachel",
+      "to": "Rachel Ruysch"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_901",
+      "from": "Dijk, Philip van",
+      "to": "Philip van Dijk"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_897",
+      "from": "Dijk, Philip van",
+      "to": "Philip van Dijk"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_892",
+      "from": "Dijk, Philip van",
+      "to": "Philip van Dijk"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3750",
+      "from": "Loo, Jacob van",
+      "to": "Jacob van Loo"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_81",
+      "from": "Loo, Jacob van",
+      "to": "Jacob van Loo"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2116",
+      "from": "Loo, Jacob van",
+      "to": "Jacob van Loo"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2201",
+      "from": "Moritz, Louis",
+      "to": "Louis Moritz"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2194",
+      "from": "Moritz, Louis",
+      "to": "Louis Moritz"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4936",
+      "from": "Moritz, Louis",
+      "to": "Louis Moritz"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_15474",
+      "from": "Hörberg, Pehr",
+      "to": "Pehr Hörberg"
+    },
+    {
+      "source": "met",
+      "native_id": "651672",
+      "from": "Hörberg, Pehr",
+      "to": "Pehr Hörberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/410/S_KPS_object_M22638_8",
+      "from": "Hörberg, Pehr",
+      "to": "Pehr Hörberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_378D9DB10EDBD1D55950081CD4EF5863",
+      "from": "Danielson-Gambogi, Elin",
+      "to": "Elin Danielson-Gambogi"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_AA352E374EBD8087B30D919D8A9364D4",
+      "from": "Danielson-Gambogi, Elin",
+      "to": "Elin Danielson-Gambogi"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_6F07783D8C538E0007C77334F5284CD0",
+      "from": "Poel, Egbert Lievensz. van der",
+      "to": "Egbert Lievensz. van der Poel"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_308",
+      "from": "Poel, Egbert Lievensz. van der",
+      "to": "Egbert Lievensz. van der Poel"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/410/S_KPS_object_M21573",
+      "from": "Reuterswärd, Patrik",
+      "to": "Patrik Reuterswärd"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/410/S_KPS_object_M46826_251",
+      "from": "Reuterswärd, Patrik",
+      "to": "Patrik Reuterswärd"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_1460",
+      "from": "Paelinck, Joseph",
+      "to": "Joseph Paelinck"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "117030",
+      "from": "Paelinck, Joseph",
+      "to": "Joseph Paelinck"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_6311",
+      "from": "Žabota, Ivan",
+      "to": "Ivan Žabota"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_5105",
+      "from": "Žabota, Ivan",
+      "to": "Ivan Žabota"
+    },
+    {
+      "source": "nga",
+      "native_id": "1192",
+      "from": "Predis, Ambrogio de",
+      "to": "Ambrogio de Predis"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3008",
+      "from": "Predis, Ambrogio de",
+      "to": "Ambrogio de Predis"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4571",
+      "from": "Bary, Hendrik",
+      "to": "Hendrik Bary"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/RP_P_BI_620",
+      "from": "Bary, Hendrik",
+      "to": "Hendrik Bary"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/502/_021018743538",
+      "from": "Wilse, Anders Beer",
+      "to": "Anders Beer Wilse"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/502/_021018748460",
+      "from": "Wilse, Anders Beer",
+      "to": "Anders Beer Wilse"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/502/_0210111919939",
+      "from": "Wilse, Anders Beer",
+      "to": "Anders Beer Wilse"
+    },
+    {
+      "source": "nga",
+      "native_id": "143852",
+      "from": "Genoels, Abraham",
+      "to": "Abraham Genoels"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1839",
+      "from": "Genoels, Abraham",
+      "to": "Abraham Genoels"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_FBB7998690FCA436C11EEB9F00D09BB8",
+      "from": "Finnberg, Gustaf Wilhelm",
+      "to": "Gustaf Wilhelm Finnberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_2F1CB57C929236037F00D6848CA8050C",
+      "from": "Finnberg, Gustaf Wilhelm",
+      "to": "Gustaf Wilhelm Finnberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4127",
+      "from": "Favray, Antoine de",
+      "to": "Antoine de Favray"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/9200579/raa4976u",
+      "from": "Favray, Antoine de",
+      "to": "Antoine de Favray"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_5143",
+      "from": "Beest, Sybrand van",
+      "to": "Sybrand van Beest"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021672/resource_document_mauritshuis_541",
+      "from": "Beest, Sybrand van",
+      "to": "Sybrand van Beest"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1355",
+      "from": "Lelie, Adriaan de",
+      "to": "Adriaan de Lelie"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3789",
+      "from": "Lelie, Adriaan de",
+      "to": "Adriaan de Lelie"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1750",
+      "from": "Mouilleron, Adolphe",
+      "to": "Adolphe Mouilleron"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "120401",
+      "from": "Mouilleron, Adolphe",
+      "to": "Adolphe Mouilleron"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1643",
+      "from": "Berckman, Hendrick",
+      "to": "Hendrick Berckman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1644",
+      "from": "Berckman, Hendrick",
+      "to": "Hendrick Berckman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_199",
+      "from": "Os, Georgius Jacobus Johannes van",
+      "to": "Georgius Jacobus Johannes van Os"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1105",
+      "from": "Os, Georgius Jacobus Johannes van",
+      "to": "Georgius Jacobus Johannes van Os"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1683",
+      "from": "Willaerts, Abraham",
+      "to": "Abraham Willaerts"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_579",
+      "from": "Willaerts, Abraham",
+      "to": "Abraham Willaerts"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/410/S_KPS_object_M16705_b",
+      "from": "Ollers, Edvin",
+      "to": "Edvin Ollers"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/410/S_KPS_object_M16642",
+      "from": "Ollers, Edvin",
+      "to": "Edvin Ollers"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2714",
+      "from": "Jelgerhuis, Johannes",
+      "to": "Johannes Jelgerhuis"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1055",
+      "from": "Jelgerhuis, Johannes",
+      "to": "Johannes Jelgerhuis"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_879",
+      "from": "Wissing, Willem",
+      "to": "Willem Wissing"
+    },
+    {
+      "source": "met",
+      "native_id": "437945",
+      "from": "Wissing, Willem",
+      "to": "Willem Wissing"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021009/_E4D76BAECC5AA7A154CD9AE4124DCC22",
+      "from": "Neyts, Gillis",
+      "to": "Gillis Neyts"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "123366",
+      "from": "Neyts, Gillis",
+      "to": "Gillis Neyts"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3961",
+      "from": "Pieneman, Nicolaas",
+      "to": "Nicolaas Pieneman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3877",
+      "from": "Pieneman, Nicolaas",
+      "to": "Nicolaas Pieneman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1350",
+      "from": "Anraedt, Pieter van",
+      "to": "Pieter van Anraedt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2",
+      "from": "Anraedt, Pieter van",
+      "to": "Pieter van Anraedt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1103",
+      "from": "Os, Pieter Gerardus van",
+      "to": "Pieter Gerardus van Os"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3229",
+      "from": "Os, Pieter Gerardus van",
+      "to": "Pieter Gerardus van Os"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_755",
+      "from": "Mirou, Anton",
+      "to": "Anton Mirou"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "132219",
+      "from": "Mirou, Anton",
+      "to": "Anton Mirou"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1710",
+      "from": "Lelienbergh, Cornelis",
+      "to": "Cornelis Lelienbergh"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1455",
+      "from": "Lelienbergh, Cornelis",
+      "to": "Cornelis Lelienbergh"
+    },
+    {
+      "source": "nga",
+      "native_id": "139258",
+      "from": "Stuck, Franz von",
+      "to": "Franz von Stuck"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_F0C292ECF57D09DB2100962E467C4AD9",
+      "from": "Stuck, Franz von",
+      "to": "Franz von Stuck"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/117/_95E9ACBD_EA47_401D_A70E_3EDA5C23C4C9",
+      "from": "Ehrensvärd, Augustin",
+      "to": "Augustin Ehrensvärd"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_50F1D7464809582DE89943C31FA9C1F6",
+      "from": "Ehrensvärd, Augustin",
+      "to": "Augustin Ehrensvärd"
+    },
+    {
+      "source": "met",
+      "native_id": "436077",
+      "from": "Dahl, Michael",
+      "to": "Michael Dahl"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_AE158E7A9A7248AAF678593F3C6CB2DF",
+      "from": "Dahl, Michael",
+      "to": "Michael Dahl"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/410/S_KPS_object_M10753_a",
+      "from": "Forsslund, Jonas",
+      "to": "Jonas Forsslund"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_018319A58832A18BA762257DEE4F6A3B",
+      "from": "Forsslund, Jonas",
+      "to": "Jonas Forsslund"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_C86F4F966DD72F0428F95721F863D66E",
+      "from": "Scheffel, Johan Henrik",
+      "to": "Johan Henrik Scheffel"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_799D21E318E4ABA4A4AD23A946684032",
+      "from": "Scheffel, Johan Henrik",
+      "to": "Johan Henrik Scheffel"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_8F9D8DBCBCDEC1B31AADA9966928A9D6",
+      "from": "Guérin, Charles-François-Prosper",
+      "to": "Charles-François-Prosper Guérin"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "172117",
+      "from": "Guérin, Charles-François-Prosper",
+      "to": "Charles-François-Prosper Guérin"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/602/S_DM_object_DFK0320",
+      "from": "Jönsson, Kers Erik",
+      "to": "Kers Erik Jönsson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/602/S_DM_object_DFK0319",
+      "from": "Jönsson, Kers Erik",
+      "to": "Kers Erik Jönsson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_22AC40474BFC9E848D38CCBEEBCCDD68",
+      "from": "Heusch, Willem de",
+      "to": "Willem de Heusch"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_149",
+      "from": "Heusch, Willem de",
+      "to": "Willem de Heusch"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3076",
+      "from": "Blommers, Bernardus Johannes",
+      "to": "Bernardus Johannes Blommers"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2974",
+      "from": "Blommers, Bernardus Johannes",
+      "to": "Bernardus Johannes Blommers"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1711",
+      "from": "Murant, Emanuel",
+      "to": "Emanuel Murant"
+    },
+    {
+      "source": "met",
+      "native_id": "437171",
+      "from": "Murant, Emanuel",
+      "to": "Emanuel Murant"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "150693",
+      "from": "Segantini, Giovanni",
+      "to": "Giovanni Segantini"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3346",
+      "from": "Segantini, Giovanni",
+      "to": "Giovanni Segantini"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_6535",
+      "from": "Klemens, Jozef Božetech",
+      "to": "Jozef Božetech Klemens"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_6536",
+      "from": "Klemens, Jozef Božetech",
+      "to": "Jozef Božetech Klemens"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_F58C91BC3460240B88D2D1A6AE8F61C9",
+      "from": "Snellman, Eero",
+      "to": "Eero Snellman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_C86D9811FEBE7BAAE1A8C5FF75198251",
+      "from": "Snellman, Eero",
+      "to": "Eero Snellman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3775",
+      "from": "Bosch, Hendrik van den",
+      "to": "Hendrik van den Bosch"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4542",
+      "from": "Bosch, Hendrik van den",
+      "to": "Hendrik van den Bosch"
+    },
+    {
+      "source": "met",
+      "native_id": "437089",
+      "from": "Boonen, Arnold",
+      "to": "Arnold Boonen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_1567",
+      "from": "Boonen, Arnold",
+      "to": "Arnold Boonen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_1530",
+      "from": "Compe, Jan ten",
+      "to": "Jan ten Compe"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_1529",
+      "from": "Compe, Jan ten",
+      "to": "Jan ten Compe"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/91617/upmu_photo_CO0106_21",
+      "from": "Arvidson, Tommy",
+      "to": "Tommy Arvidson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/91617/upmu_photo_DIA06660",
+      "from": "Arvidson, Tommy",
+      "to": "Tommy Arvidson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/91617/upmu_photo_CO0188_09",
+      "from": "Arvidson, Tommy",
+      "to": "Tommy Arvidson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/91617/upmu_photo_CO0094_35",
+      "from": "Arvidson, Tommy",
+      "to": "Tommy Arvidson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/91617/upmu_photo_CO0292_14",
+      "from": "Arvidson, Tommy",
+      "to": "Tommy Arvidson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/91617/upmu_photo_CO0203_03",
+      "from": "Arvidson, Tommy",
+      "to": "Tommy Arvidson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_E543A2A3E8E42E294B3811E8E6A2CB82",
+      "from": "Åberg, Victoria",
+      "to": "Victoria Åberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_77252BEA2B03FEE5C4744FE19612BB56",
+      "from": "Åberg, Victoria",
+      "to": "Victoria Åberg"
+    },
+    {
+      "source": "met",
+      "native_id": "438949",
+      "from": "Hansen, Constantin",
+      "to": "Constantin Hansen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_043CC41A9F29C4427B63137552F65513",
+      "from": "Hansen, Constantin",
+      "to": "Constantin Hansen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2322",
+      "from": "Esselens, Jacob",
+      "to": "Jacob Esselens"
+    },
+    {
+      "source": "met",
+      "native_id": "335483",
+      "from": "Esselens, Jacob",
+      "to": "Jacob Esselens"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "167981",
+      "from": "Latenay, Gaston de",
+      "to": "Gaston de Latenay"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_BD51398D69F1E5DB059D81F504B6EB78",
+      "from": "Latenay, Gaston de",
+      "to": "Gaston de Latenay"
+    },
+    {
+      "source": "met",
+      "native_id": "334773",
+      "from": "Berckheyde, Gerrit Adriaensz.",
+      "to": "Gerrit Adriaensz. Berckheyde"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_104",
+      "from": "Berckheyde, Gerrit Adriaensz.",
+      "to": "Gerrit Adriaensz. Berckheyde"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4215",
+      "from": "Glauber, Johannes",
+      "to": "Johannes Glauber"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4216",
+      "from": "Glauber, Johannes",
+      "to": "Johannes Glauber"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1816",
+      "from": "Hanedoes, Louwrens",
+      "to": "Louwrens Hanedoes"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1818",
+      "from": "Hanedoes, Louwrens",
+      "to": "Louwrens Hanedoes"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/410/S_KPS_object_M47549",
+      "from": "Gidstam, Björn",
+      "to": "Björn Gidstam"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/410/S_KPS_object_M47541",
+      "from": "Gidstam, Björn",
+      "to": "Björn Gidstam"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_60FAF2E45F95344A6D9217ED4ABA40A9",
+      "from": "Rissanen, Juho",
+      "to": "Juho Rissanen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_209F584442CE440BC3410676B0209F88",
+      "from": "Rissanen, Juho",
+      "to": "Juho Rissanen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_DD0726CF544A9AFE4033199B5DB0A3D3",
+      "from": "Uotila, Aukusti",
+      "to": "Aukusti Uotila"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/117/_2339F42B_9747_455B_B473_6759BBDA04C8",
+      "from": "Uotila, Aukusti",
+      "to": "Aukusti Uotila"
+    },
+    {
+      "source": "nga",
+      "native_id": "73498",
+      "from": "Luyken, Jan",
+      "to": "Jan Luyken"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/RP_P_1896_A_19368_2506",
+      "from": "Luyken, Jan",
+      "to": "Jan Luyken"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "150719",
+      "from": "Schönfeld, Johann Heinrich",
+      "to": "Johann Heinrich Schönfeld"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_5905",
+      "from": "Schönfeld, Johann Heinrich",
+      "to": "Johann Heinrich Schönfeld"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_140",
+      "from": "Codde, Pieter",
+      "to": "Pieter Codde"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_17405",
+      "from": "Codde, Pieter",
+      "to": "Pieter Codde"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2088",
+      "from": "Brugghen, Guillaume Anne van der",
+      "to": "Guillaume Anne van der Brugghen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2087",
+      "from": "Brugghen, Guillaume Anne van der",
+      "to": "Guillaume Anne van der Brugghen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/9200579/py97tacn",
+      "from": "Buesem, Jan Jansz.",
+      "to": "Jan Jansz. Buesem"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2253",
+      "from": "Buesem, Jan Jansz.",
+      "to": "Jan Jansz. Buesem"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/410/S_KPS_object_M48964_9",
+      "from": "Nordenberg, Bengt",
+      "to": "Bengt Nordenberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/410/S_KPS_object_M10919_a",
+      "from": "Nordenberg, Bengt",
+      "to": "Bengt Nordenberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_1750",
+      "from": "Oberman, Anthony",
+      "to": "Anthony Oberman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4890",
+      "from": "Oberman, Anthony",
+      "to": "Anthony Oberman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_244",
+      "from": "Ketel, Cornelis",
+      "to": "Cornelis Ketel"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3122",
+      "from": "Ketel, Cornelis",
+      "to": "Cornelis Ketel"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2254",
+      "from": "Toorenvliet, Jacob",
+      "to": "Jacob Toorenvliet"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/9200579/rf38r77h",
+      "from": "Toorenvliet, Jacob",
+      "to": "Jacob Toorenvliet"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_788",
+      "from": "Broeck, Elias van den",
+      "to": "Elias van den Broeck"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_18360",
+      "from": "Broeck, Elias van den",
+      "to": "Elias van den Broeck"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_CB5C72B5543C1D32C4901D33FF5B9337",
+      "from": "Rylander, Carl Isak",
+      "to": "Carl Isak Rylander"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_71DA917421A2A121CF59EAD10BD4AB97",
+      "from": "Rylander, Carl Isak",
+      "to": "Carl Isak Rylander"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2874",
+      "from": "Rossum, Jan Cornelis van",
+      "to": "Jan Cornelis van Rossum"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_1549",
+      "from": "Rossum, Jan Cornelis van",
+      "to": "Jan Cornelis van Rossum"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_59CFBBA8CEEF223BA996695406532F3E",
+      "from": "Wargh, Carl",
+      "to": "Carl Wargh"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2008",
+      "from": "Vollerdt, Johann Christian",
+      "to": "Johann Christian Vollerdt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021009/_1A2BD7E1AB66B8E1EA1B1901D4D8FC93",
+      "from": "Mikkola, Erkki",
+      "to": "Erkki Mikkola"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1672",
+      "from": "Verheyden, Mattheus",
+      "to": "Mattheus Verheyden"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_6CE48F3C2A1EEC5C3A4EC885FF48E69A",
+      "from": "Cossiers, Jan",
+      "to": "Jan Cossiers"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4074",
+      "from": "Engelberts, Willem Jodocus Mattheus",
+      "to": "Willem Jodocus Mattheus Engelberts"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1222",
+      "from": "Reclam, Friedrich",
+      "to": "Friedrich Reclam"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/916121/S_OLM_object_OLM_9582",
+      "from": "Lagerholm, Wilhelmina",
+      "to": "Wilhelmina Lagerholm"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_D0B8A78675C9200B5C58A4052DFB0186",
+      "from": "Stieler, Joseph Karl",
+      "to": "Joseph Karl Stieler"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1531",
+      "from": "Wever, Cornelis",
+      "to": "Cornelis Wever"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_203",
+      "from": "Duyster, Willem Cornelisz.",
+      "to": "Willem Cornelisz. Duyster"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3072",
+      "from": "Bilders, Gerard",
+      "to": "Gerard Bilders"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3882",
+      "from": "Cromwell, Oliver",
+      "to": "Oliver Cromwell"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_73659A95BD6E863B5C0A4CDBC800F66D",
+      "from": "Riesener, Henri François",
+      "to": "Henri François Riesener"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_487",
+      "from": "Wouwerman, Pieter",
+      "to": "Pieter Wouwerman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1779",
+      "from": "Wassenbergh, Jan Abel",
+      "to": "Jan Abel Wassenbergh"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_121",
+      "from": "Cuyp, Jacob Gerritsz",
+      "to": "Jacob Gerritsz Cuyp"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4896",
+      "from": "Odevaere, Joseph Denis",
+      "to": "Joseph Denis Odevaere"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_1693",
+      "from": "Luns, Huib",
+      "to": "Huib Luns"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_4ee0cb85_ee12_41e3_a5d1_c306bf4d8371",
+      "from": "Vivien, Joseph",
+      "to": "Joseph Vivien"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_37",
+      "from": "Bergen, Dirck van",
+      "to": "Dirck van Bergen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/RP_P_OB_24_559",
+      "from": "Körnlein, Johannes",
+      "to": "Johannes Körnlein"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/410/S_KPS_object_M17532",
+      "from": "Faustman, Mollie",
+      "to": "Mollie Faustman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2857",
+      "from": "Cuyp, Benjamin Gerritsz",
+      "to": "Benjamin Gerritsz Cuyp"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2024903/photography_ProvidedCHO_KU_Leuven_9990713410101488",
+      "from": "Cuyp, Benjamin Gerritsz",
+      "to": "Benjamin Gerritsz Cuyp"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_57",
+      "from": "Brassauw, Melchior",
+      "to": "Melchior Brassauw"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_7E71FFD2F5B29484521B6C232FDEB859",
+      "from": "Metz, Gertrud",
+      "to": "Gertrud Metz"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_98098EAAF5FF4FD42481DCCBD94B254A",
+      "from": "Gude, Hans",
+      "to": "Hans Gude"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_5F56336203D94FD8EAE4914C175AF165",
+      "from": "Stock, Henri Charles",
+      "to": "Henri Charles Stock"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3727",
+      "from": "Maris, Matthijs",
+      "to": "Matthijs Maris"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/502/_011013337700",
+      "from": "Selmer, Marcus",
+      "to": "Marcus Selmer"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2072",
+      "from": "Geldorp, Gortzius",
+      "to": "Gortzius Geldorp"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/RP_P_1995_25_119",
+      "from": "Jode, Gerard de",
+      "to": "Gerard de Jode"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_400",
+      "from": "Willeboirts Bosschaert, Thomas",
+      "to": "Thomas Willeboirts Bosschaert"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_693",
+      "from": "Hemert, Jan van",
+      "to": "Jan van Hemert"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_EF83F39B63FB69A65B46CAFD8825F347",
+      "from": "Rota, Giuseppe",
+      "to": "Giuseppe Rota"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/RP_P_OB_105_393",
+      "from": "Senus, Willem van",
+      "to": "Willem van Senus"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3866",
+      "from": "Poorter, Bastiaan de",
+      "to": "Bastiaan de Poorter"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/636/_8c4c22ef_f14c_4a53_956a_b8b63488935a",
+      "from": "Salminen, Pekka",
+      "to": "Pekka Salminen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_88",
+      "from": "Kupecký, Ján",
+      "to": "Ján Kupecký"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2241",
+      "from": "Borch, Moses ter",
+      "to": "Moses ter Borch"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_5609",
+      "from": "Magyar-Mannheimer, Gusztáv",
+      "to": "Gusztáv Magyar-Mannheimer"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/916121/S_OLM_object_OLM_21725",
+      "from": "Grünewald, Isaac",
+      "to": "Isaac Grünewald"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3765",
+      "from": "Coeman, Jacob",
+      "to": "Jacob Coeman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1917",
+      "from": "Winter, Abraham Hendrik",
+      "to": "Abraham Hendrik Winter"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_1530",
+      "from": "Majsch, Eduard",
+      "to": "Eduard Majsch"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/410/S_KPS_object_M49674",
+      "from": "Ekwall, Emma",
+      "to": "Emma Ekwall"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3744",
+      "from": "Champaigne, Jean-Baptiste de",
+      "to": "Jean-Baptiste de Champaigne"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/91659/sk_object_SKANM0139458A",
+      "from": "Kronberg, Julius",
+      "to": "Julius Kronberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_87806628FD14602FB272B3A518A9D6CC",
+      "from": "Schuch, Carl",
+      "to": "Carl Schuch"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_1561",
+      "from": "Clercq, J. de",
+      "to": "J. de Clercq"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1032",
+      "from": "Eelkema, Eelke Jelles",
+      "to": "Eelke Jelles Eelkema"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_6D0E11E880BA7DCD6F522C45BF028D4F",
+      "from": "Syberg, Fritz",
+      "to": "Fritz Syberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2347",
+      "from": "Werff, Adriaen van der",
+      "to": "Adriaen van der Werff"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2573",
+      "from": "Stoop, Maerten",
+      "to": "Maerten Stoop"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_4C3B98E4C0EDCE8222964941C436ACC3",
+      "from": "Nordgrén, Anna",
+      "to": "Anna Nordgrén"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_E56C4962B55B1E4ADE909506B0B8639B",
+      "from": "Grassi, Josef",
+      "to": "Josef Grassi"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2826",
+      "from": "Lance, George",
+      "to": "George Lance"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_530D75E7FC13FDB5C4C1C1E8FE22C578",
+      "from": "Köhler, Johan Gustaf",
+      "to": "Johan Gustaf Köhler"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4241",
+      "from": "Meegeren, Han van",
+      "to": "Han van Meegeren"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1758",
+      "from": "Rochussen, Charles",
+      "to": "Charles Rochussen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2199",
+      "from": "Backhuijzen, Gerrit",
+      "to": "Gerrit Backhuijzen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/G_4907",
+      "from": "Bouttats, Gerard",
+      "to": "Gerard Bouttats"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/RP_P_OB_46_289",
+      "from": "Lommelin, Adriaen",
+      "to": "Adriaen Lommelin"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1243",
+      "from": "Voort, Cornelis van der",
+      "to": "Cornelis van der Voort"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2423",
+      "from": "May, Jan Willem",
+      "to": "Jan Willem May"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1559",
+      "from": "Valckenborch, Lucas van",
+      "to": "Lucas van Valckenborch"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_09E695877BF689E71A191B59800384D7",
+      "from": "Lagrenée, François",
+      "to": "François Lagrenée"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/410/S_KPS_object_M7097",
+      "from": "Sandzén, Birger",
+      "to": "Birger Sandzén"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_A826EF4F59CA850699889A4C9F0E5159",
+      "from": "Ring, Laurits Andersen",
+      "to": "Laurits Andersen Ring"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1591",
+      "from": "Fabritius, Carel",
+      "to": "Carel Fabritius"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/RP_P_OB_70_045",
+      "from": "Ram, Johannes de",
+      "to": "Johannes de Ram"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_75E7FE827A27893A12381CCD72A03397",
+      "from": "Tidemand, Adolph",
+      "to": "Adolph Tidemand"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_1526",
+      "from": "Mij, Hieronymus van der",
+      "to": "Hieronymus van der Mij"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1191",
+      "from": "Isaacsz, Isaac",
+      "to": "Isaac Isaacsz"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_A5C87E66211EA60CDED0B69B88E713C2",
+      "from": "Storck, Abraham",
+      "to": "Abraham Storck"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021009/_B837CE2086EF3C8C328C5F8BDF938D8D",
+      "from": "Saarinen, Eliel",
+      "to": "Eliel Saarinen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4675",
+      "from": "Susan, Johannes Daniël",
+      "to": "Johannes Daniël Susan"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/1177/S_GOM_object_GKM1192",
+      "from": "Lundgren, Tyra",
+      "to": "Tyra Lundgren"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_20",
+      "from": "Beerstraten, Jan Abrahamsz.",
+      "to": "Jan Abrahamsz. Beerstraten"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_492D0A372D3FD59A3398D7FE3E786718",
+      "from": "Comerford, John",
+      "to": "John Comerford"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/RP_T_1963_363",
+      "from": "Dijsselhof, Gerrit Willem",
+      "to": "Gerrit Willem Dijsselhof"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_43C09735671AC033A6624467BD65B60E",
+      "from": "Erichsen, Thorvald",
+      "to": "Thorvald Erichsen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_576",
+      "from": "Block, Eugène François de",
+      "to": "Eugène François de Block"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_265",
+      "from": "Purgau, Franz Michael Siegmund von",
+      "to": "Franz Michael Siegmund von Purgau"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/885/item_QSYVTLBET7FEDKSR2TJCMGH5B72C5YQP",
+      "from": "Moosbrugger, Wendelin",
+      "to": "Wendelin Moosbrugger"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_135",
+      "from": "Haanen, George Gillis",
+      "to": "George Gillis Haanen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1735",
+      "from": "Bombled, Karel Frederik",
+      "to": "Karel Frederik Bombled"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_80067C70E48D134D98922497F2DBD2A2",
+      "from": "Stäck, Joseph Magnus",
+      "to": "Joseph Magnus Stäck"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2941",
+      "from": "Verster, Floris",
+      "to": "Floris Verster"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_A9AE3115CEE7989DE8C83968BA86044D",
+      "from": "Pasch, Ulrika Fredrika",
+      "to": "Ulrika Fredrika Pasch"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2058",
+      "from": "Schooten, Floris van",
+      "to": "Floris van Schooten"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_90",
+      "from": "Nason, Pieter",
+      "to": "Pieter Nason"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_A675ED969632B26ED73622B32E9FBD6C",
+      "from": "Wulfraet, Margaretha",
+      "to": "Margaretha Wulfraet"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_B3510352B5AE2582C4E50B550975D866",
+      "from": "Neyn, Pieter de",
+      "to": "Pieter de Neyn"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_88",
+      "from": "Asch, Pieter Jansz. van",
+      "to": "Pieter Jansz. van Asch"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_761",
+      "from": "Attama, J.",
+      "to": "J. Attama"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_3480",
+      "from": "Storck, Jacobus",
+      "to": "Jacobus Storck"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1290",
+      "from": "Ferguson, William Gowe",
+      "to": "William Gowe Ferguson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_525",
+      "from": "Pietersz., Aert",
+      "to": "Aert Pietersz."
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1016",
+      "from": "Burch, Hendrick van der",
+      "to": "Hendrick van der Burch"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_AD1B408CDB472232099EC3D6EF58D779",
+      "from": "Liljefors, Bruno",
+      "to": "Bruno Liljefors"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_4695",
+      "from": "Baen, Jan de",
+      "to": "Jan de Baen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_241",
+      "from": "Tempel, Abraham van den",
+      "to": "Abraham van den Tempel"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_2703",
+      "from": "Schilcher, Friedrich",
+      "to": "Friedrich Schilcher"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1361",
+      "from": "Vroom, Hendrik Cornelisz.",
+      "to": "Hendrik Cornelisz. Vroom"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_523",
+      "from": "Leemans, Johannes",
+      "to": "Johannes Leemans"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1536",
+      "from": "Gelder, Nicolaes van",
+      "to": "Nicolaes van Gelder"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1225",
+      "from": "Haag, Tethart Philip Christian",
+      "to": "Tethart Philip Christian Haag"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_8DA1177654F0E6AA30E92790C29E2B66",
+      "from": "Purvītis, Vilhelms",
+      "to": "Vilhelms Purvītis"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_C2DF47DEFA86746D08609FC868B9FBA5",
+      "from": "Bochoutt, Godfriedt van",
+      "to": "Godfriedt van Bochoutt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_4549",
+      "from": "Kaván, František",
+      "to": "František Kaván"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_174",
+      "from": "Kalvoda, Alois",
+      "to": "Alois Kalvoda"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1634",
+      "from": "Gallis, Pieter",
+      "to": "Pieter Gallis"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/RP_P_1938_1515",
+      "from": "Grondhout, Willem Adrianus",
+      "to": "Willem Adrianus Grondhout"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4059",
+      "from": "Eeckhout, Jacob Joseph",
+      "to": "Jacob Joseph Eeckhout"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_111",
+      "from": "Doncker, Herman Meynderts",
+      "to": "Herman Meynderts Doncker"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1397",
+      "from": "Nooms, Reinier",
+      "to": "Reinier Nooms"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/NG_2008_64",
+      "from": "Keiga, Kawahara",
+      "to": "Kawahara Keiga"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_336",
+      "from": "Roepel, Coenraet",
+      "to": "Coenraet Roepel"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4563",
+      "from": "Nolpe, Pieter",
+      "to": "Pieter Nolpe"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2535",
+      "from": "Zürcher, Jan",
+      "to": "Jan Zürcher"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_882",
+      "from": "Ziesenis, Johann Georg",
+      "to": "Johann Georg Ziesenis"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_28C565EA9513901CE8266233EC9522E5",
+      "from": "Wahl, Johann Salomon",
+      "to": "Johann Salomon Wahl"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_716F006B347C5CC5EC33E091566EDF0F",
+      "from": "Köhler, Per",
+      "to": "Per Köhler"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_194AF2E90B96B4D3D5AE943808B51C6A",
+      "from": "Karsten, Ludvig",
+      "to": "Ludvig Karsten"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2374",
+      "from": "Schooten, Joris van",
+      "to": "Joris van Schooten"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/916121/S_OLM_object_OLM_17802",
+      "from": "Hjertén, Sigrid",
+      "to": "Sigrid Hjertén"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_310AE46442610592994919BBD89DD380",
+      "from": "Libert, Georg Emil",
+      "to": "Georg Emil Libert"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2419",
+      "from": "Numan, Hermanus",
+      "to": "Hermanus Numan"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_62266B57EBF0CFB4608C9245A546FBE8",
+      "from": "Hallström, Eric",
+      "to": "Eric Hallström"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1069",
+      "from": "Kruseman, Cornelis",
+      "to": "Cornelis Kruseman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_204",
+      "from": "Potter, Pieter Symonsz.",
+      "to": "Pieter Symonsz. Potter"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_906",
+      "from": "Loncke, Jacob Lambrechtsz.",
+      "to": "Jacob Lambrechtsz. Loncke"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_668586B50365DFA42C0CA0AA38A3018B",
+      "from": "Seghers, Gerard",
+      "to": "Gerard Seghers"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4588",
+      "from": "Bouttats, Gaspar",
+      "to": "Gaspar Bouttats"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_A2E89904340317D8F17128BEAF9438CC",
+      "from": "Barbarini, Franz",
+      "to": "Franz Barbarini"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1574",
+      "from": "Diepraam, Abraham",
+      "to": "Abraham Diepraam"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/502/_021018753008",
+      "from": "Lindahl, Axel",
+      "to": "Axel Lindahl"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/502/_011023127598",
+      "from": "Lorentzen, Christian August",
+      "to": "Christian August Lorentzen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/NG_NM_6095_A",
+      "from": "Tromp, Cornelis",
+      "to": "Cornelis Tromp"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2813",
+      "from": "Torrentius, Johannes",
+      "to": "Johannes Torrentius"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/410/S_KPS_object_M18933",
+      "from": "Kjellberg-Juel, Astrid",
+      "to": "Astrid Kjellberg-Juel"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_EBC934670D360D9403ABEF0083324926",
+      "from": "Wacklin, Isak",
+      "to": "Isak Wacklin"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_777",
+      "from": "Noort, Pieter van",
+      "to": "Pieter van Noort"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_1872",
+      "from": "Bauer, Konštantín",
+      "to": "Konštantín Bauer"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_703A7518F0D8343B87E17389D9398855",
+      "from": "Diziani, Antonio",
+      "to": "Antonio Diziani"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2373",
+      "from": "Heck, Claes Jacobsz. van der",
+      "to": "Claes Jacobsz. van der Heck"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3804",
+      "from": "Spoel, Jacob",
+      "to": "Jacob Spoel"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_631",
+      "from": "Treskoň, Ladislav",
+      "to": "Ladislav Treskoň"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4752",
+      "from": "Ephraim, J.",
+      "to": "J. Ephraim"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_89AF77FC01367B85E6A40AF24EFF994B",
+      "from": "Nylund, Felix",
+      "to": "Felix Nylund"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_756",
+      "from": "Stalbemt, Adriaen van",
+      "to": "Adriaen van Stalbemt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/410/S_KPS_object_M16511",
+      "from": "Gate, Simon",
+      "to": "Simon Gate"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1336",
+      "from": "Schendel, Petrus van",
+      "to": "Petrus van Schendel"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1847",
+      "from": "Nouts, Michiel",
+      "to": "Michiel Nouts"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2222",
+      "from": "Treck, Jan Jansz.",
+      "to": "Jan Jansz. Treck"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1544",
+      "from": "Meerman, Hendrik",
+      "to": "Hendrik Meerman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/RP_P_BI_4506",
+      "from": "Vinne, Isaac Vincentsz. van der",
+      "to": "Isaac Vincentsz. van der Vinne"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2676",
+      "from": "Beeldemaker, Adriaen Cornelisz",
+      "to": "Adriaen Cornelisz Beeldemaker"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1131",
+      "from": "Schotel, Johannes Christiaan",
+      "to": "Johannes Christiaan Schotel"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4664",
+      "from": "Groenia, Petrus",
+      "to": "Petrus Groenia"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3990",
+      "from": "Beccaruzzi, Francesco",
+      "to": "Francesco Beccaruzzi"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1107",
+      "from": "Os, Maria Margaretha van",
+      "to": "Maria Margaretha van Os"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1596",
+      "from": "Bijlert, Jan van",
+      "to": "Jan van Bijlert"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_87AA3955A6A525683A3CE5A2E15A4DAA",
+      "from": "Neff, Timoleon von",
+      "to": "Timoleon von Neff"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2140",
+      "from": "Mijn, George van der",
+      "to": "George van der Mijn"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_B2181C142C0A2D1D2A01CA7242DD9580",
+      "from": "Gebhard, Albert",
+      "to": "Albert Gebhard"
+    }
+  ]
+}
