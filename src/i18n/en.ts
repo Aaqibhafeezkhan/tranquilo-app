@@ -112,6 +112,8 @@ export const en = {
   "detail.cite.failed": "Couldn't copy",
   "detail.print.button": "Get a print",
   "detail.print.soon": "Checkout is opening soon.",
+  "detail.print.price": "about {price}",
+  "detail.print.estimate": "Estimated prices, delivery included.",
   "detail.print.showMockup": "Show the {product} mock-up",
   "detail.print.mockupNote": "A preview. The printed colours and edges may differ slightly.",
   "print.product.mini_print": "Mini print",

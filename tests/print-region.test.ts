@@ -28,15 +28,15 @@ async function get(headers: Record<string, any>) {
 
 describe("mapping a country to a print region", () => {
   it("groups launch countries into their regions", () => {
-    expect(regionForCountry("US")).toBe("us_ca");
-    expect(regionForCountry("CA")).toBe("us_ca");
-    expect(regionForCountry("DE")).toBe("eu_uk");
-    expect(regionForCountry("GB")).toBe("eu_uk");
+    expect(regionForCountry("US")).toBe("us");
+    expect(regionForCountry("CA")).toBe("ca");
+    expect(regionForCountry("DE")).toBe("eu");
+    expect(regionForCountry("GB")).toBe("uk");
     expect(regionForCountry("AU")).toBe("au");
   });
 
   it("accepts lowercase codes", () => {
-    expect(regionForCountry("fr")).toBe("eu_uk");
+    expect(regionForCountry("fr")).toBe("eu");
   });
 
   it("offers nothing outside the launch regions", () => {
@@ -64,7 +64,7 @@ describe("?shape=print_region", () => {
   it("answers from the visitor's country without touching the database", async () => {
     const res = await get({ "x-vercel-ip-country": "DE" });
     expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual({ country: "DE", region: "eu_uk" });
+    expect(res.body).toEqual({ country: "DE", region: "eu" });
   });
 
   it("is never cached where another visitor could receive it", async () => {
@@ -104,7 +104,7 @@ describe("a local development country", () => {
     process.env.PRINT_REGION_DEV_COUNTRY = "US";
     process.env.VERCEL_ENV = "development";
     const res = await get({});
-    expect(res.body).toEqual({ country: "US", region: "us_ca" });
+    expect(res.body).toEqual({ country: "US", region: "us" });
   });
 
   it("never overrides a real header", async () => {

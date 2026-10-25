@@ -645,7 +645,17 @@
 .detail-modal-inner:has(.d-frame.nudity-gated) .mockup img{
   filter:blur(32px) brightness(0.75);
 }
+.detail-modal-inner .print-label{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  min-width:0;
+}
 .detail-modal-inner .print-name{ font-size:0.9rem; }
+.detail-modal-inner .print-price{
+  font-size:0.85rem;
+  white-space:nowrap;
+}
 .detail-modal-inner .print-size{
   font-family:var(--sans);
   font-size:0.72rem;

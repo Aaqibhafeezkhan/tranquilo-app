@@ -41,9 +41,9 @@ import {
 } from "./i18n/index";
 import {
   hasMasterSize,
-  type PrintProduct,
+  type PrintOffer,
   printLinkEnabled,
-  printOptionsFor,
+  printOffersFor,
 } from "./logic/printOptions";
 import type { ITopbarHost } from "./types/ITopbarHost";
 import type { ITranquiloDetailModalHost } from "./types/ITranquiloDetailModalHost";
@@ -163,7 +163,7 @@ class TranquiloApp {
       return itemsApi.fetchFeedPage(params);
     }
     let printRegion: Promise<string | null> | null = null;
-    function itemPrintOptions(item: any): Promise<PrintProduct[]> {
+    function itemPrintOffers(item: any): Promise<PrintOffer[]> {
       if (!printLinkEnabled(location.search) || !hasMasterSize(item)) {
         return Promise.resolve([]);
       }
@@ -171,7 +171,7 @@ class TranquiloApp {
         (r) => r.region,
         () => null,
       );
-      return printRegion.then((region) => printOptionsFor(item, region));
+      return printRegion.then((region) => printOffersFor(item, region));
     }
     function fetchFacets() {
       return itemsApi.fetchFacets();
@@ -446,7 +446,7 @@ class TranquiloApp {
       showToast: (msg: any) => {
         showToast(msg);
       },
-      printOptionsFor: (item: any) => itemPrintOptions(item),
+      printOffersFor: (item: any) => itemPrintOffers(item),
     };
     detailModalEl.app = detailModalHost;
     detailModalEl.addEventListener("storyline-handoff-restore", (e: any) => {

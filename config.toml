@@ -101,8 +101,10 @@ link_enabled = false
 
 [print.regions]
 # Print-on-demand launch regions as comma-separated ISO country codes.
-us_ca = "US,CA"
-eu_uk = "AT,BE,BG,HR,CY,CZ,DK,EE,FI,FR,DE,GR,HU,IE,IT,LV,LT,LU,MT,NL,PL,PT,RO,SK,SI,ES,SE,GB"
+us = "US"
+ca = "CA"
+eu = "AT,BE,BG,HR,CY,CZ,DK,EE,FI,FR,DE,GR,HU,IE,IT,LV,LT,LU,MT,NL,PL,PT,RO,SK,SI,ES,SE"
+uk = "GB"
 au = "AU"
 
 [print.min_short_edge_px]
@@ -114,6 +116,45 @@ tote = 1800
 
 [print.region_products]
 # Products offered per region, in display order.
-us_ca = "mini_print,poster,framed,tote"
-eu_uk = "mini_print,poster,framed,tote"
+us = "mini_print,poster,framed,tote"
+ca = "mini_print,poster,framed,tote"
+eu = "mini_print,poster,framed,tote"
+uk = "mini_print,poster,framed,tote"
 au = "mini_print,poster,framed,tote"
+
+[print.currency]
+us = "USD"
+ca = "CAD"
+eu = "EUR"
+uk = "GBP"
+au = "AUD"
+
+# Estimated retail prices, delivery included, tax excluded: the dearest
+# country's Gelato cost at a 30% margin after card fees. A product left out
+# has no known delivery cost somewhere in the region.
+[print.prices.us]
+poster = 27
+framed = 101
+tote = 24
+
+[print.prices.ca]
+poster = 54
+framed = 146
+tote = 37
+
+[print.prices.eu]
+poster = 48
+framed = 92
+tote = 30
+
+[print.prices.uk]
+mini_print = 18
+poster = 24
+framed = 59
+tote = 21
+
+[print.prices.au]
+mini_print = 35
+poster = 50
+framed = 110
+tote = 41

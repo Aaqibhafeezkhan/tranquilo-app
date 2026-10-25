@@ -27,6 +27,31 @@ export function printOptionsFor(
     ) as PrintProduct[];
 }
 
+export interface PrintOffer {
+  product: PrintProduct;
+  price: { amount: number; currency: string } | null;
+}
+
+const CURRENCY: Record<string, string> = TRANQUILO_CONFIG["print.currency"];
+const PRICES = TRANQUILO_CONFIG as unknown as Record<
+  string,
+  Record<string, number> | undefined
+>;
+
+export function printOffersFor(
+  item: MasterSize,
+  region: string | null,
+): PrintOffer[] {
+  return printOptionsFor(item, region).map((product) => {
+    const amount = region ? PRICES[`print.prices.${region}`]?.[product] : null;
+    const currency = region ? CURRENCY[region] : null;
+    return {
+      product,
+      price: amount && currency ? { amount, currency } : null,
+    };
+  });
+}
+
 export function hasMasterSize(item: MasterSize): boolean {
   return Boolean(item.master_width && item.master_height);
 }

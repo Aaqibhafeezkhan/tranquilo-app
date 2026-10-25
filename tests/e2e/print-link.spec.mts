@@ -52,7 +52,7 @@ test("is hidden, and the region is never looked up, unless enabled", async ({
 }) => {
   const requests = await openDetail(page, {
     master: [3192, 4000],
-    region: "us_ca",
+    region: "us",
     search: "",
   });
   await expect(page.locator("#detailModal .detail-actions")).toBeVisible();
@@ -63,7 +63,7 @@ test("is hidden, and the region is never looked up, unless enabled", async ({
 test("offers every product for a large image in a print region", async ({
   page,
 }) => {
-  await openDetail(page, { master: [3192, 4000], region: "us_ca" });
+  await openDetail(page, { master: [3192, 4000], region: "us" });
   const btn = page.locator("#detailModal .btn-print");
   const panel = page.locator("#detailModal .print-panel");
   await expect(btn).toBeVisible();
@@ -81,7 +81,7 @@ test("offers every product for a large image in a print region", async ({
 });
 
 test("lists only the products a smaller image can fill", async ({ page }) => {
-  await openDetail(page, { master: [2000, 4000], region: "us_ca" });
+  await openDetail(page, { master: [2000, 4000], region: "us" });
   await page.locator("#detailModal .btn-print").click();
   const products = page.locator("#detailModal .print-panel [data-product]");
   await expect(products).toHaveCount(2);
@@ -102,7 +102,7 @@ test("is not offered outside a print region", async ({ page }) => {
 test("is not offered when the image's full size is unknown", async ({
   page,
 }) => {
-  await openDetail(page, { master: null, region: "us_ca" });
+  await openDetail(page, { master: null, region: "us" });
   await expect(page.locator("#detailModal .detail-actions")).toBeVisible();
   await expect(page.locator("#detailModal .btn-print")).toBeHidden();
 });
@@ -110,7 +110,7 @@ test("is not offered when the image's full size is unknown", async ({
 test("each product shows a thumbnail mock-up of the artwork", async ({
   page,
 }) => {
-  await openDetail(page, { master: [3192, 4000], region: "us_ca" });
+  await openDetail(page, { master: [3192, 4000], region: "us" });
   await page.locator("#detailModal .btn-print").click();
   const rows = page.locator("#detailModal .print-panel [data-product]");
   await expect(rows).toHaveCount(4);
@@ -123,7 +123,7 @@ test("each product shows a thumbnail mock-up of the artwork", async ({
 });
 
 test("a thumbnail opens a larger mock-up, one at a time", async ({ page }) => {
-  await openDetail(page, { master: [3192, 4000], region: "us_ca" });
+  await openDetail(page, { master: [3192, 4000], region: "us" });
   await page.locator("#detailModal .btn-print").click();
   const poster = page.locator('#detailModal [data-product="poster"]');
   const tote = page.locator('#detailModal [data-product="tote"]');
@@ -154,7 +154,7 @@ test("a thumbnail opens a larger mock-up, one at a time", async ({ page }) => {
 });
 
 test("the mock-up follows the artwork's orientation", async ({ page }) => {
-  await openDetail(page, { master: [4000, 3000], region: "us_ca" });
+  await openDetail(page, { master: [4000, 3000], region: "us" });
   await page.locator("#detailModal .btn-print").click();
   await expect(
     page.locator('#detailModal [data-product="poster"] .mockup').first(),
@@ -166,7 +166,7 @@ test("mock-ups stay blurred while the artwork is behind the nudity gate", async 
 }) => {
   await openDetail(page, {
     master: [3192, 4000],
-    region: "us_ca",
+    region: "us",
     extra: { category: "Photography", contains_nudity: true },
   });
   await page.locator("#detailModal .btn-print").click();
@@ -177,4 +177,28 @@ test("mock-ups stay blurred while the artwork is behind the nudity gate", async 
   expect(await filter()).toMatch(/blur/);
   await page.locator("#detailModal .d-frame .nudity-gate-overlay").click();
   await expect.poll(filter).toBe("none");
+});
+
+test("shows an estimated price in the region's currency", async ({ page }) => {
+  await openDetail(page, { master: [3192, 4000], region: "uk" });
+  await page.locator("#detailModal .btn-print").click();
+  await expect(
+    page.locator('#detailModal [data-product="poster"] .print-price'),
+  ).toHaveText(/£24/);
+  await expect(page.locator("#detailModal .print-panel")).toContainText(
+    /delivery/i,
+  );
+});
+
+test("leaves a product unpriced where its delivery cost is unknown", async ({
+  page,
+}) => {
+  await openDetail(page, { master: [3192, 4000], region: "us" });
+  await page.locator("#detailModal .btn-print").click();
+  await expect(
+    page.locator('#detailModal [data-product="mini_print"] .print-price'),
+  ).toHaveCount(0);
+  await expect(
+    page.locator('#detailModal [data-product="poster"] .print-price'),
+  ).toHaveText(/\$27/);
 });

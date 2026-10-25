@@ -482,23 +482,34 @@ function wirePrint(
   const mockup = (p: string) =>
     `<div class="mockup mockup-${p}" data-orientation="${orientation}">` +
     `<div class="mockup-surface"><img src="${escapeHtml(item.img)}" alt="" loading="lazy" decoding="async"></div></div>`;
-  host.printOptionsFor(item).then((products) => {
-    if (!products.length) return;
+  const priceText = (price: { amount: number; currency: string }) =>
+    t("detail.print.price", {
+      price: new Intl.NumberFormat(currentLocale(), {
+        style: "currency",
+        currency: price.currency,
+        maximumFractionDigits: 0,
+      }).format(price.amount),
+    });
+  host.printOffersFor(item).then((offers) => {
+    if (!offers.length) return;
     panel.innerHTML =
-      products
-        .map((p) => {
+      offers
+        .map(({ product: p, price }) => {
           const name = t(`print.product.${p}` as MessageKey);
           return (
             `<div class="print-option" data-product="${p}">` +
             `<button class="print-thumb" type="button" aria-expanded="false" aria-label="${escapeHtml(t("detail.print.showMockup", { product: name }))}">${mockup(p)}</button>` +
-            `<span class="print-name">${escapeHtml(name)}</span>` +
-            `<span class="print-size">${escapeHtml(t(`print.size.${p}` as MessageKey))}</span>` +
+            `<span class="print-label"><span class="print-name">${escapeHtml(name)}</span>` +
+            `<span class="print-size">${escapeHtml(t(`print.size.${p}` as MessageKey))}</span></span>` +
+            (price
+              ? `<span class="print-price">${escapeHtml(priceText(price))}</span>`
+              : "") +
             `<div class="print-mockup-large" hidden>${mockup(p)}` +
             `<p class="print-mockup-note">${escapeHtml(t("detail.print.mockupNote"))}</p></div></div>`
           );
         })
         .join("") +
-      `<p class="print-soon">${escapeHtml(t("detail.print.soon"))}</p>`;
+      `<p class="print-soon">${escapeHtml(t("detail.print.estimate"))} ${escapeHtml(t("detail.print.soon"))}</p>`;
     const rows = [...panel.querySelectorAll<HTMLElement>(".print-option")];
     for (const row of rows) {
       const thumb = row.querySelector<HTMLButtonElement>(".print-thumb");
