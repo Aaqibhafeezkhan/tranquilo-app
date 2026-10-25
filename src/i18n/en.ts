@@ -285,6 +285,8 @@ export const en = {
   "facet.region.southeast-asia": "Southeast Asia",
   "facet.region.west-asia-middle-east": "West Asia & Middle East",
   "facet.region.africa": "Africa",
+  "facet.region.north-america": "North America",
+  "facet.region.latin-america-caribbean": "Latin America & Caribbean",
   "facet.region.americas": "Americas",
   "facet.region.oceania": "Oceania",
 

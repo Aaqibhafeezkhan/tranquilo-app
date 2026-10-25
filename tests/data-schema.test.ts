@@ -53,7 +53,7 @@ describe("catalogue: category taxonomy", () => {
 });
 
 describe("catalogue: facets", () => {
-  it("region_primary, where non-null, is one of the 8 controlled-vocabulary values", () => {
+  it("region_primary, where non-null, is one of the controlled-vocabulary values", () => {
     TRANQUILO_ITEMS.forEach((item: any) => {
       if (item.region_primary == null) return;
       expect(VALID_REGIONS, `item ${item.id}`).toContain(item.region_primary);
