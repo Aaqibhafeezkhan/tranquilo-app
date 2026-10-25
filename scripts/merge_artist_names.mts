@@ -16,45 +16,77 @@
 //
 //   node scripts/merge_artist_names.mts             # dry run
 //   node scripts/merge_artist_names.mts --commit
+//
+// --from-map applies data/reference/artist-canonical.json, the frozen map
+// ingestion uses, instead of re-deriving groups from ULAN `merges`. Its
+// audit goes to a dated file, leaving earlier audits intact.
 
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { neon } from "@neondatabase/serverless";
+import {
+  chooseCanonical,
+  planFromMap,
+  type SpellingCount,
+} from "../lib/artist-canonical.ts";
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const STORE = path.join(ROOT, "data/reference/ulan-artists.json");
-const AUDIT = path.join(ROOT, "data/reference/artist-merge-audit.json");
+const MAP = path.join(ROOT, "data/reference/artist-canonical.json");
 const COMMIT = process.argv.includes("--commit");
 const USE_ULAN = process.argv.includes("--ulan-names");
+const FROM_MAP = process.argv.includes("--from-map");
+const AUDIT = path.join(
+  ROOT,
+  FROM_MAP
+    ? `data/reference/artist-merge-audit-${new Date().toISOString().slice(0, 10)}.json`
+    : "data/reference/artist-merge-audit.json",
+);
 
-const diacritics = (s: string) =>
-  (s.normalize("NFD").match(/[\u0300-\u036f]/g) || []).length;
-const bare = (s: string) =>
-  s
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase();
+interface PlanEntry {
+  ulan_id?: string;
+  canonical: string;
+  total: number;
+  alreadyCorrect: number;
+  changing: { from: string; items: number }[];
+  newCanonical: boolean;
+}
 
-// Most-used spelling wins, except when two spellings differ only in
-// accents -- there, counting would entrench a typo ("Edouard Manet" beating
-// "Édouard Manet"), so the accented form wins outright.
-function ourChoice(rows: any[]) {
-  const sorted = rows
-    .slice()
-    .sort(
-      (a: any, b: any) =>
-        b.n - a.n ||
-        diacritics(b.artist) - diacritics(a.artist) ||
-        b.artist.length - a.artist.length,
-    );
-  const top = sorted[0];
-  const sameNameBetterAccents = sorted.find(
-    (r: any) =>
-      bare(r.artist) === bare(top.artist) &&
-      diacritics(r.artist) > diacritics(top.artist),
-  );
-  return (sameNameBetterAccents || top).artist;
+const LIVE = `review_status NOT IN ('quarantined','rejected')`;
+
+async function planFromCanonicalMap(): Promise<PlanEntry[]> {
+  const map: Record<string, string> = JSON.parse(fs.readFileSync(MAP, "utf8"));
+  const keys = Object.keys(map).filter((k) => map[k] !== k);
+  const rows = (await sql.query(
+    `SELECT artist, count(*)::int n FROM items
+      WHERE artist = ANY($1) AND ${LIVE} GROUP BY 1`,
+    [keys],
+  )) as SpellingCount[];
+  const rewrites = planFromMap(rows, map);
+  const targets = [...new Set(rewrites.map((r) => r.to))];
+  const held = (await sql.query(
+    `SELECT artist, count(*)::int n FROM items
+      WHERE artist = ANY($1) AND ${LIVE} GROUP BY 1`,
+    [targets],
+  )) as SpellingCount[];
+  const heldCount = new Map(held.map((r) => [r.artist, r.n]));
+
+  const byTarget = new Map<string, PlanEntry>();
+  for (const r of rewrites) {
+    const already = heldCount.get(r.to) ?? 0;
+    const e = byTarget.get(r.to) ?? {
+      canonical: r.to,
+      total: already,
+      alreadyCorrect: already,
+      changing: [],
+      newCanonical: already === 0,
+    };
+    e.total += r.items;
+    e.changing.push({ from: r.from, items: r.items });
+    byTarget.set(r.to, e);
+  }
+  return [...byTarget.values()];
 }
 
 for (const line of fs
@@ -66,12 +98,12 @@ for (const line of fs
 }
 const sql = neon(process.env.DATABASE_URL!);
 
-async function main() {
+async function planFromUlanMerges(): Promise<PlanEntry[]> {
   const { merges } = JSON.parse(fs.readFileSync(STORE, "utf8"));
   const groups = (merges || []).filter((g: any) => g.ourNames.length > 1);
   console.log(`${groups.length} merge group(s) from ULAN\n`);
 
-  const plan = [];
+  const plan: PlanEntry[] = [];
   for (const g of groups) {
     const rows = await sql.query(
       `SELECT artist, count(*)::int n FROM items
@@ -83,11 +115,12 @@ async function main() {
 
     // ULAN is authoritative on grouping, not on display -- its preferred
     // form is a cataloguing convention, often worse to read (drops accents,
-    // hyphens, capitalises particles). The canonical name is ours: the
-    // spelling shown most often, ties to more diacritics then longer.
-    // --ulan-names switches to ULAN's preference instead.
+    // hyphens, capitalises particles). The canonical name is ours; see
+    // lib/artist-canonical.ts. --ulan-names switches to ULAN's preference.
     const canonical =
-      USE_ULAN && g.preferredName ? g.preferredName : ourChoice(rows);
+      USE_ULAN && g.preferredName
+        ? g.preferredName
+        : chooseCanonical(rows as SpellingCount[], g.variants ?? []);
     if (!canonical) continue;
     const total = rows.reduce((a, r) => a + r.n, 0);
     const changing = rows.filter((r) => r.artist !== canonical);
@@ -100,6 +133,13 @@ async function main() {
       newCanonical: !g.ourNames.includes(canonical),
     });
   }
+  return plan;
+}
+
+async function main() {
+  const plan = FROM_MAP
+    ? await planFromCanonicalMap()
+    : await planFromUlanMerges();
 
   plan.sort((a, b) => b.total - a.total);
   const rowsChanging = plan.reduce(
