@@ -22,6 +22,7 @@ import { getSql } from "../lib/db.ts";
 import { getHeroPool } from "../lib/hero-items.ts";
 import { LIVE_ITEMS_PREDICATE } from "../lib/items-sql.ts";
 import { getMusicBuckets } from "../lib/music.ts";
+import { printRegionFromHeaders } from "../lib/print-region.ts";
 import { safeHttpUrl } from "../lib/safe-url.ts";
 import { reportError } from "../lib/sentry.ts";
 import { getSetOfWork, getSetOfWorksIndex } from "../lib/setOfWorks.ts";
@@ -662,6 +663,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.statusCode = 405;
     res.setHeader("Allow", "GET");
     res.json({ error: "Method not allowed" });
+    return;
+  }
+
+  // Varies per visitor, so never shared at the edge.
+  if (req.query?.shape === "print_region") {
+    res.setHeader("Cache-Control", "private, no-store");
+    res.json(printRegionFromHeaders(req.headers || {}));
     return;
   }
 
