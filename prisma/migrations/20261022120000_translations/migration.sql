@@ -1,4 +1,4 @@
--- Mirrors sql/049_translations.sql.
+-- Mirrors sql/048_translations.sql.
 -- Content translations: one row per (entity, locale, field), so a new
 -- language needs rows, not columns. Read by lib/translations.ts, which
 -- serves a row only when review_status = 'approved' and, unless the row is
