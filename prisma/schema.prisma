@@ -99,6 +99,11 @@ model items {
   // See sql/042_items_source_verified_at.sql.
   source_verified_at DateTime? @db.Timestamptz
 
+  // See sql/049_items_master_dims.sql.
+  master_width           Int?
+  master_height          Int?
+  master_dims_checked_at DateTime? @db.Timestamptz
+
   attribution_type   String?
   artist_nationality String?
   artist_lifespan    String?
