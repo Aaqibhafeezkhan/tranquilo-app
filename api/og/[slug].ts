@@ -14,6 +14,13 @@ import { getSql } from "../../lib/db.ts";
 import { rateLimitOrRespond } from "../../lib/img-visitor-rate-limit.ts";
 import { LIVE_ITEMS_AND } from "../../lib/items-sql.ts";
 import { reportError } from "../../lib/sentry.ts";
+// "shelf-{id}" slugs render a shelf card instead of an artwork card.
+import {
+  getShelf,
+  getShelfPreview,
+  isShareableShelf,
+  parseShelfSlug,
+} from "../../lib/shelves.ts";
 import * as sourceHealth from "../../lib/source-health.ts";
 import { imageFetchHeaders } from "../../lib/source-identity.ts";
 // "s-{id}" slugs render a storyline card instead of an artwork card.
@@ -375,6 +382,37 @@ function buildStorylineCard(
   });
 }
 
+function buildShelfCard(
+  shelf: { title: string },
+  count: number,
+  imageDataUri: string | null,
+  accentColor: string | null | undefined,
+): CardNode {
+  return buildShareCard({
+    eyebrow: `Shelf · ${count} ${count === 1 ? "work" : "works"}`,
+    title: shelf.title,
+    caption: "A shelf on Tranquilo",
+    captionStyle: { fontWeight: 300, fontSize: 25 },
+    imageDataUri: imageDataUri,
+    accentColor: accentColor,
+  });
+}
+
+// Held sources get a text-only card; no origin fetch.
+async function coverDataUriFor(
+  client: ReturnType<typeof getSql>,
+  cover: ItemRow | null,
+): Promise<string | null> {
+  if (!cover?.img) return null;
+  const held = await sourceHealth.heldSourceSet(client, [cover.source]);
+  if (held[cover.source]) return null;
+  try {
+    return await fetchImageDataUri(cover.img, cover.source);
+  } catch (_e) {
+    return null;
+  }
+}
+
 function buildFallbackCard(message: string) {
   return h(
     "div",
@@ -487,6 +525,36 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       res.setHeader("Content-Type", "image/png");
       res.setHeader("Cache-Control", "public, max-age=3600, s-maxage=86400");
       res.end(storylineBuffer);
+      return;
+    }
+
+    const shelfKey = parseShelfSlug(slug);
+    if (shelfKey) {
+      let shelfTree = buildFallbackCard("Tranquilo");
+      try {
+        const shelf = client ? await getShelf(client, shelfKey) : null;
+        if (client && isShareableShelf(shelf)) {
+          const preview = await getShelfPreview(client, shelf);
+          shelfTree = buildShelfCard(
+            shelf,
+            preview.count,
+            await coverDataUriFor(client, preview.cover),
+            preview.cover?.accent_color,
+          );
+        }
+      } catch (err) {
+        console.error("og/[slug]: shelf query failed", err);
+        await reportError(err);
+      }
+      const shelfImage = new ImageResponse(shelfTree, {
+        width: 1200,
+        height: 630,
+        fonts: await loadFonts(),
+      });
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "image/png");
+      res.setHeader("Cache-Control", "public, max-age=3600, s-maxage=86400");
+      res.end(Buffer.from(await shelfImage.arrayBuffer()));
       return;
     }
 

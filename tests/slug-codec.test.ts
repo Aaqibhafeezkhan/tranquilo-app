@@ -131,3 +131,19 @@ describe("storylineIdFromLocation", () => {
     expect(codec.storylineIdFromLocation()).toBe("");
   });
 });
+
+describe("shelfIdFromLocation", () => {
+  beforeEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("reads the /shelf/{id} path form", () => {
+    vi.stubGlobal("location", { pathname: "/shelf/pets-in-art" });
+    expect(new SlugCodec().shelfIdFromLocation()).toBe("pets-in-art");
+  });
+
+  it("returns an empty string off any other path", () => {
+    vi.stubGlobal("location", { pathname: "/s/el-greco-evolution" });
+    expect(new SlugCodec().shelfIdFromLocation()).toBe("");
+  });
+});

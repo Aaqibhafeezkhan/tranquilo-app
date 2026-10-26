@@ -1,4 +1,4 @@
-// Share links: URL construction for an artwork or a storyline, plus
+// Share links: URL construction for an artwork, storyline or shelf, plus
 // whichever share mechanism the device has (native share sheet on
 // mobile, clipboard + toast otherwise).
 //
@@ -37,6 +37,10 @@ export class ShareService {
   // can't repeat the same bug.
   storylineShareUrlFor(storyline: { id: string }): string {
     return `${location.origin}/s/${encodeURIComponent(storyline.id)}`;
+  }
+
+  shelfShareUrlFor(shelf: { id: string; slug?: string }): string {
+    return `${location.origin}/shelf/${encodeURIComponent(shelf.slug || shelf.id)}`;
   }
 
   // A mouse or trackpad, as opposed to a finger. Guarded since matchMedia
@@ -79,6 +83,15 @@ export class ShareService {
       this.storylineShareUrlFor(storyline),
       storyline.title,
       `${storyline.title} · ${storyline.items.length}-part storyline`,
+    );
+  }
+
+  shareShelf(shelf: { id: string; slug?: string; title: string }): void {
+    this.host.trackEvent("share_click", { shelf_id: shelf.id });
+    this.shareLink(
+      this.shelfShareUrlFor(shelf),
+      shelf.title,
+      `${shelf.title} · Tranquilo`,
     );
   }
 

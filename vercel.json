@@ -24,6 +24,10 @@
       "destination": "/api/v/s-:id"
     },
     {
+      "source": "/shelf/:id",
+      "destination": "/api/v/shelf-:id"
+    },
+    {
       "source": "/sitemap.xml",
       "destination": "/api/sitemap"
     },

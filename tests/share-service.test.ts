@@ -57,7 +57,16 @@ describe("storylineShareUrlFor", () => {
   });
 });
 
-describe("shareItem / shareStoryline", () => {
+describe("shelfShareUrlFor", () => {
+  it("builds a /shelf/{slug} URL from the title slug", () => {
+    const svc = makeService();
+    expect(
+      svc.shelfShareUrlFor({ id: "pets-in-art", slug: "furry-friends" }),
+    ).toBe("https://tranquilo.art/shelf/furry-friends");
+  });
+});
+
+describe("shareItem / shareStoryline / shareShelf", () => {
   it("tracks share_click with id and source, then copies the link on desktop", async () => {
     const svc = makeService();
     svc.shareItem({ id: "1", source: "met", title: "Wheat Field" });
@@ -78,6 +87,23 @@ describe("shareItem / shareStoryline", () => {
     expect(trackEvent).toHaveBeenCalledWith("share_click", {
       storyline_id: "el-greco-evolution",
     });
+  });
+
+  it("tracks share_click with shelf_id, then copies the shelf's link", async () => {
+    const writeText = vi.fn(() => Promise.resolve());
+    vi.stubGlobal("navigator", { clipboard: { writeText } });
+    const svc = makeService();
+    svc.shareShelf({
+      id: "pets-in-art",
+      slug: "furry-friends",
+      title: "Furry Friends",
+    });
+    expect(trackEvent).toHaveBeenCalledWith("share_click", {
+      shelf_id: "pets-in-art",
+    });
+    expect(writeText).toHaveBeenCalledWith(
+      "https://tranquilo.art/shelf/furry-friends",
+    );
   });
 });
 

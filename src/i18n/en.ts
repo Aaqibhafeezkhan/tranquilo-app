@@ -171,6 +171,10 @@ export const en = {
   "shelves.storylines.subtitle": "Curated stories behind the art",
   "shelves.moods.title": "Shelves, Curated by Hand",
   "shelves.moods.subtitle": "Pick a mood and enjoy",
+  "shelf.close": "Close shelf",
+  "shelf.share": "Copy link to this shelf",
+  "shelf.works.one": "{count} work",
+  "shelf.works.other": "{count} works",
 
   // Storyline mode.
   "storyline.close": "Close storyline",

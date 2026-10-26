@@ -45,6 +45,7 @@ import type { ITranquiloExportModalHost } from "./types/ITranquiloExportModalHos
 import type { ITranquiloFeedHost } from "./types/ITranquiloFeedHost";
 import type { ITranquiloLightboxHost } from "./types/ITranquiloLightboxHost";
 import type { ITranquiloSetOfWorksModeHost } from "./types/ITranquiloSetOfWorksModeHost";
+import type { ITranquiloShelfModeHost } from "./types/ITranquiloShelfModeHost";
 import type { ITranquiloShelvesModeHost } from "./types/ITranquiloShelvesModeHost";
 import type { ITranquiloStorylineModeHost } from "./types/ITranquiloStorylineModeHost";
 
@@ -58,6 +59,8 @@ import "./components/TranquiloDetailModal";
 import "./components/TranquiloStorylineMode";
 import "./components/TranquiloSetOfWorksMode";
 import "./components/TranquiloShelvesMode";
+import type { TranquiloShelfMode } from "./components/TranquiloShelfMode";
+import "./components/TranquiloShelfMode";
 import "./components/TranquiloExportModal";
 import "./components/TranquiloUpsellToast";
 import "./components/TranquiloFeed";
@@ -274,7 +277,7 @@ class TranquiloApp {
     // Captured once at share-banner show-time, reused by its dismiss/CTA
     // handlers so every event in the funnel -- not just the impression --
     // is attributable to which entry type (artwork vs storyline) triggered it.
-    let shareBannerSource: "artwork" | "storyline" | null = null;
+    let shareBannerSource: "artwork" | "storyline" | "shelf" | null = null;
     let searchResultCount = 0;
 
     const feedEl = document.getElementById("feed") as any;
@@ -291,6 +294,11 @@ class TranquiloApp {
     const storylineModeEl = document.getElementById("storylineMode") as any;
     const setOfWorksModeEl = document.getElementById("setOfWorksMode") as any;
     const shelvesModeEl = document.getElementById("shelvesMode") as any;
+    const shelfModeEl = document.getElementById(
+      "shelfMode",
+    ) as TranquiloShelfMode;
+    // Which shelf surface the detail panel steps back to on close.
+    let shelfReturnEl: { restore(): void } = shelvesModeEl;
     const exportModalEl = document.getElementById("exportModal") as any;
     // Assigned as a property, not an attribute, since it carries live
     // functions rather than strings.
@@ -424,7 +432,7 @@ class TranquiloApp {
         requestOverlayClose(closeFn);
       },
       reopenShelvesMode: () => {
-        shelvesModeEl.restore();
+        shelfReturnEl.restore();
       },
       showToast: (msg: any) => {
         showToast(msg);
@@ -512,7 +520,11 @@ class TranquiloApp {
         trackEvent(name, props);
       },
       openDetailModal: (item: any, shelfContext: any) => {
+        shelfReturnEl = shelvesModeEl;
         detailModalEl.open(item, shelfContext);
+      },
+      shareShelf: (shelf) => {
+        shareService.shareShelf(shelf);
       },
       pushOverlayHistoryState: (name: any) => {
         pushOverlayHistoryState(name);
@@ -522,6 +534,34 @@ class TranquiloApp {
       },
     };
     shelvesModeEl.app = shelvesModeHost;
+    shelfModeEl.shelves = shelves;
+    const shelfModeHost: ITranquiloShelfModeHost = {
+      apiUrl: (params) => apiUrl(params),
+      fetchJson: (url, what) => fetchJson(url, what),
+      absorbPage: (rows) => absorbPage(rows),
+      resolveItemsByIds: (ids) => resolveItemsByIds(ids),
+      hydrateItems: (items) => hydrateItems(items),
+      applyNudityGate: (frame, item, compact) => {
+        applyNudityGate(frame, item, compact);
+      },
+      trackEvent: (name, props) => {
+        trackEvent(name, props);
+      },
+      shareShelf: (shelf) => {
+        shareService.shareShelf(shelf);
+      },
+      openDetailModal: (item, shelfContext) => {
+        shelfReturnEl = shelfModeEl;
+        detailModalEl.open(item, shelfContext);
+      },
+      pushOverlayHistoryState: (name) => {
+        pushOverlayHistoryState(name);
+      },
+      requestOverlayClose: (closeFn) => {
+        requestOverlayClose(closeFn);
+      },
+    };
+    shelfModeEl.app = shelfModeHost;
     const exportModalHost: ITranquiloExportModalHost = {
       pushOverlayHistoryState: (name: any) => {
         pushOverlayHistoryState(name);
@@ -998,6 +1038,7 @@ class TranquiloApp {
     const overlayHistory = new OverlayHistoryManager({
       detailModalEl,
       shelvesModeEl,
+      shelfModeEl,
       storylineModeEl,
       setOfWorksModeEl,
       lightboxEl,
@@ -1096,6 +1137,10 @@ class TranquiloApp {
     if (initialStorylineId) {
       storylineModeEl.open(initialStorylineId);
     }
+    const initialShelfId = slugCodec.shelfIdFromLocation();
+    const openedShelf = initialShelfId
+      ? shelfModeEl.open(initialShelfId)
+      : false;
 
     // Either deep-link form means the same thing for this banner: the
     // intro slide (and its Mission/Connect/Support cards) was skipped,
@@ -1104,12 +1149,16 @@ class TranquiloApp {
     // so forking into two independently-tracked states would only invite
     // them drifting out of sync.
     const arrivedViaShareLink =
-      hadDeepLinkArtwork || Boolean(initialStorylineId);
+      hadDeepLinkArtwork || Boolean(initialStorylineId) || openedShelf;
     if (
       arrivedViaShareLink &&
       !sessionStorage.getItem(SESSION_SHARE_BANNER_KEY)
     ) {
-      shareBannerSource = hadDeepLinkArtwork ? "artwork" : "storyline";
+      shareBannerSource = hadDeepLinkArtwork
+        ? "artwork"
+        : initialStorylineId
+          ? "storyline"
+          : "shelf";
       topbarEl.showShareBanner();
       sessionStorage.setItem(SESSION_SHARE_BANNER_KEY, "1");
       trackEvent("share_banner_shown", { source: shareBannerSource });

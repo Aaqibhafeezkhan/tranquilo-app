@@ -207,7 +207,7 @@ describe("query endpoint: filters, search and cursor paging", () => {
   });
 
   it("whitelists facets rather than accepting an arbitrary column", () => {
-    expect(itemsSource).toMatch(/const FACETS = \[/);
+    expect(itemsSource).toContain("facetClauses(");
   });
 
   it("reproduces matchesQuery: substring over search_text, plus the century rule", () => {

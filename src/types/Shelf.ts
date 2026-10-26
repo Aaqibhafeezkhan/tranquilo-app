@@ -3,6 +3,8 @@ import type { StoryItemId } from "./Storyline";
 
 interface ShelfBase {
   id: string;
+  // URL form of the untranslated title; absent in pre-slug cached responses.
+  slug?: string;
   title: string;
 }
 
