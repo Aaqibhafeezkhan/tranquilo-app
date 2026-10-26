@@ -29,7 +29,7 @@ function mockRes() {
   return res;
 }
 
-async function get(query: Record<string, string>) {
+async function get(query: Record<string, string | string[]>) {
   const res = mockRes();
   await handler(
     { method: "GET", query } as unknown as VercelRequest,
@@ -46,26 +46,27 @@ beforeEach(() => {
 
 describe("/api/items caller mistakes", () => {
   it("answers a malformed cursor with a 400 and does not report it", async () => {
-    const res = await get({ limit: "10", cursor: "not-a-cursor" });
+    const res = await get({
+      shape: "manifest",
+      order: "shuffle",
+      cursor: "not-a-cursor",
+    });
     expect(res.statusCode).toBe(400);
     expect(sentry.reportError).not.toHaveBeenCalled();
     expect(db.query).not.toHaveBeenCalled();
   });
 
-  it("answers an unpaged full-row request with a 400 and does not report it", async () => {
-    const res = await get({});
-    expect(res.statusCode).toBe(400);
-    expect(sentry.reportError).not.toHaveBeenCalled();
-  });
-
-  it("refuses a whole-catalogue request without querying it", async () => {
-    const unbounded: Record<string, string>[] = [
+  it("refuses a bulk request without querying it", async () => {
+    const bulk: Record<string, string>[] = [
       {},
       { category: "Paintings & Portraits" },
+      { limit: "200" },
+      { limit: "200", cursor: "anything" },
+      { order: "shuffle", start: "0", limit: "200" },
       { shape: "manifest" },
       { shape: "manifest", artist: "Claude Monet" },
     ];
-    for (const query of unbounded) {
+    for (const query of bulk) {
       const res = await get(query);
       expect(res.statusCode, JSON.stringify(query)).toBe(400);
     }
@@ -75,7 +76,6 @@ describe("/api/items caller mistakes", () => {
 
   it("still answers bounded requests", async () => {
     const bounded: Record<string, string>[] = [
-      { limit: "10" },
       { ids: "a" },
       { shape: "manifest", order: "shuffle", limit: "10", start: "0" },
       { shape: "count" },
@@ -90,15 +90,29 @@ describe("/api/items caller mistakes", () => {
 
   it("reports a real query failure as a 500", async () => {
     db.query.mockRejectedValue(new Error("connection reset"));
-    const res = await get({ limit: "10" });
+    const res = await get({ ids: "a" });
     expect(res.statusCode).toBe(500);
     expect(sentry.reportError).toHaveBeenCalledTimes(1);
   });
 });
 
-describe("/api/items page size", () => {
-  it("caps limit so one request cannot ask for the whole catalogue", () => {
-    const q = buildQuery({ limit: "1000000" });
+describe("/api/items request size", () => {
+  const ids = (n: number) => Array.from({ length: n }, (_, i) => `id-${i}`);
+
+  it("looks up at most 100 ids per request", async () => {
+    expect((await get({ ids: ids(100) })).statusCode).toBe(200);
+    db.query.mockClear();
+    expect((await get({ ids: ids(101) })).statusCode).toBe(400);
+    expect(db.query).not.toHaveBeenCalled();
+  });
+
+  it("caps a manifest page so one request cannot ask for the whole catalogue", () => {
+    const q = buildQuery({
+      shape: "manifest",
+      order: "shuffle",
+      start: "0",
+      limit: "1000000",
+    });
     expect(q.limit).toBeLessThan(1000000);
     expect(q.params.at(-1)).toBe(q.limit);
   });

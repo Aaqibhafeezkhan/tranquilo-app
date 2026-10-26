@@ -31,6 +31,10 @@
 # a page is the horizon now, not the whole catalogue.
 page_size = 60
 
+# Most ids one ?ids= lookup accepts. api/items.ts rejects more, and the
+# client splits longer lists into lookups of this size.
+max_ids_per_lookup = 100
+
 # How close to the end of the loaded shells the visitor gets before the
 # next page is requested. Comfortably more than the recycling window's own
 # radius, so the fetch is already in flight by the time those slides are

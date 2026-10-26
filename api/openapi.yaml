@@ -38,14 +38,11 @@ paths:
       operationId: getItems
       description: >-
         One endpoint for every shape of "what's in the catalogue" question:
-        a page of full item rows, the lightweight order manifest, a shuffled
-        feed page, an explicit id lookup, or one of three bounded
-        aggregates (facets/suggest/correction). Exactly one of `shape`,
-        `ids`, or the plain filter+paging parameters applies per request --
-        see the individual parameter descriptions for how they interact.
-        There is no unpaginated "give me everything" response: a full-row
-        request without `limit`/`cursor`/`order=shuffle`, or `shape=manifest`
-        without `order=shuffle`, is a 400.
+        a shuffled page of the lightweight order manifest, an explicit id
+        lookup, a count, or one of the bounded aggregates
+        (facets/suggest/correction). Full item rows are served only by `ids`
+        lookups. A request that is neither an `ids` lookup, a shuffled
+        manifest page, a count, nor one of the other shapes is a 400.
       parameters:
         - name: shape
           in: query
@@ -70,7 +67,7 @@ paths:
             Repeated params (`?ids=a&ids=b`), never comma-joined -- some
             native ids contain a literal comma. Resolves exactly these
             items regardless of any other filter; short-circuits
-            everything else in this list. Max 500 per request.
+            everything else in this list. Max 100 per request.
           schema:
             type: array
             items: { type: string }
@@ -131,7 +128,7 @@ paths:
           schema: { type: number }
         - name: limit
           in: query
-          description: Page size. Default 60, max 200.
+          description: Manifest page size. Default 60, max 200.
           schema: { type: integer, minimum: 1, maximum: 200, default: 60 }
         - name: cursor
           in: query
@@ -159,7 +156,6 @@ paths:
             application/json:
               schema:
                 oneOf:
-                  - $ref: "#/components/schemas/ItemPage"
                   - $ref: "#/components/schemas/ItemLookupResult"
                   - $ref: "#/components/schemas/ShuffledManifestPage"
                   - $ref: "#/components/schemas/FacetsResult"
@@ -175,10 +171,10 @@ paths:
                     items: { $ref: "#/components/schemas/HeroPoolEntry" }
         "400":
           description: >-
-            Caller error -- a malformed/too-large `ids` list, a malformed
-            cursor, an out-of-range `start`, an unwhitelisted facet, an
-            unpaged full-row request, or `shape=manifest` without
-            `order=shuffle`.
+            Caller error -- a malformed or too-large `ids` list, a malformed
+            cursor, an out-of-range `start`, an unwhitelisted facet, a
+            full-row request that is not an `ids` lookup, or `shape=manifest`
+            without `order=shuffle`.
           content:
             application/json: { schema: { $ref: "#/components/schemas/Error" } }
         "404":
@@ -685,7 +681,6 @@ components:
         caption_tea: { type: string, nullable: true }
         caption_basic: { type: string, nullable: true }
         tea_voice_status: { type: string, nullable: true }
-        tea_voice_eligible: { type: boolean }
         tea_voice_sources:
           type: array
           nullable: true
@@ -712,9 +707,7 @@ components:
         twist_category: { type: string, nullable: true }
         twist_hook: { type: string, nullable: true }
         twist_story: { type: string, nullable: true }
-        twist_confidence: { type: number, nullable: true }
         twist_source_url: { type: string, nullable: true }
-        music_mood: { type: string, nullable: true }
         shuffle_key: { type: number }
     ManifestItem:
       type: object
@@ -737,14 +730,6 @@ components:
         contains_nudity: { type: boolean }
         twist_category: { type: string, nullable: true }
         shuffle_key: { type: number }
-    ItemPage:
-      type: object
-      properties:
-        items: { type: array, items: { $ref: "#/components/schemas/Item" } }
-        next_cursor:
-          type: string
-          nullable: true
-          description: Pass back as `?cursor=` to continue; null means this was the last page.
     ItemLookupResult:
       type: object
       description: 'Response to an explicit `?ids=` lookup.'

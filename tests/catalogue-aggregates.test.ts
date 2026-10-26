@@ -30,7 +30,6 @@ describe("?shape=facets", () => {
     // unlike the manifest it legitimately needs no paging.
     const q = items.buildQuery({ shape: "facets" });
     expect(q.facets).toBe(true);
-    expect(q.paginated).toBeUndefined();
     expect(q.text).not.toMatch(/cursor/);
   });
 

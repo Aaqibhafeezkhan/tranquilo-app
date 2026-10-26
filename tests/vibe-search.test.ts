@@ -84,7 +84,6 @@ describe("?shape=vibe_search", () => {
       vibe_tags_any: "Serene",
     });
     expect(q.vibeSearch).toBe(true);
-    expect(q.paginated).toBeUndefined();
     expect(q.text).not.toMatch(/cursor/);
     expect(q.text).toMatch(/LIMIT 60/); // the default
   });

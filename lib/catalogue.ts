@@ -1,8 +1,8 @@
-// How the tooling reads the whole catalogue now that /api/items no longer
-// serves it in one response (the old endpoint was an unbounded SELECT *,
-// ~390MB at the 200k target). Both page with a cursor: fetchAllItems()
-// for callers needing full fields (title, medium, tags, bio);
-// fetchManifest() for when only identity/facets matter.
+// How the tooling reads the whole catalogue. /api/items serves full rows
+// only by ?ids= lookups, so fetchAllItems() lists ids from the shuffled
+// manifest and resolves them in batches; fetchManifest() is enough when
+// only identity/facets matter.
+import { TRANQUILO_CONFIG } from "./config.generated.ts";
 
 const DEFAULT_API = "https://tranquilo.art/api/items";
 
@@ -23,17 +23,27 @@ export function apiFetch(url: string): Promise<Response> {
 
 type PageOptions = { limit?: number; maxPages?: number };
 
-export function fetchAllItems(
-  api: string,
-  { limit = 200, maxPages = 2000 }: PageOptions = {},
-) {
-  return fetchAllPages(
-    (cursor) =>
-      `${api}?limit=${limit}${
-        cursor ? `&cursor=${encodeURIComponent(cursor)}` : ""
-      }`,
-    maxPages,
-  );
+const MAX_IDS_PER_LOOKUP = TRANQUILO_CONFIG.feed.max_ids_per_lookup;
+
+export async function fetchAllItems(api: string, options: PageOptions = {}) {
+  const manifest = await fetchManifest(api, options);
+  const items: typeof manifest = [];
+  for (let at = 0; at < manifest.length; at += MAX_IDS_PER_LOOKUP) {
+    const ids = manifest
+      .slice(at, at + MAX_IDS_PER_LOOKUP)
+      .map((entry) => String(entry.id));
+    const query = ids.map((id) => `ids=${encodeURIComponent(id)}`).join("&");
+    const res = await apiFetch(`${api}?${query}`);
+    if (!res.ok) throw new Error(`${api} id lookup responded ${res.status}`);
+    const body = await res.json();
+    if (body.missing?.length) {
+      throw new Error(
+        `id lookup could not resolve manifest ids: ${body.missing.join(", ")}`,
+      );
+    }
+    items.push(...body.items);
+  }
+  return items;
 }
 
 export function fetchManifest(

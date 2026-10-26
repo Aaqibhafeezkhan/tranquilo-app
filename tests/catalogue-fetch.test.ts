@@ -101,3 +101,73 @@ describe("fetchManifest", () => {
     await expect(fetchManifest(API)).rejects.toThrow(/404/);
   });
 });
+
+describe("fetchAllItems", () => {
+  function stubCatalogue(ids: string[], pageSize: number) {
+    const urls: URL[] = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: string) => {
+        const url = new URL(input);
+        urls.push(url);
+        const lookup = url.searchParams.getAll("ids");
+        if (lookup.length) {
+          return new Response(
+            JSON.stringify({
+              items: lookup.map((id) => ({ id, title: `Item ${id}` })),
+              missing: [],
+            }),
+          );
+        }
+        const at = Number(url.searchParams.get("cursor") ?? 0);
+        const next = at + pageSize < ids.length ? String(at + pageSize) : null;
+        return new Response(
+          JSON.stringify({
+            items: ids.slice(at, at + pageSize).map((id) => ({ id })),
+            next_cursor: next,
+          }),
+        );
+      }),
+    );
+    return urls;
+  }
+
+  it("resolves every manifest id to a full row, at most 100 ids per lookup", async () => {
+    const ids = Array.from({ length: 250 }, (_, i) => `n${i}`);
+    const urls = stubCatalogue(ids, 200);
+
+    const items = await fetchAllItems(API);
+
+    expect(items.map((i: { id: string }) => i.id).sort()).toEqual(
+      [...ids].sort(),
+    );
+    expect(items[0].title).toBe("Item n0");
+    const lookups = urls.filter((u) => u.searchParams.has("ids"));
+    expect(lookups.length).toBeGreaterThan(0);
+    for (const url of lookups) {
+      expect(url.searchParams.getAll("ids").length).toBeLessThanOrEqual(100);
+    }
+    expect(
+      urls.some(
+        (u) => u.searchParams.has("limit") && !u.searchParams.has("shape"),
+      ),
+    ).toBe(false);
+  });
+
+  it("fails loudly when a lookup reports missing ids", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: string) => {
+        const url = new URL(input);
+        return new Response(
+          JSON.stringify(
+            url.searchParams.has("ids")
+              ? { items: [], missing: url.searchParams.getAll("ids") }
+              : { items: [{ id: "gone" }], next_cursor: null },
+          ),
+        );
+      }),
+    );
+    await expect(fetchAllItems(API)).rejects.toThrow(/gone/);
+  });
+});

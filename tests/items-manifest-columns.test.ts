@@ -96,7 +96,7 @@ describe("manifest queries", () => {
     expect(body.next_cursor).toEqual(expect.any(String));
   });
 
-  it("full-row pages still select every column", () => {
-    expect(buildQuery({ limit: "10" }).text).toMatch(/SELECT \*/);
+  it("id lookups still select every column", () => {
+    expect(buildQuery({ ids: "1" }).text).toMatch(/SELECT \*/);
   });
 });

@@ -71,18 +71,6 @@ export interface Item {
   // as optional, not assume every item carries them.
   img_width: number | null;
   img_height: number | null;
-  palette_hex: string[] | null;
-  // Every distinct hue bucket among palette_hex's several colors (the
-  // real color filter) -- see classify_palette_buckets() in the ingestion
-  // repo. Same 9-value vocabulary as the existing `palette` facet, but
-  // multi-valued: an item can carry several.
-  palette_buckets: Palette[] | null;
-  // Up to 3 tags (1 primary + up to 2 secondary, in that
-  // order) from the closed vocabulary in artscroll-poc's
-  // vibe_taxonomy.py -- not sourced from shared/vocabulary.json like the
-  // fields above, so plain string[] rather than a literal union, same as
-  // caption_tea/tea_voice_status's own real-but-untyped vocabularies.
-  vibe_tags: string[] | null;
   url: string | null;
   license: string | null;
   category: Category | null;
@@ -100,7 +88,6 @@ export interface Item {
   caption_tea: string | null;
   caption_basic: string | null;
   tea_voice_status: string | null;
-  tea_voice_eligible: boolean | null;
   tea_voice_sources: TeaVoiceSource[] | null;
   cast: CastMember[] | null;
   cast_context: CastContext | null;
@@ -111,9 +98,7 @@ export interface Item {
   twist_category: string | null;
   twist_hook: string | null;
   twist_story: string | null;
-  twist_confidence: string | null;
   twist_source_url: string | null;
-  music_mood: string | null;
   shuffle_key: number;
   // Computed client-side after fetch, stashed onto the item -- never part
   // of the API response itself.

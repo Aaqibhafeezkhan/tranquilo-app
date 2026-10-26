@@ -51,7 +51,6 @@ interface ItemRow {
   native_id: string;
   img?: string | null;
   full_img?: string | null;
-  cursor_ts?: string;
   shuffle_key?: number;
   [column: string]: unknown;
 }
@@ -79,7 +78,6 @@ interface BuiltQuery {
   counting?: true;
   lookup?: true;
   requestedIds?: string[];
-  paginated?: boolean;
   limit?: number;
   manifest?: boolean;
   shuffled?: boolean;
@@ -222,12 +220,7 @@ function serializeRow(row: ItemRow) {
     blur_placeholder: row.blur_placeholder,
     img_width: row.img_width,
     img_height: row.img_height,
-    palette_hex: row.palette_hex,
-    palette_buckets: row.palette_buckets,
-    // curator_boost/palette_contrast_score deliberately absent -- pure
-    // server-side ranking inputs (see vibeSearchQuery() above), not
-    // something the client renders.
-    vibe_tags: row.vibe_tags,
+    // Ranking inputs and fields the UI never reads are deliberately absent.
     url: safeHttpUrl(row.url),
     license: row.license,
     category: row.category,
@@ -243,7 +236,6 @@ function serializeRow(row: ItemRow) {
     caption_tea: row.caption_tea,
     caption_basic: row.caption_basic,
     tea_voice_status: row.tea_voice_status,
-    tea_voice_eligible: row.tea_voice_eligible,
     // Only grounded claims with a URL, trimmed to what the UI renders.
     tea_voice_sources: teaVoiceSources(row.tea_voice_claims),
     cast: castWithSafeLinks(row.cast),
@@ -254,9 +246,7 @@ function serializeRow(row: ItemRow) {
     twist_category: row.twist_category,
     twist_hook: row.twist_hook,
     twist_story: row.twist_story,
-    twist_confidence: row.twist_confidence,
     twist_source_url: safeHttpUrl(row.twist_source_url),
-    music_mood: row.music_mood,
     shuffle_key: row.shuffle_key,
   };
 }
@@ -322,36 +312,7 @@ const MAX_LIMIT = 200;
 // Shared with app.ts's FEED_PAGE_SIZE via config.toml, not hand-synced.
 const DEFAULT_LIMIT = TRANQUILO_CONFIG.feed.page_size;
 
-// Bounds the collection view / CSV export / hero shelves / storyline
-// chapter lookups.
-const MAX_IDS = 500;
-
-// A cursor is (created_at, native_id) base64'd, matching the ORDER BY
-// and items_live_idx exactly. Cursor rather than OFFSET: an item
-// ingested mid-scroll would shift every offset. The timestamp is
-// carried as Postgres TEXT, never a JS Date -- Date.toISOString()
-// truncates to milliseconds while Postgres stores microseconds, which
-// once made every page return the same rows (a cursor compared as
-// "not greater than itself").
-function encodeCursor(
-  createdAtText: string | undefined,
-  nativeId: string,
-): string {
-  return Buffer.from(
-    `${String(createdAtText)}\u0000${nativeId}`,
-    "utf8",
-  ).toString("base64url");
-}
-
-function decodeCursor(cursor: string) {
-  const parts = Buffer.from(String(cursor), "base64url")
-    .toString("utf8")
-    .split("\u0000");
-  if (parts.length !== 2 || !parts[0] || !parts[1]) {
-    throw Object.assign(new Error("malformed cursor"), { status: 400 });
-  }
-  return { createdAt: parts[0], nativeId: parts[1] };
-}
+const MAX_IDS = TRANQUILO_CONFIG.feed.max_ids_per_lookup;
 
 // ---------------------------------------------------------------------------
 // The shuffle cursor -- a separate codec since it carries a different
@@ -565,8 +526,6 @@ function vibeSearchQuery(params: QueryParams): BuiltQuery {
     ),
   );
   return {
-    // No cursor_ts alias -- unlike the paginated shapes below, this never
-    // pages, so there's nothing to encode a cursor from.
     text:
       `SELECT * FROM items ` +
       ` WHERE ${LIVE_ITEMS_PREDICATE} AND vibe_tags && $1::text[] ` +
@@ -608,7 +567,7 @@ function buildQuery(params: QueryParams): BuiltQuery {
       );
     }
     return {
-      text: `SELECT *, created_at::text AS cursor_ts FROM items WHERE ${
+      text: `SELECT * FROM items WHERE ${
         LIVE_ITEMS_PREDICATE
       } AND native_id = ANY($1) ORDER BY created_at ASC, native_id ASC`,
       params: [ids],
@@ -686,8 +645,6 @@ function buildQuery(params: QueryParams): BuiltQuery {
   const cursor = scalar(params.cursor);
   const manifest = shape === "manifest";
   const shuffled = scalar(params.order) === "shuffle";
-  const paginated =
-    shuffled || params.limit !== undefined || params.cursor !== undefined;
 
   // Rejected before querying: the unbounded SELECT exceeds Neon's 64MB response cap.
   if (manifest && !shuffled) {
@@ -698,13 +655,11 @@ function buildQuery(params: QueryParams): BuiltQuery {
       { status: 400 },
     );
   }
-  if (!paginated && !counting) {
+  if (!manifest && !counting) {
     throw Object.assign(
       new Error(
-        "This endpoint no longer returns the whole catalogue in one response. " +
-          "Use ?shape=manifest&order=shuffle&start=0 for every item's identity and facets, " +
-          "?ids=a,b,c to look up specific items, or ?limit=N (with ?cursor= to continue) to " +
-          "page through full rows.",
+        `Full item rows are served only by ?ids= lookups (at most ${MAX_IDS} per request). ` +
+          "Use ?shape=manifest&order=shuffle&start=0 and follow next_cursor to list items.",
       ),
       { status: 400 },
     );
@@ -735,13 +690,6 @@ function buildQuery(params: QueryParams): BuiltQuery {
     if (wrapped) {
       where.push(`shuffle_key < ${bind(start)}::float8`);
     }
-  } else if (!manifest && cursor) {
-    const c = decodeCursor(cursor);
-    where.push(
-      `(created_at, native_id) > (${bind(c.createdAt)}::timestamptz, ${bind(
-        c.nativeId,
-      )})`,
-    );
   }
 
   if (counting) {
@@ -754,21 +702,12 @@ function buildQuery(params: QueryParams): BuiltQuery {
 
   // ORDER BY must match the index column-for-column or the planner
   // sorts anyway -- see sql/017_items_shuffle_key.sql.
-  const columns = manifest
-    ? MANIFEST_COLUMNS.join(", ")
-    : "*, created_at::text AS cursor_ts";
-  let text = `SELECT ${columns} FROM items WHERE ${where.join(" AND ")}${
-    shuffled
-      ? " ORDER BY shuffle_key ASC, native_id ASC"
-      : " ORDER BY created_at ASC, native_id ASC"
-  }`;
-  if (paginated) {
-    text += ` LIMIT ${bind(limit)}`;
-  }
+  const text =
+    `SELECT ${MANIFEST_COLUMNS.join(", ")} FROM items WHERE ${where.join(" AND ")}` +
+    ` ORDER BY shuffle_key ASC, native_id ASC LIMIT ${bind(limit)}`;
   return {
     text: text,
     params: values,
-    paginated: paginated,
     limit: limit,
     manifest: manifest,
     shuffled: shuffled,
@@ -1033,14 +972,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return;
     }
 
-    const last = itemRows[itemRows.length - 1];
-    res.json({
-      items: items,
-      next_cursor:
-        itemRows.length === query.limit && last
-          ? encodeCursor(last.cursor_ts, last.native_id)
-          : null,
-    });
+    throw new Error("buildQuery returned an unhandled query shape");
   } catch (err) {
     // 400s are the caller's mistake -- reported to the client, not Sentry.
     if (err && (err as { status?: number }).status === 400) {
@@ -1055,15 +987,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 }
 
-// Exported for tests only. The cursor codec's contract -- a
-// microsecond-precision Postgres timestamp survives the round trip --
-// is worth testing directly. buildQuery's SQL text is testable without
+// Exported for tests only. buildQuery's SQL text is testable without
 // a live database; EXPLAIN against Neon is the real acceptance test.
 export {
   buildQuery,
-  decodeCursor,
   decodeShuffleCursor,
-  encodeCursor,
   encodeShuffleCursor,
   teaVoiceSources,
 };
