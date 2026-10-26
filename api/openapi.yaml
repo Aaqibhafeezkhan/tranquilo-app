@@ -367,6 +367,60 @@ paths:
           content:
             application/json: { schema: { $ref: "#/components/schemas/Error" } }
 
+  /api/webhooks/patreon:
+    post:
+      tags: [engagement]
+      summary: Patreon member webhook
+      operationId: patreonWebhook
+      description: >-
+        Registered in Patreon's developer portal (PATREON_WEBHOOK_SECRET),
+        not called by this site's own client. X-Patreon-Signature is the hex
+        HMAC-MD5 of the raw body. On a members:* or members:pledge:* event,
+        stores the member's name, status and tiers for the About page's
+        patron list; members:delete blanks the stored name. Every other
+        event type is acknowledged and ignored.
+      parameters:
+        - name: X-Patreon-Event
+          in: header
+          required: true
+          schema: { type: string }
+        - name: X-Patreon-Signature
+          in: header
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        description: Raw Patreon JSON:API payload whose `data` is a member resource.
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        "200":
+          description: Event acknowledged (and, for a member event, stored).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok: { type: boolean }
+                  handled:
+                    type: boolean
+                    description: false for an event type other than members:*.
+        "400":
+          description: Unreadable body, or not a member resource.
+          content:
+            application/json: { schema: { $ref: "#/components/schemas/Error" } }
+        "401":
+          description: Signature verification failed.
+          content:
+            application/json: { schema: { $ref: "#/components/schemas/Error" } }
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          description: PATREON_WEBHOOK_SECRET not configured, or the database write failed.
+          content:
+            application/json: { schema: { $ref: "#/components/schemas/Error" } }
+
   /v/{slug}:
     get:
       tags: [sharing]

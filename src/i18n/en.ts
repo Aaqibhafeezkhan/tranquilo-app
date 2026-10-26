@@ -163,6 +163,12 @@ export const en = {
     "Payment is handled by Stripe — Tranquilo never sees your card details. Amounts are shown in your own currency at checkout.",
   "support.once.note": "Choose your own amount",
 
+  // <tranquilo-patreon-link> on the Support and Thank-you pages.
+  "support.patreon.body":
+    "Prefer a membership? Join us on Patreon and follow along as Tranquilo grows.",
+  "support.patreon.join": "Join on Patreon",
+  "support.patreon.soon": "Patreon opens soon.",
+
   // Discover (shelves) mode.
   "shelves.home": "Tranquilo, back to the homepage",
   "shelves.title": "Discover",
@@ -217,6 +223,7 @@ export const en = {
     "Tranquilo is built in the open, with help from these people. Thank you.",
   "community.contributors": "Contributors on GitHub",
   "community.donors": "Supporters",
+  "community.patrons": "Patrons on Patreon",
   "community.avatarAlt": "{handle} on GitHub",
 
   // Email sign-up forms on static pages (src/pages/*.ts).

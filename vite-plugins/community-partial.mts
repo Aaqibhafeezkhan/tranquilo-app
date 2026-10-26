@@ -2,6 +2,8 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import type { Plugin } from "vite";
+import { getSql } from "../lib/db.ts";
+import { loadPatronGroups, type PatronGroup } from "../lib/patreon.ts";
 import { safeHttpUrl } from "../lib/safe-url.ts";
 import { escapeHtml, fallbackChain, interpolate, lookup } from "../src/i18n/core.ts";
 import { DICTIONARIES } from "../src/i18n/dictionaries.ts";
@@ -28,6 +30,7 @@ export interface CommunityData {
   /** null when the fetch failed; the grid is then left out. */
   contributors: Contributor[] | null;
   donors: Donor[];
+  patrons?: PatronGroup[];
 }
 
 type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
@@ -90,6 +93,17 @@ export function loadSupporters(root: string): { donors: Donor[] } {
   }
 }
 
+async function fetchPatrons(): Promise<PatronGroup[]> {
+  const sql = getSql();
+  if (!sql) return [];
+  try {
+    return await loadPatronGroups(sql);
+  } catch (err) {
+    console.warn("[community] patrons unavailable; building without them", err);
+    return [];
+  }
+}
+
 function translator(html: string) {
   const locale = /<html lang="([^"]+)"/.exec(html)?.[1] ?? "en";
   const chain = fallbackChain(locale, new Set(Object.keys(DICTIONARIES)));
@@ -124,11 +138,25 @@ function renderDonors(donors: Donor[], t: ReturnType<typeof translator>): string
       </ul>`;
 }
 
+function renderPatrons(groups: PatronGroup[], t: ReturnType<typeof translator>): string {
+  const lists = groups.map(({ title, names }) => {
+    const label = title ? `<p class="community-tier">${escapeHtml(title)}</p>\n      ` : "";
+    const items = names.map((name) => `<li>${escapeHtml(name)}</li>`);
+    return `${label}<ul class="community-donors community-patrons">
+        ${items.join("\n        ")}
+      </ul>`;
+  });
+  return `<h3 class="community-h3">${t("community.patrons")}</h3>
+      ${lists.join("\n      ")}`;
+}
+
 export function expandCommunityPartial(html: string, data: CommunityData): string {
   if (!html.includes(COMMUNITY_MARKER)) return html;
   const t = translator(html);
   const parts: string[] = [];
   if (data.contributors?.length) parts.push(renderContributors(data.contributors, t));
+  const patrons = (data.patrons ?? []).filter((g) => g.names.length);
+  if (patrons.length) parts.push(renderPatrons(patrons, t));
   if (data.donors.length) parts.push(renderDonors(data.donors, t));
   if (!parts.length) return html.replace(COMMUNITY_MARKER, "");
 
@@ -147,7 +175,7 @@ export default function communityPartial(root: string): Plugin {
     if (contributors === null) {
       console.warn("[community] GitHub contributors unavailable; building without the grid");
     }
-    return { contributors, donors: loadSupporters(root).donors };
+    return { contributors, donors: loadSupporters(root).donors, patrons: await fetchPatrons() };
   };
   return {
     name: "tranquilo-community-partial",

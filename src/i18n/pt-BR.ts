@@ -135,6 +135,11 @@ export const ptBR: Dictionary = {
     "O pagamento é feito por Stripe — Tranquilo nunca vê os dados do seu cartão. Os valores aparecem na sua moeda no momento do pagamento.",
   "support.once.note": "Escolha o valor",
 
+  "support.patreon.body":
+    "Prefere uma assinatura? Apoie no Patreon e acompanhe o crescimento do Tranquilo.",
+  "support.patreon.join": "Apoiar no Patreon",
+  "support.patreon.soon": "O Patreon abre em breve.",
+
   "shelves.home": "Tranquilo, voltar à página inicial",
   "shelves.title": "Descobrir",
   "shelves.close": "Fechar Descobrir",
@@ -181,6 +186,7 @@ export const ptBR: Dictionary = {
     "Tranquilo é feito de forma aberta, com a ajuda destas pessoas. Agradecemos de coração.",
   "community.contributors": "Contribuições no GitHub",
   "community.donors": "Apoio financeiro",
+  "community.patrons": "Apoio no Patreon",
   "community.avatarAlt": "{handle} no GitHub",
 
   "form.joining": "Inscrevendo…",
