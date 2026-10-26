@@ -5,6 +5,7 @@ import {
   chooseCanonical,
   excludedVariants,
   flipSurnameFirst,
+  neverMapped,
   planFromMap,
 } from "../lib/artist-canonical.ts";
 
@@ -303,6 +304,16 @@ describe("applyAliases", () => {
         "Canaletto (Giovanni Antonio Canal)": "Antonio Canalleto",
       }),
     ).toThrow(/Antonio Canalleto/);
+  });
+
+  it("removes a spelling marked never to be mapped", () => {
+    expect(applyAliases(map, { "Canal, Antonio": null })).toEqual({});
+  });
+
+  it("splits never-map spellings from the additions", () => {
+    expect(
+      neverMapped({ "G Romano": null, "Canaletto (X)": "Antonio Canaletto" }),
+    ).toEqual(new Set(["G Romano"]));
   });
 
   it("refuses a hedged spelling", () => {

@@ -16,11 +16,13 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { neon } from "@neondatabase/serverless";
 import {
+  type Aliases,
   applyAliases,
   buildCanonicalMap,
   type CanonicalGroup,
   chooseCanonical,
   excludedVariants,
+  neverMapped,
   type SpellingCount,
 } from "../lib/artist-canonical.ts";
 
@@ -69,6 +71,11 @@ for (const [name, info] of Object.entries(artists)) {
   for (const v of info.variants || []) g.variants.add(v);
 }
 
+const aliases: Aliases = fs.existsSync(ALIASES)
+  ? JSON.parse(fs.readFileSync(ALIASES, "utf8"))
+  : {};
+// Dropped before the canonical is chosen, so one cannot win a group.
+const never = neverMapped(aliases);
 const excluded = excludedVariants(
   [...byId.values()],
   new Set(
@@ -80,8 +87,9 @@ const excluded = excludedVariants(
 const previous: Record<string, string> = fs.existsSync(OUT)
   ? JSON.parse(fs.readFileSync(OUT, "utf8"))
   : {};
+for (const n of never) excluded.add(n);
 const groups = [...byId.values()].map((g) => {
-  const ourNames = [...g.ourNames];
+  const ourNames = [...g.ourNames].filter((n) => !never.has(n));
   const safeVariants = [...g.variants].filter((v) => !excluded.has(v));
   // Rows a merge rewrote now sit under a variant or a previous canonical.
   const held = [
@@ -92,7 +100,7 @@ const groups = [...byId.values()].map((g) => {
         .map((n) => previous[n])
         .filter((p): p is string => Boolean(p)),
     ]),
-  ];
+  ].filter((n) => !never.has(n));
   return { ...g, ourNames, held };
 });
 
@@ -117,16 +125,13 @@ for (const g of groups) {
   // A group with no live rows keeps its previous canonical.
   const canonical =
     chooseCanonical(rows, g.variants) ??
-    g.ourNames.map((n) => previous[n]).find(Boolean);
+    g.ourNames.map((n) => previous[n]).find((p) => p && !never.has(p));
   if (!canonical) continue;
   // Variants included: an unseen variant is what the next pull delivers.
   resolved.push({ canonical, ourNames: g.ourNames, variants: [...g.variants] });
 }
 
-const map = applyAliases(
-  buildCanonicalMap(resolved, excluded),
-  fs.existsSync(ALIASES) ? JSON.parse(fs.readFileSync(ALIASES, "utf8")) : {},
-);
+const map = applyAliases(buildCanonicalMap(resolved, excluded), aliases);
 // Sorted so a rebuild diffs by content, not by query row order.
 const sorted = Object.fromEntries(
   Object.entries(map).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)),

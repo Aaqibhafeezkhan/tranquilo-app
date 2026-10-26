@@ -125,19 +125,34 @@ export function buildCanonicalMap(
 }
 
 // Hand-curated spellings ULAN cannot settle. A target must already be a
-// canonical, so a typo cannot mint a new byline.
+// canonical, so a typo cannot mint a new byline. A null target means the
+// spelling is never mapped.
+export type Aliases = Record<string, string | null>;
+
+export function neverMapped(aliases: Aliases): Set<string> {
+  return new Set(
+    Object.entries(aliases)
+      .filter(([, canonical]) => canonical === null)
+      .map(([spelling]) => spelling),
+  );
+}
+
 export function applyAliases(
   map: Record<string, string>,
-  aliases: Record<string, string>,
+  aliases: Aliases,
 ): Record<string, string> {
-  const canonicals = new Set(Object.values(map));
+  const out = { ...map };
+  for (const spelling of neverMapped(aliases)) delete out[spelling];
+  const canonicals = new Set(Object.values(out));
   for (const [spelling, canonical] of Object.entries(aliases)) {
+    if (canonical === null) continue;
     if (HEDGED.test(spelling.trim()))
       throw new Error(`alias "${spelling}" is a hedged attribution`);
     if (!canonicals.has(canonical))
       throw new Error(`alias target "${canonical}" is not a canonical name`);
+    out[spelling] = canonical;
   }
-  return { ...map, ...aliases };
+  return out;
 }
 
 export function chooseCanonical(
