@@ -528,11 +528,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return;
     }
 
-    const shelfId = parseShelfSlug(slug);
-    if (shelfId) {
+    const shelfKey = parseShelfSlug(slug);
+    if (shelfKey) {
       let shelfTree = buildFallbackCard("Tranquilo");
       try {
-        const shelf = client ? await getShelf(client, shelfId) : null;
+        const shelf = client ? await getShelf(client, shelfKey) : null;
         if (isShareableShelf(shelf)) {
           const preview = await getShelfPreview(client, shelf);
           shelfTree = buildShelfCard(

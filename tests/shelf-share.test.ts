@@ -15,6 +15,7 @@ import {
   parseShelfSlug,
   SHELF_SLUG_PREFIX,
   shelfSlug,
+  shelfTitleSlug,
 } from "../lib/shelves.ts";
 import { STORYLINE_SLUG_PREFIX } from "../lib/storylines.ts";
 import { makeSql } from "./helpers/pg.ts";
@@ -53,6 +54,8 @@ beforeAll(async () => {
     "038_items_palette_buckets.sql",
     "021_shelves.sql",
     "022_shelves_seed.sql",
+    "044_shelves_seed_brazil_latin_america.sql",
+    "045_shelves_brazil_latin_america_first.sql",
   ]);
   SHELVES = await getShelves(sql);
 
@@ -142,6 +145,38 @@ describe("which shelves are shareable", () => {
     expect(isShareableShelf(SHELVES.find((s) => s.id === "storylines"))).toBe(
       false,
     );
+  });
+});
+
+describe("a shelf's link follows its title", () => {
+  it("slugs the title, not the internal id", () => {
+    const shelf = SHELVES.find((s) => s.id === "painted-by-themselves");
+    expect(shelf.title).toBe("Main Character Energy");
+    expect(shelf.slug).toBe("main-character-energy");
+  });
+
+  it("drops accents and punctuation", () => {
+    expect(shelfTitleSlug("Feito no Brasil")).toBe("feito-no-brasil");
+    expect(shelfTitleSlug("Água & Luz: Retratos!")).toBe("agua-luz-retratos");
+    expect(shelfTitleSlug("  Old  World  ")).toBe("old-world");
+  });
+
+  it("gives every seeded shelf a distinct, URL-safe slug", () => {
+    const slugs = SHELVES.map((s) => s.slug);
+    expect(new Set(slugs).size).toBe(slugs.length);
+    for (const slug of slugs) {
+      expect(slug).toMatch(/^[a-z0-9]+(-[a-z0-9]+)*$/);
+    }
+  });
+
+  it("resolves a shelf by its title slug", async () => {
+    const shelf = await getShelf(sql, "main-character-energy");
+    expect(shelf?.id).toBe("painted-by-themselves");
+  });
+
+  it("still resolves a shelf by its id, for links shared before", async () => {
+    const shelf = await getShelf(sql, "painted-by-themselves");
+    expect(shelf?.slug).toBe("main-character-energy");
   });
 });
 

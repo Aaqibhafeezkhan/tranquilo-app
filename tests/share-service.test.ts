@@ -58,11 +58,11 @@ describe("storylineShareUrlFor", () => {
 });
 
 describe("shelfShareUrlFor", () => {
-  it("builds a /shelf/{id} URL", () => {
+  it("builds a /shelf/{slug} URL from the title slug", () => {
     const svc = makeService();
-    expect(svc.shelfShareUrlFor({ id: "pets-in-art" })).toBe(
-      "https://tranquilo.art/shelf/pets-in-art",
-    );
+    expect(
+      svc.shelfShareUrlFor({ id: "pets-in-art", slug: "furry-friends" }),
+    ).toBe("https://tranquilo.art/shelf/furry-friends");
   });
 });
 
@@ -93,12 +93,16 @@ describe("shareItem / shareStoryline / shareShelf", () => {
     const writeText = vi.fn(() => Promise.resolve());
     vi.stubGlobal("navigator", { clipboard: { writeText } });
     const svc = makeService();
-    svc.shareShelf({ id: "pets-in-art", title: "Furry Friends" });
+    svc.shareShelf({
+      id: "pets-in-art",
+      slug: "furry-friends",
+      title: "Furry Friends",
+    });
     expect(trackEvent).toHaveBeenCalledWith("share_click", {
       shelf_id: "pets-in-art",
     });
     expect(writeText).toHaveBeenCalledWith(
-      "https://tranquilo.art/shelf/pets-in-art",
+      "https://tranquilo.art/shelf/furry-friends",
     );
   });
 });

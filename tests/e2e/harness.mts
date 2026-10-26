@@ -11,6 +11,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Page, Route } from "@playwright/test";
 import * as realApi from "../../api/items.ts";
+import { shelfTitleSlug } from "../../lib/shelves.ts";
 import { MUSIC_BUCKETS } from "../../src/data/music.ts";
 import { SHELVES } from "../../src/data/shelves.ts";
 
@@ -339,9 +340,16 @@ export async function stubBackend(
       return json(
         SHELVES.map((s) =>
           s.type === "hero"
-            ? { id: s.id, title: s.title, type: s.type, itemIds: s.itemIds }
+            ? {
+                id: s.id,
+                slug: shelfTitleSlug(s.title),
+                title: s.title,
+                type: s.type,
+                itemIds: s.itemIds,
+              }
             : {
                 id: s.id,
+                slug: shelfTitleSlug(s.title),
                 title: s.title,
                 type: s.type,
                 filter: s.filter,

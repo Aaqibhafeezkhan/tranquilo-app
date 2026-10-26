@@ -267,13 +267,13 @@ async function sendShelfPage(
   client: Sql | null,
   res: VercelResponse,
   origin: string,
-  shelfId: string,
+  shelfKey: string,
 ) {
   let shelf = null;
   let count = 0;
   if (client) {
     try {
-      shelf = await getShelf(client, shelfId);
+      shelf = await getShelf(client, shelfKey);
       if (!isShareableShelf(shelf)) shelf = null;
       if (shelf) count = (await getShelfPreview(client, shelf)).count;
     } catch (err) {
@@ -282,7 +282,7 @@ async function sendShelfPage(
       shelf = null;
     }
   }
-  const canonicalUrl = `${origin}/shelf/${encodeURIComponent(shelfId)}`;
+  const canonicalUrl = `${origin}/shelf/${encodeURIComponent(shelf?.slug || shelfKey)}`;
 
   res.setHeader("Content-Type", "text/html; charset=utf-8");
   if (!shelf) {
@@ -310,7 +310,7 @@ async function sendShelfPage(
       `A shelf of ${countLabel} on Tranquilo, a calm scroll of public-domain art.`,
     ),
     ogTitle: escapeHtml(`${shelf.title} — ${countLabel}`),
-    ogImage: `${origin}/og/${encodeURIComponent(shelfSlug(shelfId))}.png`,
+    ogImage: `${origin}/og/${encodeURIComponent(shelfSlug(shelf.slug))}.png`,
     canonicalUrl: canonicalUrl,
     // Not back to /shelf/{id}: renderPage's fallback does location.replace().
     redirectUrl: `${origin}/index.html`,
@@ -333,8 +333,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (storylineId)
     return sendStorylinePage(client, res, origin, slug, storylineId);
 
-  const shelfId = parseShelfSlug(slug);
-  if (shelfId) return sendShelfPage(client, res, origin, shelfId);
+  const shelfKey = parseShelfSlug(slug);
+  if (shelfKey) return sendShelfPage(client, res, origin, shelfKey);
 
   const parsed = parseSlug(slug);
   let item: ItemRow | null = null;

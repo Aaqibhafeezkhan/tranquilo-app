@@ -74,7 +74,26 @@ afterAll(async () => {
   if (db.sql) await db.sql.$close();
 });
 
-describe("/shelf/{id} share page", () => {
+describe("/shelf/{slug} share page", () => {
+  it("canonicalises to the title slug, even from an id link", async () => {
+    const res = await call(pageHandler, "shelf-painted-by-themselves");
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toContain(
+      'rel="canonical" href="https://tranquilo.art/shelf/main-character-energy"',
+    );
+    expect(res.body).toContain(
+      'content="https://tranquilo.art/og/shelf-main-character-energy.png"',
+    );
+  });
+
+  it("serves the title slug directly", async () => {
+    const res = await call(pageHandler, "shelf-main-character-energy");
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toContain(
+      "<title>Main Character Energy · Tranquilo</title>",
+    );
+  });
+
   it("describes the shelf by its title and live work count", async () => {
     const res = await call(pageHandler, "shelf-birdwatching");
     expect(res.statusCode).toBe(200);

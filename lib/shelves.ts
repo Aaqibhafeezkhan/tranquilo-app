@@ -10,11 +10,21 @@ const SHELF_SLUG_PREFIX = "shelf";
 // Filled client-side; storylines have their own /s/{id} links.
 const UNSHAREABLE_SHELF_IDS = new Set(["storylines"]);
 
-function shelfSlug(id: string): string {
-  return `${SHELF_SLUG_PREFIX}-${id}`;
+function shelfSlug(key: string): string {
+  return `${SHELF_SLUG_PREFIX}-${key}`;
 }
 
-// The shelf id, or null if this slug addresses something else.
+// The URL form of a shelf's English title, e.g. "feito-no-brasil".
+function shelfTitleSlug(title: string): string {
+  return title
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+// The shelf's title slug or id, or null if this slug addresses something else.
 function parseShelfSlug(slug?: string | null): string | null {
   const raw = String(slug == null ? "" : slug);
   const prefix = `${SHELF_SLUG_PREFIX}-`;
@@ -41,7 +51,13 @@ function parseJsonbField(value: any): any {
 }
 
 function rowToShelf(row: any): any {
-  const shelf: any = { id: row.id, title: row.title, type: row.type };
+  const shelf: any = {
+    id: row.id,
+    // From the untranslated title, so a link reads the same in every locale.
+    slug: shelfTitleSlug(row.title),
+    title: row.title,
+    type: row.type,
+  };
   if (row.type === "hero") {
     shelf.itemIds = parseJsonbField(row.item_ids) || [];
   } else {
@@ -59,10 +75,15 @@ async function getShelves(sql: any): Promise<any[]> {
   return rows.map(rowToShelf);
 }
 
-async function getShelf(sql: any, id?: string | null): Promise<any> {
-  if (!id) return null;
-  const rows = await sql.query("SELECT * FROM shelves WHERE id = $1", [id]);
-  return rows[0] ? rowToShelf(rows[0]) : null;
+// Matches the title slug first, then the id that older links used.
+async function getShelf(sql: any, key?: string | null): Promise<any> {
+  if (!key) return null;
+  const shelves = await getShelves(sql);
+  return (
+    shelves.find((s) => s.slug === key) ||
+    shelves.find((s) => s.id === key) ||
+    null
+  );
 }
 
 // Live work count, plus the first live work as cover.
@@ -111,4 +132,5 @@ export {
   parseShelfSlug,
   SHELF_SLUG_PREFIX,
   shelfSlug,
+  shelfTitleSlug,
 };

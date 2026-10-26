@@ -378,13 +378,13 @@ paths:
         `<meta>`/OpenGraph/Twitter Card tags injected in place -- a crawler
         sees a fully-formed preview, a human gets the real running app at a
         real, bookmarkable URL. `/s/{id}` (a storyline) rewrites here too,
-        as slug `s-{id}`, and `/shelf/{id}` (a Discover shelf) as slug
-        `shelf-{id}`.
+        as slug `s-{id}`, and `/shelf/{slug}` (a Discover shelf) as slug
+        `shelf-{slug}`.
       parameters:
         - name: slug
           in: path
           required: true
-          description: '`{source}-{nativeId}` for an artwork (split on the first hyphen only), `s-{storylineId}` for a storyline, or `shelf-{shelfId}` for a shelf.'
+          description: '`{source}-{nativeId}` for an artwork (split on the first hyphen only), `s-{storylineId}` for a storyline, or `shelf-{shelfSlug}` for a shelf (its title slug, or its id for older links).'
           schema: { type: string }
       responses:
         "200":
@@ -409,14 +409,14 @@ paths:
           content:
             text/html: { schema: { type: string } }
 
-  /shelf/{id}:
+  /shelf/{slug}:
     get:
       tags: [sharing]
       summary: Shelf share page (alias)
       operationId: getShelfSharePageAlias
-      description: Rewrites to `/v/shelf-{id}` -- see `/v/{slug}`.
+      description: Rewrites to `/v/shelf-{slug}` -- see `/v/{slug}`. Accepts the shelf's title slug, or its id for older links.
       parameters:
-        - name: id
+        - name: slug
           in: path
           required: true
           schema: { type: string }
@@ -436,13 +436,13 @@ paths:
         card via @vercel/og (Satori) -- the artwork's own image tinted with
         its accent color, or a title/caption-only card if the source is
         under a health hold or the image fetch fails. `slug` matching
-        `s-{id}` renders the storyline variant instead, and `shelf-{id}`
+        `s-{id}` renders the storyline variant instead, and `shelf-{slug}`
         the shelf variant (title, work count, one cover image).
       parameters:
         - name: slug
           in: path
           required: true
-          description: '`{source}-{nativeId}`, `s-{storylineId}` for a storyline card, or `shelf-{shelfId}` for a shelf card. The `.png` suffix is stripped by the rewrite.'
+          description: '`{source}-{nativeId}`, `s-{storylineId}` for a storyline card, or `shelf-{shelfSlug}` for a shelf card. The `.png` suffix is stripped by the rewrite.'
           schema: { type: string }
       responses:
         "200":
@@ -863,6 +863,9 @@ components:
       required: [id, title, type]
       properties:
         id: { type: string }
+        slug:
+          type: string
+          description: URL form of the untranslated title, used by `/shelf/{slug}` share links.
         title: { type: string }
         translated: { $ref: "#/components/schemas/Translated" }
         type: { type: string, enum: [hero, rule] }

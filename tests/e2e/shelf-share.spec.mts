@@ -78,7 +78,7 @@ test("sharing from Discover copies the shelf's own URL and stays on Discover", a
     () => window.__copied && window.__copied.length > 0,
   );
   const copied = await page.evaluate(() => window.__copied![0]);
-  expect(new URL(copied).pathname).toBe("/shelf/painted-by-themselves");
+  expect(new URL(copied).pathname).toBe("/shelf/main-character-energy");
   await expect(page.locator("#toast")).toContainText("Link copied");
   await expect(page.locator("#shelvesMode")).toHaveClass(/open/);
   await expect(page.locator("#shelfMode")).not.toHaveClass(/open/);
@@ -87,20 +87,20 @@ test("sharing from Discover copies the shelf's own URL and stays on Discover", a
 test("the shelf view's own share control copies the same URL", async ({
   page,
 }) => {
-  const view = await gotoShelf(page, "painted-by-themselves");
+  const view = await gotoShelf(page, "main-character-energy");
   await captureClipboard(page);
   await view.locator(".shelf-mode-share").click();
   await page.waitForFunction(
     () => window.__copied && window.__copied.length > 0,
   );
   const copied = await page.evaluate(() => window.__copied![0]);
-  expect(new URL(copied).pathname).toBe("/shelf/painted-by-themselves");
+  expect(new URL(copied).pathname).toBe("/shelf/main-character-energy");
 });
 
 test("a shared hero-shelf link opens the shelf over the feed", async ({
   page,
 }) => {
-  const view = await gotoShelf(page, "painted-by-themselves");
+  const view = await gotoShelf(page, "main-character-energy");
   await expect(view.locator(".shelf-mode-title")).toHaveText(
     "Main Character Energy",
   );
@@ -126,7 +126,7 @@ test("a shared rule-shelf link shows its works even below Discover's minimum", a
 test("a work opens in the detail panel and closing it returns to the shelf", async ({
   page,
 }) => {
-  const view = await gotoShelf(page, "painted-by-themselves");
+  const view = await gotoShelf(page, "main-character-energy");
   await view.locator(".shelf-mode-card").nth(1).click();
 
   const detail = page.locator("#detailModal");
@@ -136,6 +136,13 @@ test("a work opens in the detail panel and closing it returns to the shelf", asy
   await page.goBack();
   await expect(detail).not.toHaveClass(/open/);
   await expect(view).toHaveClass(/open/);
+});
+
+test("a link using the shelf's old id still opens it", async ({ page }) => {
+  const view = await gotoShelf(page, "painted-by-themselves");
+  await expect(view.locator(".shelf-mode-title")).toHaveText(
+    "Main Character Energy",
+  );
 });
 
 test("an unknown shelf link leaves the feed usable", async ({ page }) => {

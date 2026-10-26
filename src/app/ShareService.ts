@@ -39,8 +39,8 @@ export class ShareService {
     return `${location.origin}/s/${encodeURIComponent(storyline.id)}`;
   }
 
-  shelfShareUrlFor(shelf: { id: string }): string {
-    return `${location.origin}/shelf/${encodeURIComponent(shelf.id)}`;
+  shelfShareUrlFor(shelf: { id: string; slug?: string }): string {
+    return `${location.origin}/shelf/${encodeURIComponent(shelf.slug || shelf.id)}`;
   }
 
   // A mouse or trackpad, as opposed to a finger. Guarded since matchMedia
@@ -86,7 +86,7 @@ export class ShareService {
     );
   }
 
-  shareShelf(shelf: { id: string; title: string }): void {
+  shareShelf(shelf: { id: string; slug?: string; title: string }): void {
     this.host.trackEvent("share_click", { shelf_id: shelf.id });
     this.shareLink(
       this.shelfShareUrlFor(shelf),

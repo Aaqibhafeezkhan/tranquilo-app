@@ -87,9 +87,11 @@ export class TranquiloShelfMode extends HTMLElement {
     });
   }
 
-  // False for an unknown or unshareable id.
-  open(shelfId: string): boolean {
-    const shelf = this.shelves.find((s) => s.id === shelfId);
+  // Takes a title slug or, for older links, an id. False if unknown.
+  open(key: string): boolean {
+    const shelf =
+      this.shelves.find((s) => s.slug === key) ||
+      this.shelves.find((s) => s.id === key);
     if (!isShareableShelf(shelf)) return false;
     const host = this.requireApp();
 
