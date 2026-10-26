@@ -30,16 +30,18 @@
 //
 // Required env vars: BLOB_READ_WRITE_TOKEN, DATABASE_URL,
 // BLOB_USAGE_SOFT_CAP_BYTES (optional).
+
 import { head as rawHead, put as rawPut } from "@vercel/blob";
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 // Wrapped rather than counted at call sites, so a new call site can't
 // go uncounted. Failures count too -- Vercel bills either way.
 import { makeCountedBlobOps, recordBlobOp } from "../../../../lib/blob-ops.ts";
-import { getSql } from "../../../../lib/db.ts";
+import { getSql, type Sql } from "../../../../lib/db.ts";
 
 const { put, head } = makeCountedBlobOps({
   put: rawPut,
   head: rawHead,
-  record: (op: any) => recordBlobOp(getSql(), op),
+  record: (op: string) => recordBlobOp(getSql(), op),
 });
 
 import sharp from "sharp";
@@ -61,6 +63,16 @@ type ImgTier = (typeof TIERS)[number];
 
 function isImgTier(value: unknown): value is ImgTier {
   return value === "display" || value === "lightbox";
+}
+
+interface OriginError extends Error {
+  status?: number;
+  retryAfter?: string | null;
+  tooLarge?: boolean;
+}
+
+function firstValue(value: string | string[] | undefined): string | undefined {
+  return Array.isArray(value) ? value[0] : value;
 }
 
 // The single most load-bearing rule in the caching design: which tiers
@@ -194,22 +206,22 @@ function isAllowedOrigin(
 // as api/items.ts's imgProxyUrl() calls. null for an unknown or non-live
 // item.
 async function lookupOriginUrl(
-  sql: any,
-  source: any,
-  id: any,
+  sql: Sql | null,
+  source: string,
+  id: string,
   tier: ImgTier,
 ): Promise<string | null> {
   if (!sql) return null;
-  const rows = await sql.query(
+  const rows = (await sql.query(
     `SELECT img, full_img FROM items WHERE source = $1 AND native_id = $2 ${LIVE_ITEMS_AND} LIMIT 1`,
     [String(source), String(id)],
-  );
+  )) as { img: string | null; full_img: string | null }[];
   const row = rows[0];
   if (!row) return null;
   return (tier === "lightbox" ? row.full_img || row.img : row.img) || null;
 }
 
-function pathnameFor(source: any, id: any, tier: any) {
+function pathnameFor(source: string, id: string, tier: ImgTier) {
   // Blob pathnames reject "//" -- Europeana's own ids can contain
   // literal slashes, so collapse any slash in id first. Also collapses
   // ":" now that npm.py's ids do too ("U:15646") -- lib/img-object-key.ts's
@@ -224,41 +236,37 @@ function pathnameFor(source: any, id: any, tier: any) {
 // `status` left unset so the handler counts this as origin_error, not a
 // misreported 429 -- nothing is wrong with the source, we're declining
 // to hold what it offered.
-function tooLargeError(bytes: any) {
-  const err: any = new Error(
+function tooLargeError(bytes: number) {
+  const err: OriginError = new Error(
     `origin response exceeds ${MAX_ORIGIN_BYTES} bytes (${bytes})`,
   );
   err.tooLarge = true;
   return err;
 }
 
-async function fetchOriginOnce(url: any, source: any) {
+async function fetchOriginOnce(
+  url: string,
+  source: string,
+): Promise<{ buf: Buffer; contentType: string }> {
   const controller = new AbortController();
   const timeout = setTimeout(() => {
     controller.abort();
   }, ORIGIN_FETCH_TIMEOUT_MS);
-  let r: any,
-    err: any,
-    declared: number,
-    chunks: any[],
-    total: number,
-    buf: any,
-    declaredContentType: any,
-    typeErr: any,
-    contentType: any;
   try {
-    r = await fetch(url, {
+    const r = await fetch(url, {
       signal: controller.signal,
       headers: identity.imageFetchHeaders(source),
     });
     if (!r.ok) {
-      err = new Error(`origin fetch failed with status ${r.status}`);
+      const err: OriginError = new Error(
+        `origin fetch failed with status ${r.status}`,
+      );
       err.status = r.status;
       err.retryAfter = r.headers.get("retry-after");
       throw err;
     }
     // Cheap rejection first, from the declared size.
-    declared = Number(r.headers.get("content-length"));
+    const declared = Number(r.headers.get("content-length"));
     if (Number.isFinite(declared) && declared > MAX_ORIGIN_BYTES) {
       throw tooLargeError(declared);
     }
@@ -267,9 +275,9 @@ async function fetchOriginOnce(url: any, source: any) {
     // the size, and some institutional servers omit it on chunked
     // responses. Reading in chunks lets an oversized body be abandoned
     // partway instead of fully materialised first.
-    chunks = [];
-    total = 0;
-    for await (const chunk of r.body as any) {
+    const chunks: Uint8Array[] = [];
+    let total = 0;
+    for await (const chunk of r.body as unknown as AsyncIterable<Uint8Array>) {
       total += chunk.length;
       if (total > MAX_ORIGIN_BYTES) {
         controller.abort();
@@ -277,21 +285,21 @@ async function fetchOriginOnce(url: any, source: any) {
       }
       chunks.push(chunk);
     }
-    buf = Buffer.concat(chunks, total);
-    declaredContentType = r.headers.get("content-type");
+    const buf = Buffer.concat(chunks, total);
+    const declaredContentType = r.headers.get("content-type");
     // A 200 isn't proof of an image -- some institutional servers
     // (Nationalmuseum Sweden's eMuseumPlus, found live) answer a broken
     // asset request with 200 and an HTML error page as the body. Without
     // this, that HTML would sail through sharp's decode failure path and
     // get stored verbatim as if it were the image.
     if (declaredContentType && !/^image\//i.test(declaredContentType)) {
-      typeErr = new Error(
+      const typeErr: OriginError = new Error(
         `origin returned a 200 with a non-image content-type (${declaredContentType})`,
       );
       typeErr.status = r.status;
       throw typeErr;
     }
-    contentType = declaredContentType || "application/octet-stream";
+    const contentType = declaredContentType || "application/octet-stream";
     return { buf: buf, contentType: contentType };
   } finally {
     clearTimeout(timeout);
@@ -304,26 +312,29 @@ async function fetchOriginOnce(url: any, source: any) {
 // Module-scoped, so it lasts as long as the warm instance; a cold start
 // re-alerting is fine. Keyed per-HOST: one source rate-limiting us is
 // one condition, however many images are involved.
-function hostOf(url: any) {
+function hostOf(url: string | null | undefined) {
   try {
-    return new URL(url).host;
+    return new URL(url ?? "").host;
   } catch (_e) {
     return "unknown-host";
   }
 }
 
-const alertedConditions = Object.create(null);
+const alertedConditions: Record<string, number> = Object.create(null);
 const ALERT_REPEAT_MS = 15 * 60 * 1000;
 
-async function alertOnce(key: any, message: any, extra?: any) {
+async function alertOnce(
+  key: string,
+  message: string,
+  extra?: Record<string, unknown>,
+) {
   const now = Date.now();
   if (alertedConditions[key] && now - alertedConditions[key] < ALERT_REPEAT_MS)
     return;
   alertedConditions[key] = now;
   console.error(`img proxy: ${message}`, extra || "");
-  let err: any;
   try {
-    err = new Error(`img proxy: ${message}`);
+    const err = new Error(`img proxy: ${message}`);
     err.name = "ImgProxyDegraded";
     // Every degraded condition here shares the same error name, so an
     // alert scoped to one condition (e.g. s3-put-failed) needs this tag
@@ -338,7 +349,7 @@ async function alertOnce(key: any, message: any, extra?: any) {
 
 // Single attempt -- see ORIGIN_COOLDOWN_DEFAULT_SECONDS above for why
 // there's no retry loop.
-async function fetchOrigin(url: any, source: any) {
+async function fetchOrigin(url: string, source: string) {
   return await fetchOriginOnce(url, source);
 }
 
@@ -351,21 +362,22 @@ const RESERVE_USAGE_SQL =
   "UPDATE blob_usage_tracker SET total_bytes = total_bytes + $1 " +
   "WHERE total_bytes + $1 <= $2 RETURNING total_bytes";
 
-async function reserveUsage(bytes: any) {
+async function reserveUsage(bytes: number) {
   const client = getSql();
   if (!client) return false;
   const cap =
     Number(process.env.BLOB_USAGE_SOFT_CAP_BYTES) ||
     DEFAULT_USAGE_SOFT_CAP_BYTES;
-  let rows: any, total: number;
   try {
-    rows = await client.query(RESERVE_USAGE_SQL, [bytes, cap]);
+    const rows = (await client.query(RESERVE_USAGE_SQL, [bytes, cap])) as {
+      total_bytes: unknown;
+    }[];
     if (!rows.length) return false;
 
     // Warn in-band on the way up -- the daily health-check cron also
     // watches this, but Hobby's minimum cron interval is daily, and
     // usage can cross 80% -> 100% inside a day under real traffic.
-    total = Number(rows[0].total_bytes);
+    const total = Number(rows[0].total_bytes);
     if (total >= cap * USAGE_WARN_FRACTION) {
       await alertOnce(
         "usage-high",
@@ -381,13 +393,13 @@ async function reserveUsage(bytes: any) {
     await alertOnce(
       "tracker-down",
       "usage tracker unreachable, failing closed -- NOTHING is being cached while this persists",
-      { error: String((err && (err as any).message) || err) },
+      { error: String((err instanceof Error && err.message) || err) },
     );
     return false;
   }
 }
 
-async function bookShed(writes: any) {
+async function bookShed(writes: Promise<unknown>[]) {
   try {
     await Promise.all(writes);
   } catch (_bookErr) {
@@ -399,28 +411,38 @@ async function bookShed(writes: any) {
 // to origin directly; lightbox falls back to the cached display blob
 // instead, since redirecting to its origin would be the heaviest
 // possible museum request.
-async function shedPlan(tier: any, lookupDisplayBlob: any) {
+type ShedPlan =
+  | { kind: "origin" }
+  | { kind: "display"; url: string }
+  | { kind: "unavailable" };
+
+async function shedPlan(
+  tier: ImgTier,
+  lookupDisplayBlob: () => Promise<{ url: string }>,
+): Promise<ShedPlan> {
   if (canShedToOrigin(tier)) {
     return { kind: "origin" };
   }
-  let blob: any;
   try {
-    blob = await lookupDisplayBlob();
+    const blob = await lookupDisplayBlob();
     return { kind: "display", url: blob.url };
   } catch (_e) {
     return { kind: "unavailable" };
   }
 }
 
-async function transformForTier(buf: any, contentType: any, tier: any) {
-  let webpBuf: any;
+async function transformForTier(
+  buf: Buffer,
+  contentType: string,
+  tier: string,
+): Promise<{ buf: Buffer; contentType: string }> {
   if (tier === "display") {
     // Measured before building: 19 sampled display images re-encode at
     // WebP q82 for a 66.3% saving (56-75% per source), none got bigger.
     // Guarded anyway in case WebP ever loses to an already-optimised
     // source.
     try {
-      webpBuf = await sharp(buf)
+      const webpBuf = await sharp(buf)
         .resize({
           width: DISPLAY_MAX_DIMENSION,
           height: DISPLAY_MAX_DIMENSION,
@@ -464,7 +486,7 @@ async function transformForTier(buf: any, contentType: any, tier: any) {
 // worse -- it also escapes "%", double-encoding the many already-encoded
 // Commons URLs. This encodes exactly Node's real rejection set (above
 // U+00FF, control chars) and nothing else, idempotently.
-function headerSafeLocation(url: any) {
+function headerSafeLocation(url: unknown) {
   return String(url).replace(/[^\x20-\xFF]/g, (ch) => encodeURIComponent(ch));
 }
 
@@ -473,7 +495,7 @@ function headerSafeLocation(url: any) {
 // reaching here means there's no key, so Blob has nothing to say either.
 // Blob bills OPERATIONS, not storage, and the free tier's 10,000 has
 // been exhausted from exactly this kind of redundant head() call.
-function shouldConsultBlob(s3Config: any) {
+function shouldConsultBlob(s3Config?: { enabled?: boolean } | null) {
   return !s3Config?.enabled;
 }
 
@@ -481,7 +503,7 @@ function shouldConsultBlob(s3Config: any) {
 // specifically, and with S3 configured the PUT below never touches
 // Blob, so charging it against that budget would track a spend that
 // never happened.
-function shouldCheckBlobBudget(s3Config: any) {
+function shouldCheckBlobBudget(s3Config?: { enabled?: boolean } | null) {
   return !s3Config?.enabled;
 }
 
@@ -492,29 +514,32 @@ function shouldCheckBlobBudget(s3Config: any) {
 // rethrew it as a 500 for an image the miss path could have redirected
 // to the museum for. A cache is an optimisation; one that can take the
 // page down with it is worse than no cache.
-function isCacheMissError(_headErr?: any) {
+function isCacheMissError(_headErr?: unknown) {
   return true;
 }
 
-export default async function handler(req: any, res: any) {
-  const source = req.query.source;
-  const id = req.query.id;
-  const tier = req.query.tier;
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  const rawSource = firstValue(req.query.source);
+  const rawId = firstValue(req.query.id);
+  const rawTier = firstValue(req.query.tier);
   // Set from the item's row (lookupOriginUrl()) only once a request
   // actually needs it -- the miss path, or the no-Blob redirect. A hit
   // never pays for the lookup, and never depends on this source being in
   // the allowlist: one missing entry (npm's) once 400'd every one of that
   // source's requests even though the objects were already cached in S3.
   // The request's own `?origin=` is ignored; see lookupOriginUrl().
-  let originUrl: any = null;
+  let originUrl: string | null = null;
 
-  if (!source || !id || !isImgTier(tier)) {
+  if (!rawSource || !rawId || !isImgTier(rawTier)) {
     res.statusCode = 400;
     res.json({
       error: `Expected /img/:source/:id/:tier with tier in ${TIERS.join("|")}`,
     });
     return;
   }
+  const source = rawSource;
+  const id = rawId;
+  const tier = rawTier;
 
   // Per visitor IP, checked before even a cache-hit lookup -- see
   // lib/img-visitor-rate-limit.ts for why this is a hand-rolled token
@@ -526,7 +551,7 @@ export default async function handler(req: any, res: any) {
   // museum load stops scaling with our traffic. Tier-dependent per
   // SHEDDABLE_TO_ORIGIN above; lightbox falls back to the cached
   // display blob (warm for ~71% of items) before failing honestly.
-  async function shedToVisitor(reason: any) {
+  async function shedToVisitor(reason: string) {
     res.setHeader("X-Tranquilo-Shed", reason);
 
     // Only what the RESPONSE depends on is awaited here -- display
@@ -563,7 +588,7 @@ export default async function handler(req: any, res: any) {
 
   // Counts ALL FOUR shed paths (img_cache_stats.shed counts only three
   // pre-fetch ones -- see sql/013_img_shed_stats.sql).
-  function shedWrites(reason: any) {
+  function shedWrites(reason: string) {
     return [
       guard.bumpStat(sqlClient, source, tier, "shed"),
       guard.bumpShedReason(sqlClient, source, tier, reason),
@@ -599,30 +624,8 @@ export default async function handler(req: any, res: any) {
   const pathname = pathnameFor(source, id, tier);
   const cacheKeyForEntry = `${source}:${id}:${tier}`;
   const s3Config = store.configFromEnv();
-  let entry: any,
-    resolved: any,
-    existing: any,
-    sqlClient: any,
-    cacheKeyForAdmission: any,
-    verdict: any,
-    storeResult: any,
-    budget: any,
-    hostBudget: any,
-    cacheKey: any,
-    claimed: any,
-    origin: any,
-    status: any,
-    cooldown: any,
-    transformed: any,
-    outBuf: any,
-    outContentType: any,
-    allowed: any,
-    s3Location: any,
-    s3PutFailed: any,
-    hash: any,
-    objectKey: any,
-    putResult: any,
-    written: any;
+  // Read by shedToVisitor(), which is declared above the try block.
+  let sqlClient: Sql | null = null;
 
   try {
     // Phase 6: ask the database first, not Blob. If a row carries an
@@ -634,8 +637,8 @@ export default async function handler(req: any, res: any) {
     // if deletion ever returns. Rows with no key (everything written
     // before this migration) fall through unchanged below.
     if (s3Config.enabled) {
-      entry = await store.touchAndResolve(getSql(), cacheKeyForEntry);
-      resolved = store.resolveHit(entry, s3Config);
+      const entry = await store.touchAndResolve(getSql(), cacheKeyForEntry);
+      const resolved = store.resolveHit(entry, s3Config);
       if (resolved.from === "cdn") {
         res.statusCode = 302;
         res.setHeader("Location", headerSafeLocation(resolved.url));
@@ -653,7 +656,7 @@ export default async function handler(req: any, res: any) {
     // Skipped entirely once S3 is on -- see shouldConsultBlob().
     if (shouldConsultBlob(s3Config)) {
       try {
-        existing = await head(pathname);
+        const existing = await head(pathname);
         // RESPOND FIRST -- the hit counter and LRU recency stamp below
         // are bookkeeping the visitor doesn't depend on. They used to
         // be awaited before the response, costing two extra Neon round
@@ -699,8 +702,8 @@ export default async function handler(req: any, res: any) {
 
     // Is this image worth storing? Asked first, since a rejection means
     // no fetch, no token, no origin request from our IP at all.
-    cacheKeyForAdmission = `${source}:${id}:${tier}`;
-    verdict = await admission.noteRequest(
+    const cacheKeyForAdmission = `${source}:${id}:${tier}`;
+    const verdict = await admission.noteRequest(
       sqlClient,
       cacheKeyForAdmission,
       source,
@@ -714,16 +717,16 @@ export default async function handler(req: any, res: any) {
       await shedToVisitor(`not-admitted-${verdict.requests}`);
       return;
     }
-    storeResult = verdict.admit;
+    const storeResult = verdict.admit;
 
     // Is this source fetchable right now? A standing hold, an active
     // Retry-After cooldown, or an exhausted budget all mean: don't
     // fetch it ourselves.
-    budget = await guard.acquireFetchToken(sqlClient, source);
+    let budget = await guard.acquireFetchToken(sqlClient, source);
     if (budget.allowed) {
       // Europeana is 26 institutions behind one source key, so a
       // source-level yes says nothing about the specific host.
-      hostBudget = await guard.acquireHostToken(
+      const hostBudget = await guard.acquireHostToken(
         sqlClient,
         hostOf(originUrl),
         source,
@@ -751,13 +754,15 @@ export default async function handler(req: any, res: any) {
     // Single-flight: without this, N concurrent viewers of one
     // uncached image produce N origin fetches. Losers shed rather than
     // queue.
-    cacheKey = `${source}:${id}:${tier}`;
-    claimed = await guard.claimFetch(sqlClient, cacheKey);
+    const cacheKey = `${source}:${id}:${tier}`;
+    const claimed = await guard.claimFetch(sqlClient, cacheKey);
     if (!claimed) {
       await shedToVisitor("in-flight");
       return;
     }
 
+    const fetchUrl = originUrl;
+    let origin: { buf: Buffer; contentType: string };
     try {
       // Spans carry only catalogue-shape debug data (source, tier, id),
       // never visitor data -- see lib/sentry.ts's scrubEvent().
@@ -767,17 +772,17 @@ export default async function handler(req: any, res: any) {
           name: "img-proxy.fetch-origin",
           attributes: { source: source, tier: tier, id: id },
         },
-        () => fetchOrigin(originUrl, source),
+        () => fetchOrigin(fetchUrl, source),
       );
       await guard.recordOriginOutcome(sqlClient, source, 200, true);
       await guard.recordHostOutcome(sqlClient, hostOf(originUrl), 200, true);
       await guard.bumpStat(sqlClient, source, tier, "origin_ok");
-    } catch (fetchErr: any) {
+    } catch (fetchErr) {
       await guard.releaseFetch(sqlClient, cacheKey);
-      status = fetchErr?.status;
+      const { status, retryAfter } = (fetchErr ?? {}) as OriginError;
       if (status === 429) {
-        cooldown = guard.parseRetryAfter(
-          fetchErr.retryAfter,
+        const cooldown = guard.parseRetryAfter(
+          retryAfter,
           ORIGIN_COOLDOWN_DEFAULT_SECONDS,
         );
         // Parks the HOST that pushed back, not the whole source --
@@ -808,7 +813,7 @@ export default async function handler(req: any, res: any) {
       return;
     }
 
-    transformed = await sentry.Sentry.startSpan(
+    const transformed = await sentry.Sentry.startSpan(
       {
         op: "img.transform",
         name: "img-proxy.transform",
@@ -821,8 +826,8 @@ export default async function handler(req: any, res: any) {
       },
       () => transformForTier(origin.buf, origin.contentType, tier),
     );
-    outBuf = transformed.buf;
-    outContentType = transformed.contentType;
+    const outBuf = transformed.buf;
+    const outContentType = transformed.contentType;
 
     // Not admitted -- serve the bytes already held and store nothing;
     // the budget stays untouched.
@@ -842,7 +847,7 @@ export default async function handler(req: any, res: any) {
       return;
     }
 
-    allowed = shouldCheckBlobBudget(s3Config)
+    const allowed = shouldCheckBlobBudget(s3Config)
       ? await reserveUsage(outBuf.length)
       : true;
     if (!allowed && !canShedToOrigin(tier)) {
@@ -879,12 +884,15 @@ export default async function handler(req: any, res: any) {
     // unconfigured. A working S3 costs zero Blob operations. The key is
     // content-addressed, so re-fetching an unchanged master lands on
     // the same key rather than orphaning a copy.
-    s3Location = null;
-    s3PutFailed = false;
+    let s3Location: string | null = null;
+    let s3PutFailed = false;
+    let objectKey: string | null = null;
+    let putResult: { ok: boolean; status?: number } | null = null;
     if (s3Config.enabled) {
-      hash = objectKeys.contentHash(outBuf);
-      objectKey = objectKeys.objectKeyFor(source, id, tier, hash);
-      putResult = await sentry.Sentry.startSpan(
+      const hash = objectKeys.contentHash(outBuf);
+      const key = objectKeys.objectKeyFor(source, id, tier, hash);
+      objectKey = key;
+      const result = await sentry.Sentry.startSpan(
         {
           op: "http.client",
           name: "img-proxy.s3-put",
@@ -895,16 +903,17 @@ export default async function handler(req: any, res: any) {
             bytes: outBuf.length,
           },
         },
-        () => s3.putObject(s3Config, objectKey, outBuf, outContentType),
+        () => s3.putObject(s3Config, key, outBuf, outContentType),
       );
-      if (putResult.ok) {
-        s3Location = store.cdnUrlFor(s3Config.cdnBaseUrl, objectKey);
+      putResult = result;
+      if (result.ok) {
+        s3Location = store.cdnUrlFor(s3Config.cdnBaseUrl, key);
         // Recorded only after the PUT succeeds -- the hit path above
         // trusts the key without an existence check on that ordering.
         await store.recordObject(
           getSql(),
           cacheKeyForEntry,
-          objectKey,
+          key,
           hash,
           outBuf.length,
         );
@@ -933,7 +942,7 @@ export default async function handler(req: any, res: any) {
           source: source,
           id: id,
           tier: tier,
-          status: putResult.status,
+          status: putResult?.status,
           key: objectKey,
         },
       );
@@ -946,7 +955,7 @@ export default async function handler(req: any, res: any) {
     }
 
     // S3 not configured at all -- the original Blob write, unchanged.
-    written = await put(pathname, outBuf, {
+    const written = await put(pathname, outBuf, {
       access: "public",
       addRandomSuffix: false,
       contentType: outContentType,
