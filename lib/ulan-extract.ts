@@ -64,14 +64,33 @@ function buildIndex(terms: any): any {
   return { byNorm: byNorm, bySubject: bySubject };
 }
 
+// "Guercino (Giovanni Francesco Barbieri)": the full name in the
+// parenthetical picks one of the alias's candidates. Dates never do.
+function narrowByParenthetical(
+  index: { byNorm: Map<string, Set<unknown>> },
+  name: unknown,
+  candidates: unknown[],
+): unknown[] {
+  const inner = String(name).match(/\(([^()]*)\)\s*$/)?.[1];
+  if (!inner || /\d/.test(inner)) return candidates;
+  const innerIds = index.byNorm.get(normalise(inner));
+  const both = candidates.filter((id) => innerIds?.has(id));
+  return both.length === 1 ? both : candidates;
+}
+
 // Two different people can carry the same term -- there is more than one
 // Rembrandt in ULAN. Choosing one silently would fuse two artists in our
 // catalogue, so an ambiguous name reports every candidate and NO subjectId,
 // leaving nothing for a merge step to act on by accident.
+const HEDGED_PARENTHETICAL =
+  /\([^)]*(\?|\b(after|attributed|circle|copy|d'apres|d'après|follower|manner|mukaan|naar|nach|perhaps|possibly|probably|school|studio|style|toegeschreven|workshop|zugeschrieben)\b)[^)]*\)\s*$/i;
+
 function lookup(index: any, name: any): any {
+  if (HEDGED_PARENTHETICAL.test(String(name))) return null;
   const ids = index.byNorm.get(normalise(name));
   if (!ids?.size) return null;
-  const list = Array.from(ids);
+  let list = Array.from(ids);
+  if (list.length > 1) list = narrowByParenthetical(index, name, list);
   if (list.length > 1) return { ambiguous: true, subjectIds: list };
   const rec = index.bySubject.get(list[0]) || {};
   return {

@@ -37,6 +37,13 @@ const MAP = path.join(ROOT, "data/reference/artist-canonical.json");
 const COMMIT = process.argv.includes("--commit");
 const USE_ULAN = process.argv.includes("--ulan-names");
 const FROM_MAP = process.argv.includes("--from-map");
+// --skip <file>: a JSON array of spellings a reviewer rejected.
+const SKIP_AT = process.argv.indexOf("--skip");
+const SKIP = new Set<string>(
+  SKIP_AT > 0
+    ? JSON.parse(fs.readFileSync(process.argv[SKIP_AT + 1], "utf8"))
+    : [],
+);
 const AUDIT = path.join(
   ROOT,
   FROM_MAP
@@ -63,7 +70,7 @@ async function planFromCanonicalMap(): Promise<PlanEntry[]> {
       WHERE artist = ANY($1) AND ${LIVE} GROUP BY 1`,
     [keys],
   )) as SpellingCount[];
-  const rewrites = planFromMap(rows, map);
+  const rewrites = planFromMap(rows, map, SKIP);
   const targets = [...new Set(rewrites.map((r) => r.to))];
   const held = (await sql.query(
     `SELECT artist, count(*)::int n FROM items

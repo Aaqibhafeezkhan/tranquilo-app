@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
+  applyAliases,
   buildCanonicalMap,
   chooseCanonical,
   excludedVariants,
   flipSurnameFirst,
+  neverMapped,
   planFromMap,
 } from "../lib/artist-canonical.ts";
 
@@ -21,6 +23,16 @@ describe("chooseCanonical", () => {
     ).toBe("Rembrandt van Rijn");
   });
 
+  it("breaks a tie the same way whatever order the rows arrive in", () => {
+    const spaced: [string, number] = ["Jean Pierre Hoüel", 5];
+    const hyphenated: [string, number] = ["Jean-Pierre Hoüel", 5];
+    expect(chooseCanonical(rows(spaced, hyphenated))).toBe("Jean-Pierre Hoüel");
+    expect(chooseCanonical(rows(hyphenated, spaced))).toBe("Jean-Pierre Hoüel");
+    const a: [string, number] = ["Anthony Vandyck", 5];
+    const b: [string, number] = ["Anthony Vandyke", 5];
+    expect(chooseCanonical(rows(a, b))).toBe(chooseCanonical(rows(b, a)));
+  });
+
   it("prefers the accented form of the same name regardless of count", () => {
     expect(
       chooseCanonical(rows(["Edouard Manet", 10], ["Édouard Manet", 2])),
@@ -31,6 +43,46 @@ describe("chooseCanonical", () => {
     expect(chooseCanonical(rows(["Bril, Paul", 20], ["Paul Bril", 3]))).toBe(
       "Paul Bril",
     );
+  });
+
+  it("prefers a plain name over a more-used one carrying a parenthetical", () => {
+    expect(
+      chooseCanonical(
+        rows(
+          ["Pietro da Cortona (Pietro Berrettini)", 40],
+          ["Pietro da Cortona", 5],
+        ),
+      ),
+    ).toBe("Pietro da Cortona");
+  });
+
+  it("prefers a plain name over one carrying native script or dates", () => {
+    expect(
+      chooseCanonical(
+        rows(["Katsukawa Shunshō 勝川春章", 30], ["Katsukawa Shunshō", 2]),
+      ),
+    ).toBe("Katsukawa Shunshō");
+    expect(
+      chooseCanonical(rows(["Jin Nong (1687-1763)", 30], ["Jin Nong", 2])),
+    ).toBe("Jin Nong");
+  });
+
+  it("still returns a decorated name when it is the only spelling", () => {
+    expect(chooseCanonical(rows(["Mei Qing (1623-1697)", 15]))).toBe(
+      "Mei Qing (1623-1697)",
+    );
+  });
+
+  it("prefers a plain surname-first name and flips it when confirmed", () => {
+    expect(
+      chooseCanonical(
+        rows(
+          ["Rembrandt (Rembrandt van Rijn)", 25],
+          ["Rijn, Rembrandt van", 3],
+        ),
+        ["Rembrandt van Rijn"],
+      ),
+    ).toBe("Rembrandt van Rijn");
   });
 
   it("flips a surname-first name when the authority file has the flipped form", () => {
@@ -102,6 +154,12 @@ describe("planFromMap", () => {
     );
   });
 
+  it("leaves a spelling a reviewer rejected untouched", () => {
+    expect(
+      planFromMap(rows(["Bril, Paul", 6]), map, new Set(["Bril, Paul"])),
+    ).toEqual([]);
+  });
+
   it("never rewrites a placeholder attribution", () => {
     expect(
       planFromMap(rows(["Unknown, Dutch", 4], ["Anonymous", 9]), map),
@@ -156,6 +214,7 @@ describe("buildCanonicalMap", () => {
             "After Van Dyck",
             "school of van dyck",
             "Follower of Anthony van Dyck",
+            "Anthonis van Dyck (?)",
             "Van Dyck",
           ],
         },
@@ -222,5 +281,44 @@ describe("flipSurnameFirst", () => {
     expect(flipSurnameFirst("Paul Bril")).toBeNull();
     expect(flipSurnameFirst("Geest, Wybrand de, the Elder")).toBeNull();
     expect(flipSurnameFirst("Bril,")).toBeNull();
+  });
+});
+
+describe("applyAliases", () => {
+  const map = { "Canal, Antonio": "Antonio Canaletto" };
+
+  it("adds a curated spelling for an artist the map already knows", () => {
+    expect(
+      applyAliases(map, {
+        "Canaletto (Giovanni Antonio Canal)": "Antonio Canaletto",
+      }),
+    ).toEqual({
+      "Canal, Antonio": "Antonio Canaletto",
+      "Canaletto (Giovanni Antonio Canal)": "Antonio Canaletto",
+    });
+  });
+
+  it("refuses a target the map has never used as a canonical", () => {
+    expect(() =>
+      applyAliases(map, {
+        "Canaletto (Giovanni Antonio Canal)": "Antonio Canalleto",
+      }),
+    ).toThrow(/Antonio Canalleto/);
+  });
+
+  it("removes a spelling marked never to be mapped", () => {
+    expect(applyAliases(map, { "Canal, Antonio": null })).toEqual({});
+  });
+
+  it("splits never-map spellings from the additions", () => {
+    expect(
+      neverMapped({ "G Romano": null, "Canaletto (X)": "Antonio Canaletto" }),
+    ).toEqual(new Set(["G Romano"]));
+  });
+
+  it("refuses a hedged spelling", () => {
+    expect(() =>
+      applyAliases(map, { "After Canaletto": "Antonio Canaletto" }),
+    ).toThrow(/After Canaletto/);
   });
 });

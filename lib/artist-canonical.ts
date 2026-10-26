@@ -10,6 +10,10 @@ const diacritics = (s: string) =>
 const bare = (s: string) =>
   s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 const isDisplayOrder = (s: string) => !s.includes(",");
+const hyphens = (s: string) => (s.match(/-/g) || []).length;
+// No parenthetical, dates or non-Latin script: what a byline should read.
+const isPlain = (s: string) =>
+  !/[(\d]|[^\p{Script=Latin}\p{M}\p{P}\p{Zs}]/u.test(s);
 
 export function flipSurnameFirst(name: string): string | null {
   const parts = name.split(",");
@@ -25,10 +29,13 @@ function ourChoice(rows: SpellingCount[]): string {
     .slice()
     .sort(
       (a, b) =>
+        Number(isPlain(b.artist)) - Number(isPlain(a.artist)) ||
         Number(isDisplayOrder(b.artist)) - Number(isDisplayOrder(a.artist)) ||
         b.n - a.n ||
         diacritics(b.artist) - diacritics(a.artist) ||
-        b.artist.length - a.artist.length,
+        b.artist.length - a.artist.length ||
+        hyphens(b.artist) - hyphens(a.artist) ||
+        (a.artist < b.artist ? -1 : a.artist > b.artist ? 1 : 0),
     );
   const top = sorted[0];
   const sameNameBetterAccents = sorted.find(
@@ -51,11 +58,13 @@ const isPlaceholder = (s: string) => /^\s*(unknown|anonymous)/i.test(s);
 export function planFromMap(
   rows: SpellingCount[],
   map: Record<string, string>,
+  skip: ReadonlySet<string> = new Set(),
 ): Rewrite[] {
   return rows
     .filter(
       (r) =>
         !isPlaceholder(r.artist) &&
+        !skip.has(r.artist) &&
         Object.hasOwn(map, r.artist) &&
         map[r.artist] !== r.artist,
     )
@@ -69,7 +78,7 @@ export interface CanonicalGroup {
 }
 
 const HEDGED =
-  /^(after|attributed to|circle of|copy after|copy of|follower of|formerly attributed to|imitator of|manner of|school of|studio of|style of|workshop of)\b/i;
+  /^(after|attributed to|circle of|copy after|copy of|follower of|formerly attributed to|imitator of|manner of|school of|studio of|style of|workshop of)\b|\(\?\)\s*$/i;
 
 // Computed over every ULAN subject, not only those we currently hold.
 export function excludedVariants(
@@ -113,6 +122,37 @@ export function buildCanonicalMap(
     for (const n of g.ourNames) map[n] = g.canonical;
   }
   return map;
+}
+
+// Hand-curated spellings ULAN cannot settle. A target must already be a
+// canonical, so a typo cannot mint a new byline. A null target means the
+// spelling is never mapped.
+export type Aliases = Record<string, string | null>;
+
+export function neverMapped(aliases: Aliases): Set<string> {
+  return new Set(
+    Object.entries(aliases)
+      .filter(([, canonical]) => canonical === null)
+      .map(([spelling]) => spelling),
+  );
+}
+
+export function applyAliases(
+  map: Record<string, string>,
+  aliases: Aliases,
+): Record<string, string> {
+  const out = { ...map };
+  for (const spelling of neverMapped(aliases)) delete out[spelling];
+  const canonicals = new Set(Object.values(out));
+  for (const [spelling, canonical] of Object.entries(aliases)) {
+    if (canonical === null) continue;
+    if (HEDGED.test(spelling.trim()))
+      throw new Error(`alias "${spelling}" is a hedged attribution`);
+    if (!canonicals.has(canonical))
+      throw new Error(`alias target "${canonical}" is not a canonical name`);
+    out[spelling] = canonical;
+  }
+  return out;
 }
 
 export function chooseCanonical(

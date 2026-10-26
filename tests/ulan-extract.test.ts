@@ -118,6 +118,60 @@ describe("matching our artists to ULAN subjects", () => {
     expect(hit.subjectId).toBeUndefined();
   });
 
+  it("lets a parenthetical full name pick between same-name subjects", () => {
+    const idx = ulan.buildIndex(terms);
+    expect(ulan.lookup(idx, "Rembrandt (Rembrandt van Rijn)").subjectId).toBe(
+      "500011051",
+    );
+  });
+
+  it("stays ambiguous when the parenthetical names neither subject", () => {
+    const idx = ulan.buildIndex(terms);
+    expect(ulan.lookup(idx, "Rembrandt (the painter)").ambiguous).toBe(true);
+  });
+
+  it("stays ambiguous when the parenthetical names both subjects", () => {
+    const idx = ulan.buildIndex(terms);
+    expect(ulan.lookup(idx, "Rembrandt (Rembrandt)").ambiguous).toBe(true);
+  });
+
+  it("never treats life dates as a disambiguating name", () => {
+    const idx = ulan.buildIndex(terms);
+    expect(ulan.lookup(idx, "Rembrandt (1606-1669)").ambiguous).toBe(true);
+  });
+
+  it("never matches a name whose parenthetical hedges the attribution", () => {
+    const idx = ulan.buildIndex(
+      terms.filter((t) => t.subjectId !== "500999999"),
+    );
+    for (const name of [
+      "Rembrandt van Rijn (and Workshop?)",
+      "Rembrandt van Rijn (or Follower)",
+      "Rembrandt van Rijn (?)",
+      "Rembrandt van Rijn (Circle of)",
+      "Rembrandt van Rijn (and possibly Jacob Jordaens)",
+      "Rembrandt van Rijn (mukaan)",
+      "Rembrandt van Rijn (nach)",
+    ]) {
+      expect(ulan.lookup(idx, name)).toBeNull();
+    }
+  });
+
+  it("still matches a parenthetical listing alternative names", () => {
+    const idx = ulan.buildIndex(
+      terms.filter((t) => t.subjectId !== "500999999"),
+    );
+    expect(
+      ulan.lookup(idx, "Rembrandt van Rijn (Rembrandt or Rijn)").subjectId,
+    ).toBe("500011051");
+  });
+
+  it("does not match on the parenthetical alone", () => {
+    // "Ashanti (Asante)", "Flanders (Brussels?)": the outer name must match.
+    const idx = ulan.buildIndex(terms);
+    expect(ulan.lookup(idx, "Somebody (Rembrandt van Rijn)")).toBeNull();
+  });
+
   it("returns nothing for a name ULAN does not have", () => {
     const idx = ulan.buildIndex(terms);
     expect(ulan.lookup(idx, "Nobody At All")).toBeNull();
