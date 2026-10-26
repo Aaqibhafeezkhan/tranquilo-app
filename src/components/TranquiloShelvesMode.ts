@@ -22,7 +22,8 @@
 // once bundled. This gives the real, current URL either way.
 import tranquiloFlowerVioletUrl from "../../assets/tranquilo-flower-violet.svg";
 import { ShelfType } from "../enums/ShelfType";
-import { t } from "../i18n/index";
+import { SHARE_SVG } from "../feed/slideBuilder";
+import { t, tn } from "../i18n/index";
 import { shelfRenderLimit } from "../logic/logic";
 import type { ITranquiloShelvesModeHost } from "../types/ITranquiloShelvesModeHost";
 import type { Item } from "../types/Item";
@@ -150,6 +151,42 @@ export class TranquiloShelvesMode extends HTMLElement {
       });
   }
 
+  private buildShelfMeta(shelf: Shelf, qualifyingCount: number): HTMLElement {
+    const host = this.requireApp();
+    const meta = document.createElement("div");
+    meta.className = "shelf-meta";
+    const count = document.createElement("span");
+    count.className = "shelf-count";
+    count.textContent = tn("shelf.works", qualifyingCount);
+    // A rule shelf's sample is capped, so a full sample needs a real count.
+    if (shelf.type === ShelfType.Rule && qualifyingCount >= SHELF_FETCH_LIMIT) {
+      host
+        .fetchJson(
+          host.apiUrl({ shape: "count", ...shelf.filter }),
+          "shelf count",
+        )
+        .then((body) => {
+          if (typeof body.total === "number") {
+            count.textContent = tn("shelf.works", body.total);
+          }
+        })
+        .catch((err) => {
+          console.error("items: shelf count failed", err);
+        });
+    }
+    const share = document.createElement("button");
+    share.type = "button";
+    share.className = "btn-share shelf-share";
+    share.setAttribute("aria-label", t("shelf.share"));
+    share.title = t("shelf.share");
+    share.innerHTML = SHARE_SVG;
+    on(share, () => {
+      host.shareShelf(shelf);
+    });
+    meta.append(count, share);
+    return meta;
+  }
+
   private buildShelfRow(
     shelf: Shelf,
     qualifying: Item[],
@@ -170,15 +207,7 @@ export class TranquiloShelvesMode extends HTMLElement {
       titleEl.textContent = shelf.title;
       headEl.appendChild(titleEl);
       if (isShareableShelf(shelf)) {
-        const seeAll = document.createElement("button");
-        seeAll.type = "button";
-        seeAll.className = "shelf-see-all";
-        seeAll.textContent = `${t("shelves.seeAll")} ›`;
-        on(seeAll, () => {
-          this.close();
-          host.openShelfMode(shelf.id);
-        });
-        headEl.appendChild(seeAll);
+        headEl.appendChild(this.buildShelfMeta(shelf, qualifying.length));
       }
       row.appendChild(headEl);
     }

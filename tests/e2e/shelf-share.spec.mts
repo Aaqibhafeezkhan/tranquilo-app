@@ -1,6 +1,6 @@
-// Sharing a Discover shelf: Discover's "See all" opens a shelf's own view,
-// that view's share control copies /shelf/{id}, and a cold load of that
-// URL opens the same view over the feed.
+// Sharing a Discover shelf: each Discover row carries its work count and a
+// share control copying /shelf/{id}, and a cold load of that URL opens the
+// shelf's own view over the feed.
 
 import type { Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
@@ -34,66 +34,67 @@ async function openDiscover(page: Page) {
   await page.waitForSelector("#shelvesMode.open .shelf");
 }
 
-function seeAllFor(page: Page, title: string) {
+function discoverRow(page: Page, title: string) {
   return page
     .locator("#shelvesMode .shelf")
-    .filter({ has: page.locator(".shelf-title", { hasText: title }) })
-    .locator(".shelf-see-all");
+    .filter({ has: page.locator(".shelf-title", { hasText: title }) });
 }
 
-test("Discover's See all opens the shelf's own view", async ({ page }) => {
+test("each Discover shelf shows its work count and a share control", async ({
+  page,
+}) => {
   await gotoFeed(page);
   await openDiscover(page);
-  await seeAllFor(page, "Main Character Energy").click();
 
-  const view = page.locator("#shelfMode");
-  await expect(view).toHaveClass(/open/);
-  await expect(view).toHaveAttribute("aria-hidden", "false");
-  await expect(page.locator("#shelvesMode")).not.toHaveClass(/open/);
-  await expect(view.locator(".shelf-mode-title")).toHaveText(
-    "Main Character Energy",
-  );
-  await expect(view.locator(".shelf-mode-grid .shelf-mode-card")).toHaveCount(
-    4,
-  );
-  await expect(view.locator(".shelf-mode-count")).toContainText("4");
+  const mainCharacter = discoverRow(page, "Main Character Energy");
+  await expect(mainCharacter.locator(".shelf-count")).toHaveText("4 works");
+  await expect(mainCharacter.locator(".shelf-share")).toHaveCount(1);
+  await expect(
+    discoverRow(page, "Birdwatching").locator(".shelf-count"),
+  ).toHaveText("1 work");
 });
 
-test("the storylines shelf offers no See all", async ({ page }) => {
+test("the storylines shelf offers no share control", async ({ page }) => {
   await gotoFeed(page);
   await openDiscover(page);
   await expect(
     page.locator(
-      '#shelvesMode .shelf[data-shelf-id="storylines"] .shelf-see-all',
+      '#shelvesMode .shelf[data-shelf-id="storylines"] .shelf-share',
     ),
   ).toHaveCount(0);
 });
 
-test("sharing copies the shelf's own URL", async ({ page }) => {
+test("sharing from Discover copies the shelf's own URL and stays on Discover", async ({
+  page,
+}) => {
   await gotoFeed(page);
   await openDiscover(page);
-  await seeAllFor(page, "Main Character Energy").click();
   await captureClipboard(page);
 
-  await page.locator("#shelfMode .shelf-mode-share").click();
+  await discoverRow(page, "Main Character Energy")
+    .locator(".shelf-share")
+    .click();
   await page.waitForFunction(
     () => window.__copied && window.__copied.length > 0,
   );
   const copied = await page.evaluate(() => window.__copied![0]);
   expect(new URL(copied).pathname).toBe("/shelf/painted-by-themselves");
   await expect(page.locator("#toast")).toContainText("Link copied");
+  await expect(page.locator("#shelvesMode")).toHaveClass(/open/);
+  await expect(page.locator("#shelfMode")).not.toHaveClass(/open/);
 });
 
-test("closing a shelf opened from Discover returns to Discover", async ({
+test("the shelf view's own share control copies the same URL", async ({
   page,
 }) => {
-  await gotoFeed(page);
-  await openDiscover(page);
-  await seeAllFor(page, "Main Character Energy").click();
-  await page.locator("#shelfMode .shelf-mode-close").click();
-
-  await expect(page.locator("#shelfMode")).not.toHaveClass(/open/);
-  await expect(page.locator("#shelvesMode")).toHaveClass(/open/);
+  const view = await gotoShelf(page, "painted-by-themselves");
+  await captureClipboard(page);
+  await view.locator(".shelf-mode-share").click();
+  await page.waitForFunction(
+    () => window.__copied && window.__copied.length > 0,
+  );
+  const copied = await page.evaluate(() => window.__copied![0]);
+  expect(new URL(copied).pathname).toBe("/shelf/painted-by-themselves");
 });
 
 test("a shared hero-shelf link opens the shelf over the feed", async ({

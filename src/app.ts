@@ -520,8 +520,8 @@ class TranquiloApp {
         shelfReturnEl = shelvesModeEl;
         detailModalEl.open(item, shelfContext);
       },
-      openShelfMode: (shelfId: string) => {
-        shelfModeEl.open(shelfId, { fromDiscover: true });
+      shareShelf: (shelf) => {
+        shareService.shareShelf(shelf);
       },
       pushOverlayHistoryState: (name: any) => {
         pushOverlayHistoryState(name);
@@ -550,9 +550,6 @@ class TranquiloApp {
       openDetailModal: (item, shelfContext) => {
         shelfReturnEl = shelfModeEl;
         detailModalEl.open(item, shelfContext);
-      },
-      restoreDiscover: () => {
-        shelvesModeEl.restore();
       },
       pushOverlayHistoryState: (name) => {
         pushOverlayHistoryState(name);

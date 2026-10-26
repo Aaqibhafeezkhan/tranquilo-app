@@ -5,11 +5,15 @@
 // SHELVES itself is handed over as a plain property
 // (`shelvesModeEl.shelves = SHELVES`) rather than through this host.
 import type { Item } from "./Item";
+import type { Shelf } from "./Shelf";
 import type { StorylineIndexEntry } from "./Storyline";
 
 export interface ITranquiloShelvesModeHost {
   apiUrl(params: Record<string, unknown>): string;
-  fetchJson(url: string, what: string): Promise<{ items?: unknown[] }>;
+  fetchJson(
+    url: string,
+    what: string,
+  ): Promise<{ items?: unknown[]; total?: number }>;
   // Merges fetched rows into app.js's own itemsById/items state, returning
   // the resolved Item objects a rule shelf's qualifying set draws from.
   absorbPage(rows: unknown[]): Item[];
@@ -24,7 +28,7 @@ export interface ITranquiloShelvesModeHost {
     item: Item,
     shelfContext: { items: Item[]; index: number },
   ): void;
-  openShelfMode(shelfId: string): void;
+  shareShelf(shelf: Shelf): void;
   // Every overlay pushes one history entry on open so the hardware back
   // button closes it instead of leaving the app; requestOverlayClose routes
   // an explicit close through history.back() when an entry is pending.

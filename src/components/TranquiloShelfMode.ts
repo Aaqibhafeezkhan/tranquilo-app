@@ -1,4 +1,4 @@
-// One shelf's works in a grid, opened from Discover or /shelf/{id}.
+// One shelf's works in a grid, opened from a /shelf/{id} link.
 import { ShelfType } from "../enums/ShelfType";
 import { escapeHtml, SHARE_SVG } from "../feed/slideBuilder";
 import { t, tn } from "../i18n/index";
@@ -45,11 +45,10 @@ export class TranquiloShelfMode extends HTMLElement {
 
   private shelf: Shelf | null = null;
   private items: Item[] = [];
-  private openedFromDiscover = false;
-  // Bumped per open; stale responses compare against it.
   private cursor: string | null = null;
   private start = 0;
   private loading = false;
+  // Bumped per open; stale responses compare against it.
   private generation = 0;
   private observer: IntersectionObserver | null = null;
 
@@ -89,7 +88,7 @@ export class TranquiloShelfMode extends HTMLElement {
   }
 
   // False for an unknown or unshareable id.
-  open(shelfId: string, opts: { fromDiscover?: boolean } = {}): boolean {
+  open(shelfId: string): boolean {
     const shelf = this.shelves.find((s) => s.id === shelfId);
     if (!isShareableShelf(shelf)) return false;
     const host = this.requireApp();
@@ -100,7 +99,6 @@ export class TranquiloShelfMode extends HTMLElement {
     this.cursor = null;
     this.start = Math.random();
     this.loading = false;
-    this.openedFromDiscover = Boolean(opts.fromDiscover);
     this.titleEl.textContent = shelf.title;
     this.countEl.textContent = "";
     this.gridEl.innerHTML = "";
@@ -124,10 +122,6 @@ export class TranquiloShelfMode extends HTMLElement {
   close(): void {
     this.hide();
     this.observer?.disconnect();
-    if (this.openedFromDiscover) {
-      this.openedFromDiscover = false;
-      this.requireApp().restoreDiscover();
-    }
   }
 
   // No re-render or history push; keeps grid and scroll position.

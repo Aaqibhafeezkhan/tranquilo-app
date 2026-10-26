@@ -22,8 +22,6 @@ export interface ITranquiloShelfModeHost {
     item: Item,
     shelfContext: { items: Item[]; index: number },
   ): void;
-  // Brings Discover back when this view was opened from one of its rows.
-  restoreDiscover(): void;
   pushOverlayHistoryState(name: string): void;
   requestOverlayClose(closeFn: () => void): void;
 }
