@@ -213,17 +213,16 @@ describe("shuffle-ordered paging stays an index range scan", () => {
     });
   });
 
-  // The guarantee the existing manifest makes, which this must not weaken.
-  it("leaves an ordinary manifest complete and unpaged", () => {
-    const q = items.buildQuery({ shape: "manifest" });
-    expect(q.paginated).toBe(false);
-    expect(q.text).not.toMatch(/LIMIT/);
-  });
-
-  it("still refuses a cursor on an ordinary manifest", () => {
-    expect(() => {
-      items.buildQuery({ shape: "manifest", cursor: "anything" });
-    }).toThrowError(/cursor is not valid/);
+  it("refuses a manifest that is not shuffle-paged", () => {
+    for (const params of [
+      { shape: "manifest" },
+      { shape: "manifest", limit: "50" },
+      { shape: "manifest", cursor: "anything" },
+    ]) {
+      expect(() => items.buildQuery(params), JSON.stringify(params)).toThrow(
+        expect.objectContaining({ status: 400 }),
+      );
+    }
   });
 });
 

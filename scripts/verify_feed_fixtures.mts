@@ -17,7 +17,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
 const logic = await import(path.join(ROOT, "src/logic/logic.ts"));
 
-const { resolveApi, fetchAllItems } = await import(
+const { resolveApi, fetchAllItems, apiFetch } = await import(
   path.join(ROOT, "lib/catalogue.ts")
 );
 const API = resolveApi();
@@ -156,7 +156,7 @@ async function walkPagedFeed(
     const url: string = `${API}?shape=manifest&order=shuffle&limit=${limit}${
       cursor ? `&cursor=${encodeURIComponent(cursor)}` : `&start=${start}`
     }`;
-    const res: Response = await fetch(url);
+    const res: Response = await apiFetch(url);
     if (!res.ok) throw new Error(`${url} responded ${res.status}`);
     const body: any = await res.json();
     if (++pages > maxPages) {

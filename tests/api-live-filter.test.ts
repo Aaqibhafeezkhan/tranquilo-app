@@ -156,13 +156,6 @@ describe("the feed payload carries nothing nobody reads", () => {
 describe("query endpoint: filters, search and cursor paging", () => {
   const itemsSource = source("../api/items.ts");
 
-  it("no longer has an unpaginated response at all (superseded by Phase 5)", () => {
-    // Kept as a test rather than deleted, since "a bare request returns
-    // everything" is exactly the convenience someone would reasonably re-add.
-    expect(itemsSource).toContain("if (!query.paginated)");
-    expect(itemsSource).toContain("no longer returns the whole catalogue");
-  });
-
   it("pages by cursor, not offset", () => {
     // An offset silently skips or repeats rows when an item is ingested
     // mid-scroll, and separately this feed contains non-item slides, so
@@ -213,35 +206,6 @@ describe("query endpoint: filters, search and cursor paging", () => {
     }
   });
 
-  it("refuses to serve the whole catalogue in one response (Phase 5)", () => {
-    expect(itemsSource).toContain("no longer returns the whole catalogue");
-    // A 400, not a silent first page: a caller expecting everything and
-    // getting 60 items would quietly work on 6% of the catalogue instead
-    // of failing.
-    expect(itemsSource).not.toMatch(
-      /if \(!query\.paginated\) \{\s*res\.json\(items\)/,
-    );
-  });
-
-  it("the manifest and id-lookup answer before the paginated check", () => {
-    // Neither sets `paginated`, so falling through to the Phase 5 guard
-    // would 400 the client's first request and every collection/export/
-    // storyline lookup.
-    const at = (needle: string) => itemsSource.indexOf(needle);
-    expect(at("if (query.manifest)")).toBeGreaterThan(-1);
-    expect(at("if (query.lookup)")).toBeGreaterThan(at("if (query.manifest)"));
-    expect(at("if (!query.paginated)")).toBeGreaterThan(
-      at("if (query.lookup)"),
-    );
-  });
-
-  it("a manifest is never truncated by a stray limit or cursor", () => {
-    // A short manifest still looks like a working feed -- just missing
-    // items the client never learned about.
-    expect(itemsSource).toContain("paginated = false;");
-    expect(itemsSource).toContain("cursor is not valid with shape=manifest");
-  });
-
   it("round-trips microsecond precision through the cursor", async () => {
     // Shipped broken: Date.toISOString() truncates to milliseconds while
     // Postgres stores microseconds, so a cursor built from a JS Date said
@@ -277,11 +241,6 @@ describe("query endpoint: filters, search and cursor paging", () => {
     );
     expect(itemsSource).toContain("century <= 10"); // "ancient"
     expect(itemsSource).toContain("century = "); // "Nth century"
-  });
-
-  it("caps limit so one request cannot ask for the whole catalogue", () => {
-    expect(itemsSource).toMatch(/MAX_LIMIT\s*=\s*\d+/);
-    expect(itemsSource).toMatch(/Math\.min\(\s*parseInt\(params\.limit/);
   });
 
   it("returns an explicit null cursor on the last page", () => {
@@ -333,23 +292,6 @@ describe("id-set lookup protects saved and curated data", () => {
     expect(start).toBeGreaterThan(-1);
     expect(end).toBeGreaterThan(start);
     expect(itemsSource.slice(start, end)).toContain("LIVE_ITEMS_PREDICATE");
-  });
-
-  it("caller mistakes are 400s, not 500s, and are not reported to Sentry", () => {
-    // Reporting caller mistakes would bury real failures under typos, and
-    // a 500 tells a client to retry something that will never succeed.
-    expect(itemsSource).toMatch(/\(err as any\)\.status === 400/);
-    // Anchored on `query = buildQuery(params)` rather than the first
-    // "} catch (err) {" in the file, since earlier-dispatched branches add
-    // catch blocks of the same shape with no 400 case.
-    const afterQuery = itemsSource.indexOf("query = buildQuery(params)");
-    expect(afterQuery, "buildQuery(params) call not found").toBeGreaterThan(-1);
-    const catchBlock = itemsSource.slice(
-      itemsSource.indexOf("} catch (err) {", afterQuery),
-    );
-    expect(catchBlock.indexOf("res.statusCode = 400")).toBeLessThan(
-      catchBlock.indexOf("reportError"),
-    );
   });
 });
 

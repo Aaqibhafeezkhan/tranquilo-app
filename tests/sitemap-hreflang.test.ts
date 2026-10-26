@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { renderStaticPageHreflangLinks } from "../lib/sitemap-hreflang";
 import type { LocaleInfo } from "../src/i18n/locales";
+import { staticPageAlternates } from "../src/i18n/pages";
 
 const TEST_LOCALES = [
   { code: "en", nativeName: "English", dir: "ltr", status: "shipped" },
@@ -43,5 +44,28 @@ describe("static-page sitemap hreflang links", () => {
         { "pt-BR": ["support.html"] },
       ),
     ).toBe("");
+  });
+});
+
+describe("staticPageAlternates", () => {
+  it("lists English, each shipped translation, and x-default", () => {
+    expect(
+      staticPageAlternates("about.html", TEST_LOCALES, {
+        fr: ["about.html"],
+        "pt-BR": ["about.html"],
+      }),
+    ).toEqual([
+      { hreflang: "en", path: "/pages/about.html" },
+      { hreflang: "fr", path: "/pages/fr/about.html" },
+      { hreflang: "x-default", path: "/pages/about.html" },
+    ]);
+  });
+
+  it("is empty when no shipped locale translates the page", () => {
+    expect(
+      staticPageAlternates("support.html", TEST_LOCALES, {
+        "pt-BR": ["support.html"],
+      }),
+    ).toEqual([]);
   });
 });
