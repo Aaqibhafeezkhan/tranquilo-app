@@ -127,7 +127,11 @@ const map = applyAliases(
   buildCanonicalMap(resolved, excluded),
   fs.existsSync(ALIASES) ? JSON.parse(fs.readFileSync(ALIASES, "utf8")) : {},
 );
-fs.writeFileSync(OUT, `${JSON.stringify(map, null, 2)}\n`);
+// Sorted so a rebuild diffs by content, not by query row order.
+const sorted = Object.fromEntries(
+  Object.entries(map).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)),
+);
+fs.writeFileSync(OUT, `${JSON.stringify(sorted, null, 2)}\n`);
 console.log(
   `${resolved.length} group(s) -> ${Object.keys(map).length} name(s) mapped`,
 );

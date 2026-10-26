@@ -157,7 +157,18 @@ async function main() {
   }
   fs.writeFileSync(
     OUT,
-    `${JSON.stringify({ merges: groups, artists: out }, null, 2)}\n`,
+    `${JSON.stringify(
+      {
+        merges: groups
+          .map((g) => ({ ...g, ourNames: [...g.ourNames].sort() }))
+          .sort((a, b) => a.subjectId.localeCompare(b.subjectId)),
+        artists: Object.fromEntries(
+          Object.entries(out).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)),
+        ),
+      },
+      null,
+      2,
+    )}\n`,
   );
   console.log(`\nwritten to ${path.relative(ROOT, OUT)}`);
 }

@@ -22,6 +22,16 @@ describe("chooseCanonical", () => {
     ).toBe("Rembrandt van Rijn");
   });
 
+  it("breaks a tie the same way whatever order the rows arrive in", () => {
+    const spaced: [string, number] = ["Jean Pierre Hoüel", 5];
+    const hyphenated: [string, number] = ["Jean-Pierre Hoüel", 5];
+    expect(chooseCanonical(rows(spaced, hyphenated))).toBe("Jean-Pierre Hoüel");
+    expect(chooseCanonical(rows(hyphenated, spaced))).toBe("Jean-Pierre Hoüel");
+    const a: [string, number] = ["Anthony Vandyck", 5];
+    const b: [string, number] = ["Anthony Vandyke", 5];
+    expect(chooseCanonical(rows(a, b))).toBe(chooseCanonical(rows(b, a)));
+  });
+
   it("prefers the accented form of the same name regardless of count", () => {
     expect(
       chooseCanonical(rows(["Edouard Manet", 10], ["Édouard Manet", 2])),

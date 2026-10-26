@@ -83,7 +83,7 @@ function narrowByParenthetical(
 // catalogue, so an ambiguous name reports every candidate and NO subjectId,
 // leaving nothing for a merge step to act on by accident.
 const HEDGED_PARENTHETICAL =
-  /\([^)]*(\?|\b(after|attributed|circle|copy|follower|manner|school|studio|style|workshop)\b)[^)]*\)\s*$/i;
+  /\([^)]*(\?|\b(after|attributed|circle|copy|d'apres|d'après|follower|manner|mukaan|naar|nach|perhaps|possibly|probably|school|studio|style|toegeschreven|workshop|zugeschrieben)\b)[^)]*\)\s*$/i;
 
 function lookup(index: any, name: any): any {
   if (HEDGED_PARENTHETICAL.test(String(name))) return null;

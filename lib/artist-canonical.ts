@@ -10,6 +10,7 @@ const diacritics = (s: string) =>
 const bare = (s: string) =>
   s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 const isDisplayOrder = (s: string) => !s.includes(",");
+const hyphens = (s: string) => (s.match(/-/g) || []).length;
 // No parenthetical, dates or non-Latin script: what a byline should read.
 const isPlain = (s: string) =>
   !/[(\d]|[^\p{Script=Latin}\p{M}\p{P}\p{Zs}]/u.test(s);
@@ -32,7 +33,9 @@ function ourChoice(rows: SpellingCount[]): string {
         Number(isDisplayOrder(b.artist)) - Number(isDisplayOrder(a.artist)) ||
         b.n - a.n ||
         diacritics(b.artist) - diacritics(a.artist) ||
-        b.artist.length - a.artist.length,
+        b.artist.length - a.artist.length ||
+        hyphens(b.artist) - hyphens(a.artist) ||
+        (a.artist < b.artist ? -1 : a.artist > b.artist ? 1 : 0),
     );
   const top = sorted[0];
   const sameNameBetterAccents = sorted.find(

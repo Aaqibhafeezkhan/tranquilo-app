@@ -149,6 +149,9 @@ describe("matching our artists to ULAN subjects", () => {
       "Rembrandt van Rijn (or Follower)",
       "Rembrandt van Rijn (?)",
       "Rembrandt van Rijn (Circle of)",
+      "Rembrandt van Rijn (and possibly Jacob Jordaens)",
+      "Rembrandt van Rijn (mukaan)",
+      "Rembrandt van Rijn (nach)",
     ]) {
       expect(ulan.lookup(idx, name)).toBeNull();
     }
