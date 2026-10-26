@@ -78,9 +78,7 @@ const excluded = excludedVariants(
 const previous: Record<string, string> = fs.existsSync(OUT)
   ? JSON.parse(fs.readFileSync(OUT, "utf8"))
   : {};
-const resolved: CanonicalGroup[] = [];
-
-for (const g of byId.values()) {
+const groups = [...byId.values()].map((g) => {
   const ourNames = [...g.ourNames];
   const safeVariants = [...g.variants].filter((v) => !excluded.has(v));
   // Rows a merge rewrote now sit under a variant or a previous canonical.
@@ -93,16 +91,34 @@ for (const g of byId.values()) {
         .filter((p): p is string => Boolean(p)),
     ]),
   ];
-  const rows = await sql.query(
+  return { ...g, ourNames, held };
+});
+
+const counts = new Map<string, number>();
+const allHeld = [...new Set(groups.flatMap((g) => g.held))];
+const CHUNK = 5000;
+for (let i = 0; i < allHeld.length; i += CHUNK) {
+  const rows = (await sql.query(
     `SELECT artist, count(*)::int n FROM items
       WHERE artist = ANY($1) AND review_status NOT IN ('quarantined','rejected')
       GROUP BY 1`,
-    [held],
-  );
-  const canonical = chooseCanonical(rows as SpellingCount[], g.variants);
+    [allHeld.slice(i, i + CHUNK)],
+  )) as SpellingCount[];
+  for (const r of rows) counts.set(r.artist, r.n);
+}
+
+const resolved: CanonicalGroup[] = [];
+for (const g of groups) {
+  const rows = g.held
+    .filter((n) => counts.has(n))
+    .map((artist) => ({ artist, n: counts.get(artist)! }));
+  // A group with no live rows keeps its previous canonical.
+  const canonical =
+    chooseCanonical(rows, g.variants) ??
+    g.ourNames.map((n) => previous[n]).find(Boolean);
   if (!canonical) continue;
   // Variants included: an unseen variant is what the next pull delivers.
-  resolved.push({ canonical, ourNames, variants: [...g.variants] });
+  resolved.push({ canonical, ourNames: g.ourNames, variants: [...g.variants] });
 }
 
 const map = buildCanonicalMap(resolved, excluded);
