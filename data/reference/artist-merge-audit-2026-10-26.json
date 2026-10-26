@@ -1,0 +1,6150 @@
+{
+  "applied_at": "2026-10-26T16:00:12.173Z",
+  "source": "Getty ULAN ulan_rel_0126 (ODC-BY 1.0)",
+  "rows": [
+    {
+      "source": "met",
+      "native_id": "57652",
+      "from": "Utagawa Hiroshige 歌川広重",
+      "to": "Utagawa Hiroshige"
+    },
+    {
+      "source": "met",
+      "native_id": "78614",
+      "from": "Utagawa Hiroshige 歌川広重",
+      "to": "Utagawa Hiroshige"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184376-0",
+      "from": "Utagawa Hiroshige 歌川広重 (1797-1858)",
+      "to": "Utagawa Hiroshige"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184653-0",
+      "from": "Utagawa Hiroshige 歌川広重 (1797-1858)",
+      "to": "Utagawa Hiroshige"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184513-0",
+      "from": "Utagawa Hiroshige 歌川広重 (1797-1858)",
+      "to": "Utagawa Hiroshige"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184841-0",
+      "from": "Utagawa Hiroshige 歌川広重 (1797-1858)",
+      "to": "Utagawa Hiroshige"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184296-0",
+      "from": "Utagawa Hiroshige 歌川広重 (1797-1858)",
+      "to": "Utagawa Hiroshige"
+    },
+    {
+      "source": "met",
+      "native_id": "333806",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333789",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333886",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333958",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333805",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333965",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334019",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333879",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333801",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334456",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334045",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334044",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333844",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334030",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333828",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334047",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334041",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333782",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333843",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333954",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334083",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333787",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334016",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334470",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "436545",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334034",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334137",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333974",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333820",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333981",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334007",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333818",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333821",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333866",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334457",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333784",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333835",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334048",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334026",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333953",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333964",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333946",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334161",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334038",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334046",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333961",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334002",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334029",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "459963",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333840",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333971",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334228",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334184",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334025",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334018",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333955",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334031",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333979",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334037",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334017",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "338474",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333780",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334024",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334453",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334138",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333976",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334725",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334006",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333947",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333786",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333949",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334009",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334050",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333977",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333973",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334032",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334020",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334043",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334723",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334724",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334005",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334012",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334015",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333804",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334022",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334027",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334039",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334023",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334014",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333833",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333967",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334010",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334008",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333842",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334021",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333783",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334183",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "397885",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333950",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334049",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333948",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333959",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334013",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334587",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "365888",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333788",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333839",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334243",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333970",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333963",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "459855",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334036",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334028",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333834",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333969",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333972",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333978",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334454",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333803",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334726",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334160",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334040",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333785",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334011",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334158",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333781",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "338473",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334315",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333975",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "380647",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333819",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334033",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334455",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333956",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334035",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333980",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333957",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "360417",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333968",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "333816",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "met",
+      "native_id": "334042",
+      "from": "Goya (Francisco de Goya y Lucientes)",
+      "to": "Francisco de Goya"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182226-1",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182220-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182207-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182219-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182209-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182219-1",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182225-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182254-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182253-1",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182253-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182250-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182213-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182211-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182248-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182251-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182242-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182206-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182230-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182208-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182205-1",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182217-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182214-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182246-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182205-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182244-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182229-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182239-1",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182248-1",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182245-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182231-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182255-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182223-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182252-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182243-1",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182212-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182235-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182239-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182247-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182249-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182233-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182224-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182222-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182226-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182210-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182230-1",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182221-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182256-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182228-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182232-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182234-0",
+      "from": "James McNeill Whistler (1834-1903)",
+      "to": "James McNeill Whistler"
+    },
+    {
+      "source": "met",
+      "native_id": "459238",
+      "from": "Rembrandt (Rembrandt van Rijn)",
+      "to": "Rembrandt van Rijn"
+    },
+    {
+      "source": "met",
+      "native_id": "347900",
+      "from": "Rembrandt (Rembrandt van Rijn)",
+      "to": "Rembrandt van Rijn"
+    },
+    {
+      "source": "met",
+      "native_id": "391479",
+      "from": "Rembrandt (Rembrandt van Rijn)",
+      "to": "Rembrandt van Rijn"
+    },
+    {
+      "source": "met",
+      "native_id": "334628",
+      "from": "Rembrandt (Rembrandt van Rijn)",
+      "to": "Rembrandt van Rijn"
+    },
+    {
+      "source": "met",
+      "native_id": "334627",
+      "from": "Rembrandt (Rembrandt van Rijn)",
+      "to": "Rembrandt van Rijn"
+    },
+    {
+      "source": "met",
+      "native_id": "373080",
+      "from": "Rembrandt (Rembrandt van Rijn)",
+      "to": "Rembrandt van Rijn"
+    },
+    {
+      "source": "met",
+      "native_id": "337063",
+      "from": "Rembrandt (Rembrandt van Rijn)",
+      "to": "Rembrandt van Rijn"
+    },
+    {
+      "source": "met",
+      "native_id": "459255",
+      "from": "Rembrandt (Rembrandt van Rijn)",
+      "to": "Rembrandt van Rijn"
+    },
+    {
+      "source": "met",
+      "native_id": "364148",
+      "from": "Rembrandt (Rembrandt van Rijn)",
+      "to": "Rembrandt van Rijn"
+    },
+    {
+      "source": "met",
+      "native_id": "354633",
+      "from": "Rembrandt (Rembrandt van Rijn)",
+      "to": "Rembrandt van Rijn"
+    },
+    {
+      "source": "met",
+      "native_id": "437402",
+      "from": "Rembrandt (Rembrandt van Rijn)",
+      "to": "Rembrandt van Rijn"
+    },
+    {
+      "source": "met",
+      "native_id": "459318",
+      "from": "Rembrandt (Rembrandt van Rijn)",
+      "to": "Rembrandt van Rijn"
+    },
+    {
+      "source": "met",
+      "native_id": "459317",
+      "from": "Rembrandt (Rembrandt van Rijn)",
+      "to": "Rembrandt van Rijn"
+    },
+    {
+      "source": "met",
+      "native_id": "361789",
+      "from": "Rembrandt (Rembrandt van Rijn)",
+      "to": "Rembrandt van Rijn"
+    },
+    {
+      "source": "met",
+      "native_id": "341483",
+      "from": "Rembrandt (Rembrandt van Rijn)",
+      "to": "Rembrandt van Rijn"
+    },
+    {
+      "source": "met",
+      "native_id": "437417",
+      "from": "Rembrandt (Rembrandt van Rijn)",
+      "to": "Rembrandt van Rijn"
+    },
+    {
+      "source": "met",
+      "native_id": "391635",
+      "from": "Rembrandt (Rembrandt van Rijn)",
+      "to": "Rembrandt van Rijn"
+    },
+    {
+      "source": "met",
+      "native_id": "371737",
+      "from": "Rembrandt (Rembrandt van Rijn)",
+      "to": "Rembrandt van Rijn"
+    },
+    {
+      "source": "met",
+      "native_id": "459319",
+      "from": "Rembrandt (Rembrandt van Rijn)",
+      "to": "Rembrandt van Rijn"
+    },
+    {
+      "source": "met",
+      "native_id": "391773",
+      "from": "Rembrandt (Rembrandt van Rijn)",
+      "to": "Rembrandt van Rijn"
+    },
+    {
+      "source": "met",
+      "native_id": "337491",
+      "from": "Rembrandt (Rembrandt van Rijn)",
+      "to": "Rembrandt van Rijn"
+    },
+    {
+      "source": "met",
+      "native_id": "392004",
+      "from": "Rembrandt (Rembrandt van Rijn)",
+      "to": "Rembrandt van Rijn"
+    },
+    {
+      "source": "met",
+      "native_id": "437395",
+      "from": "Rembrandt (Rembrandt van Rijn)",
+      "to": "Rembrandt van Rijn"
+    },
+    {
+      "source": "met",
+      "native_id": "391681",
+      "from": "Rembrandt (Rembrandt van Rijn)",
+      "to": "Rembrandt van Rijn"
+    },
+    {
+      "source": "met",
+      "native_id": "392051",
+      "from": "Rembrandt (Rembrandt van Rijn)",
+      "to": "Rembrandt van Rijn"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390188699-0",
+      "from": "Winslow Homer (1836-1910)",
+      "to": "Winslow Homer"
+    },
+    {
+      "source": "met",
+      "native_id": "57390",
+      "from": "Katsushika Hokusai 葛飾北斎",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "met",
+      "native_id": "78797",
+      "from": "Katsushika Hokusai 葛飾北斎",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183942-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184715-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184065-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183148-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184679-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183149-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183113-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184360-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184686-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184215-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184510-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184015-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184711-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184678-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183117-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184714-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184710-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183153-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184677-1",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183145-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184016-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183116-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184716-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183102-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184715-1",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183972-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184355-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184708-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184709-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184358-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184357-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184709-1",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183971-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184241-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184677-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183152-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183151-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183996-1",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184440-1",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184713-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184356-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184219-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184285-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183100-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184286-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184634-1",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183699-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184359-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184339-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184179-0",
+      "from": "Katsushika Hokusai 葛飾北斎 (1760-1849)",
+      "to": "Katsushika Hokusai"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390185424-0",
+      "from": "Henri Fantin-Latour (1836-1904)",
+      "to": "Henri Fantin-Latour"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183431-0",
+      "from": "Kitagawa Utamaro 喜多川歌麿 (1753-1806)",
+      "to": "Kitagawa Utamaro"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184287-0",
+      "from": "Kitagawa Utamaro 喜多川歌麿 (1753-1806)",
+      "to": "Kitagawa Utamaro"
+    },
+    {
+      "source": "nga",
+      "native_id": "12090",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "135579",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "138785",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "136046",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "213018",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "93147",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "57656",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "213019",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "130177",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "226946",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "135565",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "135532",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "135582",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "136047",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "1060",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "41294",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "135484",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "4457",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "138786",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "57904",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "213020",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "93115",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "93131",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "143760",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "213021",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "213016",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "met",
+      "native_id": "386076",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "138787",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "93137",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "120960",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "213017",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "135534",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "72327",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "93148",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "109658",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "130176",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "nga",
+      "native_id": "119697",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "met",
+      "native_id": "386019",
+      "from": "Félix-Hilaire Buhot",
+      "to": "Félix Hilaire Buhot"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183155-0",
+      "from": "Katsukawa Shunsho 勝川春章 (1726-1792)",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390185185-0",
+      "from": "Katsukawa Shunsho 勝川春章 (1726-1792)",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184721-1",
+      "from": "Katsukawa Shunsho 勝川春章 (1726-1792)",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183122-0",
+      "from": "Katsukawa Shunsho 勝川春章 (1726-1792)",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182937-0",
+      "from": "Katsukawa Shunsho 勝川春章 (1726-1792)",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183442-0",
+      "from": "Katsukawa Shunsho 勝川春章 (1726-1792)",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183109-0",
+      "from": "Katsukawa Shunsho 勝川春章 (1726-1792)",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390185152-1",
+      "from": "Katsukawa Shunsho 勝川春章 (1726-1792)",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390185184-0",
+      "from": "Katsukawa Shunsho 勝川春章 (1726-1792)",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36463",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36906",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36599",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "37157",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36601",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36464",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36466",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36597",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36833",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36590",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36598",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "56003",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36467",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36594",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36469",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36605",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36471",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36595",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36641",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36468",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "56960",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36591",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36880",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36470",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36603",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36592",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36606",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "56870",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36596",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "55337",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "56966",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "54595",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36600",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36472",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36593",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36465",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36848",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36473",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36684",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "met",
+      "native_id": "36750",
+      "from": "Katsukawa Shunshō 勝川春章",
+      "to": "Katsukawa Shunshō"
+    },
+    {
+      "source": "nga",
+      "native_id": "57646",
+      "from": "Théodore Gericault",
+      "to": "Théodore Géricault"
+    },
+    {
+      "source": "nga",
+      "native_id": "53161",
+      "from": "Théodore Gericault",
+      "to": "Théodore Géricault"
+    },
+    {
+      "source": "nga",
+      "native_id": "41971",
+      "from": "Théodore Gericault",
+      "to": "Théodore Géricault"
+    },
+    {
+      "source": "nga",
+      "native_id": "57647",
+      "from": "Théodore Gericault",
+      "to": "Théodore Géricault"
+    },
+    {
+      "source": "nga",
+      "native_id": "57648",
+      "from": "Théodore Gericault",
+      "to": "Théodore Géricault"
+    },
+    {
+      "source": "nga",
+      "native_id": "93056",
+      "from": "Théodore Gericault",
+      "to": "Théodore Géricault"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/957/GMTT_45_005",
+      "from": "RUBENS Pierre-Paul (1577-1640)",
+      "to": "Peter Paul Rubens"
+    },
+    {
+      "source": "mia",
+      "native_id": "5747",
+      "from": "Claude Gellée (called Le Lorrain)",
+      "to": "Claude Lorrain"
+    },
+    {
+      "source": "nga",
+      "native_id": "56987",
+      "from": "Louis Michel Eilshemius",
+      "to": "Louis Eilshemius"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183521-0",
+      "from": "Chobunsai Eishi 鳥文斎栄之 (1756-1829)",
+      "to": "Chōbunsai Eishi"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390185215-0",
+      "from": "Chobunsai Eishi 鳥文斎栄之 (1756-1829)",
+      "to": "Chōbunsai Eishi"
+    },
+    {
+      "source": "met",
+      "native_id": "335670",
+      "from": "Giovanni Benedetto Castiglione (Il Grechetto)",
+      "to": "Giovanni Benedetto Castiglione"
+    },
+    {
+      "source": "met",
+      "native_id": "335665",
+      "from": "Giovanni Benedetto Castiglione (Il Grechetto)",
+      "to": "Giovanni Benedetto Castiglione"
+    },
+    {
+      "source": "met",
+      "native_id": "335667",
+      "from": "Giovanni Benedetto Castiglione (Il Grechetto)",
+      "to": "Giovanni Benedetto Castiglione"
+    },
+    {
+      "source": "met",
+      "native_id": "393499",
+      "from": "Giovanni Benedetto Castiglione (Il Grechetto)",
+      "to": "Giovanni Benedetto Castiglione"
+    },
+    {
+      "source": "met",
+      "native_id": "335666",
+      "from": "Giovanni Benedetto Castiglione (Il Grechetto)",
+      "to": "Giovanni Benedetto Castiglione"
+    },
+    {
+      "source": "met",
+      "native_id": "397532",
+      "from": "Giovanni Benedetto Castiglione (Il Grechetto)",
+      "to": "Giovanni Benedetto Castiglione"
+    },
+    {
+      "source": "met",
+      "native_id": "338431",
+      "from": "Giovanni Benedetto Castiglione (Il Grechetto)",
+      "to": "Giovanni Benedetto Castiglione"
+    },
+    {
+      "source": "met",
+      "native_id": "335660",
+      "from": "Giovanni Benedetto Castiglione (Il Grechetto)",
+      "to": "Giovanni Benedetto Castiglione"
+    },
+    {
+      "source": "met",
+      "native_id": "335662",
+      "from": "Giovanni Benedetto Castiglione (Il Grechetto)",
+      "to": "Giovanni Benedetto Castiglione"
+    },
+    {
+      "source": "met",
+      "native_id": "335668",
+      "from": "Giovanni Benedetto Castiglione (Il Grechetto)",
+      "to": "Giovanni Benedetto Castiglione"
+    },
+    {
+      "source": "met",
+      "native_id": "335669",
+      "from": "Giovanni Benedetto Castiglione (Il Grechetto)",
+      "to": "Giovanni Benedetto Castiglione"
+    },
+    {
+      "source": "met",
+      "native_id": "393720",
+      "from": "Giovanni Benedetto Castiglione (Il Grechetto)",
+      "to": "Giovanni Benedetto Castiglione"
+    },
+    {
+      "source": "met",
+      "native_id": "335675",
+      "from": "Giovanni Benedetto Castiglione (Il Grechetto)",
+      "to": "Giovanni Benedetto Castiglione"
+    },
+    {
+      "source": "met",
+      "native_id": "335663",
+      "from": "Giovanni Benedetto Castiglione (Il Grechetto)",
+      "to": "Giovanni Benedetto Castiglione"
+    },
+    {
+      "source": "met",
+      "native_id": "816621",
+      "from": "Giovanni Benedetto Castiglione (Il Grechetto)",
+      "to": "Giovanni Benedetto Castiglione"
+    },
+    {
+      "source": "met",
+      "native_id": "335672",
+      "from": "Giovanni Benedetto Castiglione (Il Grechetto)",
+      "to": "Giovanni Benedetto Castiglione"
+    },
+    {
+      "source": "met",
+      "native_id": "335673",
+      "from": "Giovanni Benedetto Castiglione (Il Grechetto)",
+      "to": "Giovanni Benedetto Castiglione"
+    },
+    {
+      "source": "met",
+      "native_id": "335664",
+      "from": "Giovanni Benedetto Castiglione (Il Grechetto)",
+      "to": "Giovanni Benedetto Castiglione"
+    },
+    {
+      "source": "met",
+      "native_id": "335674",
+      "from": "Giovanni Benedetto Castiglione (Il Grechetto)",
+      "to": "Giovanni Benedetto Castiglione"
+    },
+    {
+      "source": "met",
+      "native_id": "333893",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "333896",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "333869",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "333822",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "333794",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "333875",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "333908",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "333891",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "333873",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "333876",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "tepapa",
+      "native_id": "40588",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "334214",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "333903",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "333909",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "334340",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "333907",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "333895",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "333901",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "333894",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "334181",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "334206",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "334165",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "334441",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "333795",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "333906",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "334205",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "333871",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "397601",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "333910",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "333874",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "334207",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "334275",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "333905",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "334440",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "333911",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "333902",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "334208",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "333904",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "334439",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "met",
+      "native_id": "333892",
+      "from": "Pierre Brebiette",
+      "to": "Pierre Brébiette"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183439-0",
+      "from": "Katsukawa Shunko 勝川春好 (1743-1812)",
+      "to": "Katsukawa Shunkō"
+    },
+    {
+      "source": "met",
+      "native_id": "190796",
+      "from": "Valerio Belli (Il Vicentino)",
+      "to": "Valerio Belli"
+    },
+    {
+      "source": "met",
+      "native_id": "196592",
+      "from": "Valerio Belli (Il Vicentino)",
+      "to": "Valerio Belli"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183162-0",
+      "from": "Maruyama Okyo 円山応挙 (1733-1795)",
+      "to": "Maruyama Ōkyo"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184956-0",
+      "from": "Maruyama Okyo 円山応挙 (1733-1795)",
+      "to": "Maruyama Ōkyo"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184862-0",
+      "from": "Maruyama Okyo 円山応挙 (1733-1795)",
+      "to": "Maruyama Ōkyo"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184864-0",
+      "from": "Maruyama Okyo 円山応挙 (1733-1795)",
+      "to": "Maruyama Ōkyo"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390185956-0",
+      "from": "Maruyama Okyo 円山応挙 (1733-1795)",
+      "to": "Maruyama Ōkyo"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184880-1",
+      "from": "Maruyama Okyo 円山応挙 (1733-1795)",
+      "to": "Maruyama Ōkyo"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184862-1",
+      "from": "Maruyama Okyo 円山応挙 (1733-1795)",
+      "to": "Maruyama Ōkyo"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184650-1",
+      "from": "Torii Kiyonaga 鳥居清長 (1752-1815)",
+      "to": "Torii Kiyonaga"
+    },
+    {
+      "source": "met",
+      "native_id": "339003",
+      "from": "Guercino (Giovanni Francesco Barbieri)",
+      "to": "Giovanni Francesco Barbieri, called Guercino"
+    },
+    {
+      "source": "met",
+      "native_id": "339007",
+      "from": "Guercino (Giovanni Francesco Barbieri)",
+      "to": "Giovanni Francesco Barbieri, called Guercino"
+    },
+    {
+      "source": "met",
+      "native_id": "339010",
+      "from": "Guercino (Giovanni Francesco Barbieri)",
+      "to": "Giovanni Francesco Barbieri, called Guercino"
+    },
+    {
+      "source": "met",
+      "native_id": "436603",
+      "from": "Guercino (Giovanni Francesco Barbieri)",
+      "to": "Giovanni Francesco Barbieri, called Guercino"
+    },
+    {
+      "source": "met",
+      "native_id": "339020",
+      "from": "Guercino (Giovanni Francesco Barbieri)",
+      "to": "Giovanni Francesco Barbieri, called Guercino"
+    },
+    {
+      "source": "met",
+      "native_id": "339006",
+      "from": "Guercino (Giovanni Francesco Barbieri)",
+      "to": "Giovanni Francesco Barbieri, called Guercino"
+    },
+    {
+      "source": "met",
+      "native_id": "339012",
+      "from": "Guercino (Giovanni Francesco Barbieri)",
+      "to": "Giovanni Francesco Barbieri, called Guercino"
+    },
+    {
+      "source": "met",
+      "native_id": "338992",
+      "from": "Guercino (Giovanni Francesco Barbieri)",
+      "to": "Giovanni Francesco Barbieri, called Guercino"
+    },
+    {
+      "source": "met",
+      "native_id": "339005",
+      "from": "Guercino (Giovanni Francesco Barbieri)",
+      "to": "Giovanni Francesco Barbieri, called Guercino"
+    },
+    {
+      "source": "met",
+      "native_id": "338997",
+      "from": "Guercino (Giovanni Francesco Barbieri)",
+      "to": "Giovanni Francesco Barbieri, called Guercino"
+    },
+    {
+      "source": "met",
+      "native_id": "339004",
+      "from": "Guercino (Giovanni Francesco Barbieri)",
+      "to": "Giovanni Francesco Barbieri, called Guercino"
+    },
+    {
+      "source": "met",
+      "native_id": "338993",
+      "from": "Guercino (Giovanni Francesco Barbieri)",
+      "to": "Giovanni Francesco Barbieri, called Guercino"
+    },
+    {
+      "source": "met",
+      "native_id": "338994",
+      "from": "Guercino (Giovanni Francesco Barbieri)",
+      "to": "Giovanni Francesco Barbieri, called Guercino"
+    },
+    {
+      "source": "met",
+      "native_id": "338998",
+      "from": "Guercino (Giovanni Francesco Barbieri)",
+      "to": "Giovanni Francesco Barbieri, called Guercino"
+    },
+    {
+      "source": "met",
+      "native_id": "459502",
+      "from": "Guercino (Giovanni Francesco Barbieri)",
+      "to": "Giovanni Francesco Barbieri, called Guercino"
+    },
+    {
+      "source": "met",
+      "native_id": "436604",
+      "from": "Guercino (Giovanni Francesco Barbieri)",
+      "to": "Giovanni Francesco Barbieri, called Guercino"
+    },
+    {
+      "source": "met",
+      "native_id": "339015",
+      "from": "Guercino (Giovanni Francesco Barbieri)",
+      "to": "Giovanni Francesco Barbieri, called Guercino"
+    },
+    {
+      "source": "met",
+      "native_id": "338968",
+      "from": "Guercino (Giovanni Francesco Barbieri)",
+      "to": "Giovanni Francesco Barbieri, called Guercino"
+    },
+    {
+      "source": "met",
+      "native_id": "365645",
+      "from": "Guercino (Giovanni Francesco Barbieri)",
+      "to": "Giovanni Francesco Barbieri, called Guercino"
+    },
+    {
+      "source": "met",
+      "native_id": "339000",
+      "from": "Guercino (Giovanni Francesco Barbieri)",
+      "to": "Giovanni Francesco Barbieri, called Guercino"
+    },
+    {
+      "source": "met",
+      "native_id": "338969",
+      "from": "Guercino (Giovanni Francesco Barbieri)",
+      "to": "Giovanni Francesco Barbieri, called Guercino"
+    },
+    {
+      "source": "met",
+      "native_id": "338995",
+      "from": "Guercino (Giovanni Francesco Barbieri)",
+      "to": "Giovanni Francesco Barbieri, called Guercino"
+    },
+    {
+      "source": "met",
+      "native_id": "338996",
+      "from": "Guercino (Giovanni Francesco Barbieri)",
+      "to": "Giovanni Francesco Barbieri, called Guercino"
+    },
+    {
+      "source": "met",
+      "native_id": "336240",
+      "from": "Hans Baldung (called Hans Baldung Grien)",
+      "to": "Hans Baldung"
+    },
+    {
+      "source": "met",
+      "native_id": "416969",
+      "from": "Hans Baldung (called Hans Baldung Grien)",
+      "to": "Hans Baldung"
+    },
+    {
+      "source": "met",
+      "native_id": "336235",
+      "from": "Hans Baldung (called Hans Baldung Grien)",
+      "to": "Hans Baldung"
+    },
+    {
+      "source": "met",
+      "native_id": "336237",
+      "from": "Hans Baldung (called Hans Baldung Grien)",
+      "to": "Hans Baldung"
+    },
+    {
+      "source": "met",
+      "native_id": "416798",
+      "from": "Hans Baldung (called Hans Baldung Grien)",
+      "to": "Hans Baldung"
+    },
+    {
+      "source": "met",
+      "native_id": "416796",
+      "from": "Hans Baldung (called Hans Baldung Grien)",
+      "to": "Hans Baldung"
+    },
+    {
+      "source": "met",
+      "native_id": "336238",
+      "from": "Hans Baldung (called Hans Baldung Grien)",
+      "to": "Hans Baldung"
+    },
+    {
+      "source": "met",
+      "native_id": "336239",
+      "from": "Hans Baldung (called Hans Baldung Grien)",
+      "to": "Hans Baldung"
+    },
+    {
+      "source": "met",
+      "native_id": "416388",
+      "from": "Hans Baldung (called Hans Baldung Grien)",
+      "to": "Hans Baldung"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/957/GMTT_605_000",
+      "from": "OUDRY Jean-Baptiste (1686-1755, peintre)",
+      "to": "Jean-Baptiste Oudry"
+    },
+    {
+      "source": "commons",
+      "native_id": "File:Manuel de Araújo Porto-Alegre - Grota.jpg",
+      "from": "Manuel de Araújo Porto-Alegre",
+      "to": "Araújo Porto-Alegre"
+    },
+    {
+      "source": "commons",
+      "native_id": "File:Manuel de Araújo Porto-Alegre - Paisagem Italiana (MNBA).jpg",
+      "from": "Manuel de Araújo Porto-Alegre",
+      "to": "Araújo Porto-Alegre"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184657-0",
+      "from": "Utagawa Kuniyoshi 歌川国芳 (1798-1861)",
+      "to": "Utagawa Kuniyoshi"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184657-1",
+      "from": "Utagawa Kuniyoshi 歌川国芳 (1798-1861)",
+      "to": "Utagawa Kuniyoshi"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184850-0",
+      "from": "Kano Tan'yu 狩野探幽 (1602-1674)",
+      "to": "Kano Tan'yū"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184850-1",
+      "from": "Kano Tan'yu 狩野探幽 (1602-1674)",
+      "to": "Kano Tan'yū"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182335-0",
+      "from": "Kano Tan'yu 狩野探幽 (1602-1674)",
+      "to": "Kano Tan'yū"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184849-0",
+      "from": "Kano Tan'yu 狩野探幽 (1602-1674)",
+      "to": "Kano Tan'yū"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182700-0",
+      "from": "Kano Tan'yu 狩野探幽 (1602-1674)",
+      "to": "Kano Tan'yū"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182727-0",
+      "from": "Kano Tan'yu 狩野探幽 (1602-1674)",
+      "to": "Kano Tan'yū"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390185756-0",
+      "from": "Kano Tan'yu 狩野探幽 (1602-1674)",
+      "to": "Kano Tan'yū"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184851-0",
+      "from": "Kano Tan'yu 狩野探幽 (1602-1674)",
+      "to": "Kano Tan'yū"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184852-0",
+      "from": "Kano Tan'yu 狩野探幽 (1602-1674)",
+      "to": "Kano Tan'yū"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184670-0",
+      "from": "Kano Tan'yu 狩野探幽 (1602-1674)",
+      "to": "Kano Tan'yū"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184853-0",
+      "from": "Kano Tan'yu 狩野探幽 (1602-1674)",
+      "to": "Kano Tan'yū"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184853-1",
+      "from": "Kano Tan'yu 狩野探幽 (1602-1674)",
+      "to": "Kano Tan'yū"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390185954-0",
+      "from": "Kano Tan'yu 狩野探幽 (1602-1674)",
+      "to": "Kano Tan'yū"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182336-0",
+      "from": "Kano Tan'yu 狩野探幽 (1602-1674)",
+      "to": "Kano Tan'yū"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184868-0",
+      "from": "Kano Tan'yu 狩野探幽 (1602-1674)",
+      "to": "Kano Tan'yū"
+    },
+    {
+      "source": "met",
+      "native_id": "13397",
+      "from": "Emanuel Leutze",
+      "to": "Emanuel Gottlieb Leutze"
+    },
+    {
+      "source": "met",
+      "native_id": "15095",
+      "from": "Emanuel Leutze",
+      "to": "Emanuel Gottlieb Leutze"
+    },
+    {
+      "source": "met",
+      "native_id": "54922",
+      "from": "Kikugawa Eizan",
+      "to": "Kikukawa Eizan"
+    },
+    {
+      "source": "met",
+      "native_id": "460868",
+      "from": "Giovanni Bernardi da Castel Bolognese",
+      "to": "Giovanni Bernardi"
+    },
+    {
+      "source": "nga",
+      "native_id": "111573",
+      "from": "Narcisse Diaz de la Peña",
+      "to": "Narcisse-Virgile Diaz de la Peña"
+    },
+    {
+      "source": "commons",
+      "native_id": "File:Plans et elévations de deux petites maisons - l'une de ville et l'autre de campagne.jpg",
+      "from": "Jean Baptiste Debret",
+      "to": "Jean-Baptiste Debret"
+    },
+    {
+      "source": "met",
+      "native_id": "338554",
+      "from": "Pietro da Cortona (Pietro Berrettini)",
+      "to": "Pietro da Cortona"
+    },
+    {
+      "source": "met",
+      "native_id": "338547",
+      "from": "Pietro da Cortona (Pietro Berrettini)",
+      "to": "Pietro da Cortona"
+    },
+    {
+      "source": "met",
+      "native_id": "338556",
+      "from": "Pietro da Cortona (Pietro Berrettini)",
+      "to": "Pietro da Cortona"
+    },
+    {
+      "source": "met",
+      "native_id": "338542",
+      "from": "Pietro da Cortona (Pietro Berrettini)",
+      "to": "Pietro da Cortona"
+    },
+    {
+      "source": "met",
+      "native_id": "338538",
+      "from": "Pietro da Cortona (Pietro Berrettini)",
+      "to": "Pietro da Cortona"
+    },
+    {
+      "source": "met",
+      "native_id": "338544",
+      "from": "Pietro da Cortona (Pietro Berrettini)",
+      "to": "Pietro da Cortona"
+    },
+    {
+      "source": "met",
+      "native_id": "338557",
+      "from": "Pietro da Cortona (Pietro Berrettini)",
+      "to": "Pietro da Cortona"
+    },
+    {
+      "source": "met",
+      "native_id": "338545",
+      "from": "Pietro da Cortona (Pietro Berrettini)",
+      "to": "Pietro da Cortona"
+    },
+    {
+      "source": "met",
+      "native_id": "338543",
+      "from": "Pietro da Cortona (Pietro Berrettini)",
+      "to": "Pietro da Cortona"
+    },
+    {
+      "source": "met",
+      "native_id": "338555",
+      "from": "Pietro da Cortona (Pietro Berrettini)",
+      "to": "Pietro da Cortona"
+    },
+    {
+      "source": "met",
+      "native_id": "338546",
+      "from": "Pietro da Cortona (Pietro Berrettini)",
+      "to": "Pietro da Cortona"
+    },
+    {
+      "source": "met",
+      "native_id": "338553",
+      "from": "Pietro da Cortona (Pietro Berrettini)",
+      "to": "Pietro da Cortona"
+    },
+    {
+      "source": "met",
+      "native_id": "338559",
+      "from": "Pietro da Cortona (Pietro Berrettini)",
+      "to": "Pietro da Cortona"
+    },
+    {
+      "source": "met",
+      "native_id": "338558",
+      "from": "Pietro da Cortona (Pietro Berrettini)",
+      "to": "Pietro da Cortona"
+    },
+    {
+      "source": "met",
+      "native_id": "334634",
+      "from": "Théodule-Augustin Ribot",
+      "to": "Théodule Ribot"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183027-0",
+      "from": "Kubo Shunman 窪俊満 (1757-1820)",
+      "to": "Kubo Shunman"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182736-0",
+      "from": "Ogata Korin 尾形光琳 (1658-1716)",
+      "to": "Ogata Kōrin"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184823-0",
+      "from": "Ogata Korin 尾形光琳 (1658-1716)",
+      "to": "Ogata Kōrin"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184955-0",
+      "from": "Ogata Korin 尾形光琳 (1658-1716)",
+      "to": "Ogata Kōrin"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184240-0",
+      "from": "Ogata Korin 尾形光琳 (1658-1716)",
+      "to": "Ogata Kōrin"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183802-0",
+      "from": "Ogata Korin 尾形光琳 (1658-1716)",
+      "to": "Ogata Kōrin"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390185556-1",
+      "from": "Ogata Korin 尾形光琳 (1658-1716)",
+      "to": "Ogata Kōrin"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390185124-1",
+      "from": "Ogata Korin 尾形光琳 (1658-1716)",
+      "to": "Ogata Kōrin"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/764/item_2524155",
+      "from": "Picart, Bernard, (1673-1733)",
+      "to": "Bernard Picart"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184289-0",
+      "from": "Katsukawa Shuncho 勝川春潮 (active ca. 1780-1795)",
+      "to": "Katsukawa Shunchō"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184361-0",
+      "from": "Katsukawa Shuncho 勝川春潮 (active ca. 1780-1795)",
+      "to": "Katsukawa Shunchō"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184298-0",
+      "from": "Kitao Masayoshi 北尾政美 (1764-1824)",
+      "to": "Kitao Masayoshi"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184652-1",
+      "from": "Okumura Masanobu 奥村政信 (1686-1764)",
+      "to": "Okumura Masanobu"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183105-0",
+      "from": "Okumura Masanobu 奥村政信 (1686-1764)",
+      "to": "Okumura Masanobu"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183126-0",
+      "from": "Okumura Masanobu 奥村政信 (1686-1764)",
+      "to": "Okumura Masanobu"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184211-0",
+      "from": "Okumura Masanobu 奥村政信 (1686-1764)",
+      "to": "Okumura Masanobu"
+    },
+    {
+      "source": "nga",
+      "native_id": "130911",
+      "from": "Jean-Baptiste-Edouard Detaille",
+      "to": "Édouard Detaille"
+    },
+    {
+      "source": "nga",
+      "native_id": "158748",
+      "from": "Jean-Baptiste-Edouard Detaille",
+      "to": "Édouard Detaille"
+    },
+    {
+      "source": "met",
+      "native_id": "339767",
+      "from": "Israel Silvestre",
+      "to": "Israël Silvestre"
+    },
+    {
+      "source": "met",
+      "native_id": "339766",
+      "from": "Israel Silvestre",
+      "to": "Israël Silvestre"
+    },
+    {
+      "source": "met",
+      "native_id": "700411",
+      "from": "Israel Silvestre",
+      "to": "Israël Silvestre"
+    },
+    {
+      "source": "met",
+      "native_id": "338772",
+      "from": "Baldassarre Franceschini (il Volterrano)",
+      "to": "Baldassare Franceschini"
+    },
+    {
+      "source": "met",
+      "native_id": "338771",
+      "from": "Baldassarre Franceschini (il Volterrano)",
+      "to": "Baldassare Franceschini"
+    },
+    {
+      "source": "met",
+      "native_id": "338768",
+      "from": "Baldassarre Franceschini (il Volterrano)",
+      "to": "Baldassare Franceschini"
+    },
+    {
+      "source": "met",
+      "native_id": "338770",
+      "from": "Baldassarre Franceschini (il Volterrano)",
+      "to": "Baldassare Franceschini"
+    },
+    {
+      "source": "met",
+      "native_id": "338750",
+      "from": "Baldassarre Franceschini (il Volterrano)",
+      "to": "Baldassare Franceschini"
+    },
+    {
+      "source": "met",
+      "native_id": "338749",
+      "from": "Baldassarre Franceschini (il Volterrano)",
+      "to": "Baldassare Franceschini"
+    },
+    {
+      "source": "met",
+      "native_id": "336067",
+      "from": "Baldassarre Franceschini (il Volterrano)",
+      "to": "Baldassare Franceschini"
+    },
+    {
+      "source": "met",
+      "native_id": "338748",
+      "from": "Baldassarre Franceschini (il Volterrano)",
+      "to": "Baldassare Franceschini"
+    },
+    {
+      "source": "met",
+      "native_id": "338747",
+      "from": "Baldassarre Franceschini (il Volterrano)",
+      "to": "Baldassare Franceschini"
+    },
+    {
+      "source": "met",
+      "native_id": "338773",
+      "from": "Baldassarre Franceschini (il Volterrano)",
+      "to": "Baldassare Franceschini"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "167247",
+      "from": "Franz Kobell",
+      "to": "Franz Innocenz Josef Kobell"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643399857816-1643399859280-0",
+      "from": "Jules Dalou",
+      "to": "Aimé-Jules Dalou"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643399857816-1643399859282-0",
+      "from": "Jules Dalou",
+      "to": "Aimé-Jules Dalou"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643399857816-1643399859281-0",
+      "from": "Jules Dalou",
+      "to": "Aimé-Jules Dalou"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "98906",
+      "from": "Jules Dalou",
+      "to": "Aimé-Jules Dalou"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643399857816-1643399859282-1",
+      "from": "Jules Dalou",
+      "to": "Aimé-Jules Dalou"
+    },
+    {
+      "source": "nga",
+      "native_id": "45889",
+      "from": "El Greco (Domenikos Theotokopoulos)",
+      "to": "El Greco"
+    },
+    {
+      "source": "nga",
+      "native_id": "90",
+      "from": "El Greco (Domenikos Theotokopoulos)",
+      "to": "El Greco"
+    },
+    {
+      "source": "nga",
+      "native_id": "1165",
+      "from": "El Greco (Domenikos Theotokopoulos)",
+      "to": "El Greco"
+    },
+    {
+      "source": "nga",
+      "native_id": "1164",
+      "from": "El Greco (Domenikos Theotokopoulos)",
+      "to": "El Greco"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/957/GMTT_175_010",
+      "from": "RAPHAEL (1483-1520)",
+      "to": "Raphael (Raffaello Sanzio or Santi)"
+    },
+    {
+      "source": "met",
+      "native_id": "36433",
+      "from": "Shitao (Zhu Ruoji)",
+      "to": "Shitao"
+    },
+    {
+      "source": "met",
+      "native_id": "49181",
+      "from": "Shitao (Zhu Ruoji)",
+      "to": "Shitao"
+    },
+    {
+      "source": "nga",
+      "native_id": "138594",
+      "from": "Jean-Jacques de Boissieu",
+      "to": "Jean Jacques de Boissieu"
+    },
+    {
+      "source": "nga",
+      "native_id": "65735",
+      "from": "Jean-Jacques de Boissieu",
+      "to": "Jean Jacques de Boissieu"
+    },
+    {
+      "source": "nga",
+      "native_id": "71480",
+      "from": "Jean-Jacques de Boissieu",
+      "to": "Jean Jacques de Boissieu"
+    },
+    {
+      "source": "nga",
+      "native_id": "71099",
+      "from": "Jean-Jacques de Boissieu",
+      "to": "Jean Jacques de Boissieu"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/957/GMTT_108_007",
+      "from": "LE BRUN Charles (1619-1690)",
+      "to": "Charles Le Brun"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/957/GMTT_100_001",
+      "from": "LE BRUN Charles (1619-1690)",
+      "to": "Charles Le Brun"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/957/GMTT_66_002",
+      "from": "LE BRUN Charles (1619-1690)",
+      "to": "Charles Le Brun"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "132119",
+      "from": "François Lemoyne",
+      "to": "François Le Moyne"
+    },
+    {
+      "source": "tepapa",
+      "native_id": "38621",
+      "from": "Giovanni Panini",
+      "to": "Giovanni Paolo Panini"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390191329-0",
+      "from": "Dai Jin (1388-1462)",
+      "to": "Dai Jin"
+    },
+    {
+      "source": "met",
+      "native_id": "459446",
+      "from": "Jacopo Tintoretto (Jacopo Robusti)",
+      "to": "Jacopo Tintoretto"
+    },
+    {
+      "source": "nga",
+      "native_id": "46095",
+      "from": "Michiel van Miereveld",
+      "to": "Michiel Jansz van Mierevelt"
+    },
+    {
+      "source": "nga",
+      "native_id": "224374",
+      "from": "Jean-Baptiste Hüet",
+      "to": "Jean-Baptiste Marie Hüet"
+    },
+    {
+      "source": "nga",
+      "native_id": "70173",
+      "from": "Jean-Baptiste Hüet, I",
+      "to": "Jean-Baptiste Marie Hüet"
+    },
+    {
+      "source": "nga",
+      "native_id": "70175",
+      "from": "Jean-Baptiste Hüet, I",
+      "to": "Jean-Baptiste Marie Hüet"
+    },
+    {
+      "source": "nga",
+      "native_id": "70174",
+      "from": "Jean-Baptiste Hüet, I",
+      "to": "Jean-Baptiste Marie Hüet"
+    },
+    {
+      "source": "nga",
+      "native_id": "70172",
+      "from": "Jean-Baptiste Hüet, I",
+      "to": "Jean-Baptiste Marie Hüet"
+    },
+    {
+      "source": "nga",
+      "native_id": "62530",
+      "from": "Jean-Baptiste Hüet, I",
+      "to": "Jean-Baptiste Marie Hüet"
+    },
+    {
+      "source": "nga",
+      "native_id": "70176",
+      "from": "Jean-Baptiste Hüet, I",
+      "to": "Jean-Baptiste Marie Hüet"
+    },
+    {
+      "source": "nga",
+      "native_id": "47101",
+      "from": "Jean-Baptiste Hüet, I",
+      "to": "Jean-Baptiste Marie Hüet"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/957/GMTT_1266_000",
+      "from": "PIERRE Jean-Baptiste",
+      "to": "Jean-Baptiste Marie Pierre"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "166646",
+      "from": "Jean-Baptiste-Marie Pierre",
+      "to": "Jean-Baptiste Marie Pierre"
+    },
+    {
+      "source": "nga",
+      "native_id": "215355",
+      "from": "Jean-Baptiste-Marie Pierre",
+      "to": "Jean-Baptiste Marie Pierre"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "140278",
+      "from": "Jean-Baptiste-Marie Pierre",
+      "to": "Jean-Baptiste Marie Pierre"
+    },
+    {
+      "source": "nga",
+      "native_id": "154541",
+      "from": "Italian (Florentine)",
+      "to": "Italian"
+    },
+    {
+      "source": "nga",
+      "native_id": "2385",
+      "from": "Jean-Michel Moreau",
+      "to": "Jean Michel Moreau le Jeune"
+    },
+    {
+      "source": "nga",
+      "native_id": "111604",
+      "from": "Jean-Michel Moreau",
+      "to": "Jean Michel Moreau le Jeune"
+    },
+    {
+      "source": "nga",
+      "native_id": "2386",
+      "from": "Jean-Michel Moreau",
+      "to": "Jean Michel Moreau le Jeune"
+    },
+    {
+      "source": "nga",
+      "native_id": "111610",
+      "from": "Jean-Michel Moreau",
+      "to": "Jean Michel Moreau le Jeune"
+    },
+    {
+      "source": "nga",
+      "native_id": "69643",
+      "from": "Jean-Michel Moreau",
+      "to": "Jean Michel Moreau le Jeune"
+    },
+    {
+      "source": "nga",
+      "native_id": "176735",
+      "from": "Pierre Jules Mene",
+      "to": "Pierre-Jules Mêne"
+    },
+    {
+      "source": "nga",
+      "native_id": "73477",
+      "from": "William Perkins Babcock",
+      "to": "William P. Babcock"
+    },
+    {
+      "source": "met",
+      "native_id": "36460",
+      "from": "Hanabusa Itchō 英一蝶",
+      "to": "Hanabusa Itcho 英一蝶 (1652-1724)"
+    },
+    {
+      "source": "nga",
+      "native_id": "163760",
+      "from": "Jean-Claude-Richard, Abbé de Saint-Non",
+      "to": "Jean-Claude-Richard de Saint-Non"
+    },
+    {
+      "source": "nga",
+      "native_id": "155586",
+      "from": "Jean-Claude-Richard, Abbé de Saint-Non",
+      "to": "Jean-Claude-Richard de Saint-Non"
+    },
+    {
+      "source": "met",
+      "native_id": "437596",
+      "from": "Jean Claude Richard, Abbé de Saint-Non",
+      "to": "Jean-Claude-Richard de Saint-Non"
+    },
+    {
+      "source": "met",
+      "native_id": "394746",
+      "from": "Jean Claude Richard, Abbé de Saint-Non",
+      "to": "Jean-Claude-Richard de Saint-Non"
+    },
+    {
+      "source": "met",
+      "native_id": "369406",
+      "from": "Jean Claude Richard, Abbé de Saint-Non",
+      "to": "Jean-Claude-Richard de Saint-Non"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "109177",
+      "from": "Jean Claude Richard, Abbé de Saint-Non",
+      "to": "Jean-Claude-Richard de Saint-Non"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "151393",
+      "from": "Jean Claude Richard, Abbé de Saint-Non",
+      "to": "Jean-Claude-Richard de Saint-Non"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183114-0",
+      "from": "Kitao Shigemasa 北尾重政 (1739-1820)",
+      "to": "Kitao Shigemasa"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183787-0",
+      "from": "Kitao Shigemasa 北尾重政 (1739-1820)",
+      "to": "Kitao Shigemasa"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184297-0",
+      "from": "Kitao Shigemasa 北尾重政 (1739-1820)",
+      "to": "Kitao Shigemasa"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390186578-0",
+      "from": "Ma Yuan 馬遠 (active late 12th-early 13th century)",
+      "to": "Ma Yuan"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182740-0",
+      "from": "Ogata Kenzan 尾形 乾山 (1663-1743)",
+      "to": "Ogata Kenzan"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183457-0",
+      "from": "Ogata Kenzan 尾形 乾山 (1663-1743)",
+      "to": "Ogata Kenzan"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390188066-0",
+      "from": "Ogata Kenzan 尾形 乾山 (1663-1743)",
+      "to": "Ogata Kenzan"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/957/GOB_446_001",
+      "from": "VEBER Jean (1864-1928)",
+      "to": "Jean Veber"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/957/GOB_221_003",
+      "from": "DEL SARTO Andrea",
+      "to": "Andrea del Sarto"
+    },
+    {
+      "source": "nga",
+      "native_id": "139137",
+      "from": "Ludwig Richter",
+      "to": "Adrian Ludwig Richter"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "80647",
+      "from": "Bartholomeus Breenberg",
+      "to": "Bartholomeus Breenbergh"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "123314",
+      "from": "Bartholomeus Breenberg",
+      "to": "Bartholomeus Breenbergh"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "149115",
+      "from": "Georg von Dillis",
+      "to": "Johann Georg von Dillis"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "156978",
+      "from": "Georg von Dillis",
+      "to": "Johann Georg von Dillis"
+    },
+    {
+      "source": "met",
+      "native_id": "208983",
+      "from": "Clodion (Claude Michel)",
+      "to": "Clodion"
+    },
+    {
+      "source": "met",
+      "native_id": "208984",
+      "from": "Clodion (Claude Michel)",
+      "to": "Clodion"
+    },
+    {
+      "source": "met",
+      "native_id": "202275",
+      "from": "Clodion (Claude Michel)",
+      "to": "Clodion"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184463-0",
+      "from": "Watanabe Shiko 渡辺始興 (1683-1755)",
+      "to": "Watanabe Shikō"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184955-1",
+      "from": "Sesshu Toyo (1420-1506)",
+      "to": "Sesshū Tōyō"
+    },
+    {
+      "source": "met",
+      "native_id": "437889",
+      "from": "Paolo Veronese (Paolo Caliari)",
+      "to": "Paolo Veronese"
+    },
+    {
+      "source": "met",
+      "native_id": "78140",
+      "from": "Nagasawa Rosetsu 長澤蘆雪",
+      "to": "Nagasawa Rosetsu"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390185245-0",
+      "from": "Nagasawa Rosetsu 長澤蘆雪 (1754-1799)",
+      "to": "Nagasawa Rosetsu"
+    },
+    {
+      "source": "mia",
+      "native_id": "1735",
+      "from": "Giovanni Battista Gaulli (Baciccio)",
+      "to": "Giovanni Battista Gaulli (Il Baciccio)"
+    },
+    {
+      "source": "met",
+      "native_id": "334367",
+      "from": "Jean-Achille Benouville",
+      "to": "Jean Achille Benouville"
+    },
+    {
+      "source": "met",
+      "native_id": "334368",
+      "from": "Jean-Achille Benouville",
+      "to": "Jean Achille Benouville"
+    },
+    {
+      "source": "nga",
+      "native_id": "32682",
+      "from": "François-Hubert Drouais",
+      "to": "François Hubert Drouais"
+    },
+    {
+      "source": "met",
+      "native_id": "405736",
+      "from": "Joseph Wright (Wright of Derby)",
+      "to": "Joseph Wright of Derby"
+    },
+    {
+      "source": "met",
+      "native_id": "405730",
+      "from": "Joseph Wright (Wright of Derby)",
+      "to": "Joseph Wright of Derby"
+    },
+    {
+      "source": "met",
+      "native_id": "437954",
+      "from": "Joseph Wright (Wright of Derby)",
+      "to": "Joseph Wright of Derby"
+    },
+    {
+      "source": "met",
+      "native_id": "441769",
+      "from": "Joseph Wright (Wright of Derby)",
+      "to": "Joseph Wright of Derby"
+    },
+    {
+      "source": "met",
+      "native_id": "405735",
+      "from": "Joseph Wright (Wright of Derby)",
+      "to": "Joseph Wright of Derby"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "134099",
+      "from": "Charles de La Fosse",
+      "to": "Charles de la Fosse"
+    },
+    {
+      "source": "nga",
+      "native_id": "127357",
+      "from": "Charles de La Fosse",
+      "to": "Charles de la Fosse"
+    },
+    {
+      "source": "nga",
+      "native_id": "136757",
+      "from": "Charles de La Fosse",
+      "to": "Charles de la Fosse"
+    },
+    {
+      "source": "nga",
+      "native_id": "60787",
+      "from": "Willem Buytewech",
+      "to": "Willem Pietersz Buytewech"
+    },
+    {
+      "source": "nga",
+      "native_id": "56392",
+      "from": "Willem Buytewech",
+      "to": "Willem Pietersz Buytewech"
+    },
+    {
+      "source": "nga",
+      "native_id": "57479",
+      "from": "Willem Buytewech",
+      "to": "Willem Pietersz Buytewech"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183120-0",
+      "from": "Utagawa Toyoharu (1735-1814)",
+      "to": "Utagawa Toyoharu"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183107-0",
+      "from": "Utagawa Toyoharu (1735-1814)",
+      "to": "Utagawa Toyoharu"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184441-0",
+      "from": "Utagawa Toyoharu (1735-1814)",
+      "to": "Utagawa Toyoharu"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183449-0",
+      "from": "Utagawa Toyoharu (1735-1814)",
+      "to": "Utagawa Toyoharu"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183075-0",
+      "from": "Utagawa Toyoharu (1735-1814)",
+      "to": "Utagawa Toyoharu"
+    },
+    {
+      "source": "met",
+      "native_id": "192728",
+      "from": "Mino da Fiesole (Mino di Giovanni)",
+      "to": "Mino da Fiesole"
+    },
+    {
+      "source": "met",
+      "native_id": "192715",
+      "from": "Mino da Fiesole (Mino di Giovanni)",
+      "to": "Mino da Fiesole"
+    },
+    {
+      "source": "nga",
+      "native_id": "47092",
+      "from": "Louis-Jean Desprez",
+      "to": "Louis Jean Desprez"
+    },
+    {
+      "source": "nga",
+      "native_id": "219523",
+      "from": "Louis-Jean Desprez",
+      "to": "Louis Jean Desprez"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/957/GOB_183_008",
+      "from": "COYPEL Charles-Antoine ( 1694-1752)",
+      "to": "Charles Coypel"
+    },
+    {
+      "source": "nga",
+      "native_id": "181117",
+      "from": "Alfred H. Maurer",
+      "to": "Alfred Henry Maurer"
+    },
+    {
+      "source": "nga",
+      "native_id": "168755",
+      "from": "Alfred H. Maurer",
+      "to": "Alfred Henry Maurer"
+    },
+    {
+      "source": "nga",
+      "native_id": "219382",
+      "from": "Lorenzo De Ferrari",
+      "to": "Lorenzo de' Ferrari"
+    },
+    {
+      "source": "nga",
+      "native_id": "217397",
+      "from": "Lorenzo De Ferrari",
+      "to": "Lorenzo de' Ferrari"
+    },
+    {
+      "source": "met",
+      "native_id": "208030",
+      "from": "Lorenzo de Ferrari",
+      "to": "Lorenzo de' Ferrari"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390185121-0",
+      "from": "Hon'ami Koetsu 本阿弥光悦 (1558-1637)",
+      "to": "Hon'ami Kōetsu"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184351-0",
+      "from": "Hon'ami Koetsu 本阿弥光悦 (1558-1637)",
+      "to": "Hon'ami Kōetsu"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184151-0",
+      "from": "Hon'ami Koetsu 本阿弥光悦 (1558-1637)",
+      "to": "Hon'ami Kōetsu"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390185564-1",
+      "from": "Hon'ami Koetsu 本阿弥光悦 (1558-1637)",
+      "to": "Hon'ami Kōetsu"
+    },
+    {
+      "source": "met",
+      "native_id": "334485",
+      "from": "Paul (Hippolyte) Delaroche",
+      "to": "Paul Delaroche"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "147870",
+      "from": "Niccolo dell' Abbate",
+      "to": "Niccolò dell' Abate"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "147871",
+      "from": "Niccolo dell' Abbate",
+      "to": "Niccolò dell' Abate"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "147869",
+      "from": "Niccolo dell' Abbate",
+      "to": "Niccolò dell' Abate"
+    },
+    {
+      "source": "met",
+      "native_id": "337524",
+      "from": "Eugène-Louis Lami",
+      "to": "Eugène Louis Lami"
+    },
+    {
+      "source": "met",
+      "native_id": "337525",
+      "from": "Eugène-Louis Lami",
+      "to": "Eugène Louis Lami"
+    },
+    {
+      "source": "met",
+      "native_id": "928532",
+      "from": "Pieter Jansz. Saenredam",
+      "to": "Pieter Jansz Saenredam"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_359",
+      "from": "Saenredam, Pieter Jansz.",
+      "to": "Pieter Jansz Saenredam"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_1409",
+      "from": "Saenredam, Pieter Jansz.",
+      "to": "Pieter Jansz Saenredam"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/1417/https___archief_nl_id_foto_af5c25a8_d0b4_102d_bcf8_003048976d84",
+      "from": "Saenredam, Pieter Jansz.",
+      "to": "Pieter Jansz Saenredam"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "130223",
+      "from": "Henry Auguste",
+      "to": "Henri Auguste"
+    },
+    {
+      "source": "nga",
+      "native_id": "224370",
+      "from": "Jean-Demosthene Dugourc",
+      "to": "Jean Démosthène Dugourc"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "115071",
+      "from": "Jean-Démosthène Dugourc",
+      "to": "Jean Démosthène Dugourc"
+    },
+    {
+      "source": "nga",
+      "native_id": "161648",
+      "from": "Cornelis Bega",
+      "to": "Cornelis Pietersz Bega"
+    },
+    {
+      "source": "met",
+      "native_id": "335062",
+      "from": "Cornelis Bega",
+      "to": "Cornelis Pietersz Bega"
+    },
+    {
+      "source": "nga",
+      "native_id": "53270",
+      "from": "Cornelis Bega",
+      "to": "Cornelis Pietersz Bega"
+    },
+    {
+      "source": "nga",
+      "native_id": "54713",
+      "from": "Gregorio De Ferrari",
+      "to": "Gregorio de' Ferrari"
+    },
+    {
+      "source": "nga",
+      "native_id": "217396",
+      "from": "Gregorio De Ferrari",
+      "to": "Gregorio de' Ferrari"
+    },
+    {
+      "source": "nga",
+      "native_id": "108659",
+      "from": "François-Édouard Bertin",
+      "to": "François Edouard Bertin"
+    },
+    {
+      "source": "nga",
+      "native_id": "134224",
+      "from": "François-Édouard Bertin",
+      "to": "François Edouard Bertin"
+    },
+    {
+      "source": "nga",
+      "native_id": "93806",
+      "from": "François-Édouard Bertin",
+      "to": "François Edouard Bertin"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184846-0",
+      "from": "Kenko Shokei (ca.1480-ca.1518)",
+      "to": "Kenkō Shōkei"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390185149-0",
+      "from": "Kenko Shokei (ca.1480-ca.1518)",
+      "to": "Kenkō Shōkei"
+    },
+    {
+      "source": "nga",
+      "native_id": "2889",
+      "from": "Philibert-Louis Debucourt",
+      "to": "Louis Philibert Debucourt"
+    },
+    {
+      "source": "met",
+      "native_id": "338625",
+      "from": "Jacopo da Empoli (Jacopo Chimenti)",
+      "to": "Jacopo Chimenti"
+    },
+    {
+      "source": "met",
+      "native_id": "439333",
+      "from": "Julius von Leypold",
+      "to": "Karl Julius von Leypold"
+    },
+    {
+      "source": "tepapa",
+      "native_id": "40712",
+      "from": "John Cozens",
+      "to": "John Robert Cozens"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_318",
+      "from": "Potter, Paulus",
+      "to": "Paulus Potter"
+    },
+    {
+      "source": "met",
+      "native_id": "437352",
+      "from": "Pieter Jansz. Quast",
+      "to": "Pieter Jansz Quast"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1756",
+      "from": "Pieter Jansz. Quast",
+      "to": "Pieter Jansz Quast"
+    },
+    {
+      "source": "met",
+      "native_id": "394779",
+      "from": "Joseph von Führich",
+      "to": "Josef von Führich"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "155966",
+      "from": "Karl Friedrich Wilhelm Mielatz",
+      "to": "Charles Frederick William Mielatz"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "150361",
+      "from": "Karl Friedrich Wilhelm Mielatz",
+      "to": "Charles Frederick William Mielatz"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "171287",
+      "from": "Karl Friedrich Wilhelm Mielatz",
+      "to": "Charles Frederick William Mielatz"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "680592",
+      "from": "Pieter I de Jode",
+      "to": "Pieter de Jode I"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "156423",
+      "from": "Pieter I de Jode",
+      "to": "Pieter de Jode I"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/BK_15974_81",
+      "from": "Dihl et Guerhard",
+      "to": "Dihl et Guérhard"
+    },
+    {
+      "source": "nga",
+      "native_id": "144395",
+      "from": "Paul-César Helleu",
+      "to": "Paul César Helleu"
+    },
+    {
+      "source": "nga",
+      "native_id": "76328",
+      "from": "Marie-Alexandre-Lucien Coudray",
+      "to": "Marie Alexandre Lucien Coudray"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643399857816-1643399860187-1",
+      "from": "William Glackens",
+      "to": "William James Glackens"
+    },
+    {
+      "source": "nga",
+      "native_id": "194594",
+      "from": "William Glackens",
+      "to": "William James Glackens"
+    },
+    {
+      "source": "nga",
+      "native_id": "194329",
+      "from": "William Glackens",
+      "to": "William James Glackens"
+    },
+    {
+      "source": "nga",
+      "native_id": "46630",
+      "from": "Jean-Baptiste-Armand Guillaumin",
+      "to": "Armand Guillaumin"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184831-1",
+      "from": "Torii Kiyonobu 鳥居清信 (1664-1729)",
+      "to": "Torii Kiyonobu I"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184651-0",
+      "from": "Torii Kiyonobu 鳥居清信 (1664-1729)",
+      "to": "Torii Kiyonobu I"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184831-0",
+      "from": "Torii Kiyonobu 鳥居清信 (1664-1729)",
+      "to": "Torii Kiyonobu I"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182946-0",
+      "from": "Torii Kiyonobu 鳥居清信 (1664-1729)",
+      "to": "Torii Kiyonobu I"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/957/GMTT_339_000",
+      "from": "MULLER Charles-Louis",
+      "to": "Charles-Louis-Lucien Müller"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184672-1",
+      "from": "Sakai Hoitsu 酒井抱一 (1761-1828)",
+      "to": "Sakai Hōitsu"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184672-0",
+      "from": "Sakai Hoitsu 酒井抱一 (1761-1828)",
+      "to": "Sakai Hōitsu"
+    },
+    {
+      "source": "met",
+      "native_id": "78659",
+      "from": "Sakai Hōitsu 酒井抱一",
+      "to": "Sakai Hōitsu"
+    },
+    {
+      "source": "met",
+      "native_id": "337084",
+      "from": "Paul Flandrin",
+      "to": "Jean-Paul Flandrin"
+    },
+    {
+      "source": "met",
+      "native_id": "337085",
+      "from": "Paul Flandrin",
+      "to": "Jean-Paul Flandrin"
+    },
+    {
+      "source": "mia",
+      "native_id": "1219",
+      "from": "Roger de la Fresnaye",
+      "to": "Roger de La Fresnaye"
+    },
+    {
+      "source": "nga",
+      "native_id": "123247",
+      "from": "Massimiliano Soldani Benzi",
+      "to": "Massimiliano Soldani"
+    },
+    {
+      "source": "nga",
+      "native_id": "126813",
+      "from": "Massimiliano Soldani Benzi",
+      "to": "Massimiliano Soldani"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184727-0",
+      "from": "Kano Shoei (1519-1592)",
+      "to": "Kano Shōei"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "156829",
+      "from": "James Thornhill",
+      "to": "Sir James Thornhill"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/957/BEAUVAIS_30_002",
+      "from": "CASANOVA François (1727-1802)",
+      "to": "Francesco Casanova"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/957/GMT_18560_004",
+      "from": "CASANOVA François (1727-1802)",
+      "to": "Francesco Casanova"
+    },
+    {
+      "source": "nga",
+      "native_id": "135468",
+      "from": "Josef Ignáz Platzer",
+      "to": "Josef Platzer"
+    },
+    {
+      "source": "met",
+      "native_id": "334793",
+      "from": "Lelio Orsi (called Lelio da Novellara)",
+      "to": "Lelio Orsi"
+    },
+    {
+      "source": "met",
+      "native_id": "339167",
+      "from": "Lelio Orsi (called Lelio da Novellara)",
+      "to": "Lelio Orsi"
+    },
+    {
+      "source": "met",
+      "native_id": "334757",
+      "from": "Lelio Orsi (called Lelio da Novellara)",
+      "to": "Lelio Orsi"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390185398-0",
+      "from": "Hishikawa Moronobu 菱川師宣 (1618-1694)",
+      "to": "Hishikawa Moronobu"
+    },
+    {
+      "source": "met",
+      "native_id": "339788",
+      "from": "Louis Roland Trinquesse",
+      "to": "Louis Rolland Trinquesse"
+    },
+    {
+      "source": "met",
+      "native_id": "19759",
+      "from": "James M. Hart",
+      "to": "James McDougal Hart"
+    },
+    {
+      "source": "met",
+      "native_id": "11006",
+      "from": "James M. Hart",
+      "to": "James McDougal Hart"
+    },
+    {
+      "source": "nga",
+      "native_id": "52465",
+      "from": "Federico Zuccaro",
+      "to": "Frederico Zuccaro"
+    },
+    {
+      "source": "nga",
+      "native_id": "61067",
+      "from": "Federico Zuccaro",
+      "to": "Frederico Zuccaro"
+    },
+    {
+      "source": "met",
+      "native_id": "338270",
+      "from": "Jacopo Bassano (Jacopo da Ponte)",
+      "to": "Jacopo Bassano"
+    },
+    {
+      "source": "met",
+      "native_id": "337884",
+      "from": "Jacopo Bassano (Jacopo da Ponte)",
+      "to": "Jacopo Bassano"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183678-0",
+      "from": "Kano Sanraku 狩野山楽 (1559-1635)",
+      "to": "Kano Sanraku"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183679-0",
+      "from": "Kano Sanraku 狩野山楽 (1559-1635)",
+      "to": "Kano Sanraku"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183508-0",
+      "from": "Eiraku Hozen 永楽保全 (1795-1854)",
+      "to": "Eiraku Hozen"
+    },
+    {
+      "source": "met",
+      "native_id": "336460",
+      "from": "Charles Michel Ange Challe",
+      "to": "Charles Michel-Ange Challe"
+    },
+    {
+      "source": "met",
+      "native_id": "336459",
+      "from": "Charles Michel Ange Challe",
+      "to": "Charles Michel-Ange Challe"
+    },
+    {
+      "source": "nga",
+      "native_id": "47821",
+      "from": "Marcellin-Gilbert Desboutin",
+      "to": "Marcellin Desboutin"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183106-0",
+      "from": "Miyagawa Choshun 宮川長春 (1683-1753)",
+      "to": "Miyagawa Chōshun"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183119-0",
+      "from": "Miyagawa Choshun 宮川長春 (1683-1753)",
+      "to": "Miyagawa Chōshun"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183445-0",
+      "from": "Miyagawa Choshun 宮川長春 (1683-1753)",
+      "to": "Miyagawa Chōshun"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_560",
+      "from": "Metsu, Gabriël",
+      "to": "Gabriël Metsu"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/RP_P_OB_39_800",
+      "from": "Jegher, Christoffel",
+      "to": "Christoffel Jegher"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184722-0",
+      "from": "Soga Shohaku 曾我蕭白 (1730-1781)",
+      "to": "Soga Shōhaku"
+    },
+    {
+      "source": "nga",
+      "native_id": "163250",
+      "from": "Francois-Louis Français",
+      "to": "François-Louis Français"
+    },
+    {
+      "source": "nga",
+      "native_id": "139215",
+      "from": "Joachim Franz Beich",
+      "to": "Franz Joachim Beich"
+    },
+    {
+      "source": "nga",
+      "native_id": "139284",
+      "from": "Joachim Franz Beich",
+      "to": "Franz Joachim Beich"
+    },
+    {
+      "source": "met",
+      "native_id": "206966",
+      "from": "Jean Henri Riesener",
+      "to": "Jean-Henri Riesener"
+    },
+    {
+      "source": "met",
+      "native_id": "78723",
+      "from": "Nishikawa Sukenobu 西川祐信",
+      "to": "Nishikawa Sukenobu"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184186-0",
+      "from": "Nishikawa Sukenobu 西川祐信 (1671-1751)",
+      "to": "Nishikawa Sukenobu"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "117933",
+      "from": "Hubert von Herkomer",
+      "to": "Sir Hubert von Herkomer"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "103152",
+      "from": "Hubert von Herkomer",
+      "to": "Sir Hubert von Herkomer"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183796-0",
+      "from": "Kano Mitsunobu (ca. 1565-1608)",
+      "to": "Kano Mitsunobu"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183796-1",
+      "from": "Kano Mitsunobu (ca. 1565-1608)",
+      "to": "Kano Mitsunobu"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390190696-0",
+      "from": "Li Zhaodao 李昭道 (675-758)",
+      "to": "Li Zhaodao"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182902-0",
+      "from": "Kaiho Yusho (1533-1615)",
+      "to": "Kaihō Yūshō"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184368-0",
+      "from": "Ishikawa Toyonobu 石川豊信 (1711-1785)",
+      "to": "Ishikawa Toyonobu"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184724-0",
+      "from": "Ishikawa Toyonobu 石川豊信 (1711-1785)",
+      "to": "Ishikawa Toyonobu"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/764/item_2523928",
+      "from": "Suyderhoef, Jonas, (1613-1686)",
+      "to": "Jonas Suyderhoef"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1697",
+      "from": "Wtewael, Joachim",
+      "to": "Joachim Anthonisz Wtewael"
+    },
+    {
+      "source": "met",
+      "native_id": "437955",
+      "from": "Joachim Wtewael",
+      "to": "Joachim Anthonisz Wtewael"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390188035-0",
+      "from": "Ding Yunpeng (1547-1628)",
+      "to": "Ding Yunpeng"
+    },
+    {
+      "source": "nga",
+      "native_id": "160495",
+      "from": "Pierre-Philippe Choffard",
+      "to": "Pierre Philippe Choffard"
+    },
+    {
+      "source": "met",
+      "native_id": "437935",
+      "from": "Frederick Waters Watts",
+      "to": "Frederick William Watts"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_801",
+      "from": "Saftleven, Cornelis",
+      "to": "Cornelis Saftleven"
+    },
+    {
+      "source": "met",
+      "native_id": "692531",
+      "from": "Various",
+      "to": "Various artists"
+    },
+    {
+      "source": "nga",
+      "native_id": "2564",
+      "from": "Various",
+      "to": "Various artists"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390186763-1",
+      "from": "Wu Bin (ca. 1591-1626)",
+      "to": "Wu Bin"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182928-0",
+      "from": "Mori Sosen (1747-1821)",
+      "to": "Mori Sosen"
+    },
+    {
+      "source": "tepapa",
+      "native_id": "37785",
+      "from": "Nicolaes Berchem the Elder",
+      "to": "Nicolaes Pietersz Berchem"
+    },
+    {
+      "source": "met",
+      "native_id": "338195",
+      "from": "Joseph François Parrocel",
+      "to": "Joseph Ignace François Parrocel"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "150970",
+      "from": "Jules Eugène Lenepveu",
+      "to": "Jules-Eugène Lenepveu"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "150969",
+      "from": "Jules Eugène Lenepveu",
+      "to": "Jules-Eugène Lenepveu"
+    },
+    {
+      "source": "met",
+      "native_id": "288179",
+      "from": "Emile Gsell",
+      "to": "Émile Gsell"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183450-0",
+      "from": "Tsukioka Settei 月岡雪鼎 (1710-1786)",
+      "to": "Tsukioka Settei"
+    },
+    {
+      "source": "met",
+      "native_id": "189308",
+      "from": "Philippe Laurent Roland",
+      "to": "Philippe-Laurent Roland"
+    },
+    {
+      "source": "met",
+      "native_id": "207866",
+      "from": "Philippe Laurent Roland",
+      "to": "Philippe-Laurent Roland"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "122286",
+      "from": "Leonard Boudin",
+      "to": "Léonard Boudin"
+    },
+    {
+      "source": "met",
+      "native_id": "335728",
+      "from": "Hendrik-Dirk Kruseman Van Elten",
+      "to": "Hendrik Dirk Kruseman van Elten"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2064116/Museu_ProvidedCHO_Nationalmuseum__Sweden_17844",
+      "from": "Louis-Jean-François Lagrenée",
+      "to": "Louis Lagrenée"
+    },
+    {
+      "source": "met",
+      "native_id": "338492",
+      "from": "Pomarancio (Cristoforo Roncalli)",
+      "to": "Cristoforo Roncalli"
+    },
+    {
+      "source": "nga",
+      "native_id": "216004",
+      "from": "Pierre-Henri de Valenciennes",
+      "to": "Pierre Henri de Valenciennes"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182459-0",
+      "from": "Kishi Ganku 岸駒 (1749-1838)",
+      "to": "Kishi Ganku"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/15508/H_I_17_89",
+      "from": "Dirck Barendsz (Schöpfer_in der Vorlage)",
+      "to": "Dirck Barendsz"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2164",
+      "from": "Dirck Barendsz (Schöpfer_in der Vorlage)",
+      "to": "Dirck Barendsz"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_365",
+      "from": "Dirck Barendsz (Schöpfer_in der Vorlage)",
+      "to": "Dirck Barendsz"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "132221",
+      "from": "Crescenzio di Onofrio",
+      "to": "Crescenzio Onofri"
+    },
+    {
+      "source": "nga",
+      "native_id": "54385",
+      "from": "Joos de Momper II",
+      "to": "Joos de Momper the Younger"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "86510",
+      "from": "Camille Roqueplan",
+      "to": "Camille-Joseph-Etienne Roqueplan"
+    },
+    {
+      "source": "nga",
+      "native_id": "136766",
+      "from": "Camille Joseph Etienne Roqueplan",
+      "to": "Camille-Joseph-Etienne Roqueplan"
+    },
+    {
+      "source": "nga",
+      "native_id": "73460",
+      "from": "Jean Baptiste Claude Chatelain",
+      "to": "Jean-Baptiste-Claude Chatelain"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "166865",
+      "from": "François Gérard",
+      "to": "baron François Gérard"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_814D11EDCB766CA6FD24D8C73EA5D457",
+      "from": "Lundberg, Gustaf",
+      "to": "Gustaf Lundberg"
+    },
+    {
+      "source": "nga",
+      "native_id": "139324",
+      "from": "Lorenzo Baldissera Tiepolo",
+      "to": "Lorenzo Tiepolo"
+    },
+    {
+      "source": "nga",
+      "native_id": "65772",
+      "from": "Pieter Claesz Soutman",
+      "to": "Pieter Soutman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021009/_7B9B0BE7BD4F7322FF05CA6D1925827E",
+      "from": "Krafft, David von",
+      "to": "David von Krafft"
+    },
+    {
+      "source": "met",
+      "native_id": "49146",
+      "from": "Bada Shanren (Zhu Da)",
+      "to": "Bada Shanren"
+    },
+    {
+      "source": "nga",
+      "native_id": "140627",
+      "from": "Pierre Lelu",
+      "to": "Pierre Lélu"
+    },
+    {
+      "source": "nga",
+      "native_id": "137826",
+      "from": "Albert Lebourg",
+      "to": "Albert-Charles Lebourg"
+    },
+    {
+      "source": "nga",
+      "native_id": "60818",
+      "from": "Jean-Jacques Pradier",
+      "to": "James Pradier"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2048429/item_FPXDJE6IHMGL32MJQEEAYU6P5NYQGHQE",
+      "from": "Brogi, Giacomo",
+      "to": "Giacomo Brogi"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2048429/item_2OXJFF7XR7454FJVAJHFJBFYBWSLC5PA",
+      "from": "Brogi, Giacomo",
+      "to": "Giacomo Brogi"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2048429/item_A7GOHJX2A6VAKIFMGHVVPUD7GWJPKEP2",
+      "from": "Brogi, Giacomo",
+      "to": "Giacomo Brogi"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/957/GMTT_185_006",
+      "from": "DESPORTES Alexandre-François (1661-1743)",
+      "to": "Alexandre François Desportes"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "143846",
+      "from": "Theo van Rysselberghe",
+      "to": "Théo van Rysselberghe"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184305-0",
+      "from": "Kaigetsudo Ando 懐月堂安度 (active early 18th century)",
+      "to": "Kaigetsudō Ando"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/401/item_QHVIFGRVYIUQN4OEPDLCWXT3UKU6VU35",
+      "from": "Wachsmuth, Jeremias (author)",
+      "to": "Jeremias Wachsmuth"
+    },
+    {
+      "source": "nga",
+      "native_id": "206774",
+      "from": "Louis-Nicolas van Blarenberghe",
+      "to": "Louis Nicolas van Blarenberghe"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "109155",
+      "from": "Pierre Charles Trémolière",
+      "to": "Pierre Charles Trémolières"
+    },
+    {
+      "source": "nga",
+      "native_id": "91230",
+      "from": "Jean-Pierre Norblin",
+      "to": "Jean Pierre Norblin"
+    },
+    {
+      "source": "nga",
+      "native_id": "214166",
+      "from": "Paul de Longprè",
+      "to": "Paul de Longpré"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/9200579/cj679ea6",
+      "from": "Andries Dirksz. Both",
+      "to": "Andries Both"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "160531",
+      "from": "Louis Cheron",
+      "to": "Louis Chéron"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/91643/SMVK_OM_objekt_104499",
+      "from": "Kuncan (Shixi, ca 1612-97)",
+      "to": "Kuncan"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/91643/SMVK_OM_objekt_114864",
+      "from": "Kuncan (Shixi, ca 1612-97)",
+      "to": "Kuncan"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_304",
+      "from": "Longhi, Alessandro",
+      "to": "Alessandro Longhi"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390188690-0",
+      "from": "Abbott Handerson Thayer (1849-1921)",
+      "to": "Abbott Handerson Thayer"
+    },
+    {
+      "source": "commons",
+      "native_id": "File:Guan Daosheng's Letter to Abbot Zhongfeng.jpg",
+      "from": "Guan Daosheng 管道昇",
+      "to": "Guan Daosheng"
+    },
+    {
+      "source": "met",
+      "native_id": "459302",
+      "from": "Gerrit Pietersz. Sweelink",
+      "to": "Gerrit Pietersz Sweelinck"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "132858",
+      "from": "Alexander, Freiherr von Humboldt",
+      "to": "Alexander von Humboldt"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "132859",
+      "from": "Alexander, Freiherr von Humboldt",
+      "to": "Alexander von Humboldt"
+    },
+    {
+      "source": "nga",
+      "native_id": "91262",
+      "from": "Anicet-Charles-Gabriel Lemonnier",
+      "to": "Anicet Charles Gabriel Lemonnier"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "168925",
+      "from": "George II Cuitt",
+      "to": "George Cuitt the Younger"
+    },
+    {
+      "source": "nga",
+      "native_id": "139624",
+      "from": "Jean François Pierre Peyron",
+      "to": "Pierre Peyron"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_155",
+      "from": "Hillegaert, Pauwels van",
+      "to": "Pauwels van Hillegaert"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4112",
+      "from": "Hillegaert, Pauwels van",
+      "to": "Pauwels van Hillegaert"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_848",
+      "from": "Hillegaert, Pauwels van",
+      "to": "Pauwels van Hillegaert"
+    },
+    {
+      "source": "met",
+      "native_id": "372203",
+      "from": "Karl Blechen",
+      "to": "Carl Blechen"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184656-0",
+      "from": "Toyokuni II (1777-1835)",
+      "to": "Utagawa Toyokuni II"
+    },
+    {
+      "source": "met",
+      "native_id": "334851",
+      "from": "Pierre Edmé Babel",
+      "to": "Pierre-Edme Babel"
+    },
+    {
+      "source": "nga",
+      "native_id": "41270",
+      "from": "Balthasar Moncornet (publisher)",
+      "to": "Balthasar Moncornet"
+    },
+    {
+      "source": "nga",
+      "native_id": "57484",
+      "from": "John Bunyan Bristol",
+      "to": "Bristol"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390188053-0",
+      "from": "Luo Ping (1733-1799)",
+      "to": "Luo Ping"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390188017-1",
+      "from": "Li Yin 李寅 (active 1694-1710)",
+      "to": "Li Yin"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390189300-0",
+      "from": "Li Yin 李寅 (active 1694-1710)",
+      "to": "Li Yin"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "125871",
+      "from": "Jean Daulle",
+      "to": "Jean Daullé"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "146906",
+      "from": "Jean Daulle",
+      "to": "Jean Daullé"
+    },
+    {
+      "source": "met",
+      "native_id": "748315",
+      "from": "Nin'ami Dōhachi (Takahashi Dōhachi II)",
+      "to": "Nin'ami Dohachi 仁阿弥道八 (1783-1855)"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "150737",
+      "from": "Peter Heinrich Lambert von Hess",
+      "to": "Peter von Hess"
+    },
+    {
+      "source": "met",
+      "native_id": "335009",
+      "from": "Jacoba van Heemskerck",
+      "to": "Jacoba van Heemskerck van Beest"
+    },
+    {
+      "source": "nga",
+      "native_id": "142945",
+      "from": "Johann Carl Loth",
+      "to": "Johan Carl Loth"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "118915",
+      "from": "Jean Francois Gigoux",
+      "to": "Jean François Gigoux"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "118916",
+      "from": "Jean Francois Gigoux",
+      "to": "Jean François Gigoux"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3428",
+      "from": "Sellaio, Jacopo del",
+      "to": "Jacopo del Sellaio"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184217-0",
+      "from": "Furuyama Moroshige 古山師重 (ca. 1678-1698)",
+      "to": "Furuyama Moroshige"
+    },
+    {
+      "source": "mia",
+      "native_id": "1476",
+      "from": "Luis de Morales (called El Divino)",
+      "to": "Luis de Morales"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_2140",
+      "from": "Maes, Godfried",
+      "to": "Godfried Maes"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/764/item_2523884",
+      "from": "François, Jean-Charles, (1717-1769)",
+      "to": "Jean-Charles François"
+    },
+    {
+      "source": "nga",
+      "native_id": "139290",
+      "from": "Ambrogio Figino",
+      "to": "Giovanni Ambrogio Figino"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "329328",
+      "from": "Nicolaus Knupfer",
+      "to": "Nikolaus Knüpfer"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2652",
+      "from": "Alma Tadema, Laura Theresa (Lady)",
+      "to": "Laura Theresa Alma-Tadema"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643399857816-1643399859939-0",
+      "from": "Alexandre Falguière",
+      "to": "Jean-Alexandre-Joseph Falguière"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1331",
+      "from": "Borch, Jan ter",
+      "to": "Jan ter Borch"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_F8C9DA91327E774D0DF8081E71C84868",
+      "from": "Swebach, Bernard Edouard",
+      "to": "Edouard Swebach"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_243",
+      "from": "Tol, Domenicus van",
+      "to": "Domenicus van Tol"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_21",
+      "from": "Tol, Domenicus van",
+      "to": "Domenicus van Tol"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "157290",
+      "from": "Jan Wierix",
+      "to": "Johan Wierix"
+    },
+    {
+      "source": "met",
+      "native_id": "466663",
+      "from": "Gil de Siloe",
+      "to": "Gil de Siloé"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_1687",
+      "from": "Coorte, Adriaen",
+      "to": "Adriaen Coorte"
+    },
+    {
+      "source": "nga",
+      "native_id": "76147",
+      "from": "Byam Shaw",
+      "to": "John Byam Liston Shaw"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390184184-0",
+      "from": "Hashimoto Gaho 橋本雅邦 (1835-1908)",
+      "to": "Hashimoto Gahō"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2832",
+      "from": "Gudin, Théodore",
+      "to": "Théodore Gudin"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390190754-0",
+      "from": "Jin Nong (1687-1763)",
+      "to": "Jin Nong"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4951",
+      "from": "Breen, Adam van",
+      "to": "Adam van Breen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1303",
+      "from": "Camphuysen, Govert Dircksz.",
+      "to": "Govert Dircksz Camphuysen"
+    },
+    {
+      "source": "nga",
+      "native_id": "139333",
+      "from": "Guglielmo Cortese",
+      "to": "Guillaume Courtois"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2494",
+      "from": "Bock, Théophile de",
+      "to": "Théophile de Bock"
+    },
+    {
+      "source": "nga",
+      "native_id": "70308",
+      "from": "Bernhard Rode",
+      "to": "Christian Bernhard Rode"
+    },
+    {
+      "source": "met",
+      "native_id": "399182",
+      "from": "Jacques François Joseph Saly",
+      "to": "Jacques-François-Joseph Saly"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390189003-0",
+      "from": "Chen Jiru (1558-1639)",
+      "to": "Chen Jiru"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "119720",
+      "from": "Anthony Vandyke Copley Fielding",
+      "to": "Anthony Vandyck Copley Fielding"
+    },
+    {
+      "source": "met",
+      "native_id": "335934",
+      "from": "Clément Pierre Marillier",
+      "to": "Clément-Pierre Marillier"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "154526",
+      "from": "François-Honoré-Georges Jacob",
+      "to": "François-Honoré-Georges Jacob-Desmalter"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390183101-0",
+      "from": "Shiba Kokan 司馬江漢 (1747-1818)",
+      "to": "Shiba Kōkan"
+    },
+    {
+      "source": "met",
+      "native_id": "336440",
+      "from": "Louis François Cassas",
+      "to": "Louis-François Cassas"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/764/item_2524191",
+      "from": "Gunst, Pieter van, (1695-1731)",
+      "to": "Gunst, Pieter van"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1586",
+      "from": "Pynas, Jacob Symonsz",
+      "to": "Jacob Pynas"
+    },
+    {
+      "source": "nga",
+      "native_id": "120630",
+      "from": "Adolphe Hervier",
+      "to": "Louis Adolphe Hervier"
+    },
+    {
+      "source": "nga",
+      "native_id": "75889",
+      "from": "Josef Rebell",
+      "to": "Joseph Rebell"
+    },
+    {
+      "source": "nga",
+      "native_id": "180792",
+      "from": "Henry Farny",
+      "to": "Henry François Farny"
+    },
+    {
+      "source": "met",
+      "native_id": "335930",
+      "from": "Louis Joseph Le Lorrain",
+      "to": "Louis-Joseph Le Lorrain"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2048128/248291",
+      "from": "Magyar Mannheimer Gusztáv",
+      "to": "Gusztáv Magyar-Mannheimer"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "149950",
+      "from": "Jean Baptiste Claude Odiot",
+      "to": "Jean-Baptiste-Claude Odiot"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "693424",
+      "from": "Frédéric Auguste Bartholdi",
+      "to": "Frédéric-Auguste Bartholdi"
+    },
+    {
+      "source": "met",
+      "native_id": "338598",
+      "from": "Pietro Damini (Pietro Damini da Castelfranco)",
+      "to": "Pietro Damini"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_5001",
+      "from": "Drölling, Michel-Martin",
+      "to": "Michel-Martin Drölling"
+    },
+    {
+      "source": "nga",
+      "native_id": "75865",
+      "from": "Claude Hoin",
+      "to": "Claude Jean-Baptiste Hoin"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/957/GMT_27639_002",
+      "from": "CAPPIELLO Leonetto (1875-1942, peintre)",
+      "to": "Leonetto Cappiello"
+    },
+    {
+      "source": "nga",
+      "native_id": "206134",
+      "from": "Conrad Gessner",
+      "to": "Johann Conrad Gessner"
+    },
+    {
+      "source": "met",
+      "native_id": "334693",
+      "from": "Marco Zoppo (Marco Ruggeri known as Lo Zoppo)",
+      "to": "Marco Zoppo"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2398",
+      "from": "Aertsen, Pieter",
+      "to": "Pieter Aertsen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1884",
+      "from": "Mancini, Antonio",
+      "to": "Antonio Mancini"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390188014-0",
+      "from": "Yuan Jiang (ca. 1694-1743)",
+      "to": "Yuan Jiang"
+    },
+    {
+      "source": "met",
+      "native_id": "336322",
+      "from": "Merry Joseph Blondel",
+      "to": "Merry-Joseph Blondel"
+    },
+    {
+      "source": "met",
+      "native_id": "78776",
+      "from": "Nishiyama Hōen 西山芳園",
+      "to": "Nishiyama Hōen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/RP_P_1987_34_11",
+      "from": "Pine, John",
+      "to": "John Pine"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/RP_P_1987_34_7",
+      "from": "Pine, John",
+      "to": "John Pine"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/9200267/BibliographicResource_3000059120812",
+      "from": "Haslehurst, Ernest William",
+      "to": "Ernest William Haslehurst"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/9200267/BibliographicResource_3000059120494",
+      "from": "Haslehurst, Ernest William",
+      "to": "Ernest William Haslehurst"
+    },
+    {
+      "source": "nga",
+      "native_id": "1273",
+      "from": "Gregorio di Lorenzo (Master of the Marble Madonnas)",
+      "to": "Gregorio di Lorenzo"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390191388-0",
+      "from": "Tosa Mitsunori (1583-1638)",
+      "to": "Tosa Mitsunori"
+    },
+    {
+      "source": "nga",
+      "native_id": "56989",
+      "from": "Thomas C. Farrer",
+      "to": "Thomas Charles Farrer"
+    },
+    {
+      "source": "nga",
+      "native_id": "130181",
+      "from": "Jules Noël",
+      "to": "Jules-Achille Noël"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3797",
+      "from": "Navez, François Joseph",
+      "to": "François-Joseph Navez"
+    },
+    {
+      "source": "smithsonian",
+      "native_id": "ld1-1643390182193-1643390182574-0",
+      "from": "Shiokawa Bunrin 塩川文麟 (1808-1877)",
+      "to": "Shiokawa Bunrin"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_74D194DC588E9B9B621ADEE39EB4401B",
+      "from": "Pilo, Carl Gustaf",
+      "to": "Carl Gustaf Pilo"
+    },
+    {
+      "source": "met",
+      "native_id": "340575",
+      "from": "Jacopo della Quercia (Jacopo di Pietro d’Angelo di Guarnieri)",
+      "to": "Jacopo della Quercia"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/957/GMTT_12_007",
+      "from": "LERAMBERT Henri",
+      "to": "Henri Lérambert"
+    },
+    {
+      "source": "met",
+      "native_id": "191896",
+      "from": "I. B. (Austrian)",
+      "to": "I. B. (the pewterer)"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1613",
+      "from": "Kruseman, Jan Adam",
+      "to": "Jan Adam Kruseman"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_1672",
+      "from": "Kruseman, Jan Adam",
+      "to": "Jan Adam Kruseman"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "126021",
+      "from": "Antoine Chazal",
+      "to": "Antoine Toussaint de Chazal"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/957/GOB_651_000",
+      "from": "FLANDRIN Jules (1871-1947)",
+      "to": "Jules Léon Flandrin"
+    },
+    {
+      "source": "nga",
+      "native_id": "139206",
+      "from": "Franz Karl Palko",
+      "to": "Franz Xavier Karl Palko"
+    },
+    {
+      "source": "met",
+      "native_id": "337319",
+      "from": "Jean Pierre Louis Laurent Hoüel",
+      "to": "Jean-Pierre-Louis-Laurent Hoüel"
+    },
+    {
+      "source": "met",
+      "native_id": "336064",
+      "from": "Jean Frédéric Schall",
+      "to": "Jean-Frédéric Schall"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "162749",
+      "from": "Cecco Bravo",
+      "to": "Francesco Montelatici"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "140460",
+      "from": "Antonin Mercié",
+      "to": "Marius-Jean-Antonin Mercié"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_FBD6770EC34BCD8A0F449698E426FFF0",
+      "from": "Salokivi, Santeri",
+      "to": "Santeri Salokivi"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_1B5B76341E72D3DBD555F7812E342385",
+      "from": "Salokivi, Santeri",
+      "to": "Santeri Salokivi"
+    },
+    {
+      "source": "nga",
+      "native_id": "209449",
+      "from": "John Clerk, of Eldin",
+      "to": "John Clerk of Eldin"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/G_10045_21",
+      "from": "Fischer von Erlach, Johann Bernhard",
+      "to": "Johann Bernhard Fischer von Erlach"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/G_10045_12",
+      "from": "Fischer von Erlach, Johann Bernhard",
+      "to": "Johann Bernhard Fischer von Erlach"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/91676/arkm_object_ARKM1988_02_D17_05",
+      "from": "Asplund, Gunnar",
+      "to": "Erik Gunnar Asplund"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/916121/S_OLM_object_OLM_17218",
+      "from": "Agueli, Ivan",
+      "to": "Ivan Agueli"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2058401/_providedCHO_c4a077f3_6902_199d_c717_f014e2c1da4b",
+      "from": "Hogg, Jabez",
+      "to": "Jabez Hogg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2058401/_providedCHO_63426599_2d7e_519c_792d_9a30cfe12e74",
+      "from": "Krone, Hermann",
+      "to": "Hermann Krone"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/410/S_KPS_object_M46826_183",
+      "from": "Smith, Wilhelm",
+      "to": "Wilhelm Smith"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_D90725BFD992D2E3D2955986DDAB14E1",
+      "from": "Cool, Jan Daemen",
+      "to": "Jan Daemen Cool"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3488",
+      "from": "Assendelft, Cornelis Albert van",
+      "to": "Cornelis Albert van Assendelft"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2321",
+      "from": "Staveren, Jan Adriaensz. van",
+      "to": "Jan Adriaensz. van Staveren"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1790",
+      "from": "Berckheyde, Job Adriaensz",
+      "to": "Job Adriaensz Berckheyde"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4251",
+      "from": "Borculo, Nicolaes van",
+      "to": "Nicolaes van Borculo"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_529",
+      "from": "Henrixz, Simon",
+      "to": "Simon Henrixz"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2620",
+      "from": "Regteren Altena, Martinus van",
+      "to": "Martinus van Regteren Altena"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_7E014723A9ABE705F0C4F347928F6096",
+      "from": "Mytens, Aert",
+      "to": "Aert Mytens"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_514",
+      "from": "Key, Adriaen Thomasz.",
+      "to": "Adriaen Thomasz. Key"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/91617/upmu_photo_DIG010523",
+      "from": "Lundgren, Per",
+      "to": "Per Lundgren"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2381",
+      "from": "Haas, Johannes Hubertus Leonardus de",
+      "to": "Johannes Hubertus Leonardus de Haas"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_EB8C9A5971C0A57559864959958BD423",
+      "from": "Signac, Pierre",
+      "to": "Pierre Signac"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3942",
+      "from": "Delen, Dirck van",
+      "to": "Dirck van Delen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2265",
+      "from": "Gabriël, Paul Joseph Constantin",
+      "to": "Paul Joseph Constantin Gabriël"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_451",
+      "from": "Knijff, Wouter",
+      "to": "Wouter Knijff"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/RP_P_2004_75_54",
+      "from": "Walpole, Horace",
+      "to": "Horace Walpole"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2366",
+      "from": "Dielaert, Christiaen van",
+      "to": "Christiaen van Dielaert"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_5031",
+      "from": "Lieste, Cornelis",
+      "to": "Cornelis Lieste"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_3D1DB53009171FD1D2BD9B2968893CF9",
+      "from": "Lundahl, Amélie",
+      "to": "Amélie Lundahl"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/BK_NM_119_A",
+      "from": "Coppens, Augustin",
+      "to": "Augustin Coppens"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_55",
+      "from": "Brakenburg, Richard",
+      "to": "Richard Brakenburg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_272",
+      "from": "Mol, Woutherus",
+      "to": "Woutherus Mol"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1952",
+      "from": "Daiwaille, Jean Augustin",
+      "to": "Jean Augustin Daiwaille"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4916",
+      "from": "Apol, Louis",
+      "to": "Louis Apol"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/916124/S_XLM_photo_XLMB1679",
+      "from": "Eriksson, Elis",
+      "to": "Elis Eriksson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_887",
+      "from": "Perger, Sigmund Ferdinand von",
+      "to": "Sigmund Ferdinand von Perger"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/RP_P_1890_A_15343",
+      "from": "Dasveldt, Jan",
+      "to": "Jan Dasveldt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_AC402CFE7AEA6A5F4A0C5CCD8CE6E933",
+      "from": "Wright, Wilhelm von",
+      "to": "Wilhelm von Wright"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_1774",
+      "from": "Kamerlingh Onnes, Menso",
+      "to": "Menso Kamerlingh Onnes"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1109",
+      "from": "Picqué, Charles",
+      "to": "Charles Picqué"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3433",
+      "from": "Morazzone, Pier Francesco",
+      "to": "Pier Francesco Morazzone"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2058401/_providedCHO_45488c9e_cc70_3bcf_c86c_b2edfa7eb1c3",
+      "from": "Suscipj, Lorenzo",
+      "to": "Lorenzo Suscipj"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/RP_T_1883_A_283_19",
+      "from": "Royer, Louis",
+      "to": "Louis Royer"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_1F2514A4A6B54A9F01EFBC0EB71BC543",
+      "from": "Munsterhjelm, John",
+      "to": "John Munsterhjelm"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/410/S_KPS_object_M18079",
+      "from": "Olson, Erik",
+      "to": "Erik Olson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_637",
+      "from": "Fargue van Nieuwland, Isaac Lodewijk la",
+      "to": "Isaac Lodewijk la Fargue van Nieuwland"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_339",
+      "from": "Romeyn, Willem",
+      "to": "Willem Romeyn"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_FD7302E45F81A24ABD83C3E162C456E4",
+      "from": "Houbraken, Jacobus",
+      "to": "Jacobus Houbraken"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021009/_3A33C49FAD378CDFDABCB10957EF6499",
+      "from": "Reinhold, Bernhard",
+      "to": "Bernhard Reinhold"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_4CC3C43CEEAA055FF202FEF41BCCAC19",
+      "from": "Henrichsen, Johan Georg",
+      "to": "Johan Georg Henrichsen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/BK_1958_83",
+      "from": "Geubels, Frans",
+      "to": "Frans Geubels"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_292",
+      "from": "Demarne, Jean Louis",
+      "to": "Jean Louis Demarne"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3235",
+      "from": "Kinnema, Johannes",
+      "to": "Johannes Kinnema"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1500",
+      "from": "Hoogstraten, Dirk van",
+      "to": "Dirk van Hoogstraten"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2697",
+      "from": "Oever, Hendrick ten",
+      "to": "Hendrick ten Oever"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_28E65ED0B5D5217C451C1D124206EDE1",
+      "from": "Billing, Lars Theodor",
+      "to": "Lars Theodor Billing"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/91617/upmu_photo_AL1161",
+      "from": "Alinder, John",
+      "to": "John Alinder"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/91617/upmu_photo_AL7138",
+      "from": "Alinder, John",
+      "to": "John Alinder"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_F4ECE3A9C52ECD8C088B3DAADA7F4D35",
+      "from": "Stohl, Heinrich",
+      "to": "Heinrich Stohl"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2100",
+      "from": "Lyon, Jacob",
+      "to": "Jacob Lyon"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1751",
+      "from": "Nellius, Martinus",
+      "to": "Martinus Nellius"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1632",
+      "from": "Kamphuijsen, Jan",
+      "to": "Jan Kamphuijsen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_1107",
+      "from": "Braunerová, Zdenka",
+      "to": "Zdenka Braunerová"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/07101/O_773",
+      "from": "Tomec, Jindřich",
+      "to": "Jindřich Tomec"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/410/S_KPS_object_M21600",
+      "from": "Ljungberg, Sven",
+      "to": "Sven Ljungberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_3590018E3D6672210E342AA0D40E2B1A",
+      "from": "Marullo, Giuseppe",
+      "to": "Giuseppe Marullo"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/778/_011023119950",
+      "from": "Ibsen, Henrik",
+      "to": "Henrik Ibsen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1022",
+      "from": "Couwenberg, Abraham Johannes",
+      "to": "Abraham Johannes Couwenberg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_590",
+      "from": "Adriaenssen, Vincent",
+      "to": "Vincent Adriaenssen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/862/_170896350079300",
+      "from": "Levi, Vasili Filippovich",
+      "to": "Vasili Filippovich Levi"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4978",
+      "from": "Dregt, Johannes van",
+      "to": "Johannes van Dregt"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_784",
+      "from": "Opperdoes, Jan Pietersz",
+      "to": "Jan Pietersz Opperdoes"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1094",
+      "from": "Ommeganck, Balthasar Paul",
+      "to": "Balthasar Paul Ommeganck"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/410/S_KPS_object_M3961",
+      "from": "Landelle, Charles",
+      "to": "Charles Landelle"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1431",
+      "from": "Heerschop, Hendrick",
+      "to": "Hendrick Heerschop"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_942",
+      "from": "Drift, Johannes Adrianus van der",
+      "to": "Johannes Adrianus van der Drift"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1537",
+      "from": "Zeeuw, Cornelis de",
+      "to": "Cornelis de Zeeuw"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2841",
+      "from": "Kick, Simon",
+      "to": "Simon Kick"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/916114/HeM_fotografi_268532",
+      "from": "Holmström, Otto",
+      "to": "Otto Holmström"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/916114/HeM_fotografi_264341",
+      "from": "Holmström, Otto",
+      "to": "Otto Holmström"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/9200267/BibliographicResource_3000059120996",
+      "from": "Jenkins, Joseph John",
+      "to": "Joseph John Jenkins"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_B208E0ACE10CAC4F32C8116C181CA2E0",
+      "from": "Andersson, Anders Gustaf",
+      "to": "Anders Gustaf Andersson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3001",
+      "from": "Poggenbeek, Geo",
+      "to": "Geo Poggenbeek"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3406",
+      "from": "Ghislandi, Vittore",
+      "to": "Vittore Ghislandi"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_987",
+      "from": "Boone, Daniel",
+      "to": "Daniel Boone"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_6768B0AB6D03CDDCC83425BBEF626D1B",
+      "from": "Carpelan, Wilhelm Maximilian",
+      "to": "Wilhelm Maximilian Carpelan"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4182",
+      "from": "Hawksley, Arthur",
+      "to": "Arthur Hawksley"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/410/S_KPS_object_M23609",
+      "from": "Gram, Lennart",
+      "to": "Lennart Gram"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4485",
+      "from": "Bronckhorst, Jan Gerritsz. van",
+      "to": "Jan Gerritsz. van Bronckhorst"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/RP_P_OB_9462A_R_",
+      "from": "Sluyter, Dirk Jurriaan",
+      "to": "Dirk Jurriaan Sluyter"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_735",
+      "from": "Bloemaert, Hendrick",
+      "to": "Hendrick Bloemaert"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1929",
+      "from": "Erichsen, Vigilius",
+      "to": "Vigilius Erichsen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_4A09EF310EA0B59AECE52B908CF5726B",
+      "from": "Labroué, Alphonse de",
+      "to": "Alphonse de Labroué"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/916105/bhm_photo_UMFA54477_1075",
+      "from": "Lundbäck, Maria",
+      "to": "Maria Lundbäck"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3442",
+      "from": "Machiavelli, Zanobi di Jacopo",
+      "to": "Zanobi di Jacopo Machiavelli"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_406",
+      "from": "Tischbein, Johann Valentin",
+      "to": "Johann Valentin Tischbein"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_3807",
+      "from": "Berg, Andries van den",
+      "to": "Andries van den Berg"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_4172",
+      "from": "Cels, Cornelis",
+      "to": "Cornelis Cels"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_C_156",
+      "from": "Janson, Johannes Christiaan",
+      "to": "Johannes Christiaan Janson"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/91609/SMVK_VKM_fotografi_2582002",
+      "from": "Hjelm, Axel",
+      "to": "Axel Hjelm"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/2021012/_88BC1BA153D53DD6861D8CFF8F22AD07",
+      "from": "Takanen, Johannes",
+      "to": "Johannes Takanen"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/9200271/BibliographicResource_3000058903381",
+      "from": "Hoogstraeten, Samuel van",
+      "to": "Samuel van Hoogstraeten"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2063",
+      "from": "Dubois, Simon",
+      "to": "Simon Dubois"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_995",
+      "from": "Rotius, Jan Albertsz.",
+      "to": "Jan Albertsz. Rotius"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_2185",
+      "from": "Hennekyn, Paulus",
+      "to": "Paulus Hennekyn"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/90402/SK_A_1368",
+      "from": "Burgh, Pieter Daniel van der",
+      "to": "Pieter Daniel van der Burgh"
+    }
+  ]
+}
