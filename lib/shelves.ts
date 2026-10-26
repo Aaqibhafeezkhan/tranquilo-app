@@ -1,8 +1,35 @@
 // Server-side access to Discover shelves (in Postgres, see
 // sql/021_shelves.sql/sql/022_shelves_seed.sql). getShelves() takes an
 // already-open `sql` client, same reasoning as lib/storylines.ts.
+import type { Sql } from "./db.ts";
 import { facetClauses } from "./item-facets.ts";
 import { LIVE_ITEMS_AND, LIVE_ITEMS_PREDICATE } from "./items-sql.ts";
+
+interface ShelfRow {
+  id: string;
+  title: string;
+  type: string;
+  item_ids: unknown;
+  filter: unknown;
+  min_items: number | null;
+}
+
+type Shelf = {
+  id: string;
+  slug: string;
+  title: string;
+  type: string;
+  itemIds?: (string | number)[];
+  filter?: Record<string, unknown>;
+  minItems?: number | null;
+};
+
+type ShelfItemRow = {
+  native_id: string;
+  source: string;
+  img?: string | null;
+  accent_color?: string | null;
+};
 
 // No ingestion source may be named "shelf".
 const SHELF_SLUG_PREFIX = "shelf";
@@ -32,13 +59,13 @@ function parseShelfSlug(slug?: string | null): string | null {
   return raw.slice(prefix.length) || null;
 }
 
-function isShareableShelf(shelf: any): boolean {
-  return Boolean(shelf) && !UNSHAREABLE_SHELF_IDS.has(shelf.id);
+function isShareableShelf(shelf: Shelf | null | undefined): shelf is Shelf {
+  return Boolean(shelf) && !UNSHAREABLE_SHELF_IDS.has((shelf as Shelf).id);
 }
 
 // JSONB columns come back already parsed under this project's driver
 // family, handled defensively anyway so a wrong assumption fails soft.
-function parseJsonbField(value: any): any {
+function parseJsonbField(value: unknown): unknown {
   if (value == null) return value;
   if (typeof value === "string") {
     try {
@@ -50,8 +77,8 @@ function parseJsonbField(value: any): any {
   return value;
 }
 
-function rowToShelf(row: any): any {
-  const shelf: any = {
+function rowToShelf(row: ShelfRow): Shelf {
+  const shelf: Shelf = {
     id: row.id,
     // From the untranslated title, so a link reads the same in every locale.
     slug: shelfTitleSlug(row.title),
@@ -59,9 +86,9 @@ function rowToShelf(row: any): any {
     type: row.type,
   };
   if (row.type === "hero") {
-    shelf.itemIds = parseJsonbField(row.item_ids) || [];
+    shelf.itemIds = (parseJsonbField(row.item_ids) as Shelf["itemIds"]) || [];
   } else {
-    shelf.filter = parseJsonbField(row.filter) || {};
+    shelf.filter = (parseJsonbField(row.filter) as Shelf["filter"]) || {};
     shelf.minItems = row.min_items;
   }
   return shelf;
@@ -70,13 +97,14 @@ function rowToShelf(row: any): any {
 // Every shelf, in Discover's display order. Small and always-fetched --
 // no lazy half, since a shelf definition is already as small as the thing
 // it would be split into.
-async function getShelves(sql: any): Promise<any[]> {
-  const rows = await sql`SELECT * FROM shelves ORDER BY position ASC`;
+async function getShelves(sql: Sql): Promise<Shelf[]> {
+  const rows =
+    (await sql`SELECT * FROM shelves ORDER BY position ASC`) as ShelfRow[];
   return rows.map(rowToShelf);
 }
 
 // Matches the title slug first, then the id that older links used.
-async function getShelf(sql: any, key?: string | null): Promise<any> {
+async function getShelf(sql: Sql, key?: string | null): Promise<Shelf | null> {
   if (!key) return null;
   const shelves = await getShelves(sql);
   return (
@@ -88,21 +116,21 @@ async function getShelf(sql: any, key?: string | null): Promise<any> {
 
 // Live work count, plus the first live work as cover.
 async function getShelfPreview(
-  sql: any,
-  shelf: any,
-): Promise<{ count: number; cover: any }> {
+  sql: Sql,
+  shelf: Shelf,
+): Promise<{ count: number; cover: ShelfItemRow | null }> {
   if (shelf.type === "hero") {
     const ids = (shelf.itemIds || []).map(String);
     if (!ids.length) return { count: 0, cover: null };
-    const rows = await sql.query(
+    const rows = (await sql.query(
       `SELECT * FROM items WHERE native_id = ANY($1) ${LIVE_ITEMS_AND}`,
       [ids],
-    );
-    const byId = new Map(rows.map((row: any) => [row.native_id, row]));
+    )) as ShelfItemRow[];
+    const byId = new Map(rows.map((row) => [row.native_id, row]));
     const firstLive = ids.find((id: string) => byId.has(id));
     return {
       count: rows.length,
-      cover: firstLive ? byId.get(firstLive) : null,
+      cover: (firstLive && byId.get(firstLive)) || null,
     };
   }
 
@@ -121,9 +149,13 @@ async function getShelfPreview(
       values,
     ),
   ]);
-  return { count: countRows[0]?.n || 0, cover: coverRows[0] || null };
+  return {
+    count: (countRows[0]?.n as number) || 0,
+    cover: (coverRows[0] as ShelfItemRow) || null,
+  };
 }
 
+export type { Shelf };
 export {
   getShelf,
   getShelfPreview,

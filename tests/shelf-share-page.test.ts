@@ -3,7 +3,7 @@
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { makeSql } from "./helpers/pg.ts";
 
-const db: { sql: any } = { sql: null };
+const db: { sql: Awaited<ReturnType<typeof makeSql>> | null } = { sql: null };
 vi.mock("../lib/db.ts", () => ({ getSql: () => db.sql }));
 vi.mock("../lib/sentry.ts", () => ({ Sentry: {}, reportError: vi.fn() }));
 vi.mock("../lib/img-visitor-rate-limit.ts", () => ({
@@ -24,7 +24,7 @@ function fakeRes() {
   return {
     statusCode: 200,
     headersSent: false,
-    body: "" as any,
+    body: "" as unknown,
     headers,
     setHeader(name: string, value: string) {
       headers[name.toLowerCase()] = value;
@@ -38,7 +38,10 @@ function fakeRes() {
   };
 }
 
-async function call(handler: any, slug: string) {
+async function call(
+  handler: (req: never, res: never) => Promise<unknown>,
+  slug: string,
+) {
   const res = fakeRes();
   await handler(
     {
@@ -148,6 +151,8 @@ describe("/og/shelf-{id} card", () => {
   it("draws the shelf, not the not-found fallback", async () => {
     const real = await call(cardHandler, "shelf-birdwatching");
     const unknown = await call(cardHandler, "shelf-no-such-shelf");
-    expect(Buffer.compare(real.body, unknown.body)).not.toBe(0);
+    expect(
+      Buffer.compare(real.body as Uint8Array, unknown.body as Uint8Array),
+    ).not.toBe(0);
   }, 30000);
 });

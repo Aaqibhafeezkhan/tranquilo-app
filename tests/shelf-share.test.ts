@@ -14,6 +14,7 @@ import {
   isShareableShelf,
   parseShelfSlug,
   SHELF_SLUG_PREFIX,
+  type Shelf,
   shelfSlug,
   shelfTitleSlug,
 } from "../lib/shelves.ts";
@@ -25,7 +26,14 @@ const vercelConfig = JSON.parse(
   readFileSync(path.join(__dirname, "../vercel.json"), "utf8"),
 );
 
-function insertItem(sql: any, source: string, nativeId: string, extra = {}) {
+type TestSql = Awaited<ReturnType<typeof makeSql>>;
+
+function insertItem(
+  sql: TestSql,
+  source: string,
+  nativeId: string,
+  extra = {},
+) {
   const row: Record<string, unknown> = {
     id: `${source}:${nativeId}`,
     source,
@@ -41,8 +49,14 @@ function insertItem(sql: any, source: string, nativeId: string, extra = {}) {
   );
 }
 
-let sql: any;
-let SHELVES: any[];
+let sql: TestSql;
+let SHELVES: Shelf[];
+
+function shelfById(id: string): Shelf {
+  const shelf = SHELVES.find((s) => s.id === id);
+  if (!shelf) throw new Error(`no seeded shelf ${id}`);
+  return shelf;
+}
 beforeAll(async () => {
   sql = await makeSql([
     "001_items_schema.sql",
@@ -133,24 +147,18 @@ describe("shelf share slugs", () => {
 
 describe("which shelves are shareable", () => {
   it("every hand-picked and rule shelf", () => {
-    expect(isShareableShelf(SHELVES.find((s) => s.id === "birdwatching"))).toBe(
-      true,
-    );
-    expect(
-      isShareableShelf(SHELVES.find((s) => s.id === "old-world-portraiture")),
-    ).toBe(true);
+    expect(isShareableShelf(shelfById("birdwatching"))).toBe(true);
+    expect(isShareableShelf(shelfById("old-world-portraiture"))).toBe(true);
   });
 
   it("not the storylines shelf, whose contents are filled in the browser", () => {
-    expect(isShareableShelf(SHELVES.find((s) => s.id === "storylines"))).toBe(
-      false,
-    );
+    expect(isShareableShelf(shelfById("storylines"))).toBe(false);
   });
 });
 
 describe("a shelf's link follows its title", () => {
   it("slugs the title, not the internal id", () => {
-    const shelf = SHELVES.find((s) => s.id === "painted-by-themselves");
+    const shelf = shelfById("painted-by-themselves");
     expect(shelf.title).toBe("Main Character Energy");
     expect(shelf.slug).toBe("main-character-energy");
   });
@@ -199,10 +207,7 @@ describe("getShelf", () => {
 
 describe("getShelfPreview", () => {
   it("hero shelf: counts live works and covers with the first live one in curated order", async () => {
-    const preview = await getShelfPreview(
-      sql,
-      SHELVES.find((s) => s.id === "birdwatching"),
-    );
+    const preview = await getShelfPreview(sql, shelfById("birdwatching"));
     // 132616 is rejected and the Commons file is Photography, so hidden.
     expect(preview.count).toBe(2);
     expect(preview.cover?.native_id).toBe("140408");
@@ -211,7 +216,7 @@ describe("getShelfPreview", () => {
   it("rule shelf: matches the filter like the feed does, alternates included", async () => {
     const preview = await getShelfPreview(
       sql,
-      SHELVES.find((s) => s.id === "old-world-portraiture"),
+      shelfById("old-world-portraiture"),
     );
     // p1, p2, and p3 via region_alt; p4 is Asia, p5 is quarantined.
     expect(preview.count).toBe(3);
@@ -221,6 +226,7 @@ describe("getShelfPreview", () => {
   it("an empty hero shelf has no works and no cover", async () => {
     const preview = await getShelfPreview(sql, {
       id: "empty",
+      slug: "empty",
       title: "Empty",
       type: "hero",
       itemIds: [],

@@ -59,6 +59,7 @@ import "./components/TranquiloDetailModal";
 import "./components/TranquiloStorylineMode";
 import "./components/TranquiloSetOfWorksMode";
 import "./components/TranquiloShelvesMode";
+import type { TranquiloShelfMode } from "./components/TranquiloShelfMode";
 import "./components/TranquiloShelfMode";
 import "./components/TranquiloExportModal";
 import "./components/TranquiloUpsellToast";
@@ -293,9 +294,11 @@ class TranquiloApp {
     const storylineModeEl = document.getElementById("storylineMode") as any;
     const setOfWorksModeEl = document.getElementById("setOfWorksMode") as any;
     const shelvesModeEl = document.getElementById("shelvesMode") as any;
-    const shelfModeEl = document.getElementById("shelfMode") as any;
+    const shelfModeEl = document.getElementById(
+      "shelfMode",
+    ) as TranquiloShelfMode;
     // Which shelf surface the detail panel steps back to on close.
-    let shelfReturnEl = shelvesModeEl;
+    let shelfReturnEl: { restore(): void } = shelvesModeEl;
     const exportModalEl = document.getElementById("exportModal") as any;
     // Assigned as a property, not an attribute, since it carries live
     // functions rather than strings.

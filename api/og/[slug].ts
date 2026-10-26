@@ -533,7 +533,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       let shelfTree = buildFallbackCard("Tranquilo");
       try {
         const shelf = client ? await getShelf(client, shelfKey) : null;
-        if (isShareableShelf(shelf)) {
+        if (client && isShareableShelf(shelf)) {
           const preview = await getShelfPreview(client, shelf);
           shelfTree = buildShelfCard(
             shelf,
