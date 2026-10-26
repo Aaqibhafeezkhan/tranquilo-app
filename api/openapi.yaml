@@ -43,16 +43,17 @@ paths:
         aggregates (facets/suggest/correction). Exactly one of `shape`,
         `ids`, or the plain filter+paging parameters applies per request --
         see the individual parameter descriptions for how they interact.
-        There is no longer an unpaginated "give me everything" response;
-        omitting both `limit`/`cursor` and `shape=manifest` is a 400.
+        There is no unpaginated "give me everything" response: a full-row
+        request without `limit`/`cursor`/`order=shuffle`, or `shape=manifest`
+        without `order=shuffle`, is a 400.
       parameters:
         - name: shape
           in: query
           description: >-
-            Selects a whole-catalogue aggregate or the paging-exempt order
-            manifest instead of a page of full rows. `manifest` returns
-            every live item's identity/facets (paged only when combined
-            with `order=shuffle`); `facets`/`suggest`/`correction` return
+            Selects a whole-catalogue aggregate or the order manifest
+            instead of a page of full rows. `manifest` returns a page of
+            live items' identity/facets and requires `order=shuffle`;
+            `facets`/`suggest`/`correction` return
             answers bounded by distinct-value count, not catalogue size;
             `storylines`/`storyline`/`shelves`/`music`/`heroes` dispatch to a
             different table entirely (see below) and take no other
@@ -136,8 +137,6 @@ paths:
           in: query
           description: >-
             Opaque continuation token from a previous page's `next_cursor`.
-            Not valid together with `shape=manifest` (the plain,
-            non-shuffled manifest is never paged).
           schema: { type: string }
         - name: locale
           in: query
@@ -154,16 +153,14 @@ paths:
       responses:
         "200":
           description: >-
-            Shape depends on the request -- see the four response schemas
-            below (page, manifest array, aggregate, or lookup-with-missing).
+            Shape depends on the request -- see the response schemas below
+            (page, manifest page, aggregate, or lookup-with-missing).
           content:
             application/json:
               schema:
                 oneOf:
                   - $ref: "#/components/schemas/ItemPage"
                   - $ref: "#/components/schemas/ItemLookupResult"
-                  - type: array
-                    items: { $ref: "#/components/schemas/ManifestItem" }
                   - $ref: "#/components/schemas/ShuffledManifestPage"
                   - $ref: "#/components/schemas/FacetsResult"
                   - $ref: "#/components/schemas/SuggestResult"
@@ -179,8 +176,9 @@ paths:
         "400":
           description: >-
             Caller error -- a malformed/too-large `ids` list, a malformed
-            cursor, an out-of-range `start`, an unwhitelisted facet, or
-            omitting both paging and `shape=manifest`.
+            cursor, an out-of-range `start`, an unwhitelisted facet, an
+            unpaged full-row request, or `shape=manifest` without
+            `order=shuffle`.
           content:
             application/json: { schema: { $ref: "#/components/schemas/Error" } }
         "404":

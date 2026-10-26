@@ -679,30 +679,35 @@ function buildQuery(params: QueryParams): BuiltQuery {
     );
   }
 
-  let paginated = params.limit !== undefined || params.cursor !== undefined;
   const limit = Math.min(
     parseInt(scalar(params.limit) ?? "", 10) || DEFAULT_LIMIT,
     MAX_LIMIT,
   );
   const cursor = scalar(params.cursor);
-
-  // Ignores cursor/limit: the manifest must be the complete live set
-  // for declusterOrder()'s global ordering to be meaningful.
   const manifest = shape === "manifest";
-
-  // Unless the order itself is global via the precomputed shuffle_key,
-  // in which case a page of it is still meaningful.
   const shuffled = scalar(params.order) === "shuffle";
-  if (shuffled) {
-    paginated = true;
-  } else if (manifest) {
-    paginated = false;
-    if (cursor) {
-      throw Object.assign(
-        new Error("cursor is not valid with shape=manifest"),
-        { status: 400 },
-      );
-    }
+  const paginated =
+    shuffled || params.limit !== undefined || params.cursor !== undefined;
+
+  // Rejected before querying: the unbounded SELECT exceeds Neon's 64MB response cap.
+  if (manifest && !shuffled) {
+    throw Object.assign(
+      new Error(
+        "shape=manifest is paged: add order=shuffle&start=0&limit=N and follow next_cursor.",
+      ),
+      { status: 400 },
+    );
+  }
+  if (!paginated && !counting) {
+    throw Object.assign(
+      new Error(
+        "This endpoint no longer returns the whole catalogue in one response. " +
+          "Use ?shape=manifest&order=shuffle&start=0 for every item's identity and facets, " +
+          "?ids=a,b,c to look up specific items, or ?limit=N (with ?cursor= to continue) to " +
+          "page through full rows.",
+      ),
+      { status: 400 },
+    );
   }
 
   let start: number | null = null;
@@ -749,8 +754,6 @@ function buildQuery(params: QueryParams): BuiltQuery {
 
   // ORDER BY must match the index column-for-column or the planner
   // sorts anyway -- see sql/017_items_shuffle_key.sql.
-  // The unpaged manifest spans the whole catalogue; SELECT * there outgrows
-  // the driver's 64 MB response cap.
   const columns = manifest
     ? MANIFEST_COLUMNS.join(", ")
     : "*, created_at::text AS cursor_ts";
@@ -979,9 +982,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const itemRows = rows as ItemRow[];
 
-    // A shuffle-ordered manifest is a page, so it gets the paged
-    // envelope rather than a bare array.
-    if (query.manifest && query.shuffled) {
+    if (query.manifest) {
       const lastRow = itemRows[itemRows.length - 1];
       let nextCursor: string | null;
       if (itemRows.length === query.limit && lastRow) {
@@ -1002,13 +1003,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         items: items,
         next_cursor: nextCursor,
       });
-      return;
-    }
-
-    if (query.manifest) {
-      const items = itemRows.map(serializeManifestRow);
-      if (locale) await translateItems(client, itemRows, items, locale);
-      res.json(items);
       return;
     }
 
@@ -1039,19 +1033,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return;
     }
 
-    // No unpaginated response any more -- this used to return the
-    // whole catalogue as one bare array (~390MB at the 200k target).
-    if (!query.paginated) {
-      throw Object.assign(
-        new Error(
-          "This endpoint no longer returns the whole catalogue in one response. " +
-            "Use ?shape=manifest for every item's identity and facets, ?ids=a,b,c " +
-            "to look up specific items, or ?limit=N (with ?cursor= to continue) to " +
-            "page through full rows.",
-        ),
-        { status: 400 },
-      );
-    }
     const last = itemRows[itemRows.length - 1];
     res.json({
       items: items,

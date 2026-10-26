@@ -58,6 +58,36 @@ describe("/api/items caller mistakes", () => {
     expect(sentry.reportError).not.toHaveBeenCalled();
   });
 
+  it("refuses a whole-catalogue request without querying it", async () => {
+    const unbounded: Record<string, string>[] = [
+      {},
+      { category: "Paintings & Portraits" },
+      { shape: "manifest" },
+      { shape: "manifest", artist: "Claude Monet" },
+    ];
+    for (const query of unbounded) {
+      const res = await get(query);
+      expect(res.statusCode, JSON.stringify(query)).toBe(400);
+    }
+    expect(db.query).not.toHaveBeenCalled();
+    expect(sentry.reportError).not.toHaveBeenCalled();
+  });
+
+  it("still answers bounded requests", async () => {
+    const bounded: Record<string, string>[] = [
+      { limit: "10" },
+      { ids: "a" },
+      { shape: "manifest", order: "shuffle", limit: "10", start: "0" },
+      { shape: "count" },
+    ];
+    for (const query of bounded) {
+      db.query.mockClear();
+      const res = await get(query);
+      expect(res.statusCode, JSON.stringify(query)).toBe(200);
+      expect(db.query, JSON.stringify(query)).toHaveBeenCalledTimes(1);
+    }
+  });
+
   it("reports a real query failure as a 500", async () => {
     db.query.mockRejectedValue(new Error("connection reset"));
     const res = await get({ limit: "10" });

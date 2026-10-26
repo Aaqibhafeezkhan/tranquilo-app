@@ -6,13 +6,13 @@ import { buildQuery } from "../api/items.ts";
 
 describe("buildQuery with repeated scalar params", () => {
   it("searches on the first ?q= instead of throwing", () => {
-    const q = buildQuery({ q: ["monet", "degas"] });
+    const q = buildQuery({ q: ["monet", "degas"], limit: "10" });
     expect(q.params).toContain("monet");
     expect(q.params).not.toContain("degas");
   });
 
   it("filters a facet on its first value, never on the array", () => {
-    const q = buildQuery({ category: ["Painting", "Print"] });
+    const q = buildQuery({ category: ["Painting", "Print"], limit: "10" });
     expect(q.params).toContain("Painting");
     expect(q.params.some((p) => Array.isArray(p))).toBe(false);
   });
