@@ -15,6 +15,13 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { neon } from "@neondatabase/serverless";
+import {
+  buildCanonicalMap,
+  type CanonicalGroup,
+  chooseCanonical,
+  excludedVariants,
+  type SpellingCount,
+} from "../lib/artist-canonical.ts";
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const ULAN = path.join(ROOT, "data/reference/ulan-artists.json");
@@ -28,30 +35,6 @@ for (const l of fs
     process.env[m[1]] = m[2].replace(/^"(.*)"$/, "$1");
 }
 const sql = neon(process.env.DATABASE_URL!);
-
-// The same rule as scripts/merge_artist_names.mts, kept identical -- if the
-// two drift, ingestion writes one name and the merge writes another.
-const diacritics = (s: string) =>
-  (s.normalize("NFD").match(/[̀-ͯ]/g) || []).length;
-const bare = (s: string) =>
-  s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
-function ourChoice(rows: any[]) {
-  const sorted = rows
-    .slice()
-    .sort(
-      (a: any, b: any) =>
-        b.n - a.n ||
-        diacritics(b.artist) - diacritics(a.artist) ||
-        b.artist.length - a.artist.length,
-    );
-  const top = sorted[0];
-  const better = sorted.find(
-    (r: any) =>
-      bare(r.artist) === bare(top.artist) &&
-      diacritics(r.artist) > diacritics(top.artist),
-  );
-  return (better || top).artist;
-}
 
 interface ArtistInfo {
   ambiguous?: boolean;
@@ -84,29 +67,65 @@ for (const [name, info] of Object.entries(artists)) {
   for (const v of info.variants || []) g.variants.add(v);
 }
 
-const map: Record<string, string> = {};
-let groups = 0;
-
-for (const g of byId.values()) {
+const excluded = excludedVariants(
+  [...byId.values()],
+  new Set(
+    Object.entries(artists)
+      .filter(([, info]) => info.ambiguous)
+      .map(([name]) => name),
+  ),
+);
+const previous: Record<string, string> = fs.existsSync(OUT)
+  ? JSON.parse(fs.readFileSync(OUT, "utf8"))
+  : {};
+const groups = [...byId.values()].map((g) => {
   const ourNames = [...g.ourNames];
-  const rows = await sql.query(
+  const safeVariants = [...g.variants].filter((v) => !excluded.has(v));
+  // Rows a merge rewrote now sit under a variant or a previous canonical.
+  const held = [
+    ...new Set([
+      ...ourNames,
+      ...safeVariants,
+      ...[...ourNames, ...safeVariants]
+        .map((n) => previous[n])
+        .filter((p): p is string => Boolean(p)),
+    ]),
+  ];
+  return { ...g, ourNames, held };
+});
+
+const counts = new Map<string, number>();
+const allHeld = [...new Set(groups.flatMap((g) => g.held))];
+const CHUNK = 5000;
+for (let i = 0; i < allHeld.length; i += CHUNK) {
+  const rows = (await sql.query(
     `SELECT artist, count(*)::int n FROM items
       WHERE artist = ANY($1) AND review_status NOT IN ('quarantined','rejected')
       GROUP BY 1`,
-    [ourNames],
-  );
-  const canonical = rows.length ? ourChoice(rows) : null;
-  if (!canonical) continue;
-  groups++;
-  // Every variant ULAN knows for this subject maps to the canonical form,
-  // not just spellings we currently hold -- an unseen variant is exactly
-  // what the next pull will deliver.
-  for (const v of g.variants) map[v] = canonical;
-  for (const n of ourNames) map[n] = canonical;
+    [allHeld.slice(i, i + CHUNK)],
+  )) as SpellingCount[];
+  for (const r of rows) counts.set(r.artist, r.n);
 }
 
+const resolved: CanonicalGroup[] = [];
+for (const g of groups) {
+  const rows = g.held
+    .filter((n) => counts.has(n))
+    .map((artist) => ({ artist, n: counts.get(artist)! }));
+  // A group with no live rows keeps its previous canonical.
+  const canonical =
+    chooseCanonical(rows, g.variants) ??
+    g.ourNames.map((n) => previous[n]).find(Boolean);
+  if (!canonical) continue;
+  // Variants included: an unseen variant is what the next pull delivers.
+  resolved.push({ canonical, ourNames: g.ourNames, variants: [...g.variants] });
+}
+
+const map = buildCanonicalMap(resolved, excluded);
 fs.writeFileSync(OUT, `${JSON.stringify(map, null, 2)}\n`);
-console.log(`${groups} group(s) -> ${Object.keys(map).length} name(s) mapped`);
+console.log(
+  `${resolved.length} group(s) -> ${Object.keys(map).length} name(s) mapped`,
+);
 console.log(`written to ${path.relative(ROOT, OUT)}`);
 console.log(
   `\nspot check: "Rijn, Rembrandt van" -> ${map["Rijn, Rembrandt van"]}`,
