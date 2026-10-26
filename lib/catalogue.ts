@@ -26,7 +26,7 @@ type PageOptions = { limit?: number; maxPages?: number };
 export function fetchAllItems(
   api: string,
   { limit = 200, maxPages = 2000 }: PageOptions = {},
-): Promise<any[]> {
+) {
   return fetchAllPages(
     (cursor) =>
       `${api}?limit=${limit}${
@@ -39,7 +39,7 @@ export function fetchAllItems(
 export function fetchManifest(
   api: string,
   { limit = 200, maxPages = 2000 }: PageOptions = {},
-): Promise<any[]> {
+) {
   return fetchAllPages(
     (cursor) =>
       `${api}?shape=manifest&order=shuffle&limit=${limit}${
