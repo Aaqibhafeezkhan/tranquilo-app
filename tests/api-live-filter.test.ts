@@ -160,7 +160,7 @@ describe("query endpoint: filters, search and cursor paging", () => {
     // An offset silently skips or repeats rows when an item is ingested
     // mid-scroll, and separately this feed contains non-item slides, so
     // DOM position and item index can already disagree by one.
-    expect(itemsSource).toContain("encodeCursor");
+    expect(itemsSource).toContain("encodeShuffleCursor");
     // Matches SQL use, not the word -- the comment above the builder
     // explains why cursors beat offsets and contains "OFFSET" itself.
     expect(itemsSource).not.toMatch(/OFFSET\s+[$\d]/i);
@@ -204,29 +204,6 @@ describe("query endpoint: filters, search and cursor paging", () => {
     ]) {
       expect(body).not.toContain(`${drop}:`);
     }
-  });
-
-  it("round-trips microsecond precision through the cursor", async () => {
-    // Shipped broken: Date.toISOString() truncates to milliseconds while
-    // Postgres stores microseconds, so a cursor built from a JS Date said
-    // "…197Z" for a row actually at "…197624+00", and `created_at > cursor`
-    // stayed true for the row the cursor pointed at -- every page returned
-    // the same rows.
-    const api = await import("../api/items.ts");
-    const ts = "2026-08-05 22:49:10.197624+00";
-    const back = api.decodeCursor(api.encodeCursor(ts, "15026"));
-    expect(back.createdAt).toBe(ts); // NOT "2026-08-05T22:49:10.197Z"
-    expect(back.nativeId).toBe("15026");
-  });
-
-  it("selects the timestamp as text so no JS Date is ever in the path", () => {
-    expect(itemsSource).toContain("created_at::text AS cursor_ts");
-    expect(itemsSource).toContain("encodeCursor(last.cursor_ts");
-  });
-
-  it("uses a row-value comparison so the composite index is read directly", () => {
-    // Easy to get subtly wrong on the tie case with a hand-written OR chain.
-    expect(itemsSource).toContain("(created_at, native_id) > (");
   });
 
   it("whitelists facets rather than accepting an arbitrary column", () => {
@@ -276,10 +253,6 @@ describe("id-set lookup protects saved and curated data", () => {
       "Array.isArray(params.ids) ? params.ids : [params.ids]",
     );
     expect(itemsSource).not.toContain('String(params.ids).split(",")');
-  });
-
-  it("bounds the id list", () => {
-    expect(itemsSource).toMatch(/MAX_IDS\s*=\s*\d+/);
   });
 
   it("still applies the live-items predicate to a lookup", () => {

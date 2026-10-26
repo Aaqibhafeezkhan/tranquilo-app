@@ -160,4 +160,27 @@ describe("fetchItemsByIds", () => {
       "api/items lookup responded with 404",
     );
   });
+  it("splits a long list into lookups of at most 100 ids and merges them", async () => {
+    fetchMock.mockImplementation((url: string) => {
+      const ids = new URL(url, "https://x.test").searchParams.getAll("ids");
+      return Promise.resolve(
+        jsonResponse({
+          items: ids.filter((id) => id !== "n7").map((id) => ({ id })),
+          missing: ids.filter((id) => id === "n7"),
+        }),
+      );
+    });
+    const client = new ItemsApiClient(1, 40);
+    const ids = Array.from({ length: 250 }, (_, i) => `n${i}`);
+
+    const body = await client.fetchItemsByIds(ids);
+
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+    for (const [url] of fetchMock.mock.calls) {
+      const sent = new URL(url, "https://x.test").searchParams.getAll("ids");
+      expect(sent.length).toBeLessThanOrEqual(100);
+    }
+    expect(body.items).toHaveLength(249);
+    expect(body.missing).toEqual(["n7"]);
+  });
 });

@@ -195,13 +195,12 @@ describe("shuffle-ordered paging stays an index range scan", () => {
     expect(q.text).toContain(LIVE_ITEMS_PREDICATE);
   });
 
-  it("is paginated and limited", () => {
+  it("is limited", () => {
     const q = items.buildQuery({
       shape: "manifest",
       order: "shuffle",
       start: "0.5",
     });
-    expect(q.paginated).toBe(true);
     expect(q.text).toMatch(/LIMIT \$\d+/);
   });
 

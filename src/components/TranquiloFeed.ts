@@ -217,7 +217,7 @@ export class TranquiloFeed extends HTMLElement {
   // activeStorylineFilter ANDing on top.
   //
   // Two modes are deliberately not paged, since both are already bounded:
-  // the collection (capped by MAX_IDS) and a deep link (one item deciding
+  // the collection (an id lookup) and a deep link (one item deciding
   // where the ordinary feed starts).
   render(onSettled?: () => void): void {
     const host = this.requireApp();

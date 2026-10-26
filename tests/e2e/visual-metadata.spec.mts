@@ -1,5 +1,5 @@
-// The feed slide reads the new img_width/img_height/
-// palette_hex fields when present, and falls back to today's behavior when
+// The feed slide reads the img_width/img_height
+// fields when present, and falls back to today's behavior when
 // absent -- most items aren't backfilled yet, so the fallback path is the
 // common case in production right now, not a hypothetical.
 import { expect, test } from "@playwright/test";
