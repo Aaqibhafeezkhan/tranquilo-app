@@ -198,7 +198,11 @@ describe("the handler on a cache miss", () => {
     delete process.env.BLOB_READ_WRITE_TOKEN;
   });
 
-  function call(id: string, tier: string, origin?: string | string[]) {
+  function call(
+    id: string | string[],
+    tier: string,
+    origin?: string | string[],
+  ) {
     const req: any = {
       query: { source: "commons", id, tier, ...(origin ? { origin } : {}) },
       headers: {},
@@ -238,6 +242,13 @@ describe("the handler on a cache miss", () => {
     await call("c1", "display", [HOSTILE, "https://example.com/x.jpg"]);
 
     expect(fetched).toEqual([ROW_IMG]);
+  });
+
+  it("takes the first value of a repeated ?id=", async () => {
+    const res = await call(["c1", "c-gone"], "display");
+
+    expect(fetched).toEqual([ROW_IMG]);
+    expect(res.statusCode).toBe(302);
   });
 
   it("answers 404 for an item that isn't live, and fetches nothing, even with ?origin=", async () => {
