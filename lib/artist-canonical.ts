@@ -119,6 +119,22 @@ export function buildCanonicalMap(
   return map;
 }
 
+// Hand-curated spellings ULAN cannot settle. A target must already be a
+// canonical, so a typo cannot mint a new byline.
+export function applyAliases(
+  map: Record<string, string>,
+  aliases: Record<string, string>,
+): Record<string, string> {
+  const canonicals = new Set(Object.values(map));
+  for (const [spelling, canonical] of Object.entries(aliases)) {
+    if (HEDGED.test(spelling.trim()))
+      throw new Error(`alias "${spelling}" is a hedged attribution`);
+    if (!canonicals.has(canonical))
+      throw new Error(`alias target "${canonical}" is not a canonical name`);
+  }
+  return { ...map, ...aliases };
+}
+
 export function chooseCanonical(
   rows: SpellingCount[],
   ulanVariants: Iterable<string> = [],

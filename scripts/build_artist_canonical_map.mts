@@ -16,6 +16,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { neon } from "@neondatabase/serverless";
 import {
+  applyAliases,
   buildCanonicalMap,
   type CanonicalGroup,
   chooseCanonical,
@@ -26,6 +27,7 @@ import {
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const ULAN = path.join(ROOT, "data/reference/ulan-artists.json");
 const OUT = path.join(ROOT, "data/reference/artist-canonical.json");
+const ALIASES = path.join(ROOT, "data/reference/artist-aliases.json");
 
 for (const l of fs
   .readFileSync(path.join(ROOT, ".env.local"), "utf8")
@@ -121,7 +123,10 @@ for (const g of groups) {
   resolved.push({ canonical, ourNames: g.ourNames, variants: [...g.variants] });
 }
 
-const map = buildCanonicalMap(resolved, excluded);
+const map = applyAliases(
+  buildCanonicalMap(resolved, excluded),
+  fs.existsSync(ALIASES) ? JSON.parse(fs.readFileSync(ALIASES, "utf8")) : {},
+);
 fs.writeFileSync(OUT, `${JSON.stringify(map, null, 2)}\n`);
 console.log(
   `${resolved.length} group(s) -> ${Object.keys(map).length} name(s) mapped`,

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  applyAliases,
   buildCanonicalMap,
   chooseCanonical,
   excludedVariants,
@@ -64,7 +65,10 @@ describe("chooseCanonical", () => {
   it("prefers a plain surname-first name and flips it when confirmed", () => {
     expect(
       chooseCanonical(
-        rows(["Rembrandt (Rembrandt van Rijn)", 25], ["Rijn, Rembrandt van", 3]),
+        rows(
+          ["Rembrandt (Rembrandt van Rijn)", 25],
+          ["Rijn, Rembrandt van", 3],
+        ),
         ["Rembrandt van Rijn"],
       ),
     ).toBe("Rembrandt van Rijn");
@@ -260,5 +264,34 @@ describe("flipSurnameFirst", () => {
     expect(flipSurnameFirst("Paul Bril")).toBeNull();
     expect(flipSurnameFirst("Geest, Wybrand de, the Elder")).toBeNull();
     expect(flipSurnameFirst("Bril,")).toBeNull();
+  });
+});
+
+describe("applyAliases", () => {
+  const map = { "Canal, Antonio": "Antonio Canaletto" };
+
+  it("adds a curated spelling for an artist the map already knows", () => {
+    expect(
+      applyAliases(map, {
+        "Canaletto (Giovanni Antonio Canal)": "Antonio Canaletto",
+      }),
+    ).toEqual({
+      "Canal, Antonio": "Antonio Canaletto",
+      "Canaletto (Giovanni Antonio Canal)": "Antonio Canaletto",
+    });
+  });
+
+  it("refuses a target the map has never used as a canonical", () => {
+    expect(() =>
+      applyAliases(map, {
+        "Canaletto (Giovanni Antonio Canal)": "Antonio Canalleto",
+      }),
+    ).toThrow(/Antonio Canalleto/);
+  });
+
+  it("refuses a hedged spelling", () => {
+    expect(() =>
+      applyAliases(map, { "After Canaletto": "Antonio Canaletto" }),
+    ).toThrow(/After Canaletto/);
   });
 });
