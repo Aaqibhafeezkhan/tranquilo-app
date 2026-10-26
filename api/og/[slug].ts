@@ -8,6 +8,8 @@
 // Queries Neon directly, same as api/v/[slug].ts, whose slug-parsing
 // scheme this mirrors exactly.
 
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+import type { ImageResponse as OgImageResponse } from "@vercel/og";
 import { getSql } from "../../lib/db.ts";
 import { rateLimitOrRespond } from "../../lib/img-visitor-rate-limit.ts";
 import { LIVE_ITEMS_AND } from "../../lib/items-sql.ts";
@@ -17,12 +19,27 @@ import { imageFetchHeaders } from "../../lib/source-identity.ts";
 // "s-{id}" slugs render a storyline card instead of an artwork card.
 import { getStoryline, parseStorylineSlug } from "../../lib/storylines.ts";
 
+type CardNode = ConstructorParameters<typeof OgImageResponse>[0];
+type CardFonts = NonNullable<
+  ConstructorParameters<typeof OgImageResponse>[1]
+>["fonts"];
+
+interface ItemRow {
+  source: string;
+  img?: string | null;
+  title?: string | null;
+  artist?: string | null;
+  date?: string | null;
+  category?: string | null;
+  accent_color?: string | null;
+}
+
 // Mirrors decodeSlugId() in api/v/[slug].ts exactly.
-function decodeSlugId(source: any, idPart: any) {
+function decodeSlugId(source: string, idPart: string): string {
   if (source === "commons") {
     return idPart.slice(0, 5) === "File:" ? idPart : `File:${idPart}`;
   }
-  let m: any;
+  let m: RegExpExecArray | null;
   if (source === "europeana" && idPart.charAt(0) !== "/") {
     m = /^([0-9]+)-(.+)$/.exec(idPart);
     if (m) return `/${m[1]}/${m[2]}`;
@@ -30,7 +47,7 @@ function decodeSlugId(source: any, idPart: any) {
   return idPart;
 }
 
-function parseSlug(slug: any) {
+function parseSlug(slug: string) {
   const parts = slug.split(/-(.+)/);
   if (parts.length < 2 || !parts[0] || !parts[1]) return null;
   return { source: parts[0], nativeId: decodeSlugId(parts[0], parts[1]) };
@@ -43,7 +60,7 @@ const CREAM_TEXT = "#f2efe6"; // matches .art-title-btn / .caption text
 const TEAL = "#5eead4"; // --gold-soft
 const INK_SOFT = "#a5a2b3"; // --ink-soft
 
-function hexToRgb(hex: any) {
+function hexToRgb(hex: string | null | undefined) {
   const m = /^#?([0-9a-f]{6})$/i.exec(hex || "");
   if (!m) return null;
   const n = parseInt(m[1], 16);
@@ -52,18 +69,25 @@ function hexToRgb(hex: any) {
 
 // Blends the item's accentColor faintly into the base background, so
 // the card glows in that piece's palette rather than reading generic.
-function tintedBackground(accentHex: any) {
+function tintedBackground(accentHex: string | null | undefined) {
   const rgb = hexToRgb(accentHex);
   const inkCss = `rgb(${INK.join(",")})`;
   if (!rgb) return inkCss;
-  const mixed = INK.map((c, i) => Math.round(c + (rgb?.[i] - c) * 0.32));
+  const mixed = INK.map((c, i) => Math.round(c + (rgb[i] - c) * 0.32));
   return `linear-gradient(135deg, ${inkCss} 0%, rgb(${mixed.join(",")}) 100%)`;
 }
 
-function h(type: any, props: any, children?: any): any {
+type CardChild = CardNode | string | null;
+
+function h(
+  type: string,
+  props: Record<string, unknown>,
+  children?: CardChild | CardChild[],
+): CardNode {
   return {
     type: type,
     props: Object.assign({}, props, { children: children }),
+    key: null,
   };
 }
 
@@ -72,11 +96,11 @@ function h(type: any, props: any, children?: any): any {
 const FONT_FETCH_UA =
   "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/534.34 (KHTML, like Gecko) PhantomJS/1.9.7 Safari/534.34";
 
-let fontsPromise: any = null;
-function loadFonts() {
+let fontsPromise: Promise<CardFonts> | null = null;
+function loadFonts(): Promise<CardFonts> {
   if (fontsPromise) return fontsPromise;
   fontsPromise = (async () => {
-    async function fetchFontBuffer(cssUrl: any) {
+    async function fetchFontBuffer(cssUrl: string) {
       const cssRes = await fetch(cssUrl, {
         headers: { "User-Agent": FONT_FETCH_UA },
       });
@@ -86,9 +110,8 @@ function loadFonts() {
       const fontRes = await fetch(m[1]);
       return await fontRes.arrayBuffer();
     }
-    let results: any;
     try {
-      results = await Promise.all([
+      const results = await Promise.all([
         fetchFontBuffer(
           "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,600&display=swap",
         ),
@@ -110,30 +133,29 @@ function loadFonts() {
         { name: "Work Sans", data: results[2], weight: 500, style: "normal" },
       ];
     } catch (_e) {
-      // Satori falls back to its built-in default font -- not pretty, but
-      // the card still renders rather than the whole request failing.
-      return [];
+      // Undefined lets @vercel/og use its bundled font; [] throws.
+      fontsPromise = null;
+      return undefined;
     }
   })();
   return fontsPromise;
 }
 
-async function fetchImageDataUri(url: any, source: any) {
+async function fetchImageDataUri(url: string, source: string) {
   const controller = new AbortController();
   const timeout = setTimeout(() => {
     controller.abort();
   }, 8000);
-  let r: any, buf: any, contentType: any;
   try {
     // Unheaded requests get a 403 from Cloudflare on real Europeana
     // thumbnail URLs; imageFetchHeaders() fixes that.
-    r = await fetch(url, {
+    const r = await fetch(url, {
       signal: controller.signal,
       headers: imageFetchHeaders(source),
     });
     if (!r.ok) throw new Error(`image fetch failed with status ${r.status}`);
-    buf = await r.arrayBuffer();
-    contentType = r.headers.get("content-type") || "image/jpeg";
+    const buf = await r.arrayBuffer();
+    const contentType = r.headers.get("content-type") || "image/jpeg";
     return `data:${contentType};base64,${Buffer.from(buf).toString("base64")}`;
   } finally {
     clearTimeout(timeout);
@@ -170,8 +192,8 @@ function buildShareCard(opts: {
   captionStyle: { fontWeight: number; fontSize: number; lineHeight?: number };
   captionMaxWidth?: { withImage: number; withoutImage: number };
   imageDataUri: string | null;
-  accentColor: any;
-}): any {
+  accentColor: string | null | undefined;
+}): CardNode {
   const imageDataUri = opts.imageDataUri;
 
   const captionNode = opts.caption
@@ -251,7 +273,7 @@ function buildShareCard(opts: {
     ].filter(Boolean),
   );
 
-  const children = [textBlock];
+  const children: CardNode[] = [textBlock];
   if (imageDataUri) {
     children.unshift(
       h(
@@ -311,7 +333,7 @@ function buildShareCard(opts: {
   );
 }
 
-function buildCard(item: any, imageDataUri: any): any {
+function buildCard(item: ItemRow, imageDataUri: string | null): CardNode {
   const artist =
     item.artist && item.artist !== "Unknown" ? item.artist : "Unknown Artist";
   const metaLine = [artist, item.date].filter(Boolean).join(" · ");
@@ -329,10 +351,10 @@ function buildCard(item: any, imageDataUri: any): any {
 // the title swapped: the part-count eyebrow and opening line announce
 // this is a storyline before the title is read.
 function buildStorylineCard(
-  storyline: any,
-  imageDataUri: any,
-  accentColor: any,
-): any {
+  storyline: { title: string; intro_caption?: string | null; items: unknown[] },
+  imageDataUri: string | null,
+  accentColor: string | null | undefined,
+): CardNode {
   const partLabel = `${storyline.items.length}-part storyline`;
   let caption = String(storyline.intro_caption || "")
     .replace(/\s+/g, " ")
@@ -353,7 +375,7 @@ function buildStorylineCard(
   });
 }
 
-function buildFallbackCard(message: any) {
+function buildFallbackCard(message: string) {
   return h(
     "div",
     {
@@ -389,47 +411,25 @@ function buildFallbackCard(message: any) {
 
 export { fetchImageDataUri };
 
-export default async function handler(req: any, res: any) {
-  let ImageResponse: any,
-    slug: any,
-    parsed: any,
-    item: any,
-    client: any,
-    storylineId: any,
-    storyline: any,
-    fonts0: any,
-    tree0: any,
-    cover: any,
-    coverRows: any,
-    coverDataUri: any,
-    held: any,
-    storylineImage: any,
-    storylineBuffer: any,
-    rows: any,
-    fonts: any,
-    imageOptions: any,
-    tree: any,
-    imageDataUri: any,
-    heldSources: any,
-    imageResponse: any,
-    buffer: any;
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
-    client = getSql();
+    const client = getSql();
     // Same per-IP budget as the image proxy, checked before the Satori
     // render (the most CPU this route ever spends).
     if (await rateLimitOrRespond(client, req, res)) return;
 
-    ImageResponse = (await import("@vercel/og")).ImageResponse;
+    const { ImageResponse } = await import("@vercel/og");
 
-    slug = req.query.slug || "";
-    parsed = parseSlug(slug);
-    item = null;
+    const raw = req.query.slug;
+    const slug = (Array.isArray(raw) ? raw[0] : raw) || "";
+    const parsed = parseSlug(slug);
+    let item: ItemRow | null = null;
 
     // "s-{id}" addresses a storyline, not an artwork -- a separate
     // Postgres row from its cover item, so this is two queries.
-    storylineId = parseStorylineSlug(slug);
+    const storylineId = parseStorylineSlug(slug);
     if (storylineId) {
-      storyline = null;
+      let storyline = null;
       if (client) {
         try {
           storyline = await getStoryline(client, storylineId);
@@ -439,17 +439,18 @@ export default async function handler(req: any, res: any) {
           storyline = null;
         }
       }
-      fonts0 = await loadFonts();
+      const fonts0 = await loadFonts();
+      let tree0: CardNode;
       if (!storyline) {
         tree0 = buildFallbackCard("Tranquilo");
       } else {
-        cover = null;
+        let cover: ItemRow | null = null;
         if (client) {
           try {
-            coverRows = await client.query(
+            const coverRows = (await client.query(
               `SELECT * FROM items WHERE native_id = $1 ${LIVE_ITEMS_AND} LIMIT 1`,
               [String(storyline.cover_item_id)],
-            );
+            )) as ItemRow[];
             cover = coverRows[0] || null;
           } catch (err) {
             console.error("og/[slug]: storyline cover query failed", err);
@@ -457,11 +458,11 @@ export default async function handler(req: any, res: any) {
             cover = null;
           }
         }
-        coverDataUri = null;
+        let coverDataUri: string | null = null;
         if (cover?.img) {
           // A held source falls back to the text-only layout rather
           // than being fetched from our servers on every unfurl.
-          held = await sourceHealth.heldSourceSet(client, [cover.source]);
+          const held = await sourceHealth.heldSourceSet(client, [cover.source]);
           if (!held[cover.source]) {
             try {
               coverDataUri = await fetchImageDataUri(cover.img, cover.source);
@@ -476,12 +477,12 @@ export default async function handler(req: any, res: any) {
           cover?.accent_color,
         );
       }
-      storylineImage = new ImageResponse(tree0, {
+      const storylineImage = new ImageResponse(tree0, {
         width: 1200,
         height: 630,
         fonts: fonts0,
       });
-      storylineBuffer = Buffer.from(await storylineImage.arrayBuffer());
+      const storylineBuffer = Buffer.from(await storylineImage.arrayBuffer());
       res.statusCode = 200;
       res.setHeader("Content-Type", "image/png");
       res.setHeader("Cache-Control", "public, max-age=3600, s-maxage=86400");
@@ -491,12 +492,12 @@ export default async function handler(req: any, res: any) {
 
     if (parsed && client) {
       try {
-        rows = await client.query(
+        const rows = (await client.query(
           // A quarantined item must not render a preview image either --
           // an OG card is as public as the page it represents.
           `SELECT * FROM items WHERE source = $1 AND native_id = $2 ${LIVE_ITEMS_AND} LIMIT 1`,
           [parsed.source, parsed.nativeId],
-        );
+        )) as ItemRow[];
         item = rows[0] || null;
       } catch (err) {
         console.error("og/[slug]: query failed", err);
@@ -505,17 +506,20 @@ export default async function handler(req: any, res: any) {
       }
     }
 
-    fonts = await loadFonts();
-    imageOptions = { width: 1200, height: 630, fonts: fonts };
+    const fonts = await loadFonts();
+    const imageOptions = { width: 1200, height: 630, fonts: fonts };
 
+    let tree: CardNode;
     if (!item) {
       tree = buildFallbackCard("Tranquilo");
     } else {
-      imageDataUri = null;
+      let imageDataUri: string | null = null;
       // item.img is the raw origin URL, not the /img proxy URL --
       // fetched directly from the source institution on every unfurl,
       // so a held source is skipped for a text-only card instead.
-      heldSources = await sourceHealth.heldSourceSet(client, [item.source]);
+      const heldSources = await sourceHealth.heldSourceSet(client, [
+        item.source,
+      ]);
       if (item.img && !heldSources[item.source]) {
         try {
           imageDataUri = await fetchImageDataUri(item.img, item.source);
@@ -526,8 +530,8 @@ export default async function handler(req: any, res: any) {
       tree = buildCard(item, imageDataUri);
     }
 
-    imageResponse = new ImageResponse(tree, imageOptions);
-    buffer = Buffer.from(await imageResponse.arrayBuffer());
+    const imageResponse = new ImageResponse(tree, imageOptions);
+    const buffer = Buffer.from(await imageResponse.arrayBuffer());
 
     res.statusCode = 200;
     res.setHeader("Content-Type", "image/png");

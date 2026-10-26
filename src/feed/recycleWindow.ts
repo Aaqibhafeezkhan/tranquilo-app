@@ -232,7 +232,7 @@ export function createRecycleWindow(
   // Data runs well ahead of the DOM: building a slide is expensive and
   // bounded to RECYCLE_RADIUS, but fetching one is cheap and should be far
   // enough ahead that scrolling never catches up. 30 either side is ~61
-  // ids, comfortably inside the endpoint's MAX_IDS of 500.
+  // ids, inside one lookup.
   const HYDRATE_RADIUS = 30;
   const hydrateInFlight: Record<string, boolean> = {};
 
@@ -272,13 +272,7 @@ export function createRecycleWindow(
     const need = Object.keys(hydrateQueue);
     hydrateQueue = {};
     if (!need.length) return;
-    // A band of 61 can't reach MAX_IDS (500), but a coalesced burst across
-    // several band moves could, so this is chunked rather than trusted to
-    // stay small.
-    const MAX_PER_REQUEST = 200;
-    for (let start = 0; start < need.length; start += MAX_PER_REQUEST) {
-      fetchHydrationBatch(need.slice(start, start + MAX_PER_REQUEST));
-    }
+    fetchHydrationBatch(need);
   }
 
   function fetchHydrationBatch(need: string[]): void {

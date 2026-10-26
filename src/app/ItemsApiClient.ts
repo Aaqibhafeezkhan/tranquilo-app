@@ -1,9 +1,15 @@
+import { TRANQUILO_CONFIG } from "../data/config.generated";
+
 // All fetches against api/items -- the catalogue is server-paged and
 // server-aggregated now, not a single manifest read once at startup.
 // Replaced the old single manifest fetch across six surfaces (feed order
 // via a precomputed shuffle_key, facets, autocomplete, did-you-mean, rule
 // shelves, hero shelves), since moving only the feed wouldn't have
 // removed the full-catalogue download.
+const MAX_IDS_PER_LOOKUP = TRANQUILO_CONFIG.feed.max_ids_per_lookup;
+
+type IdsLookup = { items?: unknown[]; missing?: string[] };
+
 export class ItemsApiClient {
   // `locale` asks the API for translated content; the URL is the CDN cache
   // key, so each language is cached separately.
@@ -140,6 +146,20 @@ export class ItemsApiClient {
   }
 
   fetchItemsByIds(ids: string[]): Promise<any> {
+    if (ids.length <= MAX_IDS_PER_LOOKUP) return this.fetchIdsChunk(ids);
+    const chunks: string[][] = [];
+    for (let at = 0; at < ids.length; at += MAX_IDS_PER_LOOKUP) {
+      chunks.push(ids.slice(at, at + MAX_IDS_PER_LOOKUP));
+    }
+    return Promise.all(chunks.map((chunk) => this.fetchIdsChunk(chunk))).then(
+      (bodies) => ({
+        items: bodies.flatMap((body) => body.items ?? []),
+        missing: bodies.flatMap((body) => body.missing ?? []),
+      }),
+    );
+  }
+
+  private fetchIdsChunk(ids: string[]): Promise<IdsLookup> {
     // One `ids=` parameter per id, never comma-joined: some Commons
     // native_ids contain commas (real filenames), and comma-joining tore
     // those into ids matching nothing, rendering permanently blank slides.
