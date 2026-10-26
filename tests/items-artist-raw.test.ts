@@ -48,7 +48,7 @@ beforeAll(async () => {
 
 describe("the raw artist string", () => {
   it.each([
-    ["full rows", { limit: "10" }],
+    ["full rows", { ids: "1" }],
     ["manifest", { shape: "manifest", order: "shuffle", start: "0" }],
   ])("is never served in %s", async (_label, query) => {
     const res = await get(query);
