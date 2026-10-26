@@ -231,7 +231,8 @@ async function main() {
   for (const p of plan) {
     for (const c of p.changing) {
       const res = await sql.query(
-        `UPDATE items SET artist = $1 WHERE artist = $2 RETURNING 1`,
+        `UPDATE items SET artist_raw = coalesce(artist_raw, artist), artist = $1
+          WHERE artist = $2 RETURNING 1`,
         [p.canonical, c.from],
       );
       updated += res.length;
