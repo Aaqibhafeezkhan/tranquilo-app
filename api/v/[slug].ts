@@ -255,10 +255,7 @@ async function sendStorylinePage(
   res.end(appHtml ? renderAppPage(appHtml, meta) : renderPage(meta));
 }
 
-export default async function handler(
-  req: VercelRequest,
-  res: VercelResponse,
-) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   const raw = req.query.slug;
   const slug = (Array.isArray(raw) ? raw[0] : raw) || "";
   const origin = getOrigin(req);
