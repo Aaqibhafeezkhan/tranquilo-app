@@ -153,6 +153,12 @@ describe("planFromMap", () => {
     );
   });
 
+  it("leaves a spelling a reviewer rejected untouched", () => {
+    expect(
+      planFromMap(rows(["Bril, Paul", 6]), map, new Set(["Bril, Paul"])),
+    ).toEqual([]);
+  });
+
   it("never rewrites a placeholder attribution", () => {
     expect(
       planFromMap(rows(["Unknown, Dutch", 4], ["Anonymous", 9]), map),

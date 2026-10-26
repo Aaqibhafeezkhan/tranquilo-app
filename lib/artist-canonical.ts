@@ -58,11 +58,13 @@ const isPlaceholder = (s: string) => /^\s*(unknown|anonymous)/i.test(s);
 export function planFromMap(
   rows: SpellingCount[],
   map: Record<string, string>,
+  skip: ReadonlySet<string> = new Set(),
 ): Rewrite[] {
   return rows
     .filter(
       (r) =>
         !isPlaceholder(r.artist) &&
+        !skip.has(r.artist) &&
         Object.hasOwn(map, r.artist) &&
         map[r.artist] !== r.artist,
     )
