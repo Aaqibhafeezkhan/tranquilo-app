@@ -49,9 +49,14 @@ async function main() {
     );
   }
   const artists = await ourArtists();
-  const names = artists.map((a) => a.artist);
   const counts = new Map(artists.map((a) => [a.artist, a.n]));
-  console.log(`${names.length} attributed artist names in the catalogue`);
+  console.log(`${counts.size} attributed artist names in the catalogue`);
+  // A merge renames rows to a spelling ULAN may lack; the old name keeps
+  // the subject in the subset.
+  const previous: string[] = fs.existsSync(OUT)
+    ? Object.keys(JSON.parse(fs.readFileSync(OUT, "utf8")).artists)
+    : [];
+  const names = [...new Set([...counts.keys(), ...previous])];
 
   // Only keep TERM rows whose normalised text is one of ours -- the dump
   // has millions of terms and we care about a few thousand.

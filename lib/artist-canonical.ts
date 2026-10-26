@@ -10,6 +10,9 @@ const diacritics = (s: string) =>
 const bare = (s: string) =>
   s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 const isDisplayOrder = (s: string) => !s.includes(",");
+// No parenthetical, dates or non-Latin script: what a byline should read.
+const isPlain = (s: string) =>
+  !/[(\d]|[^\p{Script=Latin}\p{M}\p{P}\p{Zs}]/u.test(s);
 
 export function flipSurnameFirst(name: string): string | null {
   const parts = name.split(",");
@@ -25,6 +28,7 @@ function ourChoice(rows: SpellingCount[]): string {
     .slice()
     .sort(
       (a, b) =>
+        Number(isPlain(b.artist)) - Number(isPlain(a.artist)) ||
         Number(isDisplayOrder(b.artist)) - Number(isDisplayOrder(a.artist)) ||
         b.n - a.n ||
         diacritics(b.artist) - diacritics(a.artist) ||
@@ -69,7 +73,7 @@ export interface CanonicalGroup {
 }
 
 const HEDGED =
-  /^(after|attributed to|circle of|copy after|copy of|follower of|formerly attributed to|imitator of|manner of|school of|studio of|style of|workshop of)\b/i;
+  /^(after|attributed to|circle of|copy after|copy of|follower of|formerly attributed to|imitator of|manner of|school of|studio of|style of|workshop of)\b|\(\?\)\s*$/i;
 
 // Computed over every ULAN subject, not only those we currently hold.
 export function excludedVariants(

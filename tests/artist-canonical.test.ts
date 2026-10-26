@@ -33,6 +33,43 @@ describe("chooseCanonical", () => {
     );
   });
 
+  it("prefers a plain name over a more-used one carrying a parenthetical", () => {
+    expect(
+      chooseCanonical(
+        rows(
+          ["Pietro da Cortona (Pietro Berrettini)", 40],
+          ["Pietro da Cortona", 5],
+        ),
+      ),
+    ).toBe("Pietro da Cortona");
+  });
+
+  it("prefers a plain name over one carrying native script or dates", () => {
+    expect(
+      chooseCanonical(
+        rows(["Katsukawa Shunshō 勝川春章", 30], ["Katsukawa Shunshō", 2]),
+      ),
+    ).toBe("Katsukawa Shunshō");
+    expect(
+      chooseCanonical(rows(["Jin Nong (1687-1763)", 30], ["Jin Nong", 2])),
+    ).toBe("Jin Nong");
+  });
+
+  it("still returns a decorated name when it is the only spelling", () => {
+    expect(chooseCanonical(rows(["Mei Qing (1623-1697)", 15]))).toBe(
+      "Mei Qing (1623-1697)",
+    );
+  });
+
+  it("prefers a plain surname-first name and flips it when confirmed", () => {
+    expect(
+      chooseCanonical(
+        rows(["Rembrandt (Rembrandt van Rijn)", 25], ["Rijn, Rembrandt van", 3]),
+        ["Rembrandt van Rijn"],
+      ),
+    ).toBe("Rembrandt van Rijn");
+  });
+
   it("flips a surname-first name when the authority file has the flipped form", () => {
     expect(
       chooseCanonical(rows(["Edelfelt, Albert", 12]), [
@@ -156,6 +193,7 @@ describe("buildCanonicalMap", () => {
             "After Van Dyck",
             "school of van dyck",
             "Follower of Anthony van Dyck",
+            "Anthonis van Dyck (?)",
             "Van Dyck",
           ],
         },
