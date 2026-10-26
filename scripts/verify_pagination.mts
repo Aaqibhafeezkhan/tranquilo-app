@@ -19,12 +19,16 @@ const { resolveApi, fetchManifest, apiFetch } = await import(
 
 const API = resolveApi();
 
+// Keyed by source as well: native ids repeat across sources.
+const itemKey = (i: { source: string; id: string | number }) =>
+  `${i.source}:${i.id}`;
+
 // The baseline is the manifest paged from start=0. The check below pages
 // it again from mid-catalogue, so the wrap from the top of the key space
 // back to the start is exercised -- if the two disagree, a visitor whose
 // session starts mid-feed sees missing or repeated items.
 const manifest = await fetchManifest(API);
-const expected = new Set<string>(manifest.map((i: any) => String(i.id)));
+const expected = new Set<string>(manifest.map(itemKey));
 
 const LIMIT = 200;
 const START = 0.5;
@@ -45,7 +49,7 @@ while (pages < MAX_PAGES) {
   pages++;
 
   for (const item of body.items) {
-    const id = String(item.id);
+    const id = itemKey(item);
     if (seen.has(id)) duplicates.push(id);
     seen.add(id);
   }

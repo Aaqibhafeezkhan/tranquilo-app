@@ -1,15 +1,13 @@
-// Diff the live feed against the captured baseline. `capture_feed_fixtures.mts`
-// records what each mode returned before server-side work began; this
-// re-derives them against whatever is live now and reports every difference,
-// naming the exact mode and items that appeared or vanished.
+// Checks the live feed against itself rather than a stored baseline:
+// server-side search (?q=) must return exactly what matchesQuery() picks
+// from the live catalogue, and server-paged ordering must keep the
+// same-artist adjacency budget and show each item once per session.
 //
 // Deliberately a script rather than a vitest test: the JS suite is offline by
-// design and this needs the live API. Not run on every commit -- a migration
-// checkpoint.
+// design and this needs the live API.
 //
-// Run:  node scripts/verify_feed_fixtures.mts
-//       node scripts/verify_feed_fixtures.mts --api http://localhost:3000/api/items
-import { readFileSync } from "node:fs";
+// Run:  bun scripts/verify_feed_fixtures.mts
+//       bun scripts/verify_feed_fixtures.mts --api http://localhost:3000/api/items
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -22,76 +20,73 @@ const { resolveApi, fetchAllItems, apiFetch } = await import(
 );
 const API = resolveApi();
 
-interface FixtureMode {
-  count: number;
-  ids: string[];
-}
-interface Fixture {
-  captured_at: string;
-  item_count: number;
-  modes: Record<string, FixtureMode>;
-}
+// Real queries, including accented, multi-word, CJK and no-match cases.
+const SEARCH_TERMS = [
+  "cezanne",
+  "Cézanne",
+  "monet",
+  "rembrandt",
+  "vermeer",
+  "buddha",
+  "landscape",
+  "portrait",
+  "still life",
+  "唐",
+  "gold",
+  "silk",
+  "bronze",
+  "qing",
+  "ming",
+  "van gogh",
+  "self-portrait",
+  "zzzznomatch",
+];
 
-const fixture: Fixture = JSON.parse(
-  readFileSync(path.join(ROOT, "tests/fixtures/feed-modes.json"), "utf8"),
-);
+const itemKey = (i: { source: string; id: string | number }) =>
+  `${i.source}:${i.id}`;
 
-// Full items, paged: the mode derivations below call matchesQuery(), which
-// reads title, medium, tags and bio -- fields the manifest deliberately omits.
+// Full items: matchesQuery() reads title, medium, tags and bio --
+// fields the manifest deliberately omits.
 const items = await fetchAllItems(API);
 
-// Same derivations as the capture script. Kept in step by the fact that a
-// divergence here shows up as a diff, which is the point.
-function derive(): Record<string, any[]> {
-  const modes: Record<string, any[]> = {};
-  modes["category:All"] = items;
-  for (const c of Array.from(
-    new Set(items.map((i: any) => i.category)),
-  ).sort()) {
-    modes[`category:${c}`] = items.filter((i: any) => i.category === c);
+async function serverSearch(q: string): Promise<Set<string>> {
+  const keys = new Set<string>();
+  let cursor: string | null = null;
+  for (let pages = 0; pages < 2000; pages++) {
+    const url: string = `${API}?shape=manifest&order=shuffle&q=${encodeURIComponent(q)}&limit=200${
+      cursor ? `&cursor=${encodeURIComponent(cursor)}` : "&start=0"
+    }`;
+    const res: Response = await apiFetch(url);
+    if (!res.ok) throw new Error(`${url} responded ${res.status}`);
+    const body: {
+      items: { source: string; id: string }[];
+      next_cursor?: string;
+    } = await res.json();
+    for (const item of body.items) keys.add(itemKey(item));
+    if (!body.next_cursor || body.next_cursor === cursor) return keys;
+    cursor = body.next_cursor;
   }
-  for (const key of Object.keys(fixture.modes)) {
-    if (key.startsWith("search:")) {
-      const q = key.slice("search:".length);
-      modes[key] = items.filter((i: any) => logic.matchesQuery(i, q));
-    } else if (key.startsWith("artist:")) {
-      const a = key.slice("artist:".length);
-      modes[key] = items.filter((i: any) => i.artist === a);
-    } else if (key.startsWith("facet:")) {
-      const [field, value] = key.slice("facet:".length).split("=");
-      modes[key] = items.filter((i: any) => String(i[field]) === value);
-    }
-  }
-  return modes;
+  throw new Error(`?q=${q} did not stop paging`);
 }
 
-const live = derive();
-const problems: { mode: string; kind: string; detail: string }[] = [];
-
-for (const [mode, expected] of Object.entries(fixture.modes)) {
-  const actual = live[mode];
-  if (!actual) {
-    problems.push({
-      mode,
-      kind: "mode disappeared",
-      detail: "no longer derivable",
-    });
-    continue;
-  }
-  const was = new Set(expected.ids);
-  const now = new Set(actual.map((i: any) => String(i.id)));
-  const gone = [...was].filter((id) => !now.has(id));
-  const added = [...now].filter((id) => !was.has(id));
-  if (gone.length || added.length) {
-    problems.push({
-      mode,
-      kind: "membership changed",
-      detail: `${expected.count} -> ${actual.length}${
-        gone.length
-          ? `; missing ${gone.length}: ${gone.slice(0, 4).join(", ")}`
-          : ""
-      }${added.length ? `; new ${added.length}: ${added.slice(0, 4).join(", ")}` : ""}`,
-    });
+const searchProblems: string[] = [];
+for (const q of SEARCH_TERMS) {
+  const local = new Set<string>(
+    items.filter((i: any) => logic.matchesQuery(i, q)).map(itemKey),
+  );
+  const server = await serverSearch(q);
+  const onlyLocal = [...local].filter((k) => !server.has(k));
+  const onlyServer = [...server].filter((k) => !local.has(k));
+  if (onlyLocal.length || onlyServer.length) {
+    searchProblems.push(
+      `"${q}": server ${server.size}, matchesQuery ${local.size}` +
+        (onlyLocal.length
+          ? `; missing from server ${onlyLocal.length}: ${onlyLocal.slice(0, 4).join(", ")}`
+          : "") +
+        (onlyServer.length
+          ? `; extra from server ${onlyServer.length}: ${onlyServer.slice(0, 4).join(", ")}`
+          : ""),
+    );
   }
 }
 
@@ -208,22 +203,16 @@ try {
   pagedError = err;
 }
 
-console.log(`Comparing ${API}`);
-console.log(
-  `  baseline captured ${fixture.captured_at}, ${fixture.item_count} items`,
-);
-console.log(
-  `  live now: ${items.length} items, ${Object.keys(fixture.modes).length} modes checked\n`,
-);
+console.log(`Checking ${API}`);
+console.log(`  live: ${items.length} items\n`);
 
-if (!problems.length) {
+if (!searchProblems.length) {
   console.log(
-    "  Membership: every mode returns exactly what it did at baseline.",
+    `  Search: ${SEARCH_TERMS.length} terms, ?q= matches matchesQuery() exactly.`,
   );
 } else {
-  console.log(`  Membership: ${problems.length} mode(s) changed\n`);
-  for (const p of problems)
-    console.log(`    [${p.kind}] ${p.mode}\n        ${p.detail}`);
+  console.log(`  Search: ${searchProblems.length} term(s) disagree\n`);
+  for (const p of searchProblems) console.log(`    ${p}`);
 }
 
 console.log(
@@ -257,19 +246,6 @@ if (pagedError) {
   }
 }
 
-// A changed catalogue is not a regression -- exit non-zero only on
-// membership changes, and say so, to avoid mistaking a legitimate
-// catalogue edit for a migration bug.
-if (problems.length) {
-  console.log(
-    "\n  NOTE: a mode can also change legitimately -- an item ingested or rejected\n" +
-      "  since the baseline moves membership without anything being broken. Check the\n" +
-      "  named ids against the catalogue before treating this as a migration fault,\n" +
-      "  and re-capture the baseline once the change is confirmed intentional.",
-  );
-}
-// The paged order is a MIGRATION correctness check, so it fails the run --
-// unlike a membership change, which can be a legitimate catalogue edit.
 const pagedBad =
   !!pagedError || pagedWorst > ADJACENCY_BUDGET || pagedDupes > 0;
-process.exit(problems.length || pagedBad ? 1 : 0);
+process.exit(searchProblems.length || pagedBad ? 1 : 0);

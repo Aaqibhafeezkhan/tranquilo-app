@@ -569,8 +569,8 @@ function buildQuery(params: QueryParams): BuiltQuery {
 
   // Must match app.ts's matchesQuery() exactly: a diacritic-folded,
   // lowercased substring test across search_text, OR'd with the
-  // century rule from matchesTimeframe(). Verified against
-  // tests/fixtures/feed-modes.json's 18 pinned terms.
+  // century rule from matchesTimeframe(). Checked live by
+  // scripts/verify_feed_fixtures.mts.
   const q = (scalar(params.q) || "").trim();
   if (q) {
     const clauses = [
