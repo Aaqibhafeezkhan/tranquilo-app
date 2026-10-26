@@ -249,6 +249,11 @@ export async function stubBackend(
     route.fulfill({ status: 200, contentType: "text/html", body: appHtml }),
   );
 
+  // /shelf/{id} too, same rewrite into the same handler.
+  await page.route(/\/shelf\/[^/]+$/, (route: Route) =>
+    route.fulfill({ status: 200, contentType: "text/html", body: appHtml }),
+  );
+
   // The stub emulates the endpoint's shapes, not just its data: the client
   // makes three different requests against /api/items, each structurally
   // different, so a stub answering all three with the same array would
@@ -407,6 +412,14 @@ export async function stubBackend(
       ]) {
         const v = url.searchParams.get(facet);
         if (v) rows = rows.filter((i) => String(i[facet] ?? "") === v);
+      }
+      const countRegion = url.searchParams.get("region_primary");
+      if (countRegion) {
+        rows = rows.filter(
+          (i) =>
+            i.region_primary === countRegion ||
+            (Array.isArray(i.region_alt) && i.region_alt.includes(countRegion)),
+        );
       }
       if (url.searchParams.get("has_storyline") === "1") {
         rows = rows.filter(
@@ -737,6 +750,17 @@ export async function gotoStoryline(
   );
   if (expectOpen) await page.waitForSelector("#storylineMode.open");
   return page.locator("#storylineMode");
+}
+
+// Cold load of /shelf/{id}; waits for feed, then overlay.
+export async function gotoShelf(page: Page, id: string) {
+  await stubBackend(page);
+  await page.goto(`/shelf/${encodeURIComponent(id)}`);
+  await page.waitForFunction(
+    () => document.querySelectorAll("#feed .slide").length > 1,
+  );
+  await page.waitForSelector("#shelfMode.open");
+  return page.locator("#shelfMode");
 }
 
 // The feed scrolls its own container, which animates (`scroll-behavior:

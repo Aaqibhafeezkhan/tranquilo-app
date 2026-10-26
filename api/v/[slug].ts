@@ -21,6 +21,14 @@ import { LIVE_ITEMS_AND } from "../../lib/items-sql.ts";
 import { getOrigin } from "../../lib/request-origin.ts";
 import { safeHttpUrl } from "../../lib/safe-url.ts";
 import { reportError } from "../../lib/sentry.ts";
+// Also serves /shelf/{id}, rewritten as slug "shelf-{id}", the same way.
+import {
+  getShelf,
+  getShelfPreview,
+  isShareableShelf,
+  parseShelfSlug,
+  shelfSlug,
+} from "../../lib/shelves.ts";
 // Also serves /s/{id}, rewritten as slug "s-{id}" -- a storyline
 // borrows this route rather than getting its own (Vercel Hobby's
 // function cap).
@@ -255,6 +263,66 @@ async function sendStorylinePage(
   res.end(appHtml ? renderAppPage(appHtml, meta) : renderPage(meta));
 }
 
+async function sendShelfPage(
+  client: Sql | null,
+  res: VercelResponse,
+  origin: string,
+  shelfId: string,
+) {
+  let shelf = null;
+  let count = 0;
+  if (client) {
+    try {
+      shelf = await getShelf(client, shelfId);
+      if (!isShareableShelf(shelf)) shelf = null;
+      if (shelf) count = (await getShelfPreview(client, shelf)).count;
+    } catch (err) {
+      console.error("v/[slug]: shelf query failed", err);
+      await reportError(err);
+      shelf = null;
+    }
+  }
+  const canonicalUrl = `${origin}/shelf/${encodeURIComponent(shelfId)}`;
+
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
+  if (!shelf) {
+    res.statusCode = 404;
+    res.setHeader("Cache-Control", "public, max-age=3600, s-maxage=86400");
+    res.end(
+      renderPage({
+        title: "Tranquilo",
+        description:
+          "A calm, ad-free digital museum and open-source art platform.",
+        ogTitle: "Tranquilo",
+        ogImage: null,
+        canonicalUrl: canonicalUrl,
+        redirectUrl: `${origin}/index.html`,
+        statusNote: "That shelf couldn't be found.",
+      }),
+    );
+    return;
+  }
+
+  const countLabel = `${count} ${count === 1 ? "work" : "works"}`;
+  const meta: PageMeta = {
+    title: `${escapeHtml(shelf.title)} · Tranquilo`,
+    description: escapeHtml(
+      `A shelf of ${countLabel} on Tranquilo, a calm scroll of public-domain art.`,
+    ),
+    ogTitle: escapeHtml(`${shelf.title} — ${countLabel}`),
+    ogImage: `${origin}/og/${encodeURIComponent(shelfSlug(shelfId))}.png`,
+    canonicalUrl: canonicalUrl,
+    // Not back to /shelf/{id}: renderPage's fallback does location.replace().
+    redirectUrl: `${origin}/index.html`,
+    statusNote: "Opening Tranquilo…",
+  };
+
+  res.statusCode = 200;
+  res.setHeader("Cache-Control", "public, max-age=60, s-maxage=300");
+  const appHtml = getAppHtml();
+  res.end(appHtml ? renderAppPage(appHtml, meta) : renderPage(meta));
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const raw = req.query.slug;
   const slug = (Array.isArray(raw) ? raw[0] : raw) || "";
@@ -264,6 +332,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const storylineId = parseStorylineSlug(slug);
   if (storylineId)
     return sendStorylinePage(client, res, origin, slug, storylineId);
+
+  const shelfId = parseShelfSlug(slug);
+  if (shelfId) return sendShelfPage(client, res, origin, shelfId);
 
   const parsed = parseSlug(slug);
   let item: ItemRow | null = null;

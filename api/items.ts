@@ -20,6 +20,7 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { TRANQUILO_CONFIG } from "../lib/config.generated.ts";
 import { getSql } from "../lib/db.ts";
 import { getHeroPool } from "../lib/hero-items.ts";
+import { FACETS, facetClauses } from "../lib/item-facets.ts";
 import { LIVE_ITEMS_PREDICATE } from "../lib/items-sql.ts";
 import { getMusicBuckets } from "../lib/music.ts";
 import { printRegionFromHeaders } from "../lib/print-region.ts";
@@ -377,21 +378,6 @@ function parseStart(value: string | undefined): number {
   return start;
 }
 
-// Whitelisted so a typo is a 400, not a silently empty result.
-const FACETS = [
-  "category",
-  "timeframe",
-  "palette",
-  "media_type",
-  "region_primary",
-  "source",
-  "subject_type",
-  // Real color filter -- array-contains against palette_buckets,
-  // not equality; see the special case in the FACETS.forEach loop below,
-  // same shape as region_primary's own alternates special case.
-  "palette_bucket",
-];
-
 // ---------------------------------------------------------------------------
 // Aggregate shapes -- answer questions about the catalogue without
 // shipping it. Safe to return whole because they're bounded by the
@@ -601,31 +587,12 @@ function buildQuery(params: QueryParams): BuiltQuery {
     where.push(`(${clauses.join(" OR ")})`);
   }
 
-  FACETS.forEach((facet: string) => {
-    const value = scalar(params[facet]);
-    let bound: string;
-    if (value === undefined || value === "") return;
-    if (facet === "region_primary") {
-      // Matches alternates too (GIN index, sql/006_items_region_alt.sql)
-      // -- a Cypriot item can legitimately count under both Europe and
-      // West Asia, so filtered counts can sum to more than the catalogue.
-      bound = bind(value);
-      where.push(
-        `(region_primary = ${bound} OR region_alt @> ARRAY[${bound}]::text[])`,
-      );
-      return;
-    }
-    if (facet === "palette_bucket") {
-      // A real color filter: palette_buckets is multi-valued (GIN index,
-      // sql/038_items_palette_buckets.sql), so this is containment, not
-      // equality -- an item with both blue sky and green grass matches a
-      // "Blue" filter and a "Green" one, which is the whole point.
-      bound = bind(value);
-      where.push(`palette_buckets @> ARRAY[${bound}]::text[]`);
-      return;
-    }
-    where.push(`${facet} = ${bind(value)}`);
-  });
+  where.push(
+    ...facetClauses(
+      Object.fromEntries(FACETS.map((f) => [f, scalar(params[f])])),
+      bind,
+    ),
+  );
 
   const artist = scalar(params.artist);
   if (artist) {

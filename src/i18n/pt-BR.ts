@@ -142,6 +142,11 @@ export const ptBR: Dictionary = {
   "shelves.storylines.subtitle": "Histórias selecionadas por trás da arte",
   "shelves.moods.title": "Prateleiras, curadas à mão",
   "shelves.moods.subtitle": "Escolha um clima e aproveite",
+  "shelves.seeAll": "Ver tudo",
+  "shelf.close": "Fechar a prateleira",
+  "shelf.share": "Copiar link desta prateleira",
+  "shelf.works.one": "{count} obra",
+  "shelf.works.other": "{count} obras",
 
   "storyline.close": "Fechar a narrativa",
   "storyline.prev": "Página anterior",

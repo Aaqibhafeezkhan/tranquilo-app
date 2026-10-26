@@ -28,6 +28,7 @@ import type { ITranquiloShelvesModeHost } from "../types/ITranquiloShelvesModeHo
 import type { Item } from "../types/Item";
 import type { Shelf } from "../types/Shelf";
 import { on } from "../utils/on";
+import { isShareableShelf } from "./TranquiloShelfMode";
 
 // The overlay covers the top bar, so without a mark of its own the tulip
 // would disappear the moment Discover opens. It's a real link home,
@@ -157,14 +158,29 @@ export class TranquiloShelvesMode extends HTMLElement {
     const host = this.requireApp();
     const row = document.createElement("div");
     row.className = "shelf";
+    row.dataset.shelfId = shelf.id;
     // A shelf whose name the section header already states doesn't
     // repeat it. Compared rather than hardcoded, so a second hero shelf
     // with its own name still labels itself.
     if (!suppressTitle) {
+      const headEl = document.createElement("div");
+      headEl.className = "shelf-head";
       const titleEl = document.createElement("div");
       titleEl.className = "shelf-title";
       titleEl.textContent = shelf.title;
-      row.appendChild(titleEl);
+      headEl.appendChild(titleEl);
+      if (isShareableShelf(shelf)) {
+        const seeAll = document.createElement("button");
+        seeAll.type = "button";
+        seeAll.className = "shelf-see-all";
+        seeAll.textContent = `${t("shelves.seeAll")} ›`;
+        on(seeAll, () => {
+          this.close();
+          host.openShelfMode(shelf.id);
+        });
+        headEl.appendChild(seeAll);
+      }
+      row.appendChild(headEl);
     }
     const track = document.createElement("div");
     track.className = "shelf-row";

@@ -20,7 +20,7 @@ tags:
   - name: catalogue
     description: The live art catalogue and its derived facets/search
   - name: sharing
-    description: Per-artwork/per-storyline share pages and preview images
+    description: Per-artwork/per-storyline/per-shelf share pages and preview images
   - name: engagement
     description: Analytics, waitlists, feedback and collection submissions
   - name: cron
@@ -370,7 +370,7 @@ paths:
   /v/{slug}:
     get:
       tags: [sharing]
-      summary: Per-artwork or per-storyline share page
+      summary: Per-artwork, per-storyline or per-shelf share page
       operationId: getSharePage
       description: >-
         Rewritten from `/v/:slug` (vercel.json) to `/api/v/[slug]`. Serves
@@ -378,12 +378,13 @@ paths:
         `<meta>`/OpenGraph/Twitter Card tags injected in place -- a crawler
         sees a fully-formed preview, a human gets the real running app at a
         real, bookmarkable URL. `/s/{id}` (a storyline) rewrites here too,
-        as slug `s-{id}`.
+        as slug `s-{id}`, and `/shelf/{id}` (a Discover shelf) as slug
+        `shelf-{id}`.
       parameters:
         - name: slug
           in: path
           required: true
-          description: '`{source}-{nativeId}` for an artwork (split on the first hyphen only), or `s-{storylineId}` for a storyline.'
+          description: '`{source}-{nativeId}` for an artwork (split on the first hyphen only), `s-{storylineId}` for a storyline, or `shelf-{shelfId}` for a shelf.'
           schema: { type: string }
       responses:
         "200":
@@ -408,6 +409,23 @@ paths:
           content:
             text/html: { schema: { type: string } }
 
+  /shelf/{id}:
+    get:
+      tags: [sharing]
+      summary: Shelf share page (alias)
+      operationId: getShelfSharePageAlias
+      description: Rewrites to `/v/shelf-{id}` -- see `/v/{slug}`.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: See `/v/{slug}`.
+          content:
+            text/html: { schema: { type: string } }
+
   /og/{slug}.png:
     get:
       tags: [sharing]
@@ -418,12 +436,13 @@ paths:
         card via @vercel/og (Satori) -- the artwork's own image tinted with
         its accent color, or a title/caption-only card if the source is
         under a health hold or the image fetch fails. `slug` matching
-        `s-{id}` renders the storyline variant instead.
+        `s-{id}` renders the storyline variant instead, and `shelf-{id}`
+        the shelf variant (title, work count, one cover image).
       parameters:
         - name: slug
           in: path
           required: true
-          description: '`{source}-{nativeId}`, or `s-{storylineId}` for a storyline card. The `.png` suffix is stripped by the rewrite.'
+          description: '`{source}-{nativeId}`, `s-{storylineId}` for a storyline card, or `shelf-{shelfId}` for a shelf card. The `.png` suffix is stripped by the rewrite.'
           schema: { type: string }
       responses:
         "200":

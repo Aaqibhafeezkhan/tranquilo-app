@@ -1,0 +1,121 @@
+/* Shelf view overlay, plus Discover's "See all" control. */
+
+/* Between shelves-mode (240) and set-of-works-mode (245). */
+.shelf-mode{
+  position:fixed; inset:0;
+  z-index:242;
+  background:var(--ink);
+  display:flex;
+  flex-direction:column;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.25s ease;
+}
+.shelf-mode.open{ opacity:1; pointer-events:auto; }
+
+.shelf-mode-header{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+  padding:18px 20px 8px;
+}
+.shelf-mode-title{
+  margin:0;
+  font-family:var(--serif);
+  font-style:italic;
+  font-weight:500;
+  font-size:1.6rem;
+  line-height:1.2;
+  color:var(--text);
+}
+.shelf-mode-meta{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:6px;
+  font-family:var(--sans);
+  font-size:0.82rem;
+  color:var(--ink-soft);
+}
+.shelf-mode-close{
+  flex:none;
+  background:rgba(0,0,0,0.45);
+  border:1px solid rgba(255,255,255,0.28);
+  color:#fff;
+  width:44px; height:44px;
+  border-radius:50%;
+  font-size:1.4rem;
+  line-height:1;
+  cursor:pointer;
+}
+.shelf-mode-close:hover{ background:rgba(0,0,0,0.6); }
+
+.shelf-mode-body{
+  flex:1;
+  min-height:0;
+  overflow-y:auto;
+  padding:12px 20px 40px;
+}
+.shelf-mode-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(140px, 1fr));
+  gap:16px 12px;
+}
+.shelf-mode-sentinel{ height:1px; }
+
+.shelf-mode-card{
+  position:relative;
+  min-width:0;
+  cursor:pointer;
+  background:none;
+  border:none;
+  padding:0;
+  text-align:left;
+  color:inherit;
+  font:inherit;
+}
+.shelf-mode-card img{
+  width:100%;
+  aspect-ratio:1;
+  object-fit:cover;
+  border-radius:6px;
+  display:block;
+  box-shadow:0 10px 24px -14px rgba(0,0,0,0.6);
+}
+.shelf-mode-card .nudity-gate-overlay{
+  inset:0 0 auto 0;
+  aspect-ratio:1;
+  border-radius:6px;
+}
+.shelf-mode-card-title{
+  display:block;
+  margin-top:6px;
+  font-family:var(--sans);
+  font-size:0.74rem;
+  color:var(--ink-soft);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* ---------- Discover rows: title + "See all" ---------- */
+.shelf-head{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:12px;
+  margin:0 20px 10px;
+}
+.shelf-head .shelf-title{ margin:0; }
+.shelf-see-all{
+  flex:none;
+  background:none;
+  border:none;
+  padding:4px 0;
+  cursor:pointer;
+  font-family:var(--sans);
+  font-size:0.8rem;
+  color:var(--gold-soft);
+}
+.shelf-see-all:hover{ text-decoration:underline; }

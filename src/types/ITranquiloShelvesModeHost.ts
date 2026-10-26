@@ -24,6 +24,7 @@ export interface ITranquiloShelvesModeHost {
     item: Item,
     shelfContext: { items: Item[]; index: number },
   ): void;
+  openShelfMode(shelfId: string): void;
   // Every overlay pushes one history entry on open so the hardware back
   // button closes it instead of leaving the app; requestOverlayClose routes
   // an explicit close through history.back() when an entry is pending.
