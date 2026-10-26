@@ -12,6 +12,8 @@
 // "ld1-1643399887910-1643399894916-0").
 import fs from "node:fs";
 import path from "node:path";
+import type { VercelRequest, VercelResponse } from "@vercel/node";
+import type { Sql } from "../../lib/db.ts";
 import { getSql } from "../../lib/db.ts";
 import { escapeHtml } from "../../lib/html-escape.ts";
 import { institutionName } from "../../lib/institution-names.ts";
@@ -28,16 +30,36 @@ import {
   storylineSlug,
 } from "../../lib/storylines.ts";
 
+interface ItemRow {
+  title?: string | null;
+  artist?: string | null;
+  medium?: string | null;
+  date?: string | null;
+  source?: string;
+  url?: unknown;
+}
+
+interface PageMeta {
+  title: string;
+  description: string;
+  ogTitle: string;
+  ogImage: string | null;
+  canonicalUrl: string;
+  redirectUrl: string;
+  redirectLabel?: string;
+  statusNote: string;
+}
+
 // Reverses encodeSlugId()'s source-specific transform back into the raw
 // native_id this file queries with. No decodeURIComponent -- Vercel's
 // router already fully decodes req.query.slug, and decoding twice
 // throws on a lone "%". Guarded so an old-style slug (built with the
 // previous encodeURIComponent(slugFor(item)) scheme) still resolves.
-function decodeSlugId(source: any, idPart: any) {
+function decodeSlugId(source: string, idPart: string): string {
   if (source === "commons") {
     return idPart.slice(0, 5) === "File:" ? idPart : `File:${idPart}`;
   }
-  let m: any;
+  let m: RegExpExecArray | null;
   if (source === "europeana" && idPart.charAt(0) !== "/") {
     m = /^([0-9]+)-(.+)$/.exec(idPart);
     if (m) return `/${m[1]}/${m[2]}`;
@@ -45,7 +67,7 @@ function decodeSlugId(source: any, idPart: any) {
   return idPart;
 }
 
-function parseSlug(slug: any) {
+function parseSlug(slug: string) {
   const parts = slug.split(/-(.+)/);
   if (parts.length < 2 || !parts[0] || !parts[1]) return null;
   return { source: parts[0], nativeId: decodeSlugId(parts[0], parts[1]) };
@@ -60,8 +82,8 @@ function parseSlug(slug: any) {
 //
 // dist/index.html, not the repo-root source -- `vite build`'s output,
 // the same bytes vercel.json's outputDirectory serves as the site root.
-let APP_HTML: any;
-function getAppHtml() {
+let APP_HTML: string | null | undefined;
+function getAppHtml(): string | null {
   if (APP_HTML !== undefined) return APP_HTML;
   try {
     APP_HTML = fs.readFileSync(
@@ -82,7 +104,7 @@ function getAppHtml() {
 
 // <base href="/"> is required: index.html references css/js relatively,
 // which would 404 at /v/met-436528 without it.
-function renderAppPage(appHtml: any, opts: any) {
+function renderAppPage(appHtml: string, opts: PageMeta) {
   const head = `
     <link rel="canonical" href="${opts.canonicalUrl}">
     ${metaTags(opts)}`;
@@ -108,7 +130,7 @@ function renderAppPage(appHtml: any, opts: any) {
   );
 }
 
-function metaTags(opts: any) {
+function metaTags(opts: PageMeta) {
   return `
     <meta property="og:type" content="website">
     <meta property="og:url" content="${opts.canonicalUrl}">
@@ -132,7 +154,7 @@ function metaTags(opts: any) {
     }`;
 }
 
-function renderPage(opts: any) {
+function renderPage(opts: PageMeta) {
   // redirectUrl can be an external museum page (a withdrawn item's own
   // url) rather than always /index.html, so a stale bookmark lands
   // somewhere real. Escaped for the href since it's source-controlled
@@ -162,7 +184,7 @@ function renderPage(opts: any) {
 
 // Cuts og:description on a word boundary, since every platform
 // truncates it at a different length.
-function clampDescription(text: any, max: any) {
+function clampDescription(text: unknown, max: number) {
   const s = String(text || "")
     .replace(/\s+/g, " ")
     .trim();
@@ -173,11 +195,11 @@ function clampDescription(text: any, max: any) {
 }
 
 async function sendStorylinePage(
-  client: any,
-  res: any,
-  origin: any,
-  _slug: any,
-  storylineId: any,
+  client: Sql | null,
+  res: VercelResponse,
+  origin: string,
+  _slug: string,
+  storylineId: string,
 ) {
   let storyline = null;
   if (client) {
@@ -211,7 +233,7 @@ async function sendStorylinePage(
   }
 
   const partLabel = `${storyline.items.length}-part storyline`;
-  const meta = {
+  const meta: PageMeta = {
     title: `${escapeHtml(storyline.title)} · Tranquilo`,
     // The intro caption is the same sentence the intro page opens
     // with, so the preview and the page agree.
@@ -233,8 +255,12 @@ async function sendStorylinePage(
   res.end(appHtml ? renderAppPage(appHtml, meta) : renderPage(meta));
 }
 
-export default async function handler(req: any, res: any) {
-  const slug = req.query.slug || "";
+export default async function handler(
+  req: VercelRequest,
+  res: VercelResponse,
+) {
+  const raw = req.query.slug;
+  const slug = (Array.isArray(raw) ? raw[0] : raw) || "";
   const origin = getOrigin(req);
   const client = getSql();
 
@@ -243,17 +269,17 @@ export default async function handler(req: any, res: any) {
     return sendStorylinePage(client, res, origin, slug, storylineId);
 
   const parsed = parseSlug(slug);
-  let item = null;
-  let rows: any, fallbackUrl: any, hiddenRows: any;
+  let item: ItemRow | null = null;
+  let fallbackUrl: string | null;
 
   if (parsed && client) {
     try {
-      rows = await client.query(
+      const rows = (await client.query(
         // Excludes withdrawn/quarantined rows -- that's the whole point
         // of quarantining an item.
         `SELECT * FROM items WHERE source = $1 AND native_id = $2 ${LIVE_ITEMS_AND} LIMIT 1`,
         [parsed.source, parsed.nativeId],
-      );
+      )) as ItemRow[];
       item = rows[0] || null;
     } catch (err) {
       console.error("v/[slug]: query failed", err);
@@ -277,10 +303,10 @@ export default async function handler(req: any, res: any) {
     fallbackUrl = null;
     if (parsed && client) {
       try {
-        hiddenRows = await client.query(
+        const hiddenRows = (await client.query(
           `SELECT url FROM items WHERE source = $1 AND native_id = $2 AND review_status = 'delisted' LIMIT 1`,
           [parsed.source, parsed.nativeId],
-        );
+        )) as { url: unknown }[];
         fallbackUrl = safeHttpUrl(hiddenRows[0]?.url);
       } catch (err) {
         console.error("v/[slug]: fallback-url query failed", err);
@@ -319,7 +345,7 @@ export default async function handler(req: any, res: any) {
   const description = `${descriptionParts ? `${descriptionParts} · ` : ""}via ${institution}`;
   const ogTitle = `${title} — ${artist}`;
 
-  const meta = {
+  const meta: PageMeta = {
     title: `${escapeHtml(title)} — ${escapeHtml(artist)} · Tranquilo`,
     description: escapeHtml(description),
     ogTitle: escapeHtml(ogTitle),
