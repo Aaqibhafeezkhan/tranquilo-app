@@ -38,6 +38,11 @@ const RULES = [
     to: "Hans Holbein the Elder",
   },
   { from: "Joseph Wright of Derby", birth: "1756", to: "Joseph Wright" },
+  {
+    from: "Canaletto (Giovanni Antonio Canal)",
+    birth: "1697",
+    to: "Antonio Canaletto",
+  },
 ];
 
 const ROWS = [
