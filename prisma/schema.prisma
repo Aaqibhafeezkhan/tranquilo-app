@@ -107,6 +107,8 @@ model items {
   attribution_type   String?
   artist_nationality String?
   artist_lifespan    String?
+  // See sql/051_items_artist_raw.sql. Internal only.
+  artist_raw         String?
   culture            String?
   culture_period     String?
 

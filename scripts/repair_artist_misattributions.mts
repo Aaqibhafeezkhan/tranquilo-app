@@ -185,14 +185,16 @@ console.log(`audit written: ${path.relative(ROOT, AUDIT)}`);
 let updated = 0;
 for (const r of RULES) {
   const res = await sql.query(
-    `UPDATE items SET artist = $3 WHERE ${BY_LIFESPAN} RETURNING 1`,
+    `UPDATE items SET artist_raw = coalesce(artist_raw, artist), artist = $3
+      WHERE ${BY_LIFESPAN} RETURNING 1`,
     [r.from, r.birth, r.to],
   );
   updated += res.length;
 }
 for (const r of ROWS) {
   const res = await sql.query(
-    `UPDATE items SET artist = $4 WHERE ${BY_ROW} RETURNING 1`,
+    `UPDATE items SET artist_raw = coalesce(artist_raw, artist), artist = $4
+      WHERE ${BY_ROW} RETURNING 1`,
     [r.source, r.native_id, r.from, r.to],
   );
   updated += res.length;
