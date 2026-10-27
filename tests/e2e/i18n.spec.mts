@@ -414,10 +414,9 @@ test.describe("pt-BR static pages", () => {
     await page.goto("/pages/pt-BR/thank-you.html");
     await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
     await expect(page.locator("h1")).toHaveText("Agradecemos o seu apoio");
-    await expect(page.locator("main a.btn-primary")).toHaveAttribute(
-      "href",
-      "/",
-    );
+    await expect(
+      page.getByRole("link", { name: "Voltar para a arte" }),
+    ).toHaveAttribute("href", "/");
   });
 
   test("English pages offer the same page in Portuguese", async ({ page }) => {
