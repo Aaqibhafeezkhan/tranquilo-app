@@ -108,4 +108,4 @@ au = "AU"
 [patreon]
 # The Patreon page linked from the Support and Thank-you pages. Blank shows
 # "opens soon"; only an https patreon.com URL is ever linked.
-url = ""
+url = "https://patreon.com/Tranquiloart"
