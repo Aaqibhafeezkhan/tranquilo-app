@@ -40,8 +40,8 @@ paths:
         One endpoint for every shape of "what's in the catalogue" question:
         a shuffled page of the lightweight order manifest, an explicit id
         lookup, a count, or one of the bounded aggregates
-        (facets/suggest/correction). Full item rows are served only by `ids`
-        lookups. A request that is neither an `ids` lookup, a shuffled
+        (facets/suggest/correction). Full item rows are served only by `keys`
+        or `ids` lookups. A request that is neither a lookup, a shuffled
         manifest page, a count, nor one of the other shapes is a 400.
       parameters:
         - name: shape
@@ -61,13 +61,28 @@ paths:
           schema:
             type: string
             enum: [manifest, facets, suggest, correction, count, storylines, storyline, shelves, music, heroes, print_region]
+        - name: keys
+          in: query
+          description: >-
+            Repeated `source:native_id` params (`?keys=met:1&keys=npm:U:15646`),
+            split on the first colon -- native ids may contain one. Resolves
+            exactly these items regardless of any other filter; short-circuits
+            everything else in this list. Native ids repeat across sources,
+            so this is the lookup to use when the source is known. Max 100
+            per request; not combinable with `ids`.
+          schema:
+            type: array
+            items: { type: string }
+          style: form
+          explode: true
         - name: ids
           in: query
           description: >-
             Repeated params (`?ids=a&ids=b`), never comma-joined -- some
-            native ids contain a literal comma. Resolves exactly these
-            items regardless of any other filter; short-circuits
-            everything else in this list. Max 100 per request.
+            native ids contain a literal comma. Resolves every live item
+            with these native ids, from any source, regardless of any other
+            filter; short-circuits everything else in this list. Max 100
+            per request.
           schema:
             type: array
             items: { type: string }
@@ -171,9 +186,10 @@ paths:
                     items: { $ref: "#/components/schemas/HeroPoolEntry" }
         "400":
           description: >-
-            Caller error -- a malformed or too-large `ids` list, a malformed
-            cursor, an out-of-range `start`, an unwhitelisted facet, a
-            full-row request that is not an `ids` lookup, or `shape=manifest`
+            Caller error -- a malformed or too-large `keys` or `ids` list,
+            both given at once, a malformed cursor, an out-of-range `start`,
+            an unwhitelisted facet, a full-row request that is not a
+            lookup, or `shape=manifest`
             without `order=shuffle`.
           content:
             application/json: { schema: { $ref: "#/components/schemas/Error" } }
@@ -805,13 +821,13 @@ components:
         shuffle_key: { type: number }
     ItemLookupResult:
       type: object
-      description: 'Response to an explicit `?ids=` lookup.'
+      description: 'Response to an explicit `?keys=` or `?ids=` lookup.'
       properties:
         items: { type: array, items: { $ref: "#/components/schemas/Item" } }
         missing:
           type: array
           items: { type: string }
-          description: Requested ids that resolved to nothing (quarantined, rejected, or never existed).
+          description: Requested keys or ids, as given, that resolved to nothing (quarantined, rejected, or never existed).
     ShuffledManifestPage:
       type: object
       description: '`?shape=manifest&order=shuffle` -- a page of the manifest in shuffled order.'
