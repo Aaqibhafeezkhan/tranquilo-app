@@ -376,6 +376,19 @@ export async function stubBackend(
       return json([]);
     }
 
+    // ?keys=source:native_id, split on the first colon like the endpoint.
+    const wantedKeys = url.searchParams.getAll("keys");
+    if (wantedKeys.length) {
+      const found = keyed.filter((i) =>
+        wantedKeys.includes(`${i.source}:${i.id}`),
+      );
+      const foundKeys = new Set(found.map((i) => `${i.source}:${i.id}`));
+      return json({
+        items: found,
+        missing: wantedKeys.filter((key) => !foundKeys.has(key)),
+      });
+    }
+
     // ?ids=a&ids=b, one param per id. getAll(), never a comma split: 41
     // live Commons items have a comma in their native_id, and a comma-split
     // stub would hide exactly the bug the real endpoint had.

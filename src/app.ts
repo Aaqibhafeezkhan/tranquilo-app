@@ -192,6 +192,10 @@ class TranquiloApp {
       return itemsApi.fetchItemsByIds(ids);
     }
 
+    function fetchItemsByKeys(keys: string[]) {
+      return itemsApi.fetchItemsByKeys(keys);
+    }
+
     const catalogueCache = new CatalogueCache();
     const items = catalogueCache.items;
     const itemsById = catalogueCache.itemsById;
@@ -321,8 +325,8 @@ class TranquiloApp {
     // later in this function, not hoisted -- a direct reference here
     // would capture undefined.
     const feedHost: ITranquiloFeedHost = {
-      createPager: (params: any, checkCategory: any, excludeIds: any) =>
-        createPager(params, checkCategory, excludeIds),
+      createPager: (params: any, checkCategory: any, excludeKeys: any) =>
+        createPager(params, checkCategory, excludeKeys),
       loadNextPage: (pager: any) => loadNextPage(pager),
       fillFirstScreen: (pager: any, firstPage: any) =>
         fillFirstScreen(pager, firstPage),
@@ -334,11 +338,14 @@ class TranquiloApp {
         resetRecycleWindow();
       },
       resolveItemsByIds: (ids: any) => resolveItemsByIds(ids),
-      fetchItemsByIds: (ids: any) => fetchItemsByIds(ids),
+      resolveItemsByKeys: (keys: string[]) => resolveItemsByKeys(keys),
+      fetchItemsByKeys: (keys: string[]) => fetchItemsByKeys(keys),
       absorbPage: (rows: any) => absorbPage(rows),
       createSlideShell: (item: any) => createSlideShell(item),
       getCollection: () => getCollection(),
       collectionKeyFor: (item: any) => collectionKeyFor(item),
+      isCollectionKey: (entry: string) =>
+        collectionStore.isCollectionKey(entry),
       getFilterState: () => filterState.snapshot(),
       // Read-and-clear atomically, so a second render() never re-honours
       // a link already consumed.
@@ -808,6 +815,7 @@ class TranquiloApp {
       {
         fetchFeedPage: fetchFeedPage,
         fetchItemsByIds: fetchItemsByIds,
+        fetchItemsByKeys: fetchItemsByKeys,
         absorbPage: absorbPage,
         buildSlideContents: buildSlideContents,
         maybeLoadMoreSlides: () => {
@@ -830,6 +838,7 @@ class TranquiloApp {
     const loadNextPage = recycleWindow.loadNextPage;
     const fillFirstScreen = recycleWindow.fillFirstScreen;
     const resolveItemsByIds = recycleWindow.resolveItemsByIds;
+    const resolveItemsByKeys = recycleWindow.resolveItemsByKeys;
     const hydrateItems = recycleWindow.hydrateItems;
     const activeSlideIndex = recycleWindow.activeSlideIndex;
     const updateRecycleWindow = recycleWindow.updateRecycleWindow;

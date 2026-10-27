@@ -103,27 +103,36 @@ describe("fetchManifest", () => {
 });
 
 describe("fetchAllItems", () => {
-  function stubCatalogue(ids: string[], pageSize: number) {
+  // Manifest entries are "source:id" strings here.
+  function stubCatalogue(entries: string[], pageSize: number) {
     const urls: URL[] = [];
+    const split = (key: string) => {
+      const cut = key.indexOf(":");
+      return { source: key.slice(0, cut), id: key.slice(cut + 1) };
+    };
     vi.stubGlobal(
       "fetch",
       vi.fn(async (input: string) => {
         const url = new URL(input);
         urls.push(url);
-        const lookup = url.searchParams.getAll("ids");
+        const lookup = url.searchParams.getAll("keys");
         if (lookup.length) {
           return new Response(
             JSON.stringify({
-              items: lookup.map((id) => ({ id, title: `Item ${id}` })),
+              items: lookup.map((key) => ({
+                ...split(key),
+                title: `Item ${key}`,
+              })),
               missing: [],
             }),
           );
         }
         const at = Number(url.searchParams.get("cursor") ?? 0);
-        const next = at + pageSize < ids.length ? String(at + pageSize) : null;
+        const next =
+          at + pageSize < entries.length ? String(at + pageSize) : null;
         return new Response(
           JSON.stringify({
-            items: ids.slice(at, at + pageSize).map((id) => ({ id })),
+            items: entries.slice(at, at + pageSize).map(split),
             next_cursor: next,
           }),
         );
@@ -132,21 +141,22 @@ describe("fetchAllItems", () => {
     return urls;
   }
 
-  it("resolves every manifest id to a full row, at most 100 ids per lookup", async () => {
-    const ids = Array.from({ length: 250 }, (_, i) => `n${i}`);
-    const urls = stubCatalogue(ids, 200);
+  it("resolves every manifest entry to a full row, at most 100 keys per lookup", async () => {
+    const entries = Array.from({ length: 250 }, (_, i) => `met:n${i}`);
+    const urls = stubCatalogue(entries, 200);
 
     const items = await fetchAllItems(API);
 
-    expect(items.map((i: { id: string }) => i.id).sort()).toEqual(
-      [...ids].sort(),
-    );
-    expect(items[0].title).toBe("Item n0");
-    const lookups = urls.filter((u) => u.searchParams.has("ids"));
+    expect(
+      items.map((i: { source: string; id: string }) => `${i.source}:${i.id}`),
+    ).toEqual(entries);
+    expect(items[0].title).toBe("Item met:n0");
+    const lookups = urls.filter((u) => u.searchParams.has("keys"));
     expect(lookups.length).toBeGreaterThan(0);
     for (const url of lookups) {
-      expect(url.searchParams.getAll("ids").length).toBeLessThanOrEqual(100);
+      expect(url.searchParams.getAll("keys").length).toBeLessThanOrEqual(100);
     }
+    expect(urls.some((u) => u.searchParams.has("ids"))).toBe(false);
     expect(
       urls.some(
         (u) => u.searchParams.has("limit") && !u.searchParams.has("shape"),
@@ -154,20 +164,28 @@ describe("fetchAllItems", () => {
     ).toBe(false);
   });
 
-  it("fails loudly when a lookup reports missing ids", async () => {
+  it("returns one row per source when two sources share a native id", async () => {
+    stubCatalogue(["met:1", "cleveland:1"], 200);
+    const items = await fetchAllItems(API);
+    expect(
+      items.map((i: { source: string; title: string }) => i.title),
+    ).toEqual(["Item met:1", "Item cleveland:1"]);
+  });
+
+  it("fails loudly when a lookup reports missing keys", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(async (input: string) => {
         const url = new URL(input);
         return new Response(
           JSON.stringify(
-            url.searchParams.has("ids")
-              ? { items: [], missing: url.searchParams.getAll("ids") }
-              : { items: [{ id: "gone" }], next_cursor: null },
+            url.searchParams.has("keys")
+              ? { items: [], missing: url.searchParams.getAll("keys") }
+              : { items: [{ source: "met", id: "gone" }], next_cursor: null },
           ),
         );
       }),
     );
-    await expect(fetchAllItems(API)).rejects.toThrow(/gone/);
+    await expect(fetchAllItems(API)).rejects.toThrow(/met:gone/);
   });
 });

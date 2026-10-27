@@ -302,17 +302,16 @@ export class TranquiloFeed extends HTMLElement {
     // path.
     let firstBatch: Promise<Item[]>;
     if (fixedItems) {
-      const collected = host.getCollection();
-      const ids = collected.map((entry) => {
-        // A collection entry is either a source-qualified key or a bare id
-        // depending on when it was saved; ?ids= matches native_id, so the
-        // qualifier is stripped here.
-        const colon = String(entry).indexOf(":");
-        return colon === -1 ? String(entry) : String(entry).slice(colon + 1);
-      });
-      firstBatch = ids.length
-        ? host
-            .resolveItemsByIds(ids)
+      const collected = host.getCollection().map(String);
+      // An entry is a source:native_id key, or a bare id saved before keys.
+      const keys = collected.filter((entry) => host.isCollectionKey(entry));
+      const bareIds = collected.filter((entry) => !host.isCollectionKey(entry));
+      firstBatch = collected.length
+        ? Promise.all([
+            host.resolveItemsByKeys(keys),
+            host.resolveItemsByIds(bareIds),
+          ])
+            .then(([byKey, byId]) => byKey.concat(byId))
             .then((rows) =>
               // Same membership test as the client filter, applied to what
               // came back rather than the catalogue.
@@ -346,7 +345,7 @@ export class TranquiloFeed extends HTMLElement {
         // Only what this session opens with -- excluding the whole pool
         // would hide the rest of its good items from the tail.
         this.pickSessionHeroes().forEach((h) => {
-          exclusions[String(h.native_id)] = true;
+          exclusions[`${h.source}:${h.native_id}`] = true;
         });
       }
       const pager = host.createPager(params, checkCategory, heroExclusions);
@@ -493,8 +492,7 @@ export class TranquiloFeed extends HTMLElement {
 
   // Resolve a share slug to its item. slugFor() is `(source||"met")+"-"+id`,
   // so the source is everything before the first hyphen (ids legitimately
-  // contain hyphens, sources don't). The source then disambiguates, since
-  // ?ids= matches native_id alone and some items share one across sources.
+  // contain hyphens, sources don't).
   private resolveSlug(slug: string): Promise<Item | null> {
     const host = this.requireApp();
     const raw = String(slug || "");
@@ -504,12 +502,8 @@ export class TranquiloFeed extends HTMLElement {
     const id = raw.slice(cut + 1);
     if (!id) return Promise.resolve(null);
     return host
-      .fetchItemsByIds([id])
-      .then((body) => {
-        const rows = host.absorbPage(body.items || []);
-        const exact = rows.filter((i) => (i.source || "met") === source);
-        return exact[0] || rows[0] || null;
-      })
+      .fetchItemsByKeys([`${source}:${id}`])
+      .then((body) => host.absorbPage(body.items || [])[0] || null)
       .catch((err) => {
         // A feed starting at a random offset beats no feed, so a failed
         // lookup degrades to an ordinary session.
@@ -521,12 +515,12 @@ export class TranquiloFeed extends HTMLElement {
   private fetchHeroItems(): Promise<Item[]> {
     const host = this.requireApp();
     const picked = this.pickSessionHeroes();
-    // resolveItemsByIds(), not fetchItemsByIds()+absorbPage(): absorbPage()
-    // marks rows `_full = false`, which is wrong here since ?ids= returns
+    // resolveItemsByKeys(), not fetchItemsByKeys()+absorbPage(): absorbPage()
+    // marks rows `_full = false`, which is wrong here since ?keys= returns
     // fully hydrated rows -- absorbing them as unhydrated made the
     // recycling window immediately re-fetch the same ids.
     return host
-      .resolveItemsByIds(picked.map((h) => h.native_id))
+      .resolveItemsByKeys(picked.map((h) => `${h.source}:${h.native_id}`))
       .catch((err) => {
         // A missing opener is a worse feed, not a broken one.
         console.error("items: hero lookup failed", err);

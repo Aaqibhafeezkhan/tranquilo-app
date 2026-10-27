@@ -60,7 +60,8 @@ test("first load fetches a page and an aggregate, never the catalogue", async ({
   // The two things that must never come back: a bare /api/items, and an
   // unbounded manifest.
   const fullPayload = seen.filter(
-    (p) => !p.get("shape") && !p.getAll("ids").length,
+    (p) =>
+      !p.get("shape") && !p.getAll("ids").length && !p.getAll("keys").length,
   );
   expect(fullPayload).toHaveLength(0);
   const unbounded = seen.filter(
@@ -69,29 +70,29 @@ test("first load fetches a page and an aggregate, never the catalogue", async ({
   expect(unbounded).toHaveLength(0);
 });
 
-test("slides are hydrated by id as the window approaches them", async ({
+test("slides are hydrated by source:id key as the window approaches them", async ({
   page,
 }) => {
   const seen = recordRequests(page);
   await gotoFeed(page);
   expect(
-    await waitForRequests(seen, (s) => s.some((p) => p.getAll("ids").length)),
+    await waitForRequests(seen, (s) => s.some((p) => p.getAll("keys").length)),
   ).toBe(true);
-  const atStart = seen.filter((p) => p.getAll("ids").length).length;
+  const atStart = seen.filter((p) => p.getAll("keys").length).length;
 
   await scrollToSlide(page, 70);
   expect(
     await waitForRequests(
       seen,
-      (s) => s.filter((p) => p.getAll("ids").length).length > atStart,
+      (s) => s.filter((p) => p.getAll("keys").length).length > atStart,
     ),
   ).toBe(true);
 
   // Hydration must not degenerate into fetching the whole catalogue one
   // page at a time on a single scroll.
   const idCounts = seen
-    .filter((p) => p.getAll("ids").length)
-    .map((p) => p.getAll("ids").length);
+    .filter((p) => p.getAll("keys").length)
+    .map((p) => p.getAll("keys").length);
   for (const n of idCounts) expect(n).toBeLessThanOrEqual(500); // endpoint MAX_IDS
 });
 
@@ -105,7 +106,7 @@ test("an item is never fetched twice", async ({ page }) => {
 
   // Let the final debounced flush land before reading the tally.
   await waitForRequests(seen, () => false, 400);
-  const all = seen.flatMap((p) => p.getAll("ids"));
+  const all = seen.flatMap((p) => p.getAll("keys"));
   expect(all.length).toBe(new Set(all).size);
 });
 
@@ -204,10 +205,9 @@ test("an id containing a comma still resolves", async ({ page }) => {
   expect(resolved.found).toEqual([String(item.id)]);
 
   // And the app must never send a comma-joined list again: one param per id.
-  const lookups = seen.filter((p) => p.getAll("ids").length);
-  for (const p of lookups) {
-    for (const value of p.getAll("ids")) {
-      expect(value).not.toBe("");
-    }
+  const values = seen.flatMap((p) => [...p.getAll("ids"), ...p.getAll("keys")]);
+  expect(values.length).toBeGreaterThan(0);
+  for (const value of values) {
+    expect(value).not.toBe("");
   }
 });

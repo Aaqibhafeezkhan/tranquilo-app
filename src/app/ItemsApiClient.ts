@@ -1,4 +1,5 @@
 import { TRANQUILO_CONFIG } from "../data/config.generated";
+import type { Item } from "../types/Item";
 
 // All fetches against api/items -- the catalogue is server-paged and
 // server-aggregated now, not a single manifest read once at startup.
@@ -8,7 +9,7 @@ import { TRANQUILO_CONFIG } from "../data/config.generated";
 // removed the full-catalogue download.
 const MAX_IDS_PER_LOOKUP = TRANQUILO_CONFIG.feed.max_ids_per_lookup;
 
-type IdsLookup = { items?: unknown[]; missing?: string[] };
+type IdsLookup = { items?: Item[]; missing?: string[] };
 
 export class ItemsApiClient {
   // `locale` asks the API for translated content; the URL is the CDN cache
@@ -145,25 +146,45 @@ export class ItemsApiClient {
       });
   }
 
-  fetchItemsByIds(ids: string[]): Promise<any> {
-    if (ids.length <= MAX_IDS_PER_LOOKUP) return this.fetchIdsChunk(ids);
-    const chunks: string[][] = [];
-    for (let at = 0; at < ids.length; at += MAX_IDS_PER_LOOKUP) {
-      chunks.push(ids.slice(at, at + MAX_IDS_PER_LOOKUP));
-    }
-    return Promise.all(chunks.map((chunk) => this.fetchIdsChunk(chunk))).then(
-      (bodies) => ({
-        items: bodies.flatMap((body) => body.items ?? []),
-        missing: bodies.flatMap((body) => body.missing ?? []),
-      }),
-    );
+  // Every live item with these native ids, from any source.
+  fetchItemsByIds(ids: string[]): Promise<IdsLookup> {
+    return this.fetchLookup("ids", ids);
   }
 
-  private fetchIdsChunk(ids: string[]): Promise<IdsLookup> {
-    // One `ids=` parameter per id, never comma-joined: some Commons
+  // Exactly these source:native_id items -- native ids repeat across sources.
+  fetchItemsByKeys(keys: string[]): Promise<IdsLookup> {
+    return this.fetchLookup("keys", keys);
+  }
+
+  private fetchLookup(
+    param: "ids" | "keys",
+    values: string[],
+  ): Promise<IdsLookup> {
+    if (values.length <= MAX_IDS_PER_LOOKUP) {
+      return this.fetchLookupChunk(param, values);
+    }
+    const chunks: string[][] = [];
+    for (let at = 0; at < values.length; at += MAX_IDS_PER_LOOKUP) {
+      chunks.push(values.slice(at, at + MAX_IDS_PER_LOOKUP));
+    }
+    return Promise.all(
+      chunks.map((chunk) => this.fetchLookupChunk(param, chunk)),
+    ).then((bodies) => ({
+      items: bodies.flatMap((body) => body.items ?? []),
+      missing: bodies.flatMap((body) => body.missing ?? []),
+    }));
+  }
+
+  private fetchLookupChunk(
+    param: "ids" | "keys",
+    values: string[],
+  ): Promise<IdsLookup> {
+    // One parameter per value, never comma-joined: some Commons
     // native_ids contain commas (real filenames), and comma-joining tore
     // those into ids matching nothing, rendering permanently blank slides.
-    const query = ids.map((id) => `ids=${encodeURIComponent(id)}`).join("&");
+    const query = values
+      .map((value) => `${param}=${encodeURIComponent(value)}`)
+      .join("&");
     return fetch(`/api/items?${query}${this.suffix()}`).then((res) => {
       if (!res.ok) {
         throw new Error(`api/items lookup responded with ${res.status}`);

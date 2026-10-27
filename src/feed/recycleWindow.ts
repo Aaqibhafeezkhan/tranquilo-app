@@ -29,7 +29,7 @@ export interface Pager {
   // Ids this pager must not return, because something else already put
   // them on screen (the five hero items leading the "All" feed). A
   // Record used as a set, mirroring app.js's own `{ id: true }` shape.
-  excludeIds: Record<string, boolean> | null;
+  excludeKeys: Record<string, boolean> | null;
   start: number;
   cursor: string | null;
   carry: Item | null;
@@ -51,6 +51,7 @@ interface IdsResponse {
 export interface IRecycleWindowHost {
   fetchFeedPage(params: Record<string, unknown>): Promise<FeedPageResponse>;
   fetchItemsByIds(ids: string[]): Promise<IdsResponse>;
+  fetchItemsByKeys(keys: string[]): Promise<IdsResponse>;
   // Folds fetched rows into the shared item cache, preserving object
   // identity for rows already seen, since the feed, collection and every
   // SlideRecord alias these objects.
@@ -85,11 +86,11 @@ export function createRecycleWindow(
   function createPager(
     params: Record<string, unknown>,
     checkCategory?: boolean,
-    excludeIds?: Record<string, boolean> | null,
+    excludeKeys?: Record<string, boolean> | null,
   ): Pager {
     return {
       params,
-      excludeIds: excludeIds || null,
+      excludeKeys: excludeKeys || null,
       // The per-session start offset -- variety comes from this plus the
       // nightly re-keying of shuffle_key, not a per-request sort the
       // database can't index.
@@ -129,9 +130,9 @@ export function createRecycleWindow(
         // server pages forward from the start offset, wraps once, stops.
         if (!body.next_cursor) pager.exhausted = true;
         let page = host.absorbPage(body.items || []);
-        if (pager.excludeIds) {
-          const exclude = pager.excludeIds;
-          page = page.filter((i) => !exclude[String(i.id)]);
+        if (pager.excludeKeys) {
+          const exclude = pager.excludeKeys;
+          page = page.filter((i) => !exclude[`${i.source}:${i.id}`]);
         }
         const ordered = declusterPageOrder(
           page,
@@ -244,6 +245,34 @@ export function createRecycleWindow(
   let hydrateQueue: Record<string, boolean> = {};
   let hydrateTimer: ReturnType<typeof setTimeout> | null = null;
 
+  // Native ids repeat across sources, so hydration is keyed like absorbPage().
+  function itemKey(item: Item): string {
+    return `${item.source}:${item.id}`;
+  }
+
+  // Merged into the existing object, never swapped -- items, itemsById,
+  // itemsByKey and every SlideRecord.item alias the same reference.
+  function mergeFullRow(full: Item): Item | null {
+    const target = config.itemsByKey[itemKey(full)];
+    if (!target) return null;
+    for (const k in full) {
+      if (Object.hasOwn(full, k)) {
+        (target as unknown as Record<string, unknown>)[k] = (
+          full as unknown as Record<string, unknown>
+        )[k];
+      }
+    }
+    target._full = true;
+    return target;
+  }
+
+  function markUnavailable(target: Item | undefined): void {
+    if (target) {
+      target._full = true;
+      target._unavailable = true;
+    }
+  }
+
   function ensureHydrated(lo: number, hi: number): void {
     let queued = false;
     for (
@@ -253,13 +282,9 @@ export function createRecycleWindow(
     ) {
       const rec = config.slideRecords[i];
       if (!rec || rec.permanent || !rec.item) continue;
-      if (
-        rec.item._full ||
-        hydrateInFlight[rec.item.id] ||
-        hydrateQueue[rec.item.id]
-      )
-        continue;
-      hydrateQueue[rec.item.id] = true;
+      const key = itemKey(rec.item);
+      if (rec.item._full || hydrateInFlight[key] || hydrateQueue[key]) continue;
+      hydrateQueue[key] = true;
       queued = true;
     }
     if (queued && !hydrateTimer) {
@@ -276,50 +301,32 @@ export function createRecycleWindow(
   }
 
   function fetchHydrationBatch(need: string[]): void {
-    need.forEach((id) => {
-      hydrateInFlight[id] = true;
+    need.forEach((key) => {
+      hydrateInFlight[key] = true;
     });
     host
-      .fetchItemsByIds(need)
+      .fetchItemsByKeys(need)
       .then((body) => {
-        (body.items || []).forEach((full) => {
-          const target = config.itemsById[full.id];
-          // Merged into the existing object, never swapped -- items,
-          // itemsById and every SlideRecord.item alias the same reference.
-          if (target) {
-            for (const k in full) {
-              if (Object.hasOwn(full, k)) {
-                (target as unknown as Record<string, unknown>)[k] = (
-                  full as unknown as Record<string, unknown>
-                )[k];
-              }
-            }
-            target._full = true;
-          }
-        });
+        (body.items || []).forEach(mergeFullRow);
         // Anything the server couldn't return must not be retried forever
         // -- marking it _full leaves it a permanent empty shell instead.
         if (body.missing?.length) {
-          body.missing.forEach((id) => {
-            const target = config.itemsById[id];
-            if (target) {
-              target._full = true;
-              target._unavailable = true;
-            }
+          body.missing.forEach((key) => {
+            markUnavailable(config.itemsByKey[key]);
           });
           console.warn(
             `items: ${body.missing.length} id(s) could not be loaded`,
           );
         }
-        need.forEach((id) => {
-          delete hydrateInFlight[id];
+        need.forEach((key) => {
+          delete hydrateInFlight[key];
         });
         buildWindowContents();
       })
       .catch((err) => {
         // Release the in-flight marks so a later pass can retry.
-        need.forEach((id) => {
-          delete hydrateInFlight[id];
+        need.forEach((key) => {
+          delete hydrateInFlight[key];
         });
         console.error("items: hydration failed", err);
       });
@@ -331,31 +338,17 @@ export function createRecycleWindow(
   function hydrateItems(items: Item[]): Promise<void> {
     const need: string[] = [];
     (items || []).forEach((i) => {
-      if (i && !i._full && need.indexOf(i.id) === -1) need.push(i.id);
+      if (i && !i._full && need.indexOf(itemKey(i)) === -1) {
+        need.push(itemKey(i));
+      }
     });
     if (!need.length) return Promise.resolve();
     return host
-      .fetchItemsByIds(need)
+      .fetchItemsByKeys(need)
       .then((body) => {
-        (body.items || []).forEach((full) => {
-          const target = config.itemsById[full.id];
-          if (target) {
-            for (const k in full) {
-              if (Object.hasOwn(full, k)) {
-                (target as unknown as Record<string, unknown>)[k] = (
-                  full as unknown as Record<string, unknown>
-                )[k];
-              }
-            }
-            target._full = true;
-          }
-        });
-        (body.missing || []).forEach((id) => {
-          const target = config.itemsById[id];
-          if (target) {
-            target._full = true;
-            target._unavailable = true;
-          }
+        (body.items || []).forEach(mergeFullRow);
+        (body.missing || []).forEach((key) => {
+          markUnavailable(config.itemsByKey[key]);
         });
       })
       .catch((err) => {
@@ -385,32 +378,9 @@ export function createRecycleWindow(
       ? host
           .fetchItemsByIds(missing)
           .then((body) => {
-            (body.items || []).forEach((full) => {
-              const target = config.itemsById[full.id];
-              if (target) {
-                for (const k in full) {
-                  if (Object.hasOwn(full, k)) {
-                    (target as unknown as Record<string, unknown>)[k] = (
-                      full as unknown as Record<string, unknown>
-                    )[k];
-                  }
-                }
-                target._full = true;
-              } else {
-                // Never seen: adopt it so every later lookup aliases the
-                // same object.
-                full._full = true;
-                config.items.push(full);
-                config.itemsById[full.id] = full;
-                config.itemsByKey[`${full.source}:${full.id}`] = full;
-              }
-            });
+            (body.items || []).forEach(mergeOrAdopt);
             (body.missing || []).forEach((id) => {
-              const target = config.itemsById[id];
-              if (target) {
-                target._full = true;
-                target._unavailable = true;
-              }
+              markUnavailable(config.itemsById[id]);
             });
           })
           .catch((err) => {
@@ -421,6 +391,43 @@ export function createRecycleWindow(
     return done.then(() =>
       wanted.map((id) => config.itemsById[id]).filter(Boolean),
     );
+  }
+
+  // resolveItemsByIds() for callers that know each item's source, which
+  // a bare native id cannot name unambiguously.
+  function resolveItemsByKeys(keys: string[]): Promise<Item[]> {
+    const wanted: string[] = [];
+    (keys || []).forEach((key) => {
+      if (wanted.indexOf(key) === -1) wanted.push(key);
+    });
+    if (!wanted.length) return Promise.resolve([]);
+    const missing = wanted.filter((key) => !config.itemsByKey[key]?._full);
+    const done = missing.length
+      ? host
+          .fetchItemsByKeys(missing)
+          .then((body) => {
+            (body.items || []).forEach(mergeOrAdopt);
+            (body.missing || []).forEach((key) => {
+              markUnavailable(config.itemsByKey[key]);
+            });
+          })
+          .catch((err) => {
+            // Render with whatever resolved rather than showing nothing.
+            console.error("items: key resolution failed", err);
+          })
+      : Promise.resolve();
+    return done.then(() =>
+      wanted.map((key) => config.itemsByKey[key]).filter(Boolean),
+    );
+  }
+
+  // Never seen: adopt it so every later lookup aliases the same object.
+  function mergeOrAdopt(full: Item): void {
+    if (mergeFullRow(full)) return;
+    full._full = true;
+    config.items.push(full);
+    config.itemsById[full.id] = full;
+    config.itemsByKey[itemKey(full)] = full;
   }
 
   // Every slide is exactly one feed-viewport tall (.slide and .feed are
@@ -490,6 +497,7 @@ export function createRecycleWindow(
     ensureHydrated,
     flushHydrateQueue,
     resolveItemsByIds,
+    resolveItemsByKeys,
     hydrateItems,
     fetchHydrationBatch,
     activeSlideIndex,
