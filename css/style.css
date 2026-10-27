@@ -2212,6 +2212,14 @@ html,body{
   color:var(--text);
   margin:24px 0 12px;
 }
+.community-tier{
+  font-family:var(--sans);
+  font-size:0.8rem;
+  letter-spacing:0.04em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  margin:16px 0 8px;
+}
 .community-contributors,
 .community-donors{
   list-style:none;
@@ -2603,6 +2611,21 @@ html,body{
 
 /* Pre-launch state: a line of text, not a disabled button -- a button that
    can't be pressed invites a press and then refuses it. */
+.support-patreon{
+  display:block;
+  margin:0 auto 26px;
+  max-width:420px;
+  text-align:center;
+}
+.support-patreon .support-strip-soon{ display:inline-block; }
+.support-patreon-body{
+  font-family:var(--sans);
+  font-weight:300;
+  font-size:0.92rem;
+  line-height:1.6;
+  color:var(--ink-soft);
+  margin:0 0 14px;
+}
 .support-strip-soon{
   font-family:var(--sans);
   font-size:0.76rem;

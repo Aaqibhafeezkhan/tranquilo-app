@@ -104,3 +104,8 @@ degraded_after_consecutive_failures = 5
 us_ca = "US,CA"
 eu_uk = "AT,BE,BG,HR,CY,CZ,DK,EE,FI,FR,DE,GR,HU,IE,IT,LV,LT,LU,MT,NL,PL,PT,RO,SK,SI,ES,SE,GB"
 au = "AU"
+
+[patreon]
+# The Patreon page linked from the Support and Thank-you pages. Blank shows
+# "opens soon"; only an https patreon.com URL is ever linked.
+url = "https://patreon.com/Tranquiloart"
