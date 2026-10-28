@@ -45,16 +45,18 @@ local fixtures (like `tests/fixtures/e2e-items.json` standing in for `/api/items
 * **Static Site & Serverless Functions:**
   ```bash
   bun install    # Install dependencies and test tooling
-  bun run dev    # Start the local server (compiles src/ to js/)
+  bun run dev    # Start the local Vite dev server
   ```
 
 See `.env.example` for the full list of environment variables the project uses.
 
 ## Running Tests & Formatting
 
-We rely on offline, deterministic test suites to verify logic without hitting live APIs. The test suites must pass locally before merging:
+We rely on offline, deterministic test suites to verify logic without hitting live APIs. Before opening a PR, the type check and both test suites MUST pass locally, and the linter SHOULD:
 
 ```bash
+bun run typecheck        # tsc --noEmit; vitest does not type-check, so run this separately
+bun run lint             # Biome
 bunx vitest run          # JS & logic unit tests
 bunx playwright test     # End-to-end tests (stubbed backend, real browser)
 bun run test:all         # Run both JS test suites
@@ -62,12 +64,12 @@ bun run test:all         # Run both JS test suites
 
 The ingestion pipeline's own test suite runs from its own branch/repo.
 
-**Note on CI:** Please run test suites locally prior to opening a PR. Due to free-tier usage limits on GitHub Actions, local runs are our primary ground truth for test status.
+**Note on CI:** GitHub Actions runs the type check and both test suites on every PR. A failing check is a real failure to fix, not a flake to re-run. Workflows on a first-time contributor's PR wait for a maintainer to approve them.
 
 ## Key Architectural & Design Conventions
 To keep the codebase maintainable and performant, please keep these guidelines in mind:
 * Vite Build Model: HTML entry points (index.html, pages/*.html) reference TypeScript sources directly. Running vite build bundles these into dist/ for live deployments.
-* Serverless Caps (/api/): We host on Vercel's Hobby plan, which enforces a strict limit of 12 serverless functions (we currently use 10). Never create a 13th file in /api/. Shared utility logic belongs in lib/, and scheduled jobs should be added as new cron entries in vercel.json pointing to api/cron/index.ts.
+* Serverless Functions (/api/): Shared utility logic belongs in lib/, and scheduled jobs should be added as new cron entries in vercel.json pointing to api/cron/index.ts.
 * Test-Driven Intent: Write tests that assert key behaviors and invariants rather than exact string matches or volatile internal implementation details.
 * Preserve Context in Comments: Comments in this repository often contain historical context regarding specific edge cases or performance tradeoffs. If your PR alters behavior described in a comment, please update or remove the comment to match the new implementation.
 * Respect Institution Rate Limits: Never perform bulk API requests against third-party institution endpoints (e.g., The Met, Cleveland Museum of Art, Smithsonian, Wikimedia Commons).
