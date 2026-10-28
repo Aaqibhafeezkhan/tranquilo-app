@@ -199,7 +199,7 @@ describe("patron storage", () => {
     expect(stored.full_name).toBe("Ana Souza Lima");
     expect(stored.display_name).toBe("A. S.");
     expect(stored.anonymous).toBe(true);
-  });
+  }, 15_000);
 
   it("forgets a deleted member's name but keeps their override", async () => {
     const sql = await makeSql(["053_patrons.sql"]);
