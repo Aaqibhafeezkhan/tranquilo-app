@@ -25,6 +25,8 @@ const PRODUCTION_ONLY_ENV = [
 
 export default defineConfig({
   test: {
+    // PGlite's WASM boot is slow on loaded CI runners under coverage.
+    testTimeout: 20_000,
     include: ["tests/**/*.test.ts"],
     exclude: ["tests/e2e/**", "node_modules/**"],
     env: Object.fromEntries(PRODUCTION_ONLY_ENV.map((name) => [name, ""])),
