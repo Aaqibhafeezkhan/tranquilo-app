@@ -2,6 +2,7 @@
 // only by lookups, so fetchAllItems() lists source:id keys from the
 // shuffled manifest and resolves them in batches; fetchManifest() is
 // enough when only identity/facets matter.
+import type { Item } from "../src/types/Item.ts";
 import { TRANQUILO_CONFIG } from "./config.generated.ts";
 
 const DEFAULT_API = "https://tranquilo.art/api/items";
@@ -69,8 +70,8 @@ export function fetchManifest(
 async function fetchAllPages(
   pageUrl: (cursor: string | null) => string,
   maxPages: number,
-): Promise<any[]> {
-  const items: any[] = [];
+): Promise<Item[]> {
+  const items: Item[] = [];
   let cursor: string | null = null;
   let pages = 0;
 
@@ -78,7 +79,10 @@ async function fetchAllPages(
     const url = pageUrl(cursor);
     const res: Response = await apiFetch(url);
     if (!res.ok) throw new Error(`${url} responded ${res.status}`);
-    const body: any = await res.json();
+    const body = (await res.json()) as {
+      items: Item[];
+      next_cursor: string | null;
+    };
     pages++;
 
     items.push(...body.items);

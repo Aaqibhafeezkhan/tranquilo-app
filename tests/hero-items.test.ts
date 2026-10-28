@@ -55,10 +55,10 @@ describe("getHeroPool", () => {
   it("resolves each entry's media_type from the live items row, not a stored copy", async () => {
     const pool = await getHeroPool(sql);
     const rodin = pool.find(
-      (h: any) => h.source === "met" && h.native_id === "191811",
+      (h) => h.source === "met" && h.native_id === "191811",
     );
     expect(rodin).toBeDefined();
-    expect(rodin.media_type).toBe("Metalwork");
+    expect(rodin?.media_type).toBe("Metalwork");
   });
 
   it("returns entries ordered by the seed's own position", async () => {

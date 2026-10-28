@@ -4,19 +4,26 @@
 // getHeroPool() takes an already-open `sql` client rather than opening its
 // own, same reasoning as lib/shelves.ts's getShelves().
 
+import type { Sql } from "./db.ts";
 import { LIVE_ITEMS_PREDICATE } from "./items-sql.ts";
+
+interface HeroPoolEntry {
+  source: string;
+  native_id: string;
+  media_type: string | null;
+}
 
 // Joined against `items` for media_type (used by pickHeroes() to avoid two
 // consecutive items of the same medium) rather than storing it in
 // hero_items. Filtered by LIVE_ITEMS_PREDICATE, so a hero whose item has
 // since been quarantined or rejected silently drops out of the pool.
-async function getHeroPool(sql: any): Promise<any[]> {
-  const rows = await sql.query(
+async function getHeroPool(sql: Sql): Promise<HeroPoolEntry[]> {
+  const rows = (await sql.query(
     `SELECT h.source, h.native_id, i.media_type FROM hero_items h ` +
       `JOIN items i ON i.source = h.source AND i.native_id = h.native_id ` +
       `WHERE ${LIVE_ITEMS_PREDICATE} ORDER BY h.position ASC`,
-  );
-  return rows.map((row: any) => ({
+  )) as HeroPoolEntry[];
+  return rows.map((row) => ({
     source: row.source,
     native_id: row.native_id,
     media_type: row.media_type,

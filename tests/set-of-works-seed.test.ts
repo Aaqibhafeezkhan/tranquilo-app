@@ -76,8 +76,8 @@ describe("Sets of works seeded from review", () => {
   it("lists every member in display order with a trait, by bare native_id", async () => {
     for (const [id, { ids }] of Object.entries(SETS)) {
       const set = await getSetOfWork(sql, id);
-      expect(set, id).toBeTruthy();
-      expect(set.items.map((m: any) => m.id)).toEqual(ids);
+      if (!set) throw new Error(`no set ${id}`);
+      expect(set.items.map((m) => m.id)).toEqual(ids);
       for (const member of set.items) {
         expect(member.id).not.toContain(":");
         expect(member.distinguishing_trait.length).toBeGreaterThan(10);
