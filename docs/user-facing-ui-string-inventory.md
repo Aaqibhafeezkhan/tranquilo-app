@@ -2,6 +2,8 @@
 
 Issue: [#33 — Audit and extract all user-facing UI strings](https://github.com/tranquilo-art/tranquilo-app/issues/33)
 
+Snapshot of `main` as of commit `3b97086`. Copy and message keys change over time, so treat `src/i18n/en.ts` as the source of truth.
+
 ## Scope and method
 
 This inventory is based on the current `main` source: the English message catalogue, component templates, app/search/feed helpers, HTML entry points and generated static-page templates. It records user-visible copy and accessibility labels, including loading/error/empty states, button labels, modal chrome, toasts and prompts. Artwork titles, artists, institution names, API error details and catalogue/facet values are data rather than fixed UI copy; they are called out separately where they can appear in the UI.
