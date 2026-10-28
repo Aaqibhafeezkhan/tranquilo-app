@@ -117,6 +117,7 @@ Thanks to everyone who has helped with code, design, documentation and ideas ([e
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/pollychen-lab"><img src="https://avatars.githubusercontent.com/u/265131177?v=4?s=64" width="64px;" alt="Polly Labs"/><br /><sub><b>Polly Labs</b></sub></a><br /><a href="https://github.com/tranquilo-art/tranquilo-app/commits?author=pollychen-lab" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/bfs2021"><img src="https://avatars.githubusercontent.com/u/101915083?v=4?s=64" width="64px;" alt="zgy"/><br /><sub><b>zgy</b></sub></a><br /><a href="https://github.com/tranquilo-art/tranquilo-app/commits?author=bfs2021" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Vamsi-2581"><img src="https://avatars.githubusercontent.com/u/245859299?v=4?s=64" width="64px;" alt="Vamsi-2581"/><br /><sub><b>Vamsi-2581</b></sub></a><br /><a href="https://github.com/tranquilo-art/tranquilo-app/commits?author=Vamsi-2581" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/bh-official"><img src="https://avatars.githubusercontent.com/u/162908389?v=4?s=64" width="64px;" alt="bh-official"/><br /><sub><b>bh-official</b></sub></a><br /><a href="https://github.com/tranquilo-art/tranquilo-app/commits?author=bh-official" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
