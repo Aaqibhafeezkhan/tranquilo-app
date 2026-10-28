@@ -416,7 +416,10 @@ function facetsQuery(): BuiltQuery {
       group("category", "category"),
       group("source", "source"),
       group("artist", "artist", 2, BROWSE_ARTIST_POOL),
-      group("region", "region_primary", 10),
+      // Regions are a closed vocabulary (shared/vocabulary.json): every
+      // region must reach the facet, so no count threshold and no cap --
+      // either would silently drop the smallest region from the list.
+      group("region", "region_primary"),
       group("era", "timeframe", 10),
       group("type", "media_type", 10),
       group("color", "palette", 10),
