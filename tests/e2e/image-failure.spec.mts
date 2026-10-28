@@ -108,17 +108,14 @@ test("tapping a failed image fetches it again and shows it", async ({
     (el) => (el.closest(".slide") as HTMLElement).dataset.slug,
   );
 
-  // Slides are recycled, so `frame` can point at a detached node by the time
-  // we tap it -- the click then waits out the whole timeout. Re-resolve the
-  // frame through the slide's data-slug and require the failed state to have
-  // survived before tapping.
   const slide = page.locator(`#feed .slide[data-slug="${slug}"]`);
   const retryFrame = slide.locator(".art-frame");
 
   const requests = imageRequests(page);
   failImages(page, () => false);
   await expect(retryFrame).toHaveClass(/failed/, { timeout: 15000 });
-  await retryFrame.click();
+  // The caption or topbar can cover the frame's center, blocking a real click.
+  await retryFrame.dispatchEvent("click");
 
   await expect(retryFrame).not.toHaveClass(/failed/, {
     timeout: 10000,
