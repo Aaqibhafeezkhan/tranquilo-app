@@ -20,6 +20,7 @@ export interface ITranquiloShelvesModeHost {
   // Resolves a hero shelf's itemIds in order, dropping whatever no longer
   // exists rather than rendering a blank card.
   resolveItemsByIds(ids: string[]): Promise<Item[]>;
+  resolveItemsByKeys(keys: string[]): Promise<Item[]>;
   hydrateItems(items: Item[]): Promise<void>;
   applyNudityGate(frame: HTMLElement, item: Item, compact?: boolean): void;
   storylineFor(item: Item): StorylineIndexEntry | null;

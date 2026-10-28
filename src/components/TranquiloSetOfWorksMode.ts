@@ -16,6 +16,7 @@
 //
 // Renders into light DOM: every style already lives in css/.
 
+import { findCuratedItem, resolveCuratedItems } from "../feed/curatedEntries";
 import { escapeHtml } from "../feed/slideBuilder";
 import { t } from "../i18n/index";
 import type { ITranquiloSetOfWorksModeHost } from "../types/ITranquiloSetOfWorksModeHost";
@@ -152,15 +153,14 @@ export class TranquiloSetOfWorksMode extends HTMLElement {
     // A set's members are items the feed's recycling window has no
     // reason to have hydrated -- fetch them first or a panel renders a
     // blank frame.
-    const memberIds = setOfWork.items.map((m) => m.id);
-    const memberItems = memberIds
-      .map((id) => host.getItem(id))
+    const memberItems = setOfWork.items
+      .map((m) => findCuratedItem(host, m))
       .filter((i): i is Item => !!i);
     if (
-      memberItems.length !== memberIds.length ||
+      memberItems.length !== setOfWork.items.length ||
       memberItems.some((i) => !i._full)
     ) {
-      host.resolveItemsByIds(memberIds).then(() => {
+      resolveCuratedItems(host, setOfWork.items).then(() => {
         this.open(setOfWorkId);
       });
       return;
@@ -170,7 +170,7 @@ export class TranquiloSetOfWorksMode extends HTMLElement {
     this.headerTitleEl.textContent = setOfWork.title;
     this.panelsEl.innerHTML = "";
     setOfWork.items.forEach((member) => {
-      const item = host.getItem(member.id);
+      const item = findCuratedItem(host, member);
       if (!item) return;
       this.panelsEl.appendChild(this.buildMemberPanel(item, member));
     });

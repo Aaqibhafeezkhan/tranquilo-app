@@ -44,16 +44,26 @@ function parseItemsField(value: any): any[] {
   return [];
 }
 
+// The cover is one of the chapters, so its source is that chapter's.
+function coverSource(
+  coverId: unknown,
+  chapters: { id?: unknown; source?: string }[],
+): string | undefined {
+  return chapters.find((c) => String(c.id) === String(coverId))?.source;
+}
+
 function rowToStoryline(row: any): any {
+  const chapters = parseItemsField(row.items);
   return {
     id: row.id,
     title: row.title,
     type: row.type,
     tier: row.tier,
     cover_item_id: row.cover_item_id,
+    cover_source: coverSource(row.cover_item_id, chapters),
     intro_caption: row.intro_caption,
     source_note: row.source_note || undefined,
-    items: parseItemsField(row.items),
+    items: chapters,
   };
 }
 
@@ -72,14 +82,19 @@ async function getStoryline(sql: any, id?: string | null): Promise<any> {
 // this is split out from getStoryline() at all.
 async function getStorylineIndex(sql: any): Promise<any[]> {
   const rows = await sql`SELECT id, cover_item_id, items FROM storylines`;
-  return rows.map((row: any) => ({
-    id: row.id,
-    cover_item_id: row.cover_item_id,
-    items: parseItemsField(row.items).map((chapter: any) => ({
-      id: chapter.id,
-      position: chapter.position,
-    })),
-  }));
+  return rows.map((row: any) => {
+    const chapters = parseItemsField(row.items);
+    return {
+      id: row.id,
+      cover_item_id: row.cover_item_id,
+      cover_source: coverSource(row.cover_item_id, chapters),
+      items: chapters.map((chapter: any) => ({
+        id: chapter.id,
+        source: chapter.source,
+        position: chapter.position,
+      })),
+    };
+  });
 }
 
 export {

@@ -14,6 +14,8 @@ export interface ITranquiloStorylineModeHost {
   // to resolveItemsByIds().
   getItem(id: string): Item | undefined;
   resolveItemsByIds(ids: string[]): Promise<Item[]>;
+  getItemByKey(key: string): Item | undefined;
+  resolveItemsByKeys(keys: string[]): Promise<Item[]>;
   // Same sync-getter/async-fetch-and-cache pair as above, for the
   // storyline's own full content instead of its chapter items.
   getStorylineDetail(id: string): Storyline | undefined;

@@ -13,6 +13,8 @@ import type { SetOfWork } from "./SetOfWork";
 export interface ITranquiloSetOfWorksModeHost {
   getItem(id: string): Item | undefined;
   resolveItemsByIds(ids: string[]): Promise<Item[]>;
+  getItemByKey(key: string): Item | undefined;
+  resolveItemsByKeys(keys: string[]): Promise<Item[]>;
   getSetOfWorkDetail(id: string): SetOfWork | undefined;
   resolveSetOfWorkDetail(id: string): Promise<SetOfWork | null>;
   applyNudityGate(frame: HTMLElement, item: Item, compact?: boolean): void;

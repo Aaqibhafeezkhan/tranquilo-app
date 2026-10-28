@@ -5,6 +5,8 @@
 // Same eager/lazy split as Storyline.ts's Storyline/StorylineIndexEntry.
 export interface SetOfWorkMember {
   id: string;
+  // Set where the native id is shared across sources.
+  source?: string;
   distinguishing_trait: string;
 }
 
@@ -20,5 +22,5 @@ export interface SetOfWork {
 // SetOfWork is fetched lazily, one at a time, only when opened.
 export interface SetOfWorkIndexEntry {
   id: string;
-  items: Pick<SetOfWorkMember, "id">[];
+  items: Pick<SetOfWorkMember, "id" | "source">[];
 }

@@ -14,7 +14,8 @@ interface ShelfBase {
 // A fixed, hand-curated list. Doesn't scale with catalogue size and isn't meant to.
 export interface HeroShelf extends ShelfBase {
   type: "hero";
-  itemIds: StoryItemId[];
+  // Bare native id, or {id, source} where the id is shared across sources.
+  itemIds: (StoryItemId | { id: StoryItemId; source?: string })[];
 }
 
 // A generic filter matched against `item[key] === value` for every key

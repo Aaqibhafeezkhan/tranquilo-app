@@ -30,6 +30,7 @@ import {
 import type { Item } from "../types/Item";
 import type { SetOfWorkIndexEntry } from "../types/SetOfWork";
 import type { StorylineIndexEntry } from "../types/Storyline";
+import { sameCuratedItem } from "./curatedEntries";
 
 // document.startViewTransition() isn't in this TS version's DOM lib yet
 // (Chromium-only browser API) -- a minimal local shape rather than `any`,
@@ -160,7 +161,7 @@ export function createSlideBuilder(
     // String() on both sides: storylines.js has literal number tokens;
     // item.id always comes back as a string from Postgres's native_id.
     storyline.items.forEach((si, i) => {
-      if (String(si.id) === String(item.id)) idx = i;
+      if (sameCuratedItem(si, item)) idx = i;
     });
     return t("slide.position", {
       index: idx + 1,
@@ -181,7 +182,7 @@ export function createSlideBuilder(
   ): string {
     let idx = -1;
     setOfWork.items.forEach((member, i) => {
-      if (String(member.id) === String(item.id)) idx = i;
+      if (sameCuratedItem(member, item)) idx = i;
     });
     return t("slide.setPosition", {
       index: idx + 1,

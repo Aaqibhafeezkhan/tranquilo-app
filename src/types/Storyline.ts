@@ -5,6 +5,8 @@ export type StoryItemId = number | string;
 
 export interface StorylineChapter {
   id: StoryItemId;
+  // Set where the native id is shared across sources.
+  source?: string;
   position: number;
   chapter_caption: string;
 }
@@ -19,6 +21,7 @@ export interface Storyline {
   type: string;
   tier: "structural" | "narrative";
   cover_item_id: StoryItemId;
+  cover_source?: string;
   intro_caption: string;
   // Required when tier is "narrative"; a "structural" storyline's
   // connection is already visible in the items' own fields.
@@ -34,5 +37,6 @@ export interface Storyline {
 export interface StorylineIndexEntry {
   id: string;
   cover_item_id: StoryItemId;
-  items: Pick<StorylineChapter, "id" | "position">[];
+  cover_source?: string;
+  items: Pick<StorylineChapter, "id" | "source" | "position">[];
 }
