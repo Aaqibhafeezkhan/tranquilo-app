@@ -1,7 +1,7 @@
 // How the tooling reads the whole catalogue. /api/items serves full rows
-// only by ?ids= lookups, so fetchAllItems() lists ids from the shuffled
-// manifest and resolves them in batches; fetchManifest() is enough when
-// only identity/facets matter.
+// only by lookups, so fetchAllItems() lists source:id keys from the
+// shuffled manifest and resolves them in batches; fetchManifest() is
+// enough when only identity/facets matter.
 import { TRANQUILO_CONFIG } from "./config.generated.ts";
 
 const DEFAULT_API = "https://tranquilo.art/api/items";
@@ -29,16 +29,19 @@ export async function fetchAllItems(api: string, options: PageOptions = {}) {
   const manifest = await fetchManifest(api, options);
   const items: typeof manifest = [];
   for (let at = 0; at < manifest.length; at += MAX_IDS_PER_LOOKUP) {
-    const ids = manifest
+    // By key, not bare id: native ids repeat across sources.
+    const keys = manifest
       .slice(at, at + MAX_IDS_PER_LOOKUP)
-      .map((entry) => String(entry.id));
-    const query = ids.map((id) => `ids=${encodeURIComponent(id)}`).join("&");
+      .map((entry) => `${entry.source}:${entry.id}`);
+    const query = keys
+      .map((key) => `keys=${encodeURIComponent(key)}`)
+      .join("&");
     const res = await apiFetch(`${api}?${query}`);
-    if (!res.ok) throw new Error(`${api} id lookup responded ${res.status}`);
+    if (!res.ok) throw new Error(`${api} key lookup responded ${res.status}`);
     const body = await res.json();
     if (body.missing?.length) {
       throw new Error(
-        `id lookup could not resolve manifest ids: ${body.missing.join(", ")}`,
+        `key lookup could not resolve manifest entries: ${body.missing.join(", ")}`,
       );
     }
     items.push(...body.items);

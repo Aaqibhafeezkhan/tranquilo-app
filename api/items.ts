@@ -41,7 +41,7 @@ import {
 
 type QueryParams = Record<string, string | string[] | undefined>;
 
-// Only ?ids= may repeat; any other repeated param takes its first value.
+// Only ?ids= and ?keys= may repeat; any other repeated param takes its first value.
 function scalar(value: string | string[] | undefined): string | undefined {
   return Array.isArray(value) ? value[0] : value;
 }
@@ -79,6 +79,7 @@ interface BuiltQuery {
   counting?: true;
   lookup?: true;
   requestedIds?: string[];
+  byKey?: true;
   limit?: number;
   manifest?: boolean;
   shuffled?: boolean;
@@ -536,6 +537,50 @@ function buildQuery(params: QueryParams): BuiltQuery {
   const where = [LIVE_ITEMS_PREDICATE];
   const values: unknown[] = [];
 
+  if (params.keys !== undefined) {
+    if (params.ids !== undefined) {
+      throw Object.assign(new Error("use either keys or ids, not both"), {
+        status: 400,
+      });
+    }
+    // source:native_id, split on the first colon: sources never contain
+    // one, native ids sometimes do (npm's "U:15646").
+    const keys = (Array.isArray(params.keys) ? params.keys : [params.keys])
+      .map((s) => String(s).trim())
+      .filter(Boolean);
+    if (!keys.length) {
+      throw Object.assign(new Error("keys was empty"), { status: 400 });
+    }
+    if (keys.length > MAX_IDS) {
+      throw Object.assign(
+        new Error(`too many keys: ${keys.length} (max ${MAX_IDS})`),
+        { status: 400 },
+      );
+    }
+    const sources: string[] = [];
+    const nativeIds: string[] = [];
+    for (const key of keys) {
+      const cut = key.indexOf(":");
+      if (cut <= 0 || cut === key.length - 1) {
+        throw Object.assign(
+          new Error(`key must be source:native_id, got "${key}"`),
+          { status: 400 },
+        );
+      }
+      sources.push(key.slice(0, cut));
+      nativeIds.push(key.slice(cut + 1));
+    }
+    return {
+      text: `SELECT * FROM items WHERE ${
+        LIVE_ITEMS_PREDICATE
+      } AND (source, native_id) IN (SELECT * FROM unnest($1::text[], $2::text[])) ORDER BY created_at ASC, native_id ASC`,
+      params: [sources, nativeIds],
+      lookup: true,
+      byKey: true,
+      requestedIds: keys,
+    };
+  }
+
   if (params.ids !== undefined) {
     // Repeated params (?ids=a&ids=b), NOT comma-joined -- 41 live
     // Commons items have a comma in their native_id, and splitting on
@@ -625,7 +670,7 @@ function buildQuery(params: QueryParams): BuiltQuery {
   if (!manifest && !counting) {
     throw Object.assign(
       new Error(
-        `Full item rows are served only by ?ids= lookups (at most ${MAX_IDS} per request). ` +
+        `Full item rows are served only by ?keys= or ?ids= lookups (at most ${MAX_IDS} per request). ` +
           "Use ?shape=manifest&order=shuffle&start=0 and follow next_cursor to list items.",
       ),
       { status: 400 },
@@ -930,7 +975,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (query.lookup) {
       const found: Record<string, boolean> = {};
       itemRows.forEach((row) => {
-        found[row.native_id] = true;
+        found[query.byKey ? `${row.source}:${row.native_id}` : row.native_id] =
+          true;
       });
       res.json({
         items: items,
