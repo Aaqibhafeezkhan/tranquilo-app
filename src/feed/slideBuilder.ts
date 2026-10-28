@@ -504,16 +504,16 @@ export function createSlideBuilder(
     const artistLine = !item.artist
       ? ""
       : isNamedMaker(item.artist)
-        ? `<button type="button" class="artist" aria-label="${escapeHtml(t("filter.moreBy", { artist: item.artist }))}">${escapeHtml(item.artist)}</button>`
-        : `<span class="artist">${escapeHtml(item.artist)}</span>`;
+        ? `<button type="button" class="artist" aria-label="${escapeHtml(t("filter.moreBy", { artist: item.artist }))}"><span class="artist-text">${escapeHtml(item.artist)}</span></button>`
+        : `<span class="artist"><span class="artist-text">${escapeHtml(item.artist)}</span></span>`;
     const dateLine = item.date
-      ? `<span class="sep">&middot;</span>${escapeHtml(item.date)}`
+      ? `<span class="date"><span class="date-text">${escapeHtml(item.date)}</span></span>`
       : "";
 
     caption.innerHTML = `<div class="caption-inner">
 <div class="cat-label">${escapeHtml(facetLabel("category", item.category ?? ""))}</div>
-<h2 class="art-title"><button type="button" class="art-title-btn">${escapeHtml(item.title || t("common.untitled"))}</button></h2>
-<p class="art-meta">${artistLine}${dateLine}</p>
+<h2 class="art-title"><button type="button" class="art-title-btn"><span class="art-title-btn-text">${escapeHtml(item.title || t("common.untitled"))}</span></button></h2>
+<p class="art-meta"><span class="meta-row">${artistLine}${dateLine}</span></p>
 <p class="art-medium">${escapeHtml(item.medium || "")}</p>
 ${item.twist_category ? `<p class="twist-hook">${TWIST_SVG}<span>${escapeHtml(item.twist_hook || "")}</span></p>` : ""}
 ${storyline ? `<button class="storyline-chip" type="button">${STORYLINE_SVG}<span>${escapeHtml(t("slide.storylineChip", { position: storylinePositionLabel(item, storyline) }))}</span></button>` : ""}
