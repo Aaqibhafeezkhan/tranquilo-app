@@ -35,6 +35,7 @@ model items {
   medium String?
   credit String?
   photographer String?
+  contributors Json?
   tags   String?
 
   title_in_original_language String?
