@@ -41,13 +41,36 @@ describe("?shape=facets", () => {
   });
 
   it("carries the browse-hint pools with their per-type thresholds", () => {
-    // The qualifying set only: artists with >= 2 items, everything else >= 10.
+    // The qualifying set only: artists with >= 2 items; the open-ended
+    // era/type/color pools with >= 10. Regions are a closed vocabulary and
+    // carry no threshold at all (see the next test).
     const q = items.buildQuery({ shape: "facets" });
     ["artist", "region", "era", "type", "color"].forEach((pool) => {
       expect(q.text, `${pool} pool missing`).toContain(`'${pool}'`);
     });
     expect(q.text).toMatch(/HAVING count\(\*\) >= 2/);
     expect(q.text).toMatch(/HAVING count\(\*\) >= 10/);
+  });
+
+  it("keeps every region in the closed vocabulary, however small", () => {
+    // A count threshold or a cap below the vocabulary size would silently
+    // drop the smallest region from /api/items?shape=facets.
+    const regions = (
+      JSON.parse(
+        readFileSync(
+          new URL("../shared/vocabulary.json", import.meta.url),
+          "utf8",
+        ),
+      ) as { regions: string[] }
+    ).regions;
+    const q = items.buildQuery({ shape: "facets" });
+    const clause = (q.text ?? "")
+      .split(" UNION ALL ")
+      .find((part) => part.includes("'region'"));
+    expect(clause, "region facet missing").toBeTruthy();
+    expect(clause).not.toMatch(/HAVING/);
+    const limit = Number(clause?.match(/LIMIT (\d+)/)?.[1] ?? Infinity);
+    expect(limit).toBeGreaterThanOrEqual(regions.length);
   });
 
   it("unnests palette_buckets for the real color filter's counts", () => {
