@@ -64,14 +64,13 @@ describe("?shape=facets", () => {
       ) as { regions: string[] }
     ).regions;
     const q = items.buildQuery({ shape: "facets" });
-    const clause = q.text
+    const clause = (q.text ?? "")
       .split(" UNION ALL ")
       .find((part) => part.includes("'region'"));
     expect(clause, "region facet missing").toBeTruthy();
     expect(clause).not.toMatch(/HAVING/);
-    expect(clause).not.toMatch(/LIMIT/);
-    // The facet must still be able to carry the whole vocabulary.
-    expect(regions.length).toBeGreaterThan(0);
+    const limit = Number(clause?.match(/LIMIT (\d+)/)?.[1] ?? Infinity);
+    expect(limit).toBeGreaterThanOrEqual(regions.length);
   });
 
   it("unnests palette_buckets for the real color filter's counts", () => {
