@@ -167,9 +167,10 @@ describe("fetchAllItems", () => {
   it("returns one row per source when two sources share a native id", async () => {
     stubCatalogue(["met:1", "cleveland:1"], 200);
     const items = await fetchAllItems(API);
-    expect(
-      items.map((i: { source: string; title: string }) => i.title),
-    ).toEqual(["Item met:1", "Item cleveland:1"]);
+    expect(items.map((i) => i.title)).toEqual([
+      "Item met:1",
+      "Item cleveland:1",
+    ]);
   });
 
   it("fails loudly when a lookup reports missing keys", async () => {

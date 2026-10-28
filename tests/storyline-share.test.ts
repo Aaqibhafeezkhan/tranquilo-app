@@ -146,6 +146,7 @@ describe("the share page has something to render", () => {
   it("every storyline carries the fields the preview needs", async () => {
     for (const index of STORYLINES) {
       const s = await getStoryline(sql, index.id);
+      if (!s) throw new Error(`no storyline ${index.id}`);
       expect(s.title, `${s.id} title`).toBeTruthy();
       expect(s.intro_caption, `${s.id} intro_caption`).toBeTruthy();
       expect(s.cover_item_id, `${s.id} cover_item_id`).toBeTruthy();

@@ -16,6 +16,7 @@
 // Lives in config.toml's [source_health] -- baked in at build time, never
 // read live.
 import { TRANQUILO_CONFIG } from "./config.generated.ts";
+import type { Sql } from "./db.ts";
 
 const DEGRADED_AFTER_CONSECUTIVE_FAILURES =
   TRANQUILO_CONFIG.source_health.degraded_after_consecutive_failures;
@@ -114,7 +115,7 @@ function healthAlerts(
  * losing a latency sample is trivial; breaking a hold commitment is not.
  */
 async function heldSourceSet(
-  sql: any,
+  sql: Sql | null,
   allSources?: string[] | null,
 ): Promise<Record<string, string>> {
   const closed: Record<string, string> = {};
@@ -123,9 +124,9 @@ async function heldSourceSet(
   });
   if (!sql) return closed;
   try {
-    const rows = await sql.query(
+    const rows = (await sql.query(
       "SELECT source, hold_reason FROM source_fetch_state WHERE hold_reason IS NOT NULL",
-    );
+    )) as { source: string; hold_reason: string }[];
     const held: Record<string, string> = {};
     for (let i = 0; i < rows.length; i++)
       held[rows[i].source] = rows[i].hold_reason;
@@ -135,13 +136,13 @@ async function heldSourceSet(
   }
 }
 
-async function loadSourceHealth(sql: any): Promise<SourceVerdict[]> {
+async function loadSourceHealth(sql: Sql | null): Promise<SourceVerdict[]> {
   if (!sql) return [];
   try {
-    const rows = await sql.query(
+    const rows = (await sql.query(
       "SELECT source, consecutive_failures, last_status, last_ok_at, " +
         "       hold_reason, blocked_until FROM source_fetch_state ORDER BY source",
-    );
+    )) as SourceHealthRow[];
     return classifySources(rows);
   } catch (_err) {
     return [];
@@ -157,7 +158,10 @@ async function loadSourceHealth(sql: any): Promise<SourceVerdict[]> {
  * every source's images directly -- this lets that probe count as the success
  * it actually is.
  */
-async function recordProbeSuccess(sql: any, source: string): Promise<void> {
+async function recordProbeSuccess(
+  sql: Sql | null,
+  source: string,
+): Promise<void> {
   if (!sql) return;
   try {
     await sql.query(

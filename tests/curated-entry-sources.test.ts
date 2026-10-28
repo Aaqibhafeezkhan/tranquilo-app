@@ -55,24 +55,24 @@ afterAll(async () => {
 describe("storyline entries name their source", () => {
   it("the index carries each chapter's source and the cover's source", async () => {
     const index = await getStorylineIndex(sql);
-    const rubens = index.find((s: { id: string }) => s.id === "rubens");
-    expect(rubens.items).toEqual([
+    const rubens = index.find((s) => s.id === "rubens");
+    expect(rubens?.items).toEqual([
       { id: "1", position: 1 },
       { id: "437534", source: "met", position: 2 },
     ]);
-    expect(rubens.cover_source).toBe("met");
+    expect(rubens?.cover_source).toBe("met");
   });
 
   it("a cover that no chapter names has no source", async () => {
     const index = await getStorylineIndex(sql);
-    const plain = index.find((s: { id: string }) => s.id === "plain");
-    expect(plain.cover_source).toBeUndefined();
+    const plain = index.find((s) => s.id === "plain");
+    expect(plain?.cover_source).toBeUndefined();
   });
 
   it("the full storyline keeps chapter sources and adds the cover's", async () => {
     const full = await getStoryline(sql, "rubens");
-    expect(full.items[1].source).toBe("met");
-    expect(full.cover_source).toBe("met");
+    expect(full?.items[1].source).toBe("met");
+    expect(full?.cover_source).toBe("met");
   });
 });
 
@@ -81,7 +81,7 @@ describe("set-of-works entries name their source", () => {
     const index = await getSetOfWorksIndex(sql);
     expect(index[0].items).toEqual([{ id: "5", source: "met" }, { id: "6" }]);
     const full = await getSetOfWork(sql, "set");
-    expect(full.items[0].source).toBe("met");
+    expect(full?.items[0].source).toBe("met");
   });
 });
 

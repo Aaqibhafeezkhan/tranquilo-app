@@ -17,15 +17,7 @@ import healthCheck from "../../lib/cron/health-check.ts";
 import restoreDrillReminder from "../../lib/cron/restore-drill-reminder.ts";
 import vercelDeploymentCleanup from "../../lib/cron/vercel-deployment-cleanup.ts";
 import warmImageCache from "../../lib/cron/warm-image-cache.ts";
-
-interface CronRequest {
-  query?: Record<string, string | string[] | undefined>;
-}
-
-interface CronResponse {
-  statusCode: number;
-  json(body: unknown): void;
-}
+import type { CronRequest, CronResponse } from "../../lib/cron-types.ts";
 
 type CronJob = (req: CronRequest, res: CronResponse) => unknown;
 
