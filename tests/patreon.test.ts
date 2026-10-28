@@ -127,6 +127,7 @@ describe("groupPatrons", () => {
     tier_ids: ["t-friend"],
     display_name: null,
     anonymous: false,
+    approved: true,
     ...o,
   });
 
@@ -154,6 +155,17 @@ describe("groupPatrons", () => {
       tiers,
     );
     expect(groups).toEqual([{ title: "Friend", names: ["Ana from BH"] }]);
+  });
+
+  it("leaves out patrons nobody has approved", () => {
+    const groups = groupPatrons(
+      [
+        row({ full_name: "Ana Souza", approved: false }),
+        row({ full_name: "Bia Lima" }),
+      ],
+      tiers,
+    );
+    expect(groups).toEqual([{ title: "Friend", names: ["Bia L."] }]);
   });
 
   it("leaves out former, declined and deleted members", () => {
@@ -213,13 +225,28 @@ describe("patron storage", () => {
     expect(stored.anonymous).toBe(true);
   });
 
+  it("keeps approval through later webhook updates and never sets it", async () => {
+    const sql = await makeSql(["053_patrons.sql", "054_patrons_approved.sql"]);
+    await savePatron(sql, ana);
+    const [fresh] =
+      await sql`SELECT approved FROM patrons WHERE member_id = 'm-1'`;
+    expect(fresh.approved).toBe(false);
+    await sql`UPDATE patrons SET approved = true WHERE member_id = 'm-1'`;
+    await savePatron(sql, { ...ana, fullName: "Ana Souza Lima" });
+    const [stored] =
+      await sql`SELECT approved FROM patrons WHERE member_id = 'm-1'`;
+    expect(stored.approved).toBe(true);
+  });
+
   it("loads grouped names from what was stored", async () => {
-    const sql = await makeSql(["053_patrons.sql"]);
+    const sql = await makeSql(["053_patrons.sql", "054_patrons_approved.sql"]);
     await saveTiers(sql, [
       { id: "t-friend", title: "Friend", amountCents: 500 },
     ]);
     await savePatron(sql, ana);
     await savePatron(sql, { ...ana, memberId: "m-2", fullName: "Bia Lima" });
+    await savePatron(sql, { ...ana, memberId: "m-3", fullName: "Caio Reis" });
+    await sql`UPDATE patrons SET approved = true WHERE member_id IN ('m-1', 'm-2')`;
     expect(await loadPatronGroups(sql)).toEqual([
       { title: "Friend", names: ["Ana S.", "Bia L."] },
     ]);

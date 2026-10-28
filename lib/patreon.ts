@@ -1,6 +1,7 @@
 // Patreon members for the About page's patron list. Only a member's name,
 // status and tier ids are kept; email and payment details are never read.
-// Overrides (display_name, anonymous) are hand-edited and never written here.
+// Overrides (display_name, anonymous, approved) are hand-edited and never
+// written here; a patron is listed only once approved.
 import { createHmac, timingSafeEqual } from "node:crypto";
 import type { Sql } from "./db.ts";
 
@@ -33,6 +34,7 @@ export interface PatronRow {
   tier_ids: string[];
   display_name: string | null;
   anonymous: boolean;
+  approved: boolean;
 }
 
 export interface PatronGroup {
@@ -160,7 +162,8 @@ export function groupPatrons(
   const byId = new Map(tiers.map((t) => [t.id, t]));
   const groups = new Map<string | null, { amount: number; names: string[] }>();
   for (const row of rows) {
-    if (row.patron_status !== "active_patron" || row.anonymous) continue;
+    if (row.patron_status !== "active_patron" || row.anonymous || !row.approved)
+      continue;
     const name = row.display_name?.trim() || defaultDisplayName(row.full_name);
     if (!name) continue;
     const top = row.tier_ids
@@ -216,9 +219,9 @@ export async function forgetPatron(sql: Sql, memberId: string): Promise<void> {
 
 export async function loadPatronGroups(sql: Sql): Promise<PatronGroup[]> {
   const rows = (await sql`
-    SELECT full_name, patron_status, tier_ids, display_name, anonymous
+    SELECT full_name, patron_status, tier_ids, display_name, anonymous, approved
     FROM patrons
-    WHERE patron_status = 'active_patron' AND NOT anonymous
+    WHERE patron_status = 'active_patron' AND NOT anonymous AND approved
     ORDER BY first_seen_at, member_id`) as PatronRow[];
   const tiers = (
     await sql`SELECT id, title, amount_cents FROM patreon_tiers`
