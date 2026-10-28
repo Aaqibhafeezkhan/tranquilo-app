@@ -22,6 +22,7 @@
 //
 // Renders into light DOM: every style already lives in css/style.css.
 
+import { findCuratedItem, resolveCuratedItems } from "../feed/curatedEntries";
 import { escapeHtml, SHARE_SVG } from "../feed/slideBuilder";
 import { t } from "../i18n/index";
 import type { ITranquiloStorylineModeHost } from "../types/ITranquiloStorylineModeHost";
@@ -195,7 +196,10 @@ export class TranquiloStorylineMode extends HTMLElement {
     const host = this.requireApp();
     const page = document.createElement("div");
     page.className = "storyline-page storyline-intro-page";
-    const coverItem = host.getItem(String(storyline.cover_item_id));
+    const coverItem = findCuratedItem(host, {
+      id: storyline.cover_item_id,
+      source: storyline.cover_source,
+    });
     const stackDepth = Math.min(2, storyline.items.length - 1);
     let ghosts = "";
     for (let i = 1; i <= stackDepth; i++) {
@@ -235,7 +239,7 @@ export class TranquiloStorylineMode extends HTMLElement {
     storyItem: StorylineChapter,
   ): HTMLElement {
     const host = this.requireApp();
-    const item = host.getItem(String(storyItem.id));
+    const item = findCuratedItem(host, storyItem);
     const page = document.createElement("div");
     page.className = "storyline-page storyline-chapter-page";
     page.dataset.storylinePosition = String(storyItem.position);
@@ -461,17 +465,16 @@ export class TranquiloStorylineMode extends HTMLElement {
     // no reason to have hydrated -- fetch them first or every chapter
     // renders a blank frame. Deliberately silent, unlike the
     // storyline-detail fetch above.
-    const chapterIds = storyline.items.map((si) => String(si.id));
-    const chapterItems = chapterIds
-      .map((id) => host.getItem(id))
+    const chapterItems = storyline.items
+      .map((si) => findCuratedItem(host, si))
       .filter((i): i is Item => !!i);
     // "Do we have it" and "is it hydrated" are different questions;
     // resolving by id covers both.
     if (
-      chapterItems.length !== chapterIds.length ||
+      chapterItems.length !== storyline.items.length ||
       chapterItems.some((i) => !i._full)
     ) {
-      host.resolveItemsByIds(chapterIds).then(() => {
+      resolveCuratedItems(host, storyline.items).then(() => {
         this.open(storylineId, atPosition);
       });
       return;

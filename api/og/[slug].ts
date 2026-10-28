@@ -486,8 +486,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         if (client) {
           try {
             const coverRows = (await client.query(
-              `SELECT * FROM items WHERE native_id = $1 ${LIVE_ITEMS_AND} LIMIT 1`,
-              [String(storyline.cover_item_id)],
+              `SELECT * FROM items WHERE native_id = $1 AND ($2::text IS NULL OR source = $2) ${LIVE_ITEMS_AND} LIMIT 1`,
+              [String(storyline.cover_item_id), storyline.cover_source ?? null],
             )) as ItemRow[];
             cover = coverRows[0] || null;
           } catch (err) {

@@ -14,6 +14,7 @@ export interface ITranquiloShelfModeHost {
   }>;
   absorbPage(rows: unknown[]): Item[];
   resolveItemsByIds(ids: string[]): Promise<Item[]>;
+  resolveItemsByKeys(keys: string[]): Promise<Item[]>;
   hydrateItems(items: Item[]): Promise<void>;
   applyNudityGate(frame: HTMLElement, item: Item, compact?: boolean): void;
   trackEvent(name: string, props: Record<string, unknown>): void;

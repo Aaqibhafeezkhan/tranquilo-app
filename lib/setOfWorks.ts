@@ -49,7 +49,10 @@ async function getSetOfWorksIndex(sql: any): Promise<any[]> {
   const rows = await sql`SELECT id, items FROM set_of_works`;
   return rows.map((row: any) => ({
     id: row.id,
-    items: parseItemsField(row.items).map((member: any) => ({ id: member.id })),
+    items: parseItemsField(row.items).map((member: any) => ({
+      id: member.id,
+      source: member.source,
+    })),
   }));
 }
 

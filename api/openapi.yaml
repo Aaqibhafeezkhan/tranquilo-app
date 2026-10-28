@@ -909,6 +909,9 @@ components:
       properties:
         id: { type: string }
         cover_item_id: { type: string }
+        cover_source:
+          type: string
+          description: Source of the cover item, present where its native id is shared across sources.
         title: { type: string }
     Storyline:
       type: object
@@ -919,12 +922,18 @@ components:
         intro_caption: { type: string }
         translated: { $ref: "#/components/schemas/Translated" }
         cover_item_id: { type: string }
+        cover_source:
+          type: string
+          description: Source of the cover item, present where its native id is shared across sources.
         items:
           type: array
           items:
             type: object
             properties:
               item_id: { type: string }
+              source:
+                type: string
+                description: Present where the native id is shared across sources.
               chapter_caption: { type: string, nullable: true }
               translated: { $ref: "#/components/schemas/Translated" }
     Shelf:

@@ -1,5 +1,10 @@
 // One shelf's works in a grid, opened from a /shelf/{id} link.
 import { ShelfType } from "../enums/ShelfType";
+import {
+  type CuratedRef,
+  resolveCuratedList,
+  shelfRefs,
+} from "../feed/curatedEntries";
 import { escapeHtml, SHARE_SVG } from "../feed/slideBuilder";
 import { t, tn } from "../i18n/index";
 import type { ITranquiloShelfModeHost } from "../types/ITranquiloShelfModeHost";
@@ -112,7 +117,7 @@ export class TranquiloShelfMode extends HTMLElement {
 
     // Rule shelves skip minItems; that gate is Discover-only.
     if (shelf.type === ShelfType.Hero) {
-      this.loadHero(shelf.itemIds.map(String));
+      this.loadHero(shelfRefs(shelf.itemIds));
     } else {
       this.loadRuleCount(shelf);
       this.loadRulePage(shelf);
@@ -141,11 +146,10 @@ export class TranquiloShelfMode extends HTMLElement {
     this.setAttribute("aria-hidden", "true");
   }
 
-  private loadHero(ids: string[]): void {
+  private loadHero(refs: CuratedRef[]): void {
     const host = this.requireApp();
     const generation = this.generation;
-    host
-      .resolveItemsByIds(ids)
+    resolveCuratedList(host, refs)
       .then((items) => host.hydrateItems(items).then(() => items))
       .then((items) => {
         if (generation !== this.generation) return;

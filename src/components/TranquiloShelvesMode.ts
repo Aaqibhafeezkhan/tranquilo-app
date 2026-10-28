@@ -22,6 +22,7 @@
 // once bundled. This gives the real, current URL either way.
 import tranquiloFlowerVioletUrl from "../../assets/tranquilo-flower-violet.svg";
 import { ShelfType } from "../enums/ShelfType";
+import { resolveCuratedList, shelfRefs } from "../feed/curatedEntries";
 import { SHARE_SVG } from "../feed/slideBuilder";
 import { t, tn } from "../i18n/index";
 import { shelfRenderLimit } from "../logic/logic";
@@ -128,7 +129,7 @@ export class TranquiloShelvesMode extends HTMLElement {
       // Curated order is the point of a hero shelf, and resolveItemsByIds()
       // returns items in the given order, dropping any that no longer
       // resolve rather than rendering a blank card.
-      return host.resolveItemsByIds(shelf.itemIds.map(String)).catch((err) => {
+      return resolveCuratedList(host, shelfRefs(shelf.itemIds)).catch((err) => {
         console.error("items: hero shelf lookup failed", err);
         return [];
       });

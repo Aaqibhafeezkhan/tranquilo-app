@@ -243,7 +243,10 @@ class TranquiloApp {
       (s: any) => s.id === "storylines",
     )[0];
     if (storylinesShelf) {
-      storylinesShelf.itemIds = storylineIndex.map((s: any) => s.cover_item_id);
+      storylinesShelf.itemIds = storylineIndex.map((s: any) => ({
+        id: s.cover_item_id,
+        source: s.cover_source,
+      }));
     }
     // Lazy cache: only populated once a storyline is actually opened.
     const storylineDetailById: Record<string, any> = {};
@@ -452,7 +455,9 @@ class TranquiloApp {
     });
     const storylineModeHost: ITranquiloStorylineModeHost = {
       getItem: (id: any) => itemsById[id],
+      getItemByKey: (key: string) => itemsByKey[key],
       resolveItemsByIds: (ids: any) => resolveItemsByIds(ids),
+      resolveItemsByKeys: (keys: string[]) => resolveItemsByKeys(keys),
       getStorylineDetail: (id: any) => storylineDetailById[id],
       resolveStorylineDetail: (id: any) => resolveStorylineDetail(id),
       applyNudityGate: (frame: any, item: any, compact: any) => {
@@ -480,7 +485,9 @@ class TranquiloApp {
     // instead of stacking under the detail panel.
     const setOfWorksModeHost: ITranquiloSetOfWorksModeHost = {
       getItem: (id: any) => itemsById[id],
+      getItemByKey: (key: string) => itemsByKey[key],
       resolveItemsByIds: (ids: any) => resolveItemsByIds(ids),
+      resolveItemsByKeys: (keys: string[]) => resolveItemsByKeys(keys),
       getSetOfWorkDetail: (id: any) => setOfWorkDetailById[id],
       resolveSetOfWorkDetail: (id: any) => resolveSetOfWorkDetail(id),
       applyNudityGate: (frame: any, item: any, compact: any) => {
@@ -514,6 +521,7 @@ class TranquiloApp {
     });
     shelvesModeEl.shelves = shelves;
     const shelvesModeHost: ITranquiloShelvesModeHost = {
+      resolveItemsByKeys: (keys: string[]) => resolveItemsByKeys(keys),
       apiUrl: (params: any) => apiUrl(params),
       fetchJson: (url: any, what: any) => fetchJson(url, what),
       absorbPage: (rows: any) => absorbPage(rows),
@@ -543,6 +551,7 @@ class TranquiloApp {
     shelvesModeEl.app = shelvesModeHost;
     shelfModeEl.shelves = shelves;
     const shelfModeHost: ITranquiloShelfModeHost = {
+      resolveItemsByKeys: (keys: string[]) => resolveItemsByKeys(keys),
       apiUrl: (params) => apiUrl(params),
       fetchJson: (url, what) => fetchJson(url, what),
       absorbPage: (rows) => absorbPage(rows),

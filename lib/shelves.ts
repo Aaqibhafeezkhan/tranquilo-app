@@ -19,7 +19,7 @@ type Shelf = {
   slug: string;
   title: string;
   type: string;
-  itemIds?: (string | number)[];
+  itemIds?: (string | number | { id: string | number; source?: string })[];
   filter?: Record<string, unknown>;
   minItems?: number | null;
 };
@@ -120,17 +120,36 @@ async function getShelfPreview(
   shelf: Shelf,
 ): Promise<{ count: number; cover: ShelfItemRow | null }> {
   if (shelf.type === "hero") {
-    const ids = (shelf.itemIds || []).map(String);
-    if (!ids.length) return { count: 0, cover: null };
+    const refs = (shelf.itemIds || []).map((entry) =>
+      typeof entry === "object"
+        ? { id: String(entry.id), source: entry.source }
+        : { id: String(entry), source: undefined },
+    );
+    if (!refs.length) return { count: 0, cover: null };
+    const bare = refs.filter((r) => !r.source);
+    const keyed = refs.filter((r) => r.source);
     const rows = (await sql.query(
-      `SELECT * FROM items WHERE native_id = ANY($1) ${LIVE_ITEMS_AND}`,
-      [ids],
+      `SELECT * FROM items WHERE (native_id = ANY($1)
+         OR (source, native_id) IN (SELECT * FROM unnest($2::text[], $3::text[])))
+         ${LIVE_ITEMS_AND}`,
+      [
+        bare.map((r) => r.id),
+        keyed.map((r) => r.source),
+        keyed.map((r) => r.id),
+      ],
     )) as ShelfItemRow[];
+    const byKey = new Map(
+      rows.map((row) => [`${row.source}:${row.native_id}`, row]),
+    );
     const byId = new Map(rows.map((row) => [row.native_id, row]));
-    const firstLive = ids.find((id: string) => byId.has(id));
+    const ordered = refs
+      .map((r) =>
+        r.source ? byKey.get(`${r.source}:${r.id}`) : byId.get(r.id),
+      )
+      .filter((row): row is ShelfItemRow => !!row);
     return {
-      count: rows.length,
-      cover: (firstLive && byId.get(firstLive)) || null,
+      count: ordered.length,
+      cover: ordered[0] || null,
     };
   }
 
