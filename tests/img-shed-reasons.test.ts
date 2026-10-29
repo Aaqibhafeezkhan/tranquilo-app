@@ -98,7 +98,7 @@ describe("bumpShedReason -- aggregate on write", () => {
       throw new Error("db down");
     };
     await expect(
-      guard.bumpShedReason(broken, "met", "display", "held"),
+      guard.bumpShedReason(broken as never, "met", "display", "held"),
     ).resolves.toBeUndefined();
     await expect(
       guard.bumpShedReason(null, "met", "display", "held"),

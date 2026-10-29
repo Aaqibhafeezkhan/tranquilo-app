@@ -193,9 +193,9 @@ async function doUpload() {
     // only be computed here -- this is the "rename" step.
     const hash = objectKeys.contentHash(buf);
     const objectKey = objectKeys.objectKeyFor(
-      item.source,
-      item.id,
-      item.tier,
+      item.source as string,
+      item.id as string,
+      item.tier as string,
       hash,
     );
     planned++;

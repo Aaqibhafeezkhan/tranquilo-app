@@ -9,6 +9,25 @@
 // instead" -- the safe direction, since an unguarded fetch is what
 // produced the Wikimedia rate-limit hold.
 
+interface GuardRow {
+  tokens?: number | string;
+  blocked_until?: string | Date | null;
+  hold_reason?: string | null;
+  [column: string]: unknown;
+}
+
+interface GuardSql {
+  query(text: string, params?: unknown[]): Promise<GuardRow[]>;
+}
+
+interface TokenResult {
+  allowed: boolean;
+  reason: string;
+  tokens: number;
+  hold?: string;
+  until?: string | Date | null;
+}
+
 // Lives in config.toml's [img_cache_fetch_guard] -- baked in at build
 // time, never read live.
 import { TRANQUILO_CONFIG } from "./config.generated.ts";
@@ -26,7 +45,7 @@ const CLAIM_TTL_SECONDS =
  * window.
  */
 async function claimFetch(
-  sql: any,
+  sql: GuardSql | null | undefined,
   cacheKey: string,
   ttlSeconds?: number | null,
 ): Promise<boolean> {
@@ -50,7 +69,10 @@ async function claimFetch(
 
 /** Releases a claim once the fetch finishes, so the next miss doesn't
  *  wait out the full TTL. Best-effort: expiry is the real guarantee. */
-async function releaseFetch(sql: any, cacheKey: string): Promise<void> {
+async function releaseFetch(
+  sql: GuardSql | null | undefined,
+  cacheKey: string,
+): Promise<void> {
   if (!sql) return;
   try {
     await sql.query("DELETE FROM img_fetch_claims WHERE cache_key = $1", [
@@ -67,7 +89,10 @@ async function releaseFetch(sql: any, cacheKey: string): Promise<void> {
  * schedule or drift; refill, cooldown check and spend are one atomic
  * UPDATE, so concurrent callers can't both spend the last token.
  */
-async function acquireFetchToken(sql: any, source: string): Promise<any> {
+async function acquireFetchToken(
+  sql: GuardSql | null | undefined,
+  source: string,
+): Promise<TokenResult> {
   if (!sql) return { allowed: false, reason: "no-db", tokens: 0 };
   try {
     const rows = await sql.query(
@@ -146,10 +171,10 @@ function parseRetryAfter(
  * library's 429 pause all 26. Creates the row on first sight rather
  * than needing a hand-maintained institution list. */
 async function acquireHostToken(
-  sql: any,
+  sql: GuardSql | null | undefined,
   host: string,
   source?: string | null,
-): Promise<any> {
+): Promise<TokenResult> {
   if (!sql) return { allowed: false, reason: "no-db", tokens: 0 };
   if (!host) return { allowed: false, reason: "no-host", tokens: 0 };
   try {
@@ -207,7 +232,7 @@ async function acquireHostToken(
  * library's server, not the aggregator, so pausing all 26 Europeana
  * institutions for one of them was punishing the other 25. */
 async function blockHost(
-  sql: any,
+  sql: GuardSql | null | undefined,
   host: string,
   seconds: number,
   source?: string | null,
@@ -229,7 +254,7 @@ async function blockHost(
 }
 
 async function recordHostOutcome(
-  sql: any,
+  sql: GuardSql | null | undefined,
   host: string,
   status: number,
   ok: boolean,
@@ -251,7 +276,7 @@ async function recordHostOutcome(
 }
 
 async function blockSource(
-  sql: any,
+  sql: GuardSql | null | undefined,
   source: string,
   seconds: number,
 ): Promise<void> {
@@ -270,7 +295,7 @@ async function blockSource(
 
 /** 1a: record the outcome of an origin fetch against the source's health. */
 async function recordOriginOutcome(
-  sql: any,
+  sql: GuardSql | null | undefined,
   source: string,
   status: number,
   ok: boolean,
@@ -354,7 +379,7 @@ function normalizeShedReason(reason?: string | null): string {
 /* One row per (day, source, tier, reason), counting up -- never a row
  * per request, see sql/013_img_shed_stats.sql. */
 async function bumpShedReason(
-  sql: any,
+  sql: GuardSql | null | undefined,
   source: string,
   tier: string,
   reason?: string | null,
@@ -374,7 +399,7 @@ async function bumpShedReason(
 }
 
 async function bumpStat(
-  sql: any,
+  sql: GuardSql | null | undefined,
   source: string,
   tier: string,
   field: string,
