@@ -15,6 +15,7 @@ const ROW = {
   tea_voice_eligible: true,
   twist_confidence: "high",
   music_mood: "quiet",
+  contributors: [{ name: "Léon Davent", role: "engraver" }],
 };
 
 vi.mock("../lib/db.ts", () => ({
@@ -49,6 +50,7 @@ describe("full item rows", () => {
     "tea_voice_eligible",
     "twist_confidence",
     "music_mood",
+    "contributors",
   ])("never include %s, which the UI does not read", async (field) => {
     expect(await lookup()).not.toHaveProperty(field);
   });
