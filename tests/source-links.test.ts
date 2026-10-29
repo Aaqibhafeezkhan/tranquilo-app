@@ -29,6 +29,23 @@ describe("Smithsonian items", () => {
     ).toBe("Smithsonian American Art Museum");
   });
 
+  it("name Cooper Hewitt for its object page on www.si.edu", () => {
+    expect(
+      sourceLinkLabel(at("https://www.si.edu/object/chndm_1969-40-41")),
+    ).toBe("Cooper Hewitt, Smithsonian Design Museum");
+    expect(
+      sourceLinkLabel(
+        at("https://www.si.edu/object/kulobabrooch:chndm_1969-40-41"),
+      ),
+    ).toBe("Cooper Hewitt, Smithsonian Design Museum");
+  });
+
+  it("do not name Cooper Hewitt for another unit's www.si.edu page", () => {
+    expect(
+      sourceLinkLabel(at("https://www.si.edu/object/saam_1926.6.10")),
+    ).toBe("Smithsonian Institution");
+  });
+
   it("fall back to the Smithsonian itself, never a guessed museum", () => {
     expect(sourceLinkLabel(at("https://naturalhistory.si.edu/x"))).toBe(
       "Smithsonian Institution",

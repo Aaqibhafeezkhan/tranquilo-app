@@ -28,6 +28,30 @@ describe("institutionName (share-page attribution)", () => {
     ).toBe("Hirshhorn Museum and Sculpture Garden");
   });
 
+  it("credits a Cooper Hewitt object page on www.si.edu to Cooper Hewitt", () => {
+    expect(
+      institutionName({
+        source: "smithsonian",
+        url: "https://www.si.edu/object/chndm_1969-40-41",
+      }),
+    ).toBe("Cooper Hewitt, Smithsonian Design Museum");
+    expect(
+      institutionName({
+        source: "smithsonian",
+        url: "https://www.si.edu/object/kulobabrooch:chndm_1969-40-41",
+      }),
+    ).toBe("Cooper Hewitt, Smithsonian Design Museum");
+  });
+
+  it("does not credit other www.si.edu object pages to Cooper Hewitt", () => {
+    expect(
+      institutionName({
+        source: "smithsonian",
+        url: "https://www.si.edu/object/saam_1926.6.10",
+      }),
+    ).toBe("Smithsonian Institution");
+  });
+
   it("falls back to the Smithsonian itself for an unlisted museum", () => {
     expect(
       institutionName({

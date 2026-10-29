@@ -52,7 +52,14 @@ function museumByHost(
   return fallback;
 }
 
+// Cooper Hewitt's object pages live on www.si.edu, identified by id prefix.
+const COOPER_HEWITT_OBJECT_PAGE =
+  /^https?:\/\/www\.si\.edu\/object\/(?:[^/?#]*:)?chndm_/i;
+
 function smithsonianMuseum(url: unknown): string {
+  if (COOPER_HEWITT_OBJECT_PAGE.test(String(url ?? ""))) {
+    return SMITHSONIAN_MUSEUMS["cooperhewitt.org"];
+  }
   return museumByHost(url, SMITHSONIAN_MUSEUMS, SMITHSONIAN_FALLBACK);
 }
 
