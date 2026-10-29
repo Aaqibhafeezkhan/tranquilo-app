@@ -24,6 +24,7 @@ declare module "@playwright/test" {
     __failImages?: (url: string) => boolean;
     __tallImages?: (url: string) => boolean;
     __wideImages?: (url: string) => boolean;
+    __heroPool?: { source: string; native_id: string; media_type: string }[];
   }
 }
 
@@ -366,7 +367,7 @@ export async function stubBackend(
     // pool means pickHeroes() returns nothing, the same fail-soft path a
     // genuinely empty production pool would take.
     if (shape === "heroes") {
-      return json([]);
+      return json(page.__heroPool ?? []);
     }
     // Same reasoning as heroes above: no e2e spec exercises set-of-works
     // content specifically, and app.ts fetches this index unconditionally
@@ -720,6 +721,18 @@ export async function stubBackend(
 }
 
 // Waits for the feed to have rendered its slides.
+// Opt-in hero pool of fixture items; the stub answers with an empty pool
+// unless a spec calls this before gotoFeed().
+export function useHeroPool(page: Page, size = 8) {
+  page.__heroPool = ITEMS.slice(0, size).map(
+    (i: { source?: string; id: string; media_type?: string }) => ({
+      source: i.source || "met",
+      native_id: i.id,
+      media_type: i.media_type || "image",
+    }),
+  );
+}
+
 export async function gotoFeed(page: Page, hash = "") {
   await stubBackend(page);
   // Heroes rotate per page load in production, varying slide positions

@@ -6,7 +6,7 @@
 
 import type { Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
-import { gotoFeed } from "./harness.mts";
+import { gotoFeed, useHeroPool } from "./harness.mts";
 
 const SEEN_KEY = "tranquilo:hasSeenFeed";
 
@@ -38,8 +38,11 @@ test("a returning visitor goes straight into the catalogue", async ({
   page,
   browser,
 }) => {
+  useHeroPool(page);
   await page.addInitScript((k) => {
     localStorage.setItem(k, "1");
+    // Pin the random start so the opening can't match the heroes.
+    Math.random = () => 0.5;
   }, SEEN_KEY);
   await gotoFeed(page);
   const titles = await openingTitles(page, 3);
@@ -47,10 +50,10 @@ test("a returning visitor goes straight into the catalogue", async ({
 
   // A fresh context, not page.context().newPage(): pages in one context
   // share localStorage, so a second page there would read the flag set
-  // above and be a returning visitor too, comparing two random openings
-  // that sometimes match.
+  // above and be a returning visitor too.
   const ctx = await browser.newContext();
   const firstVisit = await ctx.newPage();
+  useHeroPool(firstVisit);
   await gotoFeed(firstVisit);
   const heroTitles = await openingTitles(firstVisit, 3);
   expect(titles.join("|")).not.toBe(heroTitles.join("|"));
