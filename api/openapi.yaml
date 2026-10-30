@@ -58,10 +58,13 @@ paths:
             catalogue filter. `print_region` returns the visitor's
             country (from the request's geolocation) and the print-on-demand
             region it belongs to, as `{ country, region }`, either of which
-            may be null; it is never cached at the edge.
+            may be null; it is never cached at the edge. `vocabulary` lists
+            every controlled-vocabulary value with its display label in the
+            requested `locale` (English without one) and takes no other
+            parameter; see `VocabularyLabels`.
           schema:
             type: string
-            enum: [manifest, facets, suggest, correction, count, storylines, storyline, shelves, music, heroes, print_region]
+            enum: [manifest, facets, suggest, correction, count, storylines, storyline, shelves, music, heroes, print_region, vocabulary]
         - name: keys
           in: query
           description: >-
@@ -223,6 +226,7 @@ paths:
                   - $ref: "#/components/schemas/SuggestResult"
                   - $ref: "#/components/schemas/CorrectionResult"
                   - $ref: "#/components/schemas/CountResult"
+                  - $ref: "#/components/schemas/VocabularyLabels"
                   - $ref: "#/components/schemas/StorylineIndexEntry"
                   - $ref: "#/components/schemas/Storyline"
                   - type: array
@@ -965,6 +969,30 @@ components:
       type: object
       properties:
         total: { type: integer }
+    VocabularyLabels:
+      type: object
+      description: >-
+        Every controlled-vocabulary value under the filter parameter that
+        takes it (`x-vocabulary-fields`), with a display label in `locale`.
+        `value` is the stable code: it is what every filter and facet matches
+        on, it is never translated, and it never changes with `locale`. A
+        value with no label in the locale falls back to its English label,
+        and `label` is never empty. Values the live catalogue holds that
+        this vocabulary does not list are not included.
+      x-vocabulary-fields: [category, region_primary, timeframe, media_type, palette, subject_type]
+      required: [locale, fields]
+      properties:
+        locale: { type: string, description: The locale the labels are in. }
+        fields:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: object
+              required: [value, label]
+              properties:
+                value: { type: string }
+                label: { type: string }
     StorylineIndexEntry:
       type: object
       description: 'One entry of `?shape=storylines`''s array response.'

@@ -9,6 +9,7 @@ import {
   SERVED_ORIGINS,
   TERM_FIELDS,
 } from "../lib/translations.ts";
+import { vocabularyLabels } from "../lib/vocabulary-labels.ts";
 import { LOCALES } from "../src/i18n/locales.ts";
 
 const spec = readFileSync("api/openapi.yaml", "utf8");
@@ -58,5 +59,18 @@ describe("translated", () => {
   it("lists exactly the origins that are served", () => {
     const origins = flowList(/origin:\n\s+type: string\n\s+enum: \[([^\]]*)\]/);
     expect([...origins].sort()).toEqual([...SERVED_ORIGINS].sort());
+  });
+});
+
+describe("vocabulary labels", () => {
+  it("lists exactly the filter names the API answers with", () => {
+    const listed = flowList(/x-vocabulary-fields: \[([^\]]*)\]/);
+    expect([...listed].sort()).toEqual(
+      Object.keys(vocabularyLabels("en").fields).sort(),
+    );
+  });
+
+  it("is a documented shape", () => {
+    expect(spec).toMatch(/enum: \[manifest,[^\]]*\bvocabulary\b/);
   });
 });

@@ -22,6 +22,23 @@ const BROWSER_OUTPUT_PATH = path.join(
 );
 const NODE_OUTPUT_PATH = path.join(ROOT, "lib", "config.generated.ts");
 
+const VOCABULARY_PATH = path.join(ROOT, "shared", "vocabulary.json");
+const VOCABULARY_OUTPUT_PATH = path.join(
+  ROOT,
+  "lib",
+  "vocabulary.generated.ts",
+);
+
+// API filter name -> its list in shared/vocabulary.json.
+const VOCABULARY_LISTS: Record<string, string> = {
+  category: "categories",
+  region_primary: "regions",
+  timeframe: "timeframes",
+  media_type: "media_types",
+  palette: "palettes",
+  subject_type: "subject_types",
+};
+
 const BANNER =
   "// GENERATED FILE -- do not edit directly.\n" +
   "// Source: config.toml. Regenerate with `bun run generate-config`.\n\n";
@@ -47,8 +64,22 @@ function main() {
     `${BANNER}export const TRANQUILO_CONFIG = ${serialized};\n`,
   );
 
+  const vocabulary = JSON.parse(fs.readFileSync(VOCABULARY_PATH, "utf8"));
+  const lists = Object.fromEntries(
+    Object.entries(VOCABULARY_LISTS).map(([name, list]) => [
+      name,
+      vocabulary[list],
+    ]),
+  );
+  fs.writeFileSync(
+    VOCABULARY_OUTPUT_PATH,
+    "// GENERATED FILE -- do not edit directly.\n" +
+      "// Source: shared/vocabulary.json. Regenerate with `bun run generate-config`.\n\n" +
+      `export const VOCABULARY_LISTS: Record<string, string[]> = ${JSON.stringify(lists, null, 2)};\n`,
+  );
+
   console.log(
-    `generate-config: wrote ${path.relative(ROOT, BROWSER_OUTPUT_PATH)} and ${path.relative(ROOT, NODE_OUTPUT_PATH)}`,
+    `generate-config: wrote ${path.relative(ROOT, BROWSER_OUTPUT_PATH)}, ${path.relative(ROOT, NODE_OUTPUT_PATH)} and ${path.relative(ROOT, VOCABULARY_OUTPUT_PATH)}`,
   );
 }
 

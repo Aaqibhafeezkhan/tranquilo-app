@@ -39,6 +39,7 @@ import {
   translateShelves,
   translateStoryline,
 } from "../lib/translations.ts";
+import { vocabularyLabels } from "../lib/vocabulary-labels.ts";
 
 type QueryParams = Record<string, string | string[] | undefined>;
 
@@ -784,6 +785,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.query?.shape === "print_region") {
     res.setHeader("Cache-Control", "private, no-store");
     res.json(printRegionFromHeaders(req.headers || {}));
+    return;
+  }
+
+  // Static, so it answers without the database.
+  if (req.query?.shape === "vocabulary") {
+    try {
+      const locale = parseLocaleParam(req.query.locale);
+      res.setHeader("Cache-Control", "public, max-age=3600, s-maxage=86400");
+      res.json(vocabularyLabels(locale));
+    } catch (err) {
+      res.statusCode = (err as { status?: number }).status ?? 500;
+      res.json({ error: (err as Error).message });
+    }
     return;
   }
 
