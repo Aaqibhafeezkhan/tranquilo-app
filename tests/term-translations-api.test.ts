@@ -4,7 +4,9 @@ import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { sourceHash } from "../lib/translations.ts";
 import { makeSql } from "./helpers/pg.ts";
 
-const db = vi.hoisted(() => ({ sql: null as any }));
+type TestSql = Awaited<ReturnType<typeof makeSql>>;
+
+const db = vi.hoisted(() => ({ sql: null as unknown as TestSql }));
 vi.mock("../lib/db.ts", () => ({ getSql: () => db.sql }));
 vi.mock("../lib/sentry.ts", () => ({ Sentry: {}, reportError: vi.fn() }));
 
@@ -21,15 +23,28 @@ const SCHEMA = [
   "049_translations.sql",
 ];
 
-function mockRes(): any {
+interface ApiItem {
+  translated: Record<string, unknown>;
+  [field: string]: unknown;
+}
+
+interface MockRes {
+  statusCode: number;
+  body: { items: ApiItem[] } & Record<string, unknown>;
+  headers: Record<string, string>;
+  setHeader(k: string, v: string): void;
+  json(payload: MockRes["body"]): MockRes;
+}
+
+function mockRes(): MockRes {
   return {
     statusCode: 200,
-    body: null,
+    body: null as unknown as MockRes["body"],
     headers: {} as Record<string, string>,
     setHeader(k: string, v: string) {
       this.headers[k] = v;
     },
-    json(payload: any) {
+    json(payload: MockRes["body"]) {
       this.body = payload;
       return this;
     },
@@ -38,11 +53,11 @@ function mockRes(): any {
 
 async function get(query: Record<string, unknown>) {
   const res = mockRes();
-  await handler({ method: "GET", query } as any, res);
+  await handler({ method: "GET", query } as never, res as never);
   return res;
 }
 
-function insert(sql: any, table: string, row: Record<string, unknown>) {
+function insert(sql: TestSql, table: string, row: Record<string, unknown>) {
   const cols = Object.keys(row);
   return sql.query(
     `INSERT INTO ${table} (${cols.join(", ")}) VALUES (${cols
@@ -59,8 +74,8 @@ const terms: [string, string, string, string][] = [
   ["artist_nationality", "french", "French", "Francês"],
 ];
 
-let withTerms: any;
-let withoutTerms: any;
+let withTerms: TestSql;
+let withoutTerms: TestSql;
 
 beforeAll(async () => {
   withTerms = await makeSql([...SCHEMA, "056_term_translations.sql"]);
@@ -152,9 +167,9 @@ describe("catalogue terms", () => {
       locale: "pt-BR",
     });
     expect(res.statusCode).toBe(200);
-    const item = res.body.items.find((i: any) => i.id === "1");
-    expect(item.medium).toBeUndefined();
-    expect(item.translated).toBeUndefined();
+    const item = res.body.items.find((i) => i.id === "1");
+    expect(item?.medium).toBeUndefined();
+    expect(item?.translated).toBeUndefined();
   });
 
   it("answers exactly as before when no locale is asked for", async () => {
