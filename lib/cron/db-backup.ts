@@ -35,6 +35,7 @@ import {
 import type { CronRequest, CronResponse } from "../cron-types.ts";
 import { getSql } from "../db.ts";
 import { refreshVocabSql, refreshWordsSql, sweepSql } from "../items-vocab.ts";
+import { refreshLocaleSearch } from "../search-locale.ts";
 import { reportError, Sentry } from "../sentry.ts";
 
 function errorMessage(err: unknown): string {
@@ -408,6 +409,8 @@ export default async function handler(req: CronRequest, res: CronResponse) {
       const sweptWords = await client.query(
         `${sweepSql("items_vocab_words")} RETURNING 1`,
       );
+
+      await refreshLocaleSearch(client);
 
       const ms = Date.now() - reshuffleStart;
       console.log(

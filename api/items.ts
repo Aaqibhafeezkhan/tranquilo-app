@@ -621,8 +621,14 @@ function buildQuery(params: QueryParams): BuiltQuery {
   // scripts/verify_feed_fixtures.mts.
   const q = (scalar(params.q) || "").trim();
   if (q) {
+    const needle = `immutable_unaccent(lower(${bind(q)}))`;
+    const locale = parseLocaleParam(params.locale);
     const clauses = [
-      `search_text LIKE '%' || immutable_unaccent(lower(${bind(q)})) || '%'`,
+      locale === null || locale === "en"
+        ? `search_text LIKE '%' || ${needle} || '%'`
+        : `id IN (SELECT id FROM items WHERE search_text LIKE '%' || ${needle} || '%'` +
+          ` UNION ALL SELECT item_id FROM item_search_locale` +
+          ` WHERE locale = ${bind(locale)} AND extra_text LIKE '%' || ${needle} || '%')`,
     ];
     const lowered = q.toLowerCase();
     if (lowered.indexOf("ancient") !== -1) {

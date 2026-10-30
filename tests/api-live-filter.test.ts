@@ -213,9 +213,8 @@ describe("query endpoint: filters, search and cursor paging", () => {
   it("reproduces matchesQuery: substring over search_text, plus the century rule", () => {
     // Verified empirically against all 162 fixture modes with zero
     // disagreements; these assertions pin the shape that produced it.
-    expect(itemsSource).toContain(
-      "search_text LIKE '%' || immutable_unaccent(lower(",
-    );
+    expect(itemsSource).toContain("search_text LIKE '%' ||");
+    expect(itemsSource).toContain("immutable_unaccent(lower(");
     expect(itemsSource).toContain("century <= 10"); // "ancient"
     expect(itemsSource).toContain("century = "); // "Nth century"
   });
