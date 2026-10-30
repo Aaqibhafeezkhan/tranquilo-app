@@ -334,6 +334,10 @@ export const en = {
   "facet.subject_type.genre-scene": "Genre scene",
   "facet.subject_type.still-life": "Still life",
   "facet.subject_type.other": "Other",
+
+  // The templated caption shown when an item has no written one.
+  "caption.basic.untitled": "Untitled",
+  "caption.basic.by": "by {artist}",
 } as const;
 
 export type MessageKey = keyof typeof en;

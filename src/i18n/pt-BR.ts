@@ -284,4 +284,7 @@ export const ptBR: Dictionary = {
   "facet.subject_type.genre-scene": "Cena de gênero",
   "facet.subject_type.still-life": "Natureza-morta",
   "facet.subject_type.other": "Outro",
+
+  "caption.basic.untitled": "Sem título",
+  "caption.basic.by": "de {artist}",
 };

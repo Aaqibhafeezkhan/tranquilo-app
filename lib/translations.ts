@@ -13,6 +13,7 @@
 import { createHash } from "node:crypto";
 import { fallbackChain } from "../src/i18n/core.ts";
 import { LOCALES } from "../src/i18n/locales.ts";
+import { localizeCaptionBasic } from "./caption-basic.ts";
 import { requestLocale } from "./request-locale.ts";
 import { reportError } from "./sentry.ts";
 
@@ -342,7 +343,10 @@ export async function translateItems(
     applyTranslations(out[i], itemFields(out[i]), byEntity.get(row.id), chain);
   });
   const terms = await loadTerms(sql, termLookup(out), chain);
-  for (const item of out) applyTerms(item, terms, chain);
+  for (const item of out) {
+    applyTerms(item, terms, chain);
+    localizeCaptionBasic(item, chain);
+  }
 }
 
 export async function translateStoryline(
