@@ -5,10 +5,11 @@ info:
     Vercel Serverless Functions backing tranquilo.art. Every function under
     api/ is documented here (public routes and internal Vercel Cron
     endpoints alike) -- see CONVENTIONS.md for why these stay one file per
-    route rather than a framework. Not machine-verified against the
-    handlers (no contract-testing setup exists yet) -- kept in sync by hand
-    as routes change; treat a mismatch as this file being stale, not the
-    handler.
+    route rather than a framework. Kept in sync by hand as routes change;
+    treat a mismatch as this file being stale, not the handler. The locale
+    and translation contract (`x-supported-locales`,
+    `x-translatable-fields`, `Translated`) is checked against the code by
+    tests/openapi-locale-contract.test.ts.
   version: "1.0.0"
   license:
     name: UNLICENSED
@@ -153,15 +154,47 @@ paths:
         - name: locale
           in: query
           description: >-
-            Language to return content in, as a code from the site's locale
-            registry (e.g. "pt-BR"), matched case-insensitively; an unknown
-            code is a 400. Applies to item rows (full and manifest),
-            `shape=storyline` and `shape=shelves`: each translatable field is
-            replaced by an approved translation of its current text, trying
-            the requested locale and then English, and keeps its source text
-            when there is none. Every replaced field is listed under the
-            object's `translated`. Without `locale`, no field is translated.
+            Language to return content in, as one of `x-supported-locales`
+            (e.g. "pt-BR"), matched case-insensitively; an unknown code is a
+            400. `Accept-Language` is not read, so a response depends only on
+            the URL. Without `locale`, no field is translated.
+
+
+            Applies to item rows (full and manifest), `shape=storyline` and
+            `shape=shelves`. An item's translatable fields are listed under
+            `x-translatable-fields` on `Item`. A field is replaced only by a
+            human-reviewed translation (or the source's own text in that
+            language) of its current text, trying the requested locale and
+            then English; machine drafts are never served, and a translation
+            of text that has since changed is hidden, not served stale. Every
+            replaced field is listed under the object's `translated`.
+
+
+            `medium`, `culture`, `place_of_origin`, `artist_nationality` and
+            `tags` are translated per term: one reviewed translation of a
+            term applies to every item that uses it, following the item's own
+            capitalization. `tags` is translated per comma-separated tag, and
+            a tag without a translation keeps its source text. A translation
+            written for one item wins over a term's.
+
+
+            Source text is as supplied by the institution, in whatever
+            language that is, and there is no per-item source-language
+            field. A request for `en` can therefore return Portuguese for a
+            Portuguese-source item until an English translation exists.
+
+
+            With `q`, a `locale` request also matches that locale's reviewed
+            translations of `medium`, `tags` and `place_of_origin`, in
+            addition to source text. With `shape=suggest` and
+            `shape=correction`, it also offers them, in place of a source
+            medium or tag that has one.
+
+
+            Adding a locale, a translatable field or a `translated` key is
+            not a breaking change; removing or renaming one is.
           schema: { type: string }
+          x-supported-locales: [en, pt-BR]
       responses:
         "200":
           description: >-
@@ -728,6 +761,7 @@ components:
     Item:
       type: object
       description: A full catalogue row, as returned in a paged/lookup response.
+      x-translatable-fields: [title, caption_tea, caption_basic, medium, culture, place_of_origin, artist_nationality, tags]
       properties:
         id: { type: string, description: "native_id" }
         translated: { $ref: "#/components/schemas/Translated" }
