@@ -447,6 +447,27 @@ function suggestQuery(params: QueryParams): BuiltQuery {
   }
   // Reads items_vocab (rebuilt nightly by lib/cron/db-backup.ts); a
   // direct `items` query measured ~300ms per keystroke and was rejected.
+  const locale = vocabLocale(params);
+  if (locale) {
+    // A source medium or tag with a reviewed translation is offered only in
+    // translation; artists, titles and the rest stay as they are.
+    return {
+      text:
+        `SELECT value, type, item_count FROM (` +
+        ` SELECT value, type, rank, item_count FROM items_vocab v` +
+        `  WHERE key LIKE '%' || immutable_unaccent(lower($1)) || '%'` +
+        `    AND NOT (type IN ('Medium', 'Tag') AND EXISTS (` +
+        `      SELECT 1 FROM term_translations t` +
+        `       WHERE t.locale = $2 AND t.field IN ('medium', 'tags')` +
+        `         AND immutable_unaccent(t.source_key) = v.key))` +
+        ` UNION ALL` +
+        ` SELECT value, type, rank, item_count FROM items_vocab_locale` +
+        `  WHERE locale = $2 AND key LIKE '%' || immutable_unaccent(lower($1)) || '%'` +
+        `) s ORDER BY rank ASC, item_count DESC, value ASC LIMIT ${SUGGEST_LIMIT}`,
+      params: [q, locale],
+      suggest: true,
+    };
+  }
   return {
     text:
       `SELECT value, type, item_count FROM items_vocab ` +
@@ -457,18 +478,31 @@ function suggestQuery(params: QueryParams): BuiltQuery {
   };
 }
 
+// The locale a suggest or correction query should also read, or null for
+// the source-language vocabulary alone.
+function vocabLocale(params: QueryParams): string | null {
+  const locale = parseLocaleParam(params.locale);
+  return locale === null || locale === "en" ? null : locale;
+}
+
 // Only asked for on a submitted query that returned nothing -- never
 // per keystroke, unlike suggestQuery(). Uses pg_trgm's similarity()
 // (fuzzystrmatch's levenshtein() isn't installed on this database);
 // the client still scores candidates with its own findDidYouMean().
 function correctionQuery(params: QueryParams): BuiltQuery {
+  const q = (scalar(params.q) || "").trim();
+  const locale = vocabLocale(params);
+  const words = locale
+    ? "(SELECT word FROM items_vocab_words" +
+      " UNION ALL SELECT word FROM items_vocab_locale_words WHERE locale = $2) w"
+    : "items_vocab_words";
   return {
     text:
       "SELECT word, similarity(word, immutable_unaccent(lower($1))) AS score " +
-      "  FROM items_vocab_words " +
+      `  FROM ${words} ` +
       " WHERE similarity(word, immutable_unaccent(lower($1))) > 0.3 " +
       " ORDER BY score DESC LIMIT 25",
-    params: [(scalar(params.q) || "").trim()],
+    params: locale ? [q, locale] : [q],
     correction: true,
   };
 }

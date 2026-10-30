@@ -18,10 +18,12 @@ beforeAll(async () => {
     "043_items_search_place_of_origin.sql",
     "056_term_translations.sql",
     "057_item_search_locale.sql",
+    "018_items_vocab.sql",
+    "058_items_vocab_locale.sql",
   ]);
   bare = await makeSql(["001_items_schema.sql"]);
   await sql.query(
-    "INSERT INTO items (id, source, native_id, title, medium) VALUES ('met:1','met','1','A','Silk')",
+    "INSERT INTO items (id, source, native_id, title, medium, category) VALUES ('met:1','met','1','A','Silk','Works on Paper')",
   );
   for (const locale of ["pt-BR", "fr"]) {
     await sql.query(
@@ -42,6 +44,16 @@ describe("refreshLocaleSearch", () => {
       "SELECT locale FROM item_search_locale ORDER BY locale",
     );
     expect(rows.map((r: any) => r.locale)).toEqual(["fr", "pt-BR"]);
+  });
+
+  it("rebuilds each locale's suggestion vocabulary too", async () => {
+    const rows = await sql.query(
+      "SELECT locale, value FROM items_vocab_locale ORDER BY locale",
+    );
+    expect(rows.map((r: any) => `${r.locale}:${r.value}`)).toEqual([
+      "fr:Soie",
+      "pt-BR:Soie",
+    ]);
   });
 
   it("reports nothing and does not throw before the tables exist", async () => {

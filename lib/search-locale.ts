@@ -1,5 +1,6 @@
-// Rebuilds per-locale search text (sql/057_item_search_locale.sql) for every
-// locale that has reviewed terms. A failure is reported and swallowed: it
+// Rebuilds per-locale search text (sql/057_item_search_locale.sql) and
+// suggestion vocabulary (sql/058_items_vocab_locale.sql) for every locale
+// that has reviewed terms. A failure is reported and swallowed: it
 // must not fail the job it runs inside.
 
 import { reportError } from "./sentry.ts";
@@ -22,6 +23,7 @@ export async function refreshLocaleSearch(
         [locale],
       )) as { n: number }[];
       refreshed[locale] = row.n;
+      await client.query("SELECT refresh_items_vocab_locale($1)", [locale]);
     }
   } catch (err) {
     console.error("search-locale: refresh failed", err);
