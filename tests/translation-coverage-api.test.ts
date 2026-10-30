@@ -1,10 +1,23 @@
 // ?shape=facets&locale=&coverage=1: how much of the live catalogue is
 // served translated in a locale, counted by the same rules as serving.
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { ITEM_FIELDS, sourceHash } from "../lib/translations.ts";
 import { makeSql } from "./helpers/pg.ts";
 
-const db = vi.hoisted(() => ({ sql: null as any }));
+type Sql = {
+  query(text: string, params?: unknown[]): Promise<Record<string, unknown>[]>;
+  $close(): Promise<void>;
+};
+
+type Coverage = {
+  locale: string;
+  fields: Record<string, { items: number; translated: number }>;
+};
+
+type FacetsBody = { translation?: Coverage } & Record<string, unknown>;
+
+const db = vi.hoisted(() => ({ sql: null as unknown as Sql }));
 vi.mock("../lib/db.ts", () => ({ getSql: () => db.sql }));
 vi.mock("../lib/sentry.ts", () => ({ Sentry: {}, reportError: vi.fn() }));
 
@@ -28,24 +41,25 @@ const SCHEMA = [
   "056_term_translations.sql",
 ];
 
-function mockRes(): any {
-  return {
+function mockRes() {
+  const res = {
     statusCode: 200,
-    body: null,
-    headers: {} as Record<string, string>,
-    setHeader(k: string, v: string) {
-      this.headers[k] = v;
-    },
-    json(payload: any) {
-      this.body = payload;
-      return this;
+    body: null as unknown as FacetsBody,
+    setHeader(_k: string, _v: string) {},
+    json(payload: unknown) {
+      res.body = payload as FacetsBody;
+      return res;
     },
   };
+  return res;
 }
 
 async function get(query: Record<string, unknown>) {
   const res = mockRes();
-  await handler({ method: "GET", query } as any, res);
+  await handler(
+    { method: "GET", query } as unknown as VercelRequest,
+    res as unknown as VercelResponse,
+  );
   return res;
 }
 
@@ -126,7 +140,8 @@ afterAll(async () => {
 });
 
 const coverage = async (locale: string) =>
-  (await get({ shape: "facets", locale, coverage: "1" })).body.translation;
+  (await get({ shape: "facets", locale, coverage: "1" })).body
+    .translation as Coverage;
 
 describe("translation coverage", () => {
   it("counts live items with a value, and how many are served translated", async () => {
@@ -156,9 +171,7 @@ describe("translation coverage", () => {
 
   it("reports nothing translated for a locale with no rows", async () => {
     const t = await coverage("en");
-    expect(Object.values(t.fields).every((f: any) => f.translated === 0)).toBe(
-      true,
-    );
+    expect(Object.values(t.fields).every((f) => f.translated === 0)).toBe(true);
   });
 
   it("covers every translatable field", async () => {
