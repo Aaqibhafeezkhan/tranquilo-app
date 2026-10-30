@@ -17,23 +17,82 @@ import crypto from "node:crypto";
 const SERVICE = "s3";
 const ALGORITHM = "AWS4-HMAC-SHA256";
 
-function sha256hex(buf: any): string {
+interface S3Credentials {
+  bucket: string;
+  region: string;
+  accessKeyId: string;
+  secret(): string;
+}
+
+interface SignRequestOptions {
+  method: string;
+  host: string;
+  canonicalUri: string;
+  payloadHash: string;
+  contentType?: string;
+  amzDate: string;
+  region: string;
+  accessKeyId: string;
+  secretAccessKey: string;
+}
+
+interface SignedRequest {
+  signedHeaders: string;
+  signature: string;
+  authorization: string;
+}
+
+interface S3FetchResponse {
+  ok: boolean;
+  status: number;
+  headers?: { get(name: string): string | null };
+  arrayBuffer?(): Promise<ArrayBuffer>;
+}
+
+interface S3FetchOptions {
+  now?: Date;
+  fetch?: (url: string, init: RequestInit) => Promise<S3FetchResponse>;
+}
+
+interface PutResult {
+  ok: boolean;
+  status: number;
+  etag?: string | null;
+  error?: string;
+}
+
+interface GetResult {
+  ok: boolean;
+  status: number;
+  body?: Buffer;
+  contentType?: string | null;
+  error?: string;
+}
+
+function errorMessage(err: unknown): string {
+  return String((err instanceof Error && err.message) || err);
+}
+
+function sha256hex(buf: string | NodeJS.ArrayBufferView): string {
   return crypto.createHash("sha256").update(buf).digest("hex");
 }
-function hmac(key: any, data: any): Buffer {
+function hmac(
+  key: string | NodeJS.ArrayBufferView,
+  data: string | NodeJS.ArrayBufferView,
+): Buffer {
   return crypto.createHmac("sha256", key).update(data).digest();
 }
 
 // Each path segment is encoded but the "/" separators are not, matching S3's
 // own canonicalisation.
-function canonicalUriFor(bucket: any, key: any): string {
+function canonicalUriFor(bucket: string, key: string): string {
   return `/${bucket}/${String(key).split("/").map(encodeURIComponent).join("/")}`;
 }
 
 // Exported for testing: the signature has to be reproducible from fixed inputs,
 // or there is no way to tell a correct implementation from one that merely
 // happens to be accepted today.
-function signRequest(opts: any): any {
+function signRequest(opts: SignRequestOptions): SignedRequest {
   const method = opts.method;
   const host = opts.host;
   const canonicalUri = opts.canonicalUri;
@@ -86,19 +145,19 @@ function signRequest(opts: any): any {
   };
 }
 
-function amzDateNow(now?: any): string {
+function amzDateNow(now?: Date): string {
   return (now || new Date()).toISOString().replace(/[:-]|\.\d{3}/g, "");
 }
 
 // PUT one object. Never throws -- an exception on the hot path would turn a
 // degraded cache into a failed request; the caller falls back to Blob/origin.
 async function putObject(
-  config: any,
-  key: any,
-  body: any,
-  contentType: any,
-  opts?: any,
-): Promise<any> {
+  config: S3Credentials,
+  key: string,
+  body: Buffer | Uint8Array | string,
+  contentType: string,
+  opts?: S3FetchOptions,
+): Promise<PutResult> {
   const options = opts || {};
   const host = `s3.${config.region}.amazonaws.com`;
   const canonicalUri = canonicalUriFor(config.bucket, key);
@@ -128,19 +187,19 @@ async function putObject(
           "x-amz-date": amzDate,
           authorization: signed.authorization,
         },
-        body: body,
+        body: body as BodyInit,
       },
     );
     return {
       ok: res.ok,
       status: res.status,
-      etag: res.headers?.get ? res.headers.get("etag") : null,
+      etag: res.headers?.get("etag") ?? null,
     };
   } catch (err) {
     return {
       ok: false,
       status: 0,
-      error: String(((err as any) && (err as any).message) || err),
+      error: errorMessage(err),
     };
   }
 }
@@ -148,7 +207,11 @@ async function putObject(
 // GET one object. Same non-throwing convention as putObject. No body means
 // no content-type to sign; the payload hash is just the hash of an empty
 // buffer, same as AWS's own GET/DELETE examples.
-async function getObject(config: any, key: any, opts?: any): Promise<any> {
+async function getObject(
+  config: S3Credentials,
+  key: string,
+  opts?: S3FetchOptions,
+): Promise<GetResult> {
   const options = opts || {};
   const host = `s3.${config.region}.amazonaws.com`;
   const canonicalUri = canonicalUriFor(config.bucket, key);
@@ -184,16 +247,17 @@ async function getObject(config: any, key: any, opts?: any): Promise<any> {
     return {
       ok: true,
       status: res.status,
-      body: Buffer.from(await res.arrayBuffer()),
-      contentType: res.headers?.get ? res.headers.get("content-type") : null,
+      body: Buffer.from(await (res.arrayBuffer?.() ?? new ArrayBuffer(0))),
+      contentType: res.headers?.get("content-type") ?? null,
     };
   } catch (err) {
     return {
       ok: false,
       status: 0,
-      error: String(((err as any) && (err as any).message) || err),
+      error: errorMessage(err),
     };
   }
 }
 
+export type { S3Credentials };
 export { amzDateNow, canonicalUriFor, getObject, putObject, signRequest };

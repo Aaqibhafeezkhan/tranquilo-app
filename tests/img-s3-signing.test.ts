@@ -206,7 +206,7 @@ describe("getObject", () => {
       }),
     });
     expect(out.ok).toBe(true);
-    expect(Buffer.compare(out.body, Buffer.from("hello"))).toBe(0);
+    expect(Buffer.compare(out.body as Buffer, Buffer.from("hello"))).toBe(0);
     expect(out.contentType).toBe("image/webp");
   });
 
