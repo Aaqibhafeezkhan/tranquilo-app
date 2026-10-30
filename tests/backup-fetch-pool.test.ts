@@ -54,7 +54,7 @@ describe("fetchAllRows", () => {
     ];
     const { FakePool, queries, wasReleased, wasEnded } = fakePool(sample);
 
-    const rows = await fetchAllRows({ PoolCtor: FakePool });
+    const rows = await fetchAllRows({ PoolCtor: FakePool as never });
 
     expect(rows).toEqual(sample);
     expect(queries.length).toBe(1);
@@ -71,7 +71,7 @@ describe("fetchAllRows", () => {
       queryFails: true,
     });
 
-    await expect(fetchAllRows({ PoolCtor: FakePool })).rejects.toThrow(
+    await expect(fetchAllRows({ PoolCtor: FakePool as never })).rejects.toThrow(
       "connection reset",
     );
     expect(wasReleased()).toBe(true);
@@ -81,7 +81,7 @@ describe("fetchAllRows", () => {
   it("still ends the pool when connect() itself throws", async () => {
     const { FakePool, wasEnded } = fakePool([], { connectFails: true });
 
-    await expect(fetchAllRows({ PoolCtor: FakePool })).rejects.toThrow(
+    await expect(fetchAllRows({ PoolCtor: FakePool as never })).rejects.toThrow(
       "could not connect",
     );
     expect(wasEnded()).toBe(true);
