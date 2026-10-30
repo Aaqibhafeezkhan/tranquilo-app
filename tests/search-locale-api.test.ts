@@ -1,9 +1,15 @@
 // ?q= with ?locale=: reviewed translations of medium, tags and place of
 // origin become searchable, without losing source-text matches.
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { makeSql } from "./helpers/pg.ts";
 
-const db = vi.hoisted(() => ({ sql: null as any }));
+type Sql = {
+  query(text: string, params?: unknown[]): Promise<Record<string, unknown>[]>;
+  $close(): Promise<void>;
+};
+
+const db = vi.hoisted(() => ({ sql: null as unknown as Sql }));
 vi.mock("../lib/db.ts", () => ({ getSql: () => db.sql }));
 vi.mock("../lib/sentry.ts", () => ({ Sentry: {}, reportError: vi.fn() }));
 
@@ -25,19 +31,20 @@ const SCHEMA = [
   "057_item_search_locale.sql",
 ];
 
-function mockRes(): any {
-  return {
+function mockRes() {
+  const res = {
     statusCode: 200,
-    body: null,
+    body: null as unknown,
     headers: {} as Record<string, string>,
     setHeader(k: string, v: string) {
-      this.headers[k] = v;
+      res.headers[k] = v;
     },
-    json(payload: any) {
-      this.body = payload;
-      return this;
+    json(payload: unknown) {
+      res.body = payload;
+      return res;
     },
   };
+  return res;
 }
 
 async function ids(query: Record<string, unknown>): Promise<string[]> {
@@ -46,11 +53,12 @@ async function ids(query: Record<string, unknown>): Promise<string[]> {
     {
       method: "GET",
       query: { shape: "manifest", order: "shuffle", start: "0", ...query },
-    } as any,
-    res,
+    } as unknown as VercelRequest,
+    res as unknown as VercelResponse,
   );
   expect(res.statusCode).toBe(200);
-  return res.body.items.map((i: any) => i.id).sort();
+  const { items } = res.body as { items: { id: string }[] };
+  return items.map((i) => i.id).sort();
 }
 
 function insert(table: string, row: Record<string, unknown>) {
@@ -147,9 +155,7 @@ describe("search in a locale", () => {
       `EXPLAIN SELECT item_id FROM item_search_locale
         WHERE locale = 'pt-BR' AND extra_text LIKE '%oleo%'`,
     );
-    const text = plan
-      .map((r: Record<string, string>) => r["QUERY PLAN"])
-      .join("\n");
+    const text = plan.map((r) => r["QUERY PLAN"]).join("\n");
     expect(text).toMatch(/item_search_locale/);
   });
 });

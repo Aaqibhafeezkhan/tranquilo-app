@@ -6,8 +6,13 @@ import { makeSql } from "./helpers/pg.ts";
 
 vi.mock("../lib/sentry.ts", () => ({ Sentry: {}, reportError: vi.fn() }));
 
-let sql: any;
-let bare: any;
+type Sql = {
+  query(text: string, params?: unknown[]): Promise<Record<string, unknown>[]>;
+  $close(): Promise<void>;
+};
+
+let sql: Sql;
+let bare: Sql;
 
 beforeAll(async () => {
   sql = await makeSql([
@@ -43,14 +48,14 @@ describe("refreshLocaleSearch", () => {
     const rows = await sql.query(
       "SELECT locale FROM item_search_locale ORDER BY locale",
     );
-    expect(rows.map((r: any) => r.locale)).toEqual(["fr", "pt-BR"]);
+    expect(rows.map((r) => r.locale)).toEqual(["fr", "pt-BR"]);
   });
 
   it("rebuilds each locale's suggestion vocabulary too", async () => {
     const rows = await sql.query(
       "SELECT locale, value FROM items_vocab_locale ORDER BY locale",
     );
-    expect(rows.map((r: any) => `${r.locale}:${r.value}`)).toEqual([
+    expect(rows.map((r) => `${r.locale}:${r.value}`)).toEqual([
       "fr:Soie",
       "pt-BR:Soie",
     ]);

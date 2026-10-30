@@ -87,7 +87,7 @@ test.describe("a ?lang=pt-BR link", () => {
     // Icon-only buttons: the tooltip is the only visible name on hover.
     await gotoFeed(page, "?lang=pt-BR");
     for (const [id, tip] of [
-      ["searchToggle", "Buscar"],
+      ["searchToggle", "Busca"],
       ["discoverToggle", "Descobrir prateleiras"],
       ["collectionToggle", "Minha coleção"],
       ["musicToggle", "Ligar ou desligar a música"],
@@ -112,7 +112,7 @@ test.describe("a ?lang=pt-BR link", () => {
     await gotoFeed(page, "?lang=pt-BR");
     await expect(page.locator("#searchToggle")).toHaveAttribute(
       "aria-label",
-      "Buscar",
+      "Busca",
     );
   });
 

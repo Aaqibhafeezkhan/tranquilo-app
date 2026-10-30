@@ -1,12 +1,18 @@
 // ?shape=suggest and ?shape=correction with ?locale=: reviewed translations
 // of mediums and tags are offered, source-language entries stay.
 import { readFileSync } from "node:fs";
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { LIVE_ITEMS_PREDICATE } from "../lib/items-sql.ts";
 import { refreshVocabSql, refreshWordsSql } from "../lib/items-vocab.ts";
 import { makeSql } from "./helpers/pg.ts";
 
-const db = vi.hoisted(() => ({ sql: null as any }));
+type Sql = {
+  query(text: string, params?: unknown[]): Promise<Record<string, unknown>[]>;
+  $close(): Promise<void>;
+};
+
+const db = vi.hoisted(() => ({ sql: null as unknown as Sql }));
 vi.mock("../lib/db.ts", () => ({ getSql: () => db.sql }));
 vi.mock("../lib/sentry.ts", () => ({ Sentry: {}, reportError: vi.fn() }));
 
@@ -31,26 +37,30 @@ const SCHEMA = [
   "058_items_vocab_locale.sql",
 ];
 
-function mockRes(): any {
-  return {
+function mockRes() {
+  const res = {
     statusCode: 200,
-    body: null,
+    body: null as unknown,
     headers: {} as Record<string, string>,
     setHeader(k: string, v: string) {
-      this.headers[k] = v;
+      res.headers[k] = v;
     },
-    json(payload: any) {
-      this.body = payload;
-      return this;
+    json(payload: unknown) {
+      res.body = payload;
+      return res;
     },
   };
+  return res;
 }
 
 async function get(query: Record<string, unknown>) {
   const res = mockRes();
-  await handler({ method: "GET", query } as any, res);
+  await handler(
+    { method: "GET", query } as unknown as VercelRequest,
+    res as unknown as VercelResponse,
+  );
   expect(res.statusCode).toBe(200);
-  return res.body;
+  return res.body as Record<string, Record<string, unknown>[]>;
 }
 
 const suggest = async (q: string, locale?: string) =>
@@ -126,7 +136,7 @@ describe("suggest in a locale", () => {
   });
 
   it("keeps source-language entries and hides a source medium that has a translation", async () => {
-    const values = (await suggest("oil", "pt-BR")).map((s: any) => s.value);
+    const values = (await suggest("oil", "pt-BR")).map((s) => s.value);
     expect(values).toContain("Oiled harbour");
     expect(values).not.toContain("Oil on canvas");
   });
@@ -134,7 +144,7 @@ describe("suggest in a locale", () => {
   it("offers nothing translated without a locale, or for English", async () => {
     expect(await suggest("oleo")).toEqual([]);
     expect(await suggest("oleo", "en")).toEqual([]);
-    const values = (await suggest("oil")).map((s: any) => s.value);
+    const values = (await suggest("oil")).map((s) => s.value);
     expect(values).toContain("Oil on canvas");
   });
 });
