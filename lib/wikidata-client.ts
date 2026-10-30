@@ -17,7 +17,62 @@ const ENDPOINT = "https://query.wikidata.org/sparql";
 const ERROR_LIMIT = 3; // WDQS allows 30/min; this is deliberately far under
 const MIN_INTERVAL_MS = 2000; // one at a time, with air between
 
-function requestHeaders(): any {
+interface SparqlBinding {
+  [variable: string]: { value?: string } | undefined;
+}
+
+interface SparqlResponse {
+  results?: { bindings?: SparqlBinding[] };
+}
+
+interface ArtistCandidate {
+  wikidata: string | null;
+  description: string | null;
+  birth: string | null;
+  death: string | null;
+  article: string | null;
+}
+
+// One shape for found, ambiguous and missed answers: stored entries are read
+// back by callers that branch on `found` / `ambiguous`, not on a tag.
+interface ArtistEntry extends Partial<ArtistCandidate> {
+  name?: string;
+  found?: boolean;
+  fetched_at?: string;
+  label?: string | null;
+  nationality?: string[];
+  movement?: string[];
+  image?: string | null;
+  ambiguous?: boolean;
+  candidates?: ArtistCandidate[];
+}
+
+interface ArtistRecord extends ArtistEntry {
+  name: string;
+  wikidata: string | null;
+  description: string | null;
+  birth: string | null;
+  death: string | null;
+  article: string | null;
+  label: string | null;
+  nationality: string[];
+  movement: string[];
+  image: string | null;
+  found: true;
+  _byLabel?: boolean;
+  _exact?: boolean;
+}
+
+type ArtistStore = Record<string, ArtistEntry>;
+
+interface Breaker {
+  consecutive: number;
+  fail(): void;
+  succeed(): void;
+  tripped(): boolean;
+}
+
+function requestHeaders(): Record<string, string> {
   return {
     "User-Agent": identity.WIKIMEDIA_USER_AGENT,
     "Accept": "application/sparql-results+json",
@@ -25,25 +80,27 @@ function requestHeaders(): any {
 }
 
 // Consecutive, not lifetime. A success means the run is healthy again.
-function makeBreaker(): any {
+function makeBreaker(): Breaker {
   return {
     consecutive: 0,
-    fail: function (this: any) {
+    fail: function (this: Breaker) {
       this.consecutive++;
     },
-    succeed: function (this: any) {
+    succeed: function (this: Breaker) {
       this.consecutive = 0;
     },
-    tripped: function (this: any) {
+    tripped: function (this: Breaker) {
       return shouldStop(this.consecutive);
     },
   };
 }
-function shouldStop(consecutiveErrors: any): boolean {
+function shouldStop(consecutiveErrors: number): boolean {
   return consecutiveErrors >= ERROR_LIMIT;
 }
 
-function retryAfterMs(headers: any): any {
+function retryAfterMs(
+  headers: { get(name: string): string | null } | null | undefined,
+): number | null {
   const raw = headers?.get ? headers.get("retry-after") : null;
   if (!raw) return null;
   const secs = Number(raw);
@@ -54,7 +111,7 @@ function retryAfterMs(headers: any): any {
 // SPARQL string literals escape backslash and double-quote. An unescaped quote
 // does not return nothing -- it is a malformed query, which WDQS counts as an
 // ERROR against the budget.
-function sparqlString(s: any): string {
+function sparqlString(s: unknown): string {
   return String(s).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
 }
 
@@ -90,12 +147,12 @@ function capitalisedVariant(name: string): string {
     .join(" ");
 }
 
-function artistQuery(names: any): string {
+function artistQuery(names: string[] | null | undefined): string {
   // (?asked ?name) pairs: the catalogue's name, and each spelling tried for
   // it. ?asked travels with every match so it's filed under our spelling.
-  const lit = (s: any) => `"${sparqlString(s)}"@en`;
+  const lit = (s: unknown) => `"${sparqlString(s)}"@en`;
   const values = (names || [])
-    .flatMap((n: any) => {
+    .flatMap((n) => {
       const variant = capitalisedVariant(String(n));
       const pairs = [`(${lit(n)} ${lit(n)})`];
       if (variant !== n) pairs.push(`(${lit(n)} ${lit(variant)})`);
@@ -136,13 +193,13 @@ function artistQuery(names: any): string {
   ].join("\n");
 }
 
-function year(iso: any): any {
+function year(iso: unknown): string | null {
   if (!iso) return null;
   const m = String(iso).match(/^(-?\d{4})/);
   return m ? m[1] : null;
 }
 
-function httpsify(url: any): any {
+function httpsify(url: unknown): string | null {
   if (!url) return null;
   return String(url).replace(/^http:/, "https:");
 }
@@ -157,14 +214,14 @@ function httpsify(url: any): any {
 // land under the catalogue's spelling, or the card's exact-name lookup
 // never finds it. Wikidata's own label is kept as `label`. Old-style
 // result rows without ?name/?via are read as label matches.
-function parseArtists(json: any): any[] {
+function parseArtists(json: SparqlResponse | null | undefined): ArtistEntry[] {
   const rows = json?.results?.bindings;
   if (!Array.isArray(rows)) return [];
 
   // name -> artist URI -> record
-  const byName = new Map<string, Map<string, any>>();
-  rows.forEach((b: any) => {
-    const v = (k: any) => (b[k]?.value ? b[k].value : null);
+  const byName = new Map<string, Map<string, ArtistRecord>>();
+  rows.forEach((b) => {
+    const v = (k: string): string | null => b[k]?.value || null;
     // Old-style rows (no ?asked/?name) are label matches on the label.
     const name = v("asked") || v("name") || v("artistLabel");
     const key = v("artist") || v("artistLabel");
@@ -221,15 +278,15 @@ function parseArtists(json: any): any[] {
   // variant: exactly one person left at the top tier resolves it.
   // Anything else is recorded as ambiguous, with every contender kept and
   // no facts of its own, rather than silently picking.
-  const out: any[] = [];
+  const out: ArtistEntry[] = [];
   byName.forEach((people, name) => {
     const all = Array.from(people.values());
-    const byLabel = all.filter((r: any) => r._byLabel);
+    const byLabel = all.filter((r) => r._byLabel);
     const tier = byLabel.length ? byLabel : all;
     // Within that tier, our exact spelling outranks a capitalised variant.
-    const exact = tier.filter((r: any) => r._exact);
+    const exact = tier.filter((r) => r._exact);
     const contenders = exact.length ? exact : tier;
-    all.forEach((r: any) => {
+    all.forEach((r) => {
       delete r._byLabel;
       delete r._exact;
     });
@@ -241,7 +298,7 @@ function parseArtists(json: any): any[] {
       name,
       found: true,
       ambiguous: true,
-      candidates: contenders.map((c: any) => ({
+      candidates: contenders.map((c) => ({
         wikidata: c.wikidata,
         description: c.description,
         birth: c.birth,
@@ -256,14 +313,18 @@ function parseArtists(json: any): any[] {
 
 // Merge, never replace. Overwriting the store would throw away every earlier
 // query and make us re-ask Wikimedia for answers we already hold.
-function mergeStore(existing: any, rows: any, missNames?: any): any {
-  const out = Object.assign({}, existing || {});
-  (rows || []).forEach((r: any) => {
+function mergeStore(
+  existing: ArtistStore | null | undefined,
+  rows: ArtistEntry[] | null | undefined,
+  missNames?: string[] | null,
+): ArtistStore {
+  const out: ArtistStore = Object.assign({}, existing || {});
+  (rows || []).forEach((r) => {
     if (r?.name) out[r.name] = r;
   });
   // A miss is an answer too. Without recording it, every run re-queries the
   // names Wikidata has never heard of.
-  (missNames || []).forEach((n: any) => {
+  (missNames || []).forEach((n) => {
     if (!out[n])
       out[n] = { name: n, found: false, fetched_at: new Date().toISOString() };
   });
@@ -275,17 +336,24 @@ function mergeStore(existing: any, rows: any, missNames?: any): any {
 // (aliases are matched now), so they're worth exactly one more question.
 // Ambiguous names stay as they are; asking again can't make them less so.
 function namesToFetch(
-  names: any,
-  existing: any,
+  names: string[] | null | undefined,
+  existing: ArtistStore | null | undefined,
   opts: { recheckMisses?: boolean } = {},
-): any[] {
+): string[] {
   const have = existing || {};
   return (names || []).filter(
-    (n: any) =>
-      !have[n] || (opts.recheckMisses === true && have[n].found === false),
+    (n) => !have[n] || (opts.recheckMisses === true && have[n].found === false),
   );
 }
 
+export type {
+  ArtistCandidate,
+  ArtistEntry,
+  ArtistRecord,
+  ArtistStore,
+  Breaker,
+  SparqlResponse,
+};
 export {
   ART_OCCUPATIONS,
   artistQuery,

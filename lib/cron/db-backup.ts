@@ -32,9 +32,14 @@ import {
   encodeBackupBody,
   isDatedBackupName,
 } from "../backup-format.ts";
+import type { CronRequest, CronResponse } from "../cron-types.ts";
 import { getSql } from "../db.ts";
 import { refreshVocabSql, refreshWordsSql, sweepSql } from "../items-vocab.ts";
 import { reportError, Sentry } from "../sentry.ts";
+
+function errorMessage(err: unknown): string {
+  return String((err instanceof Error && err.message) || err);
+}
 
 // Required for Pool/Client below -- Node's global WebSocket varies by
 // runtime, so this uses the documented `ws` path rather than assuming one.
@@ -49,6 +54,46 @@ const BACKUP_DIR = "backups/items";
 // last 6 monthly snapshots instead.
 const RETENTION_DAYS = 180;
 const MONITOR_SLUG = "db-backup";
+
+interface PoolLike {
+  connect(): Promise<{
+    query(text: string): Promise<{ rows: Record<string, unknown>[] }>;
+    release(): void;
+  }>;
+  end(): Promise<void>;
+}
+
+interface FetchAllRowsOptions {
+  PoolCtor?: new (config: { connectionString?: string }) => PoolLike;
+}
+
+interface GithubRequestOptions {
+  method?: string;
+  body?: unknown;
+}
+
+interface GithubContentEntry {
+  name: string;
+  sha: string;
+}
+
+interface GithubFileJson {
+  sha?: string;
+  content?: string;
+}
+
+interface VerifyOptions {
+  request?: (
+    path: string,
+  ) => Promise<{ ok?: boolean; json(): Promise<unknown> }>;
+}
+
+interface VerifyResult {
+  ok: boolean;
+  rows?: number;
+  inconclusive?: boolean;
+  reason?: string;
+}
 
 const RESHUFFLE_FRACTION = 0.1;
 const CRON_SCHEDULE = "27 7 1 * *"; // must match vercel.json's schedule for this path
@@ -66,9 +111,11 @@ const CRON_SCHEDULE = "27 7 1 * *"; // must match vercel.json's schedule for thi
 //
 // Pool/Client must be created, used and closed within one request
 // handler, never at module scope.
-async function fetchAllRows(opts?: any) {
+async function fetchAllRows(opts?: FetchAllRowsOptions) {
   const options = opts || {};
-  const PoolCtor = options.PoolCtor || Pool;
+  const PoolCtor =
+    options.PoolCtor ||
+    (Pool as unknown as NonNullable<FetchAllRowsOptions["PoolCtor"]>);
   const pool = new PoolCtor({ connectionString: process.env.DATABASE_URL });
   try {
     const client = await pool.connect();
@@ -83,7 +130,7 @@ async function fetchAllRows(opts?: any) {
   }
 }
 
-async function githubRequest(path: any, options?: any) {
+async function githubRequest(path: string, options?: GithubRequestOptions) {
   const opts = options || {};
   const resp = await fetch(`https://api.github.com${path}`, {
     method: opts.method || "GET",
@@ -119,7 +166,7 @@ async function ensureBackupBranchExists() {
       `GitHub API error reading main branch ref: HTTP ${mainRef.status}`,
     );
   }
-  const mainJson = await mainRef.json();
+  const mainJson = (await mainRef.json()) as { object: { sha: string } };
 
   const create = await githubRequest(`/repos/${GITHUB_REPO}/git/refs`, {
     method: "POST",
@@ -134,20 +181,20 @@ async function ensureBackupBranchExists() {
 
 // Returns null (not an error) for a 404: "doesn't exist yet" is normal
 // for a brand-new dated file.
-async function getFileSha(path: any) {
+async function getFileSha(path: string) {
   const resp = await githubRequest(
     `/repos/${GITHUB_REPO}/contents/${path}?ref=${BACKUP_BRANCH}`,
   );
   if (resp.status === 404) return null;
   if (!resp.ok)
     throw new Error(`GitHub API error reading ${path}: HTTP ${resp.status}`);
-  const json = await resp.json();
+  const json = (await resp.json()) as GithubFileJson;
   return json.sha;
 }
 
-async function putFile(path: any, contentString: any, message: any) {
+async function putFile(path: string, contentString: string, message: string) {
   const sha = await getFileSha(path);
-  const body: any = {
+  const body: Record<string, unknown> = {
     message: message,
     content: encodeBackupBody(contentString),
     branch: BACKUP_BRANCH,
@@ -174,7 +221,7 @@ async function pruneOldBackups() {
     throw new Error(
       `GitHub API error listing ${BACKUP_DIR}: HTTP ${resp.status}`,
     );
-  const entries = await resp.json();
+  const entries = (await resp.json()) as GithubContentEntry[];
 
   const cutoff = new Date();
   cutoff.setUTCDate(cutoff.getUTCDate() - RETENTION_DAYS);
@@ -204,7 +251,7 @@ async function pruneOldBackups() {
   }
 }
 
-async function sendAlertEmail(alerts: any) {
+async function sendAlertEmail(alerts: string[]) {
   const apiKey = process.env.RESEND_API_KEY;
   const notifyEmail =
     process.env.OPS_ALERT_EMAIL || process.env.SUBMIT_NOTIFY_EMAIL;
@@ -212,7 +259,7 @@ async function sendAlertEmail(alerts: any) {
     process.env.RESEND_FROM_EMAIL || "Tranquilo <onboarding@resend.dev>";
   if (!apiKey || !notifyEmail) return;
 
-  const textBody = `Tranquilo database backup found ${alerts.length} issue(s):\n\n${alerts.map((a: any) => `- ${a}`).join("\n")}`;
+  const textBody = `Tranquilo database backup found ${alerts.length} issue(s):\n\n${alerts.map((a) => `- ${a}`).join("\n")}`;
   await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -228,7 +275,7 @@ async function sendAlertEmail(alerts: any) {
   }).catch(() => {}); // best-effort -- Resend is the only durable record now
 }
 
-async function alertOnFailure(message: any) {
+async function alertOnFailure(message: string) {
   const alerts = [message];
   await sendAlertEmail(alerts);
 }
@@ -243,21 +290,21 @@ async function alertOnFailure(message: any) {
 // API instead, which returns base64 up to 100MB (the same ceiling the
 // write path already uses).
 async function verifyWrittenBackup(
-  expectedRows: any,
-  opts?: any,
-): Promise<any> {
+  expectedRows: number,
+  opts?: VerifyOptions,
+): Promise<VerifyResult> {
   const options = opts || {};
   const request = options.request || githubRequest;
 
-  async function getJson(path: any) {
+  async function getJson(path: string): Promise<GithubFileJson | null> {
     const resp = await request(path);
     if (!resp?.ok) return null;
-    return await resp.json();
+    return (await resp.json()) as GithubFileJson;
   }
 
   try {
     const path = `${BACKUP_DIR}/${backupFilename(null)}`;
-    const meta: any = await getJson(
+    const meta = await getJson(
       `/repos/${GITHUB_REPO}/contents/${path}?ref=${BACKUP_BRANCH}`,
     );
     if (!meta)
@@ -265,9 +312,7 @@ async function verifyWrittenBackup(
 
     let content = meta.content;
     if (!content && meta.sha) {
-      const blob: any = await getJson(
-        `/repos/${GITHUB_REPO}/git/blobs/${meta.sha}`,
-      );
+      const blob = await getJson(`/repos/${GITHUB_REPO}/git/blobs/${meta.sha}`);
       if (!blob?.content) {
         return inconclusive(`blob ${meta.sha} for ${path} returned no content`);
       }
@@ -295,7 +340,7 @@ async function verifyWrittenBackup(
   } catch (err) {
     // A throw here is almost always decode/parse -- we have the bytes
     // and they aren't what we wrote.
-    return bad(String(((err as any) && (err as any).message) || err));
+    return bad(errorMessage(err));
   }
 }
 
@@ -303,15 +348,15 @@ async function verifyWrittenBackup(
 // token problem, network failure) -- says nothing about the backup.
 // "bad": the file was read and isn't what we wrote -- the alert that
 // must never be ignored.
-function inconclusive(reason: any) {
+function inconclusive(reason: string): VerifyResult {
   return { ok: false, inconclusive: true, reason: reason };
 }
-function bad(reason: any) {
+function bad(reason: string): VerifyResult {
   return { ok: false, inconclusive: false, reason: reason };
 }
 
-export default async function handler(req: any, res: any) {
-  const auth = req.headers.authorization || "";
+export default async function handler(req: CronRequest, res: CronResponse) {
+  const auth = req.headers?.authorization || "";
   if (
     !process.env.CRON_SECRET ||
     auth !== `Bearer ${process.env.CRON_SECRET}`
@@ -341,7 +386,7 @@ export default async function handler(req: any, res: any) {
   // value that was already uniform in [0,1), and a fresh draw is from
   // the same distribution -- while turning the whole order over in
   // about ten days.
-  if (req.query.task === "reshuffle") {
+  if (req.query?.task === "reshuffle") {
     const reshuffleStart = Date.now();
     try {
       const reshuffled = await client.query(
@@ -413,7 +458,7 @@ export default async function handler(req: any, res: any) {
   // Timings recorded per stage: knowing WHICH stage is slow is the
   // difference between "the backup is slow" and a scoped fix.
   const startedAt = Date.now();
-  const stage: any = {};
+  const stage: Record<string, number> = {};
 
   try {
     let t = Date.now();
@@ -530,7 +575,7 @@ export default async function handler(req: any, res: any) {
       monitorConfig(),
     );
     await reportError(err);
-    await alertOnFailure(`Database backup failed: ${(err as any).message}`);
+    await alertOnFailure(`Database backup failed: ${errorMessage(err)}`);
     res.statusCode = 500;
     res.json({ error: "Database backup failed" });
   }
