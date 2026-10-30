@@ -48,6 +48,7 @@ import type { ITranquiloSetOfWorksModeHost } from "./types/ITranquiloSetOfWorksM
 import type { ITranquiloShelfModeHost } from "./types/ITranquiloShelfModeHost";
 import type { ITranquiloShelvesModeHost } from "./types/ITranquiloShelvesModeHost";
 import type { ITranquiloStorylineModeHost } from "./types/ITranquiloStorylineModeHost";
+import type { HeroShelf } from "./types/Shelf";
 
 import "./components/TranquiloSupportStrip";
 import "./components/TranquiloNewsletterModal";
@@ -153,8 +154,8 @@ class TranquiloApp {
     function apiUrl(params: any) {
       return itemsApi.apiUrl(params);
     }
-    function fetchJson(url: any, what: any) {
-      return itemsApi.fetchJson(url, what);
+    function fetchJson<T>(url: string, what: string) {
+      return itemsApi.fetchJson<T>(url, what);
     }
     function fetchFeedPage(params: any) {
       return itemsApi.fetchFeedPage(params);
@@ -227,7 +228,7 @@ class TranquiloApp {
       if (category) categoryToMusicBucket[category] = key;
     });
     const categories = ["All"].concat(
-      facets.categories.map((c: any) => c.value),
+      (facets.categories ?? []).map((c) => c.value),
     );
     const storylinesById: Record<string, any> = {};
     storylineIndex.forEach((s: any) => {
@@ -239,9 +240,9 @@ class TranquiloApp {
     });
     // Postgres can't derive this itself, so it's computed here from the
     // storyline index fetched alongside it.
-    const storylinesShelf = shelves.filter(
-      (s: any) => s.id === "storylines",
-    )[0];
+    const storylinesShelf = shelves.find((s) => s.id === "storylines") as
+      | HeroShelf
+      | undefined;
     if (storylinesShelf) {
       storylinesShelf.itemIds = storylineIndex.map((s: any) => ({
         id: s.cover_item_id,
