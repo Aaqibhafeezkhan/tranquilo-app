@@ -9,12 +9,43 @@
 //   col 10 = subject id
 //   col 11 = term text
 
+interface TermRow {
+  subjectId: string;
+  term: string;
+  preferred: boolean;
+}
+
+interface SubjectRecord {
+  preferredName: string | null;
+  variants: string[];
+}
+
+interface UlanIndex {
+  byNorm: Map<string, Set<string>>;
+  bySubject: Map<string, SubjectRecord>;
+}
+
+interface LookupResult {
+  ambiguous?: boolean;
+  subjectIds?: string[];
+  subjectId?: string;
+  preferredName?: string | null;
+  variants?: string[];
+}
+
+interface SubjectGroup {
+  subjectId: string;
+  preferredName: string | null;
+  variants: string[];
+  ourNames: string[];
+}
+
 const TERM_COLS = 13;
 const COL_PREFERRED = 2;
 const COL_SUBJECT = 9;
 const COL_TERM = 10;
 
-function parseTermRow(line: any): any {
+function parseTermRow(line: unknown): TermRow | null {
   if (!line) return null;
   const parts = String(line).split("\t");
   if (parts.length < TERM_COLS) return null;
@@ -32,7 +63,7 @@ function parseTermRow(line: any): any {
 // parenthetical are noise, but word order is NOT -- a token-sorting matcher
 // once merged Dai Jin, Ma Lin and Lü Ji into one artist. Fusing two artists
 // is worse than failing to merge them, since it looks like a success.
-function normalise(name: any): string {
+function normalise(name: unknown): string {
   return String(name || "")
     .replace(/\s*\([^)]*\)\s*$/, "") // trailing parenthetical only
     .normalize("NFD")
@@ -43,15 +74,15 @@ function normalise(name: any): string {
     .trim();
 }
 
-function buildIndex(terms: any): any {
-  const byNorm = new Map(); // normalised term -> Set(subjectId)
-  const bySubject = new Map(); // subjectId -> { preferredName, variants[] }
-  (terms || []).forEach((t: any) => {
+function buildIndex(terms: (TermRow | null)[] | null | undefined): UlanIndex {
+  const byNorm = new Map<string, Set<string>>(); // normalised term -> Set(subjectId)
+  const bySubject = new Map<string, SubjectRecord>(); // subjectId -> { preferredName, variants[] }
+  (terms || []).forEach((t) => {
     if (!t) return;
     const key = normalise(t.term);
     if (!key) return;
     if (!byNorm.has(key)) byNorm.set(key, new Set());
-    byNorm.get(key).add(t.subjectId);
+    byNorm.get(key)?.add(t.subjectId);
 
     let rec = bySubject.get(t.subjectId);
     if (!rec) {
@@ -67,10 +98,10 @@ function buildIndex(terms: any): any {
 // "Guercino (Giovanni Francesco Barbieri)": the full name in the
 // parenthetical picks one of the alias's candidates. Dates never do.
 function narrowByParenthetical(
-  index: { byNorm: Map<string, Set<unknown>> },
+  index: Pick<UlanIndex, "byNorm">,
   name: unknown,
-  candidates: unknown[],
-): unknown[] {
+  candidates: string[],
+): string[] {
   const inner = String(name).match(/\(([^()]*)\)\s*$/)?.[1];
   if (!inner || /\d/.test(inner)) return candidates;
   const innerIds = index.byNorm.get(normalise(inner));
@@ -85,35 +116,39 @@ function narrowByParenthetical(
 const HEDGED_PARENTHETICAL =
   /\([^)]*(\?|\b(after|attributed|circle|copy|d'apres|d'après|follower|manner|mukaan|naar|nach|perhaps|possibly|probably|school|studio|style|toegeschreven|workshop|zugeschrieben)\b)[^)]*\)\s*$/i;
 
-function lookup(index: any, name: any): any {
+function lookup(index: UlanIndex, name: unknown): LookupResult | null {
   if (HEDGED_PARENTHETICAL.test(String(name))) return null;
   const ids = index.byNorm.get(normalise(name));
   if (!ids?.size) return null;
   let list = Array.from(ids);
   if (list.length > 1) list = narrowByParenthetical(index, name, list);
   if (list.length > 1) return { ambiguous: true, subjectIds: list };
-  const rec = index.bySubject.get(list[0]) || {};
+  const subjectId = list[0] as string;
+  const rec = index.bySubject.get(subjectId);
   return {
-    subjectId: list[0],
-    preferredName: rec.preferredName || null,
-    variants: rec.variants || [],
+    subjectId: subjectId,
+    preferredName: rec?.preferredName || null,
+    variants: rec?.variants || [],
   };
 }
 
 // Which of OUR artist names are the same person. Groups of one are dropped --
 // a "merge" of a single spelling is not a merge, and emitting it would bury
 // the real ones.
-function groupBySubject(index: any, ourNames: any): any[] {
-  const bySubject = new Map();
-  (ourNames || []).forEach((name: any) => {
+function groupBySubject(
+  index: UlanIndex,
+  ourNames: string[] | null | undefined,
+): SubjectGroup[] {
+  const bySubject = new Map<string, SubjectGroup>();
+  (ourNames || []).forEach((name) => {
     const hit = lookup(index, name);
-    if (!hit || hit.ambiguous) return;
+    if (!hit || hit.ambiguous || !hit.subjectId) return;
     let g = bySubject.get(hit.subjectId);
     if (!g) {
       g = {
         subjectId: hit.subjectId,
-        preferredName: hit.preferredName,
-        variants: hit.variants,
+        preferredName: hit.preferredName ?? null,
+        variants: hit.variants ?? [],
         ourNames: [],
       };
       bySubject.set(hit.subjectId, g);
@@ -123,4 +158,5 @@ function groupBySubject(index: any, ourNames: any): any[] {
   return Array.from(bySubject.values());
 }
 
+export type { LookupResult, SubjectGroup, TermRow, UlanIndex };
 export { buildIndex, groupBySubject, lookup, normalise, parseTermRow };

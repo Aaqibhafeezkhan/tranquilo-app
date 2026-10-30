@@ -18,13 +18,13 @@ describe("parsing a TERM row", () => {
 
   it("reads the subject id and the term", () => {
     const t = ulan.parseTermRow(row);
-    expect(t.subjectId).toBe("500011051");
-    expect(t.term).toBe("Rembrandt van Rijn");
+    expect(t?.subjectId).toBe("500011051");
+    expect(t?.term).toBe("Rembrandt van Rijn");
   });
 
   it("recognises the preferred form", () => {
-    expect(ulan.parseTermRow(row).preferred).toBe(true);
-    expect(ulan.parseTermRow(row.replace("\tY\t", "\tNA\t")).preferred).toBe(
+    expect(ulan.parseTermRow(row)?.preferred).toBe(true);
+    expect(ulan.parseTermRow(row.replace("\tY\t", "\tNA\t"))?.preferred).toBe(
       false,
     );
   });
@@ -80,8 +80,10 @@ describe("matching our artists to ULAN subjects", () => {
     const idx = ulan.buildIndex(
       terms.filter((t) => t.subjectId !== "500999999"),
     );
-    expect(ulan.lookup(idx, "Rembrandt van Rijn").subjectId).toBe("500011051");
-    expect(ulan.lookup(idx, "Rijn, Rembrandt van").subjectId).toBe("500011051");
+    expect(ulan.lookup(idx, "Rembrandt van Rijn")?.subjectId).toBe("500011051");
+    expect(ulan.lookup(idx, "Rijn, Rembrandt van")?.subjectId).toBe(
+      "500011051",
+    );
   });
 
   it("groups our spellings under one subject", () => {
@@ -94,7 +96,7 @@ describe("matching our artists to ULAN subjects", () => {
       "Edgar Degas",
     ]);
     const rembrandt = groups.find((g: any) => g.subjectId === "500011051");
-    expect(rembrandt.ourNames.sort()).toEqual([
+    expect(rembrandt?.ourNames.sort()).toEqual([
       "Rembrandt van Rijn",
       "Rijn, Rembrandt van",
     ]);
@@ -104,7 +106,7 @@ describe("matching our artists to ULAN subjects", () => {
     const idx = ulan.buildIndex(
       terms.filter((t) => t.subjectId !== "500999999"),
     );
-    expect(ulan.lookup(idx, "Rijn, Rembrandt van").preferredName).toBe(
+    expect(ulan.lookup(idx, "Rijn, Rembrandt van")?.preferredName).toBe(
       "Rembrandt van Rijn",
     );
   });
@@ -113,31 +115,31 @@ describe("matching our artists to ULAN subjects", () => {
     // Picking one silently is how a merge fuses two artists into one.
     const idx = ulan.buildIndex(terms);
     const hit = ulan.lookup(idx, "Rembrandt");
-    expect(hit.ambiguous).toBe(true);
-    expect(hit.subjectIds).toHaveLength(2);
-    expect(hit.subjectId).toBeUndefined();
+    expect(hit?.ambiguous).toBe(true);
+    expect(hit?.subjectIds).toHaveLength(2);
+    expect(hit?.subjectId).toBeUndefined();
   });
 
   it("lets a parenthetical full name pick between same-name subjects", () => {
     const idx = ulan.buildIndex(terms);
-    expect(ulan.lookup(idx, "Rembrandt (Rembrandt van Rijn)").subjectId).toBe(
+    expect(ulan.lookup(idx, "Rembrandt (Rembrandt van Rijn)")?.subjectId).toBe(
       "500011051",
     );
   });
 
   it("stays ambiguous when the parenthetical names neither subject", () => {
     const idx = ulan.buildIndex(terms);
-    expect(ulan.lookup(idx, "Rembrandt (the painter)").ambiguous).toBe(true);
+    expect(ulan.lookup(idx, "Rembrandt (the painter)")?.ambiguous).toBe(true);
   });
 
   it("stays ambiguous when the parenthetical names both subjects", () => {
     const idx = ulan.buildIndex(terms);
-    expect(ulan.lookup(idx, "Rembrandt (Rembrandt)").ambiguous).toBe(true);
+    expect(ulan.lookup(idx, "Rembrandt (Rembrandt)")?.ambiguous).toBe(true);
   });
 
   it("never treats life dates as a disambiguating name", () => {
     const idx = ulan.buildIndex(terms);
-    expect(ulan.lookup(idx, "Rembrandt (1606-1669)").ambiguous).toBe(true);
+    expect(ulan.lookup(idx, "Rembrandt (1606-1669)")?.ambiguous).toBe(true);
   });
 
   it("never matches a name whose parenthetical hedges the attribution", () => {
@@ -162,7 +164,7 @@ describe("matching our artists to ULAN subjects", () => {
       terms.filter((t) => t.subjectId !== "500999999"),
     );
     expect(
-      ulan.lookup(idx, "Rembrandt van Rijn (Rembrandt or Rijn)").subjectId,
+      ulan.lookup(idx, "Rembrandt van Rijn (Rembrandt or Rijn)")?.subjectId,
     ).toBe("500011051");
   });
 

@@ -11,15 +11,21 @@
 // a failing recorder is swallowed. Aggregated on write (one row per day/op),
 // never a per-request log, same discipline as img_cache_stats.
 
+import type { QuerySql } from "./img-store.ts";
+
 // `record(op)` is injected rather than imported so this stays testable
 // without a database.
-type BlobOpsDeps = {
-  put: (...args: any[]) => any;
-  head: (...args: any[]) => any;
-  record: (op: string) => any;
+type BlobFn = (...args: never[]) => unknown;
+
+type BlobOpsDeps<P extends BlobFn, H extends BlobFn> = {
+  put: P;
+  head: H;
+  record: (op: string) => unknown;
 };
 
-function makeCountedBlobOps(deps: BlobOpsDeps) {
+function makeCountedBlobOps<P extends BlobFn, H extends BlobFn>(
+  deps: BlobOpsDeps<P, H>,
+) {
   const put = deps.put;
   const head = deps.head;
   const record = deps.record;
@@ -28,7 +34,7 @@ function makeCountedBlobOps(deps: BlobOpsDeps) {
     try {
       const p = record(op);
       // Swallow both a rejected promise and a synchronous throw.
-      if (p && typeof p.catch === "function") p.catch(() => {});
+      if (p instanceof Promise) p.catch(() => {});
     } catch (_e) {
       /* counting must never break serving */
     }
@@ -37,19 +43,22 @@ function makeCountedBlobOps(deps: BlobOpsDeps) {
   // The count happens BEFORE awaiting, so an operation that throws is still
   // counted -- see the note above about billing.
   return {
-    put: (...args: any[]) => {
+    put: (...args: Parameters<P>): ReturnType<P> => {
       count("put");
-      return put.apply(null, args);
+      return Reflect.apply(put, null, args) as ReturnType<P>;
     },
-    head: (...args: any[]) => {
+    head: (...args: Parameters<H>): ReturnType<H> => {
       count("head");
-      return head.apply(null, args);
+      return Reflect.apply(head, null, args) as ReturnType<H>;
     },
   };
 }
 
 // Aggregated upsert, one row per (day, op). Mirrors bumpStat's shape.
-async function recordBlobOp(sql: any, op: string): Promise<void> {
+async function recordBlobOp(
+  sql: QuerySql | null | undefined,
+  op: string,
+): Promise<void> {
   if (!sql) return;
   await sql.query(
     "INSERT INTO blob_ops_stats (day, op, n) VALUES (CURRENT_DATE, $1, 1) " +
@@ -61,13 +70,15 @@ async function recordBlobOp(sql: any, op: string): Promise<void> {
 // Month-to-date total, the number the Vercel quota is measured against.
 // Returns null (not 0) when unreachable, since "no data" and "zero
 // operations" mean very different things in an alert.
-async function monthToDateOps(sql: any): Promise<number | null> {
+async function monthToDateOps(
+  sql: QuerySql | null | undefined,
+): Promise<number | null> {
   if (!sql) return null;
   try {
-    const rows = await sql.query(
+    const rows = (await sql.query(
       "SELECT COALESCE(SUM(n), 0)::bigint AS total FROM blob_ops_stats " +
         "WHERE day >= date_trunc('month', CURRENT_DATE)",
-    );
+    )) as { total: string | number }[];
     if (!rows?.length) return 0;
     return Number(rows[0].total);
   } catch (_e) {

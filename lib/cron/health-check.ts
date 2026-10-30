@@ -16,11 +16,30 @@
 import * as Sentry from "@sentry/node";
 import { list } from "@vercel/blob";
 import * as blobOps from "../blob-ops.ts";
-import { getSql } from "../db.ts";
+import type { CronRequest, CronResponse } from "../cron-types.ts";
+import { getSql, type Sql } from "../db.ts";
 import * as cacheAlerts from "../img-cache-alerts.ts";
 import { reportError } from "../sentry.ts";
 import * as sourceHealth from "../source-health.ts";
 import { imageFetchHeaders } from "../source-identity.ts";
+
+interface BlobTierTotals {
+  count: number;
+  bytes: number;
+}
+
+type ReconcileRow = [
+  cacheKey: string,
+  source: string,
+  tier: string,
+  size: number,
+  uploadedAt: string | Date | null,
+  id: string,
+];
+
+function errorMessage(err: unknown): string {
+  return String((err instanceof Error && err.message) || err);
+}
 
 // The Simple Operations meter, which actually stopped us once while
 // storage sat at 30%. 70% (lower than storage's 80%) because operations
@@ -60,7 +79,7 @@ const IMAGE_FETCH_TIMEOUT_MS = 15000;
 
 // The id can contain slashes (Commons "File:x.jpg", Europeana
 // "/318/..."), so the tier is taken from the end.
-function parseBlobPathname(pathname: any) {
+function parseBlobPathname(pathname: string) {
   const withoutPrefix = String(pathname).replace(/^img-cache\//, "");
   const parts = withoutPrefix.split("/");
   if (parts.length < 3) return null;
@@ -76,14 +95,14 @@ function parseBlobPathname(pathname: any) {
   };
 }
 
-async function checkSourceFetchHealth(client: any) {
+async function checkSourceFetchHealth(client: Sql) {
   const classified = await sourceHealth.loadSourceHealth(client);
   return sourceHealth.healthAlerts(classified);
 }
 
 // null means "cannot tell" (table absent); 0 means "genuinely none" --
 // must not be collapsed.
-async function checkBlobOperations(client: any) {
+async function checkBlobOperations(client: Sql) {
   const total = await blobOps.monthToDateOps(client);
   if (total === null) return null;
   if (total < BLOB_OPS_MONTHLY_QUOTA * BLOB_OPS_THRESHOLD) return null;
@@ -96,8 +115,8 @@ async function checkBlobOperations(client: any) {
   );
 }
 
-async function checkSourceReachability(client: any) {
-  const alerts: any[] = [];
+async function checkSourceReachability(client: Sql) {
+  const alerts: string[] = [];
   // Skips sources under a standing hold -- pinging a source through a
   // rate-limit hold just repeats the request we said we'd stop making.
   // One shared definition of "held" (source_fetch_state.hold_reason),
@@ -106,10 +125,10 @@ async function checkSourceReachability(client: any) {
   for (let i = 0; i < SOURCES.length; i++) {
     if (held[SOURCES[i]]) continue;
     const source = SOURCES[i];
-    const rows = await client.query(
+    const rows = (await client.query(
       "SELECT img FROM items WHERE source = $1 ORDER BY random() LIMIT 2",
       [source],
-    );
+    )) as { img: string | null }[];
     for (let j = 0; j < rows.length; j++) {
       const url = rows[j].img;
       if (!url) continue;
@@ -140,7 +159,7 @@ async function checkSourceReachability(client: any) {
         }
       } catch (err) {
         alerts.push(
-          `${source}: image request failed (${(err as any).name === "AbortError" ? `timed out after ${IMAGE_FETCH_TIMEOUT_MS / 1000}s` : (err as any).message}) -- ${url}`,
+          `${source}: image request failed (${err instanceof Error && err.name === "AbortError" ? `timed out after ${IMAGE_FETCH_TIMEOUT_MS / 1000}s` : errorMessage(err)}) -- ${url}`,
         );
       }
     }
@@ -148,12 +167,12 @@ async function checkSourceReachability(client: any) {
   return alerts;
 }
 
-async function checkRecentImageLoadFailures(client: any) {
+async function checkRecentImageLoadFailures(client: Sql) {
   // page_load/reason were added later; older rows coalesce to a single
   // 'legacy' bucket, which reads as one page load and can't raise an
   // alert on its own -- correct, since those rows can't distinguish
   // one client from many.
-  const rows = await client.query(
+  const rows = (await client.query(
     "SELECT props->>'source' AS source, " +
       "count(*) AS n, " +
       "count(DISTINCT coalesce(props->>'page_load', 'legacy')) AS page_loads, " +
@@ -163,13 +182,17 @@ async function checkRecentImageLoadFailures(client: any) {
       "WHERE event_name = 'image_load_failed' AND created_at >= now() - interval '24 hours' " +
       "GROUP BY 1 HAVING count(*) >= $1",
     [IMAGE_LOAD_FAILED_THRESHOLD_24H],
-  );
+  )) as {
+    source: string;
+    n: number | string;
+    page_loads: number | string;
+    timeouts: number | string;
+    errors: number | string;
+  }[];
   return rows
-    .filter(
-      (r: any) => Number(r.page_loads) >= IMAGE_LOAD_FAILED_MIN_PAGE_LOADS,
-    )
+    .filter((r) => Number(r.page_loads) >= IMAGE_LOAD_FAILED_MIN_PAGE_LOADS)
     .map(
-      (r: any) =>
+      (r) =>
         `Source '${r.source}': ${r.n} failed image load(s) across ${
           r.page_loads
         } page load(s) in the last 24h (${
@@ -178,7 +201,7 @@ async function checkRecentImageLoadFailures(client: any) {
     );
 }
 
-async function sendAlertEmail(alerts: any) {
+async function sendAlertEmail(alerts: string[]) {
   const apiKey = process.env.RESEND_API_KEY;
   const notifyEmail =
     process.env.OPS_ALERT_EMAIL || process.env.SUBMIT_NOTIFY_EMAIL;
@@ -186,7 +209,7 @@ async function sendAlertEmail(alerts: any) {
     process.env.RESEND_FROM_EMAIL || "Tranquilo <onboarding@resend.dev>";
   if (!apiKey || !notifyEmail) return;
 
-  const textBody = `Tranquilo health check found ${alerts.length} issue(s):\n\n${alerts.map((a: any) => `- ${a}`).join("\n")}`;
+  const textBody = `Tranquilo health check found ${alerts.length} issue(s):\n\n${alerts.map((a) => `- ${a}`).join("\n")}`;
   await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -216,8 +239,8 @@ function monitorConfig() {
   };
 }
 
-export default async function handler(req: any, res: any) {
-  const auth = req.headers.authorization || "";
+export default async function handler(req: CronRequest, res: CronResponse) {
+  const auth = req.headers?.authorization || "";
   if (
     !process.env.CRON_SECRET ||
     auth !== `Bearer ${process.env.CRON_SECRET}`
@@ -245,12 +268,12 @@ export default async function handler(req: any, res: any) {
     const commit = String(req.query?.commit || "") === "1";
     try {
       if (op === "reconcile-blob") {
-        let cursor: any,
+        let cursor: string | undefined,
           seen = 0,
           skipped = 0,
-          bytes = 0,
-          rows: any[] = [],
-          byTier: any = {};
+          bytes = 0;
+        const rows: ReconcileRow[] = [];
+        const byTier: Record<string, BlobTierTotals> = {};
         do {
           const page = await list({
             prefix: "img-cache/",
@@ -266,9 +289,10 @@ export default async function handler(req: any, res: any) {
               continue;
             }
             bytes += b.size;
-            byTier[p.tier] = byTier[p.tier] || { count: 0, bytes: 0 };
-            byTier[p.tier].count++;
-            byTier[p.tier].bytes += b.size;
+            const totals = byTier[p.tier] || { count: 0, bytes: 0 };
+            byTier[p.tier] = totals;
+            totals.count++;
+            totals.bytes += b.size;
             rows.push([
               p.cacheKey,
               p.source,
@@ -281,10 +305,10 @@ export default async function handler(req: any, res: any) {
           cursor = page.hasMore ? page.cursor : undefined;
         } while (cursor);
 
-        const tr = await opClient.query(
+        const tr = (await opClient.query(
           "SELECT total_bytes FROM blob_usage_tracker WHERE id = 1",
-        );
-        const tracked = tr.length ? Number(tr[0].total_bytes) : null;
+        )) as { total_bytes: string | number }[];
+        const tracked = tr[0] ? Number(tr[0].total_bytes) : null;
         const drift = tracked == null ? null : tracked - bytes;
 
         let written = 0;
@@ -339,7 +363,7 @@ export default async function handler(req: any, res: any) {
       res.statusCode = 500;
       res.json({
         op: op,
-        error: String(((opErr as any) && (opErr as any).message) || opErr),
+        error: errorMessage(opErr),
       });
       return;
     }
@@ -354,7 +378,7 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
-    let alerts = [];
+    let alerts: string[] = [];
     const blobOpsAlert = await checkBlobOperations(client);
     if (blobOpsAlert) alerts.push(blobOpsAlert);
 
