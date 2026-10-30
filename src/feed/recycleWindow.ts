@@ -38,7 +38,7 @@ export interface Pager {
   checkCategory: boolean;
 }
 
-interface FeedPageResponse {
+export interface FeedPageResponse {
   items?: Item[];
   next_cursor?: string | null;
 }

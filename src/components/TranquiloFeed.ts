@@ -21,6 +21,7 @@
 
 import type { Pager } from "../feed/recycleWindow";
 import { HERO_COUNT, pickHeroes } from "../logic/logic";
+import type { HeroPoolEntry } from "../types/HeroPoolEntry";
 import type {
   FeedFilterState,
   ITranquiloFeedHost,
@@ -107,7 +108,7 @@ const URL_SYNC_DEBOUNCE_MS = 60;
 // through as literal text.
 function encodeSlugId(source: string, rawId: string): string {
   let idPart = rawId;
-  let m: any;
+  let m: RegExpExecArray | null;
   if (source === "commons" && idPart.slice(0, 5) === "File:") {
     idPart = idPart.slice(5);
   } else if (source === "europeana") {
@@ -142,7 +143,7 @@ export class TranquiloFeed extends HTMLElement {
   // The hero-rotation pool (sql/027_hero_items.sql), assigned once by
   // app.ts's init fetch. Each entry is {source, native_id, media_type};
   // pickHeroes() below narrows it to one session's actual pick.
-  heroPool: { source: string; native_id: string; media_type: string }[] = [];
+  heroPool: HeroPoolEntry[] = [];
 
   private feedPager: Pager | null = null;
   private activeRenderToken = 0;
@@ -153,9 +154,7 @@ export class TranquiloFeed extends HTMLElement {
   // Picked once per page load, so filtering into a category and back to
   // "All" keeps the same opening rather than reshuffling under the visitor.
   // null until the first render() that actually needs it.
-  private sessionHeroes:
-    | { source: string; native_id: string; media_type: string }[]
-    | null = null;
+  private sessionHeroes: HeroPoolEntry[] | null = null;
 
   // Decided once per page load, same reasoning as sessionHeroes above:
   // markFeedSeen() flips the localStorage flag the moment the first
@@ -185,11 +184,7 @@ export class TranquiloFeed extends HTMLElement {
     return this.allModeStart;
   }
 
-  private pickSessionHeroes(): {
-    source: string;
-    native_id: string;
-    media_type: string;
-  }[] {
+  private pickSessionHeroes(): HeroPoolEntry[] {
     if (this.sessionHeroes) return this.sessionHeroes;
     this.sessionHeroes = pickHeroes(this.heroPool, HERO_COUNT, heroRandom());
     return this.sessionHeroes;

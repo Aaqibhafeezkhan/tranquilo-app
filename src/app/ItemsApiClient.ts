@@ -1,5 +1,12 @@
+import type { SearchFacets } from "../components/TranquiloSearchBar";
 import { TRANQUILO_CONFIG } from "../data/config.generated";
+import type { FeedPageResponse } from "../feed/recycleWindow";
+import type { HeroPoolEntry } from "../types/HeroPoolEntry";
 import type { Item } from "../types/Item";
+import type { MusicBucket } from "../types/MusicBucket";
+import type { SetOfWork, SetOfWorkIndexEntry } from "../types/SetOfWork";
+import type { Shelf } from "../types/Shelf";
+import type { Storyline, StorylineIndexEntry } from "../types/Storyline";
 
 // All fetches against api/items -- the catalogue is server-paged and
 // server-aggregated now, not a single manifest read once at startup.
@@ -10,6 +17,11 @@ import type { Item } from "../types/Item";
 const MAX_IDS_PER_LOOKUP = TRANQUILO_CONFIG.feed.max_ids_per_lookup;
 
 type IdsLookup = { items?: Item[]; missing?: string[] };
+
+export type FacetsResponse = SearchFacets & {
+  sources?: unknown[];
+  total?: number;
+};
 
 export class ItemsApiClient {
   // `locale` asks the API for translated content; the URL is the CDN cache
@@ -41,7 +53,7 @@ export class ItemsApiClient {
     return `/api/items?${qs}${this.suffix()}`;
   }
 
-  fetchJson(url: string, what: string): Promise<any> {
+  fetchJson<T = unknown>(url: string, what: string): Promise<T> {
     return fetch(url).then((res) => {
       if (!res.ok) {
         throw new Error(`api/items ${what} responded with ${res.status}`);
@@ -53,7 +65,7 @@ export class ItemsApiClient {
   // One page of the feed, in server-decided order. `params` carries the
   // current mode's filter plus a start offset (first page) or cursor
   // (every page after).
-  fetchFeedPage(params: Record<string, unknown>): Promise<any> {
+  fetchFeedPage(params: Record<string, unknown>): Promise<FeedPageResponse> {
     const p: Record<string, unknown> = {
       shape: "manifest",
       order: "shuffle",
@@ -62,21 +74,24 @@ export class ItemsApiClient {
     Object.keys(params).forEach((k) => {
       p[k] = params[k];
     });
-    return this.fetchJson(this.apiUrl(p), "feed page");
+    return this.fetchJson<FeedPageResponse>(this.apiUrl(p), "feed page");
   }
 
   // The catalogue's shape: category list, source count, and the pools
   // buildBrowseHint() samples. Small enough to fetch once at startup and hold.
-  fetchFacets(): Promise<any> {
-    return this.fetchJson(this.apiUrl({ shape: "facets" }), "facets");
+  fetchFacets(): Promise<FacetsResponse> {
+    return this.fetchJson<FacetsResponse>(
+      this.apiUrl({ shape: "facets" }),
+      "facets",
+    );
   }
 
   // The eager half of storylines -- id/cover_item_id/chapter id+position
   // for every storyline, small enough to fetch once at startup. No title,
   // intro_caption or chapter captions -- those are the lazy half, fetched
   // via fetchStorylineDetail() below only when a reader opens one.
-  fetchStorylineIndex(): Promise<any> {
-    return this.fetchJson(
+  fetchStorylineIndex(): Promise<StorylineIndexEntry[]> {
+    return this.fetchJson<StorylineIndexEntry[]>(
       this.apiUrl({ shape: "storylines" }),
       "storyline index",
     );
@@ -85,28 +100,37 @@ export class ItemsApiClient {
   // Discover shelf definitions -- small and fixed-size, fetched once at
   // startup since Discover needs the whole set regardless of which
   // shelves currently qualify.
-  fetchShelves(): Promise<any> {
-    return this.fetchJson(this.apiUrl({ shape: "shelves" }), "shelves");
+  fetchShelves(): Promise<Shelf[]> {
+    return this.fetchJson<Shelf[]>(
+      this.apiUrl({ shape: "shelves" }),
+      "shelves",
+    );
   }
 
   // Ambient-music buckets, keyed by bucket key -- see lib/music.ts for
   // why there's no separate category map in the response.
-  fetchMusicBuckets(): Promise<any> {
-    return this.fetchJson(this.apiUrl({ shape: "music" }), "music buckets");
+  fetchMusicBuckets(): Promise<Record<string, MusicBucket>> {
+    return this.fetchJson<Record<string, MusicBucket>>(
+      this.apiUrl({ shape: "music" }),
+      "music buckets",
+    );
   }
 
   // The hero-rotation pool, fetched once at startup. Returns
   // {source, native_id, media_type} per entry; TranquiloFeed picks a
   // random subset per session via pickHeroes() and resolves it to full
   // item data via ?ids= only when it needs to render them.
-  fetchHeroPool(): Promise<any> {
-    return this.fetchJson(this.apiUrl({ shape: "heroes" }), "hero pool");
+  fetchHeroPool(): Promise<HeroPoolEntry[]> {
+    return this.fetchJson<HeroPoolEntry[]>(
+      this.apiUrl({ shape: "heroes" }),
+      "hero pool",
+    );
   }
 
   // The LAZY half: one storyline's full content, fetched only when
   // storylineModeEl.open() doesn't already have it cached.
-  fetchStorylineDetail(id: string): Promise<any> {
-    return this.fetchJson(
+  fetchStorylineDetail(id: string): Promise<Storyline> {
+    return this.fetchJson<Storyline>(
       this.apiUrl({ shape: "storyline", id }),
       "storyline detail",
     );
@@ -114,8 +138,8 @@ export class ItemsApiClient {
 
   // Same eager/lazy split as storylines above -- no title or
   // distinguishing_trait, fetched via fetchSetOfWorkDetail() below.
-  fetchSetOfWorksIndex(): Promise<any> {
-    return this.fetchJson(
+  fetchSetOfWorksIndex(): Promise<SetOfWorkIndexEntry[]> {
+    return this.fetchJson<SetOfWorkIndexEntry[]>(
       this.apiUrl({ shape: "set_of_works" }),
       "set of works index",
     );
@@ -123,8 +147,8 @@ export class ItemsApiClient {
 
   // The LAZY half: one set's full content, fetched only when
   // setOfWorksModeEl.open() doesn't already have it cached.
-  fetchSetOfWorkDetail(id: string): Promise<any> {
-    return this.fetchJson(
+  fetchSetOfWorkDetail(id: string): Promise<SetOfWork> {
+    return this.fetchJson<SetOfWork>(
       this.apiUrl({ shape: "set_of_work", id }),
       "set of work detail",
     );
@@ -138,8 +162,8 @@ export class ItemsApiClient {
     Object.keys(params).forEach((k) => {
       p[k] = params[k];
     });
-    return this.fetchJson(this.apiUrl(p), "count")
-      .then((body: any) => body.total || 0)
+    return this.fetchJson<{ total?: number }>(this.apiUrl(p), "count")
+      .then((body) => body.total || 0)
       .catch((err: unknown) => {
         console.error("items: count failed", err);
         return 0;
@@ -189,7 +213,7 @@ export class ItemsApiClient {
       if (!res.ok) {
         throw new Error(`api/items lookup responded with ${res.status}`);
       }
-      return res.json();
+      return res.json() as Promise<IdsLookup>;
     });
   }
 }

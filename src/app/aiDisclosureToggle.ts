@@ -5,15 +5,16 @@
 // closes any open note on an outside click, exempting the note's own
 // content so its mailto link stays followable.
 export function wireAiDisclosureToggle(): void {
-  document.addEventListener("click", (e: any) => {
-    const badge = e.target.closest?.("[data-ai-disclosure]");
+  document.addEventListener("click", (e: MouseEvent) => {
+    const target = e.target as Element;
+    const badge = target.closest?.("[data-ai-disclosure]");
     if (badge) {
       e.preventDefault();
       const open = badge.getAttribute("aria-expanded") === "true";
       badge.setAttribute("aria-expanded", open ? "false" : "true");
       return;
     }
-    if (e.target.closest?.("[data-ai-disclosure-text]")) return;
+    if (target.closest?.("[data-ai-disclosure-text]")) return;
     const expanded = document.querySelectorAll(
       '[data-ai-disclosure][aria-expanded="true"]',
     );

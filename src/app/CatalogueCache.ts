@@ -3,6 +3,8 @@ import type { Item } from "../types/Item";
 // `items` is not the catalogue -- it's an accumulating cache of pages this
 // session has actually seen, in server order. `items.filter(...)` therefore
 // answers from a partial set, not the full catalogue; it would not throw if misused this way.
+type ItemRow = Pick<Item, "id" | "source"> & Partial<Item>;
+
 export class CatalogueCache {
   readonly items: Item[] = [];
   readonly itemsById: Record<string, Item> = {};
@@ -12,8 +14,9 @@ export class CatalogueCache {
   // Preserves object identity for rows already seen -- the feed, the
   // collection and every slideRecord alias these objects, and hydration
   // merges into them, so replacing one would strand existing references.
-  absorbPage(rows: any[]): Item[] {
-    return rows.map((row: any) => {
+  absorbPage(rows: ItemRow[]): Item[] {
+    return rows.map((rawRow) => {
+      const row = rawRow as Item;
       const key = `${row.source}:${row.id}`;
       const existing = this.itemsByKey[key];
       if (existing) {

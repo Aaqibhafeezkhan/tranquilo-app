@@ -97,7 +97,7 @@ export interface SearchControllerHost {
   trackEvent(name: string, props?: Record<string, unknown>): void;
   escapeHtml(s: string): string;
   apiUrl(params: Record<string, unknown>): string;
-  fetchJson(url: string, what: string): Promise<any>;
+  fetchJson(url: string, what: string): Promise<{ items?: unknown[] }>;
   countMatches(params: Record<string, unknown>): Promise<number>;
 }
 
@@ -242,7 +242,7 @@ export class SearchController {
     });
     return this.host
       .fetchJson(this.host.apiUrl(p), "concept probe")
-      .then((body: any) => !!body.items?.length)
+      .then((body) => !!body.items?.length)
       .catch((err: unknown) => {
         console.error("items: concept probe failed", err);
         return false;

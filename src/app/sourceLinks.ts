@@ -1,5 +1,10 @@
 import { t } from "../i18n/index";
 
+export type SourceLinkItem =
+  | { source?: string | null; url?: string | null }
+  | null
+  | undefined;
+
 // Domain-style labels for the detail view's "View on X" source link.
 // Separate from ExportService's EXPORT_SOURCE_NAMES, which holds full
 // institutional names for a CSV rather than the actual host item.url points at.
@@ -44,15 +49,15 @@ const SOURCE_LINK_PREPOSITIONS: Record<string, string> = {
   tainacan: "at",
 };
 
-export function sourceLinkPreposition(item: any): string {
-  return SOURCE_LINK_PREPOSITIONS[item?.source] || "on";
+export function sourceLinkPreposition(item: SourceLinkItem): string {
+  return SOURCE_LINK_PREPOSITIONS[item?.source ?? ""] || "on";
 }
 
 // The link's whole visible wording ("View on metmuseum.org"). One
 // dictionary entry per preposition rather than "View" + preposition +
 // label, since another language may need different word order or a
 // single preposition for both.
-export function sourceLinkText(item: any): string {
+export function sourceLinkText(item: SourceLinkItem): string {
   return t(
     sourceLinkPreposition(item) === "at"
       ? "detail.sourceLink.at"
@@ -70,10 +75,10 @@ const SOURCE_IS_AGGREGATOR: Record<string, boolean> = { europeana: true };
 // Falls back to the raw source string if a future source is added before
 // SOURCE_LINK_LABELS is, so an unmapped source still shows something
 // honest rather than a wrong institution name.
-export function sourceLinkLabel(item: any): string {
+export function sourceLinkLabel(item: SourceLinkItem): string {
   if (item?.source === "smithsonian") return smithsonianMuseum(item.url);
   if (item?.source === "tainacan") return tainacanMuseum(item.url);
-  return SOURCE_LINK_LABELS[item?.source] || item?.source || "source";
+  return SOURCE_LINK_LABELS[item?.source ?? ""] || item?.source || "source";
 }
 
 // The Smithsonian is an umbrella over many museums, each with its own
@@ -129,6 +134,6 @@ export function tainacanMuseum(url: unknown): string {
   return museumByHost(url, TAINACAN_MUSEUMS, "Brazilian museum collections");
 }
 
-export function isAggregatorSource(item: any): boolean {
-  return !!SOURCE_IS_AGGREGATOR[item?.source];
+export function isAggregatorSource(item: SourceLinkItem): boolean {
+  return !!SOURCE_IS_AGGREGATOR[item?.source ?? ""];
 }
