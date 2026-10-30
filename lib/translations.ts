@@ -51,7 +51,10 @@ type Translatable = Record<string, unknown> & {
 
 // Machine translations need the "Translated automatically" note on screen
 // before they may be served.
-export const SERVED_ORIGINS: readonly TranslationOrigin[] = ["original", "human"];
+export const SERVED_ORIGINS: readonly TranslationOrigin[] = [
+  "original",
+  "human",
+];
 
 const ORIGIN_PREFERENCE: readonly TranslationOrigin[] = [
   "original",
