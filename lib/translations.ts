@@ -184,6 +184,144 @@ export function itemFields(
   }));
 }
 
+export const TERM_FIELDS = [
+  "medium",
+  "culture",
+  "place_of_origin",
+  "artist_nationality",
+  "tags",
+] as const;
+
+type TermField = (typeof TERM_FIELDS)[number];
+
+export interface TermRow {
+  field: string;
+  locale: string;
+  source_key: string;
+  source_text: string;
+  text: string;
+}
+
+export function termKey(value: string): string {
+  return value.trim().replace(/\s+/g, " ").toLowerCase();
+}
+
+function termValues(field: TermField, value: string): string[] {
+  if (field !== "tags") return [value];
+  return value
+    .split(",")
+    .map((t) => t.trim())
+    .filter(Boolean);
+}
+
+export function termLookup(items: readonly Record<string, unknown>[]): {
+  fields: string[];
+  keys: string[];
+} {
+  const seen = new Set<string>();
+  const fields: string[] = [];
+  const keys: string[] = [];
+  for (const item of items) {
+    for (const field of TERM_FIELDS) {
+      const value = item[field];
+      if (typeof value !== "string") continue;
+      for (const v of termValues(field, value)) {
+        const key = termKey(v);
+        if (!key || seen.has(`${field}\0${key}`)) continue;
+        seen.add(`${field}\0${key}`);
+        fields.push(field);
+        keys.push(key);
+      }
+    }
+  }
+  return { fields, keys };
+}
+
+function startsUpper(text: string): boolean | null {
+  const first = text.charAt(0);
+  if (first.toLowerCase() === first.toUpperCase()) return null;
+  return first === first.toUpperCase();
+}
+
+// A term is reviewed in one spelling; an item may spell the same value with
+// another initial case, which its translation follows.
+function followSourceCase(source: string, row: TermRow): string {
+  const wanted = startsUpper(source);
+  if (wanted === null || wanted === startsUpper(row.source_text)) {
+    return row.text;
+  }
+  const first = row.text.charAt(0);
+  return (
+    (wanted ? first.toUpperCase() : first.toLowerCase()) + row.text.slice(1)
+  );
+}
+
+function termFor(
+  rows: readonly TermRow[],
+  field: string,
+  value: string,
+  chain: readonly string[],
+): { text: string; locale: string } | null {
+  const key = termKey(value);
+  for (const locale of chain) {
+    const hit = rows.find(
+      (r) => r.field === field && r.locale === locale && r.source_key === key,
+    );
+    if (hit) return { text: followSourceCase(value, hit), locale };
+  }
+  return null;
+}
+
+// Replaces the value fields of `target` that match a reviewed term, skipping
+// any field already translated for this item.
+export function applyTerms(
+  target: Translatable,
+  rows: readonly TermRow[],
+  chain: readonly string[],
+): void {
+  if (!rows.length) return;
+  for (const field of TERM_FIELDS) {
+    const original = target[field];
+    if (typeof original !== "string" || target.translated?.[field]) continue;
+    const tokens = termValues(field, original);
+    let locale: string | null = null;
+    const out = tokens.map((token) => {
+      const hit = termFor(rows, field, token, chain);
+      if (!hit) return token;
+      locale ??= hit.locale;
+      return hit.text;
+    });
+    if (!locale) continue;
+    target[field] = field === "tags" ? out.join(", ") : out[0];
+    target.translated = {
+      ...target.translated,
+      [field]: { origin: "human", locale, original },
+    };
+  }
+}
+
+export async function loadTerms(
+  sql: SqlClient,
+  lookup: { fields: string[]; keys: string[] },
+  chain: readonly string[],
+): Promise<TermRow[]> {
+  if (!lookup.keys.length || !chain.length) return [];
+  try {
+    return (await sql.query(
+      `SELECT t.field, t.locale, t.source_key, t.source_text, t.text
+         FROM term_translations t
+         JOIN unnest($1::text[], $2::text[]) AS k(field, source_key)
+           ON t.field = k.field AND t.source_key = k.source_key
+        WHERE t.locale = ANY($3)`,
+      [lookup.fields, lookup.keys, [...chain]],
+    )) as TermRow[];
+  } catch (err) {
+    console.error("translations: term lookup failed, serving source text", err);
+    await reportError(err);
+    return [];
+  }
+}
+
 export async function translateItems(
   sql: SqlClient,
   rows: readonly { id: string }[],
@@ -197,10 +335,11 @@ export async function translateItems(
     rows.map((r) => r.id),
     chain,
   );
-  if (!byEntity.size) return;
   rows.forEach((row, i) => {
     applyTranslations(out[i], itemFields(out[i]), byEntity.get(row.id), chain);
   });
+  const terms = await loadTerms(sql, termLookup(out), chain);
+  for (const item of out) applyTerms(item, terms, chain);
 }
 
 export async function translateStoryline(
