@@ -182,8 +182,8 @@ describe("every alert fails safe", () => {
     const broken = async () => {
       throw new Error("connection refused");
     };
-    expect(await alerts.checkTokenBuckets(broken)).toEqual([]);
-    expect(await alerts.checkEvictionThrash(broken)).toEqual([]);
-    expect(await alerts.checkRateLimits(broken)).toEqual([]);
+    expect(await alerts.checkTokenBuckets(broken as never)).toEqual([]);
+    expect(await alerts.checkEvictionThrash(broken as never)).toEqual([]);
+    expect(await alerts.checkRateLimits(broken as never)).toEqual([]);
   });
 });

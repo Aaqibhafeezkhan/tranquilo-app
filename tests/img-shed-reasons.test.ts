@@ -173,6 +173,6 @@ describe("the alert this unlocks", () => {
     const broken = async () => {
       throw new Error("db down");
     };
-    expect(await alerts.checkShedReasons(broken)).toEqual([]);
+    expect(await alerts.checkShedReasons(broken as never)).toEqual([]);
   });
 });

@@ -29,6 +29,17 @@ async function backupRows(database: any) {
   return applyMicrosecondColumns(r.rows);
 }
 
+async function backupRow(
+  database: any,
+  nativeId: string,
+): Promise<Record<string, string>> {
+  const row = (await backupRows(database)).find(
+    (x) => x.native_id === nativeId,
+  );
+  if (!row) throw new Error(`no backup row for ${nativeId}`);
+  return row as Record<string, string>;
+}
+
 // One instant with a non-zero microsecond component that ALSO has non-zero
 // digits past millisecond -- .123456 truncates to .123, so the last three
 // digits are the whole test.
@@ -99,7 +110,7 @@ describe("the backup query", () => {
 
 describe("microsecond precision", () => {
   it("survives into the backup rows", async () => {
-    const row = (await backupRows(db)).find((x: any) => x.native_id === "1");
+    const row = await backupRow(db, "1");
     expect(row.created_at).toBe("2026-08-11T12:34:56.123456Z");
     expect(row.human_reviewed_at).toBe("2026-08-11T12:34:56.123456Z");
     expect(row.harmonized_at).toBe("2026-08-11T12:34:56.123456Z");
@@ -124,7 +135,7 @@ describe("microsecond precision", () => {
   });
 
   it("round-trips back into a TIMESTAMPTZ column with no drift", async () => {
-    const row = (await backupRows(db)).find((x: any) => x.native_id === "1");
+    const row = await backupRow(db, "1");
     await db.query(
       `INSERT INTO items (source, native_id, created_at) VALUES ('met', 'restored', $1)`,
       [row.created_at],
@@ -158,7 +169,7 @@ describe("NULL handling", () => {
   it('leaves a NULL timestamp as null, not as the string "null"', async () => {
     // A formatting helper that stringified first would write "null" and
     // restore it as a parse error or a valid-looking date.
-    const row = (await backupRows(db)).find((x: any) => x.native_id === "2");
+    const row = await backupRow(db, "2");
     expect(row.human_reviewed_at).toBeNull();
   });
 });
@@ -167,7 +178,7 @@ describe("timezone independence", () => {
   it("writes UTC even when the session TimeZone is not UTC", async () => {
     await db.exec("SET TimeZone = 'America/Sao_Paulo'");
     try {
-      const row = (await backupRows(db)).find((x: any) => x.native_id === "1");
+      const row = await backupRow(db, "1");
       expect(row.created_at).toBe("2026-08-11T12:34:56.123456Z");
     } finally {
       await db.exec("SET TimeZone = 'UTC'");

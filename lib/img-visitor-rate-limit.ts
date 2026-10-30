@@ -11,6 +11,25 @@
 // Vercel's Fluid CPU / Fast Origin Transfer budget alone, not meant to
 // throttle a real visitor scrolling the feed.
 
+import { TRANQUILO_CONFIG } from "./config.generated.ts";
+import type { QuerySql } from "./img-store.ts";
+
+interface VisitorVerdict {
+  allowed: boolean;
+  reason: string;
+  tokens: number | null;
+}
+
+interface RequestWithHeaders {
+  headers?: Record<string, string | string[] | undefined>;
+}
+
+interface RateLimitResponse {
+  statusCode: number;
+  setHeader(name: string, value: string): unknown;
+  json(body: unknown): unknown;
+}
+
 const ACQUIRE_SQL =
   "INSERT INTO visitor_fetch_state (ip, last_refill, updated_at) " +
   "VALUES ($1, now(), now()) " +
@@ -34,11 +53,16 @@ const ACQUIRE_SQL =
  * reach is not a reason to 429 every visitor on the site; it just means this
  * particular safety net is unavailable for the moment.
  */
-async function acquireVisitorToken(sql: any, ip: string): Promise<any> {
+async function acquireVisitorToken(
+  sql: QuerySql | null | undefined,
+  ip: string | null,
+): Promise<VisitorVerdict> {
   if (!sql || !ip)
     return { allowed: true, reason: "no-db-or-ip", tokens: null };
   try {
-    const rows = await sql.query(ACQUIRE_SQL, [ip]);
+    const rows = (await sql.query(ACQUIRE_SQL, [ip])) as {
+      tokens: string | number;
+    }[];
     if (rows.length)
       return { allowed: true, reason: "ok", tokens: Number(rows[0].tokens) };
     return { allowed: false, reason: "rate-limited", tokens: 0 };
@@ -53,7 +77,7 @@ async function acquireVisitorToken(sql: any, ip: string): Promise<any> {
  * be Vercel's edge. Returns null on a request we can't identify, since
  * acquireVisitorToken() treats that as "allow", not "deny everyone".
  */
-function clientIp(req: any): string | null {
+function clientIp(req: RequestWithHeaders | null | undefined): string | null {
   const xff = req?.headers?.["x-forwarded-for"];
   if (xff) {
     const first = String(Array.isArray(xff) ? xff[0] : xff)
@@ -82,12 +106,12 @@ function retryAfterSeconds(): number {
  * return immediately) and false if the request may proceed.
  */
 async function rateLimitOrRespond(
-  sql: any,
-  req: any,
-  res: any,
+  sql: QuerySql | null | undefined,
+  req: RequestWithHeaders,
+  res: RateLimitResponse,
 ): Promise<boolean> {
   const ip = clientIp(req);
-  const verdict = await acquireVisitorToken(sql, ip as any);
+  const verdict = await acquireVisitorToken(sql, ip);
   if (verdict.allowed) return false;
   const retryAfter = retryAfterSeconds();
   res.statusCode = 429;
@@ -96,7 +120,5 @@ async function rateLimitOrRespond(
   res.json({ error: "Too many requests", retryAfter: retryAfter });
   return true;
 }
-
-import { TRANQUILO_CONFIG } from "./config.generated.ts";
 
 export { acquireVisitorToken, clientIp, rateLimitOrRespond, retryAfterSeconds };
