@@ -32,6 +32,7 @@ import { getShelves } from "../lib/shelves.ts";
 // this handler instead of dedicated endpoints -- Vercel Hobby's
 // 12-function cap.
 import { getStoryline, getStorylineIndex } from "../lib/storylines.ts";
+import { loadCoverage } from "../lib/translation-coverage.ts";
 import {
   parseLocaleParam,
   translateItems,
@@ -807,6 +808,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
+  const wantsCoverage = shape === "facets" && scalar(params.coverage) === "1";
+  if (wantsCoverage && !locale) {
+    res.statusCode = 400;
+    res.json({ error: "coverage needs a locale" });
+    return;
+  }
+
   // Storylines/set-of-works: different tables, dispatched before
   // buildQuery(). Each has an eager index shape (small, always fetched)
   // and a lazy detail shape (fetched only when opened).
@@ -954,7 +962,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       // Summed over categories (partition the catalogue exactly once);
       // summing anything with alternates (e.g. region) would over-count.
       const total = pools.categories.reduce((a, c) => a + c.count, 0);
-      res.json({ ...pools, total });
+      const translation = wantsCoverage
+        ? await loadCoverage(client, locale as string)
+        : undefined;
+      res.json({ ...pools, total, ...(translation && { translation }) });
       return;
     }
 

@@ -195,6 +195,19 @@ paths:
             not a breaking change; removing or renaming one is.
           schema: { type: string }
           x-supported-locales: [en, pt-BR]
+        - name: coverage
+          in: query
+          description: >-
+            `1`, with `shape=facets` and a `locale`, adds `translation` to the
+            facets answer: for each translatable field, how many live items
+            have a value and how many of those are served translated in that
+            locale. Without a `locale` it is a 400. Counts the requested
+            locale only, not the English fallback, and uses the rules
+            `locale` serves under (a reviewed term or an approved translation
+            of the current text; for `tags`, every tag translated). A field
+            the source already supplies in that language counts as not
+            translated.
+          schema: { type: string, enum: ["1"] }
       responses:
         "200":
           description: >-
@@ -918,6 +931,21 @@ components:
             type: object
             properties: { value: { type: string }, count: { type: integer } }
         total: { type: integer }
+        translation:
+          type: object
+          description: Only present for `coverage=1` with a `locale`.
+          required: [locale, fields]
+          properties:
+            locale: { type: string }
+            fields:
+              type: object
+              description: One entry per translatable field (`x-translatable-fields` on `Item`).
+              additionalProperties:
+                type: object
+                required: [items, translated]
+                properties:
+                  items: { type: integer, description: Live items with a value in the field. }
+                  translated: { type: integer, description: Of those, how many are served translated. }
     SuggestResult:
       type: object
       properties:
