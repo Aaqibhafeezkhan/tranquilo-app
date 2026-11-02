@@ -5,6 +5,7 @@
 // it looks them up via document.getElementById() once they've upgraded.
 
 import { Analytics } from "./app/Analytics";
+import { ArtworkViewTracker } from "./app/ArtworkViewTracker";
 import { wireAiDisclosureToggle } from "./app/aiDisclosureToggle";
 import { CatalogueCache } from "./app/CatalogueCache";
 import { COLLECTION_SOURCES, CollectionStore } from "./app/CollectionStore";
@@ -899,6 +900,21 @@ class TranquiloApp {
     });
     feedEl.addEventListener("scroll", () => {
       scrollTelemetry.onScroll();
+    });
+
+    const artworkViewTracker = new ArtworkViewTracker({
+      activeSlideIndex: () => activeSlideIndex(),
+      getSlideRecords: () => feedEl.slideRecords,
+      trackEvent: (name: string, props?: Record<string, unknown>) =>
+        trackEvent(name, props),
+      pageLoadId: PAGE_LOAD_ID,
+    });
+    feedEl.addEventListener("scroll", () => artworkViewTracker.check(), {
+      passive: true,
+    });
+    feedEl.addEventListener("feed-settled", () => artworkViewTracker.check());
+    document.addEventListener("visibilitychange", () => {
+      artworkViewTracker.setPageVisible(document.visibilityState !== "hidden");
     });
 
     // One rule for every banner mode, not just the artist filter: a search
