@@ -344,6 +344,10 @@ export function createSlideBuilder(
         () => markFailed(isManualRetry, "timeout"),
         IMAGE_LOAD_TIMEOUT_MS,
       );
+      // Visible slide first; pre-loaded neighbours yield.
+      const rect = frame.getBoundingClientRect();
+      img.fetchPriority =
+        rect.bottom > 0 && rect.top < window.innerHeight ? "high" : "low";
       img.src = withRetryAttempt(src, failedImageAttempts.get(key) ?? 0);
     }
 

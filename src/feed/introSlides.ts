@@ -61,7 +61,7 @@ export function buildIntroSlide(facets: {
     // with no artwork behind it, unlike the top bar's scrim over a painting.
     `<div class="intro-lockup-wrap">` +
     `<img class="intro-lockup" src="${tranquiloIconLightUrl}" ` +
-    `alt="" aria-hidden="true" width="150" height="245">` +
+    `alt="" aria-hidden="true" width="150" height="245" fetchpriority="high">` +
     `<div class="intro-lockup-word">Tranquilo.art</div>` +
     `</div>` +
     `<h1 class="visually-hidden">${h(t("intro.heading"))}</h1>` +
