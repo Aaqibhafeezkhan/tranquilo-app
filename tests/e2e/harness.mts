@@ -817,11 +817,25 @@ export async function waitForFeedRender(
   since: number,
   timeout = 10000,
 ) {
-  await page.waitForFunction(
-    (n: number) => (window.__tranquiloFeedRenders || 0) > n,
-    since,
-    { polling: 50, timeout },
-  );
+  try {
+    await page.waitForFunction(
+      (n: number) => (window.__tranquiloFeedRenders || 0) > n,
+      since,
+      { polling: 50, timeout },
+    );
+  } catch (err) {
+    const state = await page
+      .evaluate(() => ({
+        renders: window.__tranquiloFeedRenders || 0,
+        slides: document.querySelectorAll("#feed .slide").length,
+        skeletonShowing: !!document.querySelector("#feed .slide-skeleton"),
+      }))
+      .catch(() => null);
+    throw new Error(
+      `feed did not settle after render ${since} within ${timeout}ms: ${JSON.stringify(state)}`,
+      { cause: err },
+    );
+  }
   // The recycling window runs on requestAnimationFrame, so the shells exist by
   // the line above but their contents land a frame later.
   await page.evaluate(() => new Promise(requestAnimationFrame));
