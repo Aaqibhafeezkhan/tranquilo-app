@@ -106,6 +106,8 @@ const ORIGIN_FETCH_TIMEOUT_MS = 20000;
 // Used when a 429 has no Retry-After header, or an unparseable one.
 const ORIGIN_COOLDOWN_DEFAULT_SECONDS = 300;
 const CACHE_CONTROL_HEADER = "public, max-age=31536000, immutable"; // images are effectively immutable once ingested/licensed
+// Edge-cached redirects skip the function and hit counting.
+const CDN_REDIRECT_CACHE_CONTROL = `${CACHE_CONTROL_HEADER}, s-maxage=86400`;
 const LIGHTBOX_MAX_DIMENSION = 2200;
 // 82 for WebP rather than JPEG's 85: WebP's quality curve differs, and
 // 82 is the usual visual match for JPEG 85 at a smaller size.
@@ -642,7 +644,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       if (resolved.from === "cdn") {
         res.statusCode = 302;
         res.setHeader("Location", headerSafeLocation(resolved.url));
-        res.setHeader("Cache-Control", CACHE_CONTROL_HEADER);
+        res.setHeader("Cache-Control", CDN_REDIRECT_CACHE_CONTROL);
         res.end();
         try {
           await guard.bumpStat(getSql(), source, tier, "hits");
