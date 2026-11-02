@@ -9,18 +9,18 @@ import {
 } from "vitest";
 import { makeSql } from "./helpers/pg.ts";
 
-const db = vi.hoisted(() => ({ sql: null as any }));
+const db = vi.hoisted(() => ({ sql: null as unknown }));
 
 vi.mock("../lib/db.ts", () => ({ getSql: () => db.sql }));
 vi.mock("../lib/sentry.ts", () => ({
-  Sentry: { startSpan: (_opts: any, fn: any) => fn() },
+  Sentry: { startSpan: (_opts: unknown, fn: () => unknown) => fn() },
   reportError: vi.fn(),
 }));
 vi.mock("../lib/img-visitor-rate-limit.ts", () => ({
   rateLimitOrRespond: async () => false,
 }));
 vi.mock("../lib/img-fetch-guard.ts", async (importOriginal) => ({
-  ...(await importOriginal<any>()),
+  ...(await importOriginal<Record<string, unknown>>()),
   bumpStat: async () => {},
 }));
 
@@ -29,7 +29,7 @@ const proxy = await import("../api/img/[source]/[id]/[tier].ts");
 const CDN = "https://cdn.example.test";
 const OBJECT_KEY = "img-cache/met/1/display/abc123.webp";
 
-let sql: any;
+let sql: Awaited<ReturnType<typeof makeSql>>;
 beforeAll(async () => {
   sql = await makeSql([
     "001_items_schema.sql",
@@ -59,21 +59,29 @@ beforeEach(() => {
   process.env.IMG_CDN_BASE_URL = CDN;
 });
 
+interface FakeResponse {
+  statusCode: number;
+  headers: Record<string, string>;
+  setHeader(k: string, v: string): void;
+  json(): void;
+  end(): void;
+}
+
 function call(id: string) {
-  const req: any = {
+  const req = {
     query: { source: "met", id, tier: "display" },
     headers: {},
   };
-  const res: any = {
+  const res: FakeResponse = {
     statusCode: 200,
-    headers: {} as Record<string, string>,
-    setHeader(k: string, v: string) {
+    headers: {},
+    setHeader(k, v) {
       this.headers[k.toLowerCase()] = String(v);
     },
     json() {},
     end() {},
   };
-  return proxy.default(req, res).then(() => res);
+  return proxy.default(req as never, res as never).then(() => res);
 }
 
 describe("the redirect for an image already stored in S3", () => {
