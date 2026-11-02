@@ -4,13 +4,20 @@ import { stubBackend } from "./harness.mts";
 
 const ITEMS_DELAY_MS = 1200;
 
+type ClsWindow = Window & { __cls: number };
+interface LayoutShiftEntry extends PerformanceEntry {
+  value: number;
+  hadRecentInput: boolean;
+}
+
 test.beforeEach(async ({ page }) => {
   await stubBackend(page);
   await page.addInitScript(() => {
-    (window as any).__cls = 0;
+    (window as unknown as ClsWindow).__cls = 0;
     new PerformanceObserver((list) => {
-      for (const entry of list.getEntries() as any[]) {
-        if (!entry.hadRecentInput) (window as any).__cls += entry.value;
+      for (const entry of list.getEntries() as LayoutShiftEntry[]) {
+        if (!entry.hadRecentInput)
+          (window as unknown as ClsWindow).__cls += entry.value;
       }
     }).observe({ type: "layout-shift", buffered: true });
   });
@@ -41,6 +48,6 @@ test("loading the feed causes no meaningful layout shift", async ({ page }) => {
   await page.goto("/index.html");
   await page.waitForFunction(() => (window.__tranquiloFeedRenders || 0) > 0);
   await page.waitForTimeout(500);
-  const cls = await page.evaluate(() => (window as any).__cls as number);
+  const cls = await page.evaluate(() => (window as unknown as ClsWindow).__cls);
   expect(cls).toBeLessThan(0.1);
 });
