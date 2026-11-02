@@ -3,7 +3,7 @@ import { mostViewedArtworks } from "../lib/most-viewed";
 import { makeSql } from "./helpers/pg";
 
 describe("mostViewedArtworks", () => {
-  let sql: any;
+  let sql: Awaited<ReturnType<typeof makeSql>>;
 
   beforeEach(async () => {
     sql = await makeSql([
@@ -32,7 +32,7 @@ describe("mostViewedArtworks", () => {
     const cols = Object.keys(row);
     await sql.query(
       `INSERT INTO items (${cols.join(", ")}) VALUES (${cols.map((_, i) => `$${i + 1}`).join(", ")})`,
-      cols.map((c) => (row as any)[c]),
+      cols.map((c) => (row as Record<string, unknown>)[c]),
     );
   }
 

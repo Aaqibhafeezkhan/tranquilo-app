@@ -905,7 +905,8 @@ class TranquiloApp {
     const artworkViewTracker = new ArtworkViewTracker({
       activeSlideIndex: () => activeSlideIndex(),
       getSlideRecords: () => feedEl.slideRecords,
-      trackEvent: (name: any, props: any) => trackEvent(name, props),
+      trackEvent: (name: string, props?: Record<string, unknown>) =>
+        trackEvent(name, props),
       pageLoadId: PAGE_LOAD_ID,
     });
     feedEl.addEventListener("scroll", () => artworkViewTracker.check(), {

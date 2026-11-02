@@ -20,7 +20,7 @@ const since = sinceDays
   : undefined;
 
 const sql = neon(process.env.DATABASE_URL!);
-const rows = await mostViewedArtworks(sql as any, { limit, since });
+const rows = await mostViewedArtworks(sql, { limit, since });
 
 if (rows.length === 0) {
   console.log("No artwork_view events yet.");
