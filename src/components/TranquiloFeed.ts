@@ -258,7 +258,8 @@ export class TranquiloFeed extends HTMLElement {
       // record 0.
     } else {
       const introEl = host.buildIntroSlide();
-      this.appendChild(introEl);
+      // Ahead of the skeleton, so removing it shifts nothing.
+      this.prepend(introEl);
       this.slideRecords.push({
         el: introEl,
         item: null,
