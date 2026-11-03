@@ -33,6 +33,17 @@ export function findCuratedItem(
   return key ? host.getItemByKey(key) : host.getItem(String(ref.id));
 }
 
+// Entries whose item the catalogue no longer serves, dropped; positions are
+// renumbered so a "3 of 5" label still counts only what is shown.
+export function renumberResolved<T extends CuratedRef & { position: number }>(
+  host: Pick<CuratedLookupHost, "getItem" | "getItemByKey">,
+  entries: T[],
+): T[] {
+  return entries
+    .filter((entry) => findCuratedItem(host, entry))
+    .map((entry, index) => ({ ...entry, position: index + 1 }));
+}
+
 export function shelfRefs(
   itemIds: (string | number | CuratedRef)[],
 ): CuratedRef[] {

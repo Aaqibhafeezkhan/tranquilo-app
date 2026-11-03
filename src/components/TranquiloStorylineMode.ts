@@ -22,7 +22,11 @@
 //
 // Renders into light DOM: every style already lives in css/style.css.
 
-import { findCuratedItem, resolveCuratedItems } from "../feed/curatedEntries";
+import {
+  findCuratedItem,
+  renumberResolved,
+  resolveCuratedItems,
+} from "../feed/curatedEntries";
 import { escapeHtml, SHARE_SVG } from "../feed/slideBuilder";
 import { t } from "../i18n/index";
 import type { ITranquiloStorylineModeHost } from "../types/ITranquiloStorylineModeHost";
@@ -428,16 +432,16 @@ export class TranquiloStorylineMode extends HTMLElement {
 
   // `atPosition` opens straight to a chapter, used when returning from an
   // artwork's detail panel. Undefined everywhere else.
-  open(storylineId: string, atPosition?: number): void {
+  open(storylineId: string, atPosition?: number, resolved = false): void {
     const host = this.requireApp();
-    const storyline = host.getStorylineDetail(storylineId);
+    const detail = host.getStorylineDetail(storylineId);
 
     // Full storyline content is fetched lazily, one at a time, unlike the
     // lightweight index the feed chip already has. Not cached means not
     // fetched, so kick that off and show a loading skeleton meanwhile;
     // re-invoking open() once it resolves is the same self-recursion the
     // chapter-item resolution below uses.
-    if (!storyline) {
+    if (!detail) {
       this.pendingStorylineId = storylineId;
       this.currentStorylineId = storylineId;
       this.showLoadingSkeleton();
@@ -460,6 +464,7 @@ export class TranquiloStorylineMode extends HTMLElement {
       return;
     }
     this.pendingStorylineId = null;
+    let storyline = detail;
 
     // A storyline is a handful of items the feed's recycling window has
     // no reason to have hydrated -- fetch them first or every chapter
@@ -469,14 +474,26 @@ export class TranquiloStorylineMode extends HTMLElement {
       .map((si) => findCuratedItem(host, si))
       .filter((i): i is Item => !!i);
     // "Do we have it" and "is it hydrated" are different questions;
-    // resolving by id covers both.
+    // resolving by id covers both. One pass only: a chapter the catalogue
+    // no longer serves would otherwise re-trigger this forever.
     if (
-      chapterItems.length !== storyline.items.length ||
-      chapterItems.some((i) => !i._full)
+      !resolved &&
+      (chapterItems.length !== storyline.items.length ||
+        chapterItems.some((i) => !i._full))
     ) {
       resolveCuratedItems(host, storyline.items).then(() => {
-        this.open(storylineId, atPosition);
+        this.open(storylineId, atPosition, true);
       });
+      return;
+    }
+    if (resolved) {
+      storyline = {
+        ...detail,
+        items: renumberResolved(host, detail.items),
+      };
+    }
+    if (!storyline.items.length) {
+      this.close();
       return;
     }
     host.trackEvent("storyline_open", { storyline_id: storylineId });

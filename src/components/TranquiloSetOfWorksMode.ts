@@ -118,7 +118,7 @@ export class TranquiloSetOfWorksMode extends HTMLElement {
     return panel;
   }
 
-  open(setOfWorkId: string): void {
+  open(setOfWorkId: string, resolved = false): void {
     const host = this.requireApp();
     const setOfWork = host.getSetOfWorkDetail(setOfWorkId);
 
@@ -156,12 +156,15 @@ export class TranquiloSetOfWorksMode extends HTMLElement {
     const memberItems = setOfWork.items
       .map((m) => findCuratedItem(host, m))
       .filter((i): i is Item => !!i);
+    // One pass only: a member the catalogue no longer serves would
+    // otherwise re-trigger this forever; render skips it below.
     if (
-      memberItems.length !== setOfWork.items.length ||
-      memberItems.some((i) => !i._full)
+      !resolved &&
+      (memberItems.length !== setOfWork.items.length ||
+        memberItems.some((i) => !i._full))
     ) {
       resolveCuratedItems(host, setOfWork.items).then(() => {
-        this.open(setOfWorkId);
+        this.open(setOfWorkId, true);
       });
       return;
     }
