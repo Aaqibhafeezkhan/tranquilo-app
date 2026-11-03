@@ -7,28 +7,29 @@ import {
   itemsRateLimitOrRespond,
 } from "../lib/items-rate-limit.ts";
 
-function fakeSql(results: any[]) {
+type Call = { text: string; params?: unknown[] };
+
+function fakeSql(results: unknown[]) {
   const queue = results.slice();
-  const fn: any = async (text: string, params?: any[]) => {
-    fn.calls.push({ text, params });
+  const calls: Call[] = [];
+  const query = async (text: string, params?: unknown[]) => {
+    calls.push({ text, params });
     const next = queue.shift();
     if (next instanceof Error) throw next;
-    return next === undefined ? [] : next;
+    return (next === undefined ? [] : next) as Record<string, unknown>[];
   };
-  fn.calls = [];
-  fn.query = fn;
-  return fn;
+  return { query, calls };
 }
 
 function fakeRes() {
   return {
     statusCode: 200,
     headers: {} as Record<string, string>,
-    body: undefined as any,
+    body: undefined as unknown,
     setHeader(name: string, value: string) {
       this.headers[name] = value;
     },
-    json(body: any) {
+    json(body: unknown) {
       this.body = body;
     },
   };
@@ -65,7 +66,7 @@ describe("acquireItemsBudget", () => {
   it("keeps its own bucket, apart from the image budget", async () => {
     const sql = fakeSql([[{ tokens: 1 }]]);
     await acquireItemsBudget(sql, "203.0.113.7", 1, LIMITS);
-    expect(sql.calls[0].params[0]).not.toBe("203.0.113.7");
+    expect(sql.calls[0].params?.[0]).not.toBe("203.0.113.7");
   });
 
   it("denies when the bucket cannot cover the cost", async () => {
@@ -81,7 +82,7 @@ describe("acquireItemsBudget", () => {
   it("never charges more than the bucket can hold", async () => {
     const sql = fakeSql([[{ tokens: 0 }]]);
     await acquireItemsBudget(sql, "203.0.113.7", 5000, LIMITS);
-    expect(sql.calls[0].params[1]).toBe(100);
+    expect(sql.calls[0].params?.[1]).toBe(100);
   });
 
   it("fails open when the database errors", async () => {
