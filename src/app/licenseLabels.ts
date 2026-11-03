@@ -31,6 +31,13 @@ export const LICENSE_LABELS: Record<string, [string, string | null]> = {
     "Open Government Data License 1.0",
     "https://data.gov.tw/license",
   ],
+  // Te Papa's own statement, made under New Zealand law only, so it is not
+  // presented as public domain. Te Papa publishes no machine-readable rights
+  // URI; the link is the page that defines the term.
+  "no-known-copyright-restrictions": [
+    "No known copyright restrictions (Te Papa)",
+    "https://www.tepapa.govt.nz/about-collections-online",
+  ],
   // Works from Ibram (Brazil's federal museums institute) collections. The
   // works are out of copyright, but each museum attaches its own reuse terms
   // to the images -- credit "<museum>/Ibram", and commercial use goes through
