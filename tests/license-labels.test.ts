@@ -18,6 +18,13 @@ describe("licenseLabel", () => {
     });
   });
 
+  it("labels Te Papa's statement as its own, linked to Te Papa's definition", () => {
+    expect(licenseLabel("no-known-copyright-restrictions")).toEqual({
+      label: "No known copyright restrictions (Te Papa)",
+      deed: "https://www.tepapa.govt.nz/about-collections-online",
+    });
+  });
+
   it("labels Ibram public-domain items as public domain under Ibram's terms, not as CC", () => {
     // The works are out of copyright; Ibram's museums attach their own reuse
     // terms to the images, so the label says so and links to those terms.
