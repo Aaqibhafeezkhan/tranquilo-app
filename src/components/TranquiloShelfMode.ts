@@ -127,8 +127,10 @@ export class TranquiloShelfMode extends HTMLElement {
   }
 
   close(): void {
+    const wasOpen = this.classList.contains("open");
     this.hide();
     this.observer?.disconnect();
+    if (wasOpen) this.requireApp().returnToDiscover();
   }
 
   // No re-render or history push; keeps grid and scroll position.

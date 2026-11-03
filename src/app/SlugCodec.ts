@@ -69,6 +69,10 @@ export class SlugCodec {
     return m ? decodeURIComponent(m[1]) : "";
   }
 
+  isDiscoverLocation(): boolean {
+    return /^\/discover\/?$/.test(location.pathname);
+  }
+
   shelfIdFromLocation(): string {
     const m = location.pathname.match(/^\/shelf\/([^/]+)\/?$/);
     return m ? decodeURIComponent(m[1]) : "";

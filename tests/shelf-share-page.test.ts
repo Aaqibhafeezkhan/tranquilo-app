@@ -135,6 +135,22 @@ describe("/shelf/{slug} share page", () => {
   });
 });
 
+describe("/og/discover card", () => {
+  it("renders a PNG", async () => {
+    const res = await call(cardHandler, "discover");
+    expect(res.statusCode).toBe(200);
+    expect(res.headers["content-type"]).toBe("image/png");
+  }, 30000);
+
+  it("draws Discover, not the generic fallback", async () => {
+    const discover = await call(cardHandler, "discover");
+    const fallback = await call(cardHandler, "shelf-no-such-shelf");
+    expect(
+      Buffer.compare(discover.body as Uint8Array, fallback.body as Uint8Array),
+    ).not.toBe(0);
+  }, 30000);
+});
+
 describe("/og/shelf-{id} card", () => {
   it("renders a PNG for a real shelf", async () => {
     const res = await call(cardHandler, "shelf-birdwatching");

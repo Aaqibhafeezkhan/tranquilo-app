@@ -323,10 +323,31 @@ async function sendShelfPage(
   res.end(appHtml ? renderAppPage(appHtml, meta) : renderPage(meta));
 }
 
+function sendDiscoverPage(res: VercelResponse, origin: string) {
+  const meta: PageMeta = {
+    title: "Discover · Tranquilo",
+    description: escapeHtml(
+      "Discover curious collections & stories behind the art",
+    ),
+    ogTitle: "Discover · Tranquilo",
+    ogImage: `${origin}/og/discover.png`,
+    canonicalUrl: `${origin}/discover`,
+    redirectUrl: `${origin}/index.html`,
+    statusNote: "Opening Tranquilo…",
+  };
+
+  res.statusCode = 200;
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
+  res.setHeader("Cache-Control", "public, max-age=3600, s-maxage=86400");
+  const appHtml = getAppHtml();
+  res.end(appHtml ? renderAppPage(appHtml, meta) : renderPage(meta));
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const raw = req.query.slug;
   const slug = (Array.isArray(raw) ? raw[0] : raw) || "";
   const origin = getOrigin(req);
+  if (slug === "discover") return sendDiscoverPage(res, origin);
   const client = getSql();
 
   const storylineId = parseStorylineSlug(slug);

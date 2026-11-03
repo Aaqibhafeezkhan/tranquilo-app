@@ -357,11 +357,15 @@ export class TranquiloShelvesMode extends HTMLElement {
     this.classList.add("open");
     this.setAttribute("aria-hidden", "false");
     host.pushOverlayHistoryState("shelves");
+    history.replaceState(history.state, "", "/discover");
   }
 
   close(): void {
     this.classList.remove("open");
     this.setAttribute("aria-hidden", "true");
+    if (/^\/(discover|shelf\/)/.test(location.pathname)) {
+      history.replaceState(history.state, "", "/");
+    }
   }
 
   // Reopens without re-rendering or re-pushing history, for

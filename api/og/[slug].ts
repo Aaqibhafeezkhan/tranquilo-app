@@ -54,6 +54,9 @@ function decodeSlugId(source: string, idPart: string): string {
   return idPart;
 }
 
+const DISCOVER_SLUG = "discover";
+const DISCOVER_COVER = { source: "met", nativeId: "436528" };
+
 function parseSlug(slug: string) {
   const parts = slug.split(/-(.+)/);
   if (parts.length < 2 || !parts[0] || !parts[1]) return null;
@@ -398,6 +401,20 @@ function buildShelfCard(
   });
 }
 
+function buildDiscoverCard(
+  imageDataUri: string | null,
+  accentColor: string | null | undefined,
+): CardNode {
+  return buildShareCard({
+    eyebrow: "Tranquilo",
+    title: "Discover",
+    caption: "Curious collections & stories behind the art",
+    captionStyle: { fontWeight: 300, fontSize: 25 },
+    imageDataUri: imageDataUri,
+    accentColor: accentColor,
+  });
+}
+
 // Held sources get a text-only card; no origin fetch.
 async function coverDataUriFor(
   client: ReturnType<typeof getSql>,
@@ -525,6 +542,36 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       res.setHeader("Content-Type", "image/png");
       res.setHeader("Cache-Control", "public, max-age=3600, s-maxage=86400");
       res.end(storylineBuffer);
+      return;
+    }
+
+    if (slug === DISCOVER_SLUG) {
+      let discoverTree = buildDiscoverCard(null, null);
+      if (client) {
+        try {
+          const rows = (await client.query(
+            `SELECT * FROM items WHERE source = $1 AND native_id = $2 ${LIVE_ITEMS_AND} LIMIT 1`,
+            [DISCOVER_COVER.source, DISCOVER_COVER.nativeId],
+          )) as ItemRow[];
+          const cover = rows[0] || null;
+          discoverTree = buildDiscoverCard(
+            await coverDataUriFor(client, cover),
+            cover?.accent_color,
+          );
+        } catch (err) {
+          console.error("og/[slug]: discover cover failed", err);
+          await reportError(err);
+        }
+      }
+      const discoverImage = new ImageResponse(discoverTree, {
+        width: 1200,
+        height: 630,
+        fonts: await loadFonts(),
+      });
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "image/png");
+      res.setHeader("Cache-Control", "public, max-age=3600, s-maxage=86400");
+      res.end(Buffer.from(await discoverImage.arrayBuffer()));
       return;
     }
 

@@ -251,6 +251,10 @@ export async function stubBackend(
     route.fulfill({ status: 200, contentType: "text/html", body: appHtml }),
   );
 
+  await page.route(/\/discover\/?$/, (route: Route) =>
+    route.fulfill({ status: 200, contentType: "text/html", body: appHtml }),
+  );
+
   // /shelf/{id} too, same rewrite into the same handler.
   await page.route(/\/shelf\/[^/]+$/, (route: Route) =>
     route.fulfill({ status: 200, contentType: "text/html", body: appHtml }),
@@ -784,6 +788,17 @@ export async function gotoStoryline(
   );
   if (expectOpen) await page.waitForSelector("#storylineMode.open");
   return page.locator("#storylineMode");
+}
+
+// Cold load of /discover; waits for feed, then overlay.
+export async function gotoDiscover(page: Page) {
+  await stubBackend(page);
+  await page.goto("/discover");
+  await page.waitForFunction(
+    () => document.querySelectorAll("#feed .slide").length > 1,
+  );
+  await page.waitForSelector("#shelvesMode.open .shelf");
+  return page.locator("#shelvesMode");
 }
 
 // Cold load of /shelf/{id}; waits for feed, then overlay.

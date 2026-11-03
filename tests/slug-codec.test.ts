@@ -147,3 +147,28 @@ describe("shelfIdFromLocation", () => {
     expect(new SlugCodec().shelfIdFromLocation()).toBe("");
   });
 });
+
+describe("isDiscoverLocation", () => {
+  beforeEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("matches /discover with or without a trailing slash", () => {
+    vi.stubGlobal("location", { pathname: "/discover" });
+    expect(new SlugCodec().isDiscoverLocation()).toBe(true);
+    vi.stubGlobal("location", { pathname: "/discover/" });
+    expect(new SlugCodec().isDiscoverLocation()).toBe(true);
+  });
+
+  it("does not match other paths", () => {
+    for (const pathname of [
+      "/",
+      "/discovery",
+      "/discover/x",
+      "/shelf/discover",
+    ]) {
+      vi.stubGlobal("location", { pathname });
+      expect(new SlugCodec().isDiscoverLocation()).toBe(false);
+    }
+  });
+});

@@ -4,7 +4,7 @@
 
 import type { Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
-import { gotoFeed, gotoShelf } from "./harness.mts";
+import { gotoDiscover, gotoFeed, gotoShelf } from "./harness.mts";
 
 declare global {
   interface Window {
@@ -106,10 +106,20 @@ test("a shared hero-shelf link opens the shelf over the feed", async ({
   );
   await expect(view.locator(".shelf-mode-card")).toHaveCount(4);
 
-  // Back leaves a real feed behind, not a blank page.
+  // Closing a shared shelf lands on Discover; a second back reaches the feed.
   await page.goBack();
   await expect(view).not.toHaveClass(/open/);
+  await expect(page.locator("#shelvesMode")).toHaveClass(/open/);
+  await page.goBack();
+  await expect(page.locator("#shelvesMode")).not.toHaveClass(/open/);
   await expect(page.locator("#feed .slide").first()).toBeVisible();
+});
+
+test("the shelf view's close button returns to Discover", async ({ page }) => {
+  const view = await gotoShelf(page, "main-character-energy");
+  await view.locator(".shelf-mode-close").click();
+  await expect(view).not.toHaveClass(/open/);
+  await expect(page.locator("#shelvesMode")).toHaveClass(/open/);
 });
 
 test("a shared rule-shelf link shows its works even below Discover's minimum", async ({

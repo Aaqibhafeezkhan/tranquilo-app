@@ -301,7 +301,12 @@ class TranquiloApp {
     // Captured once at share-banner show-time, reused by its dismiss/CTA
     // handlers so every event in the funnel -- not just the impression --
     // is attributable to which entry type (artwork vs storyline) triggered it.
-    let shareBannerSource: "artwork" | "storyline" | "shelf" | null = null;
+    let shareBannerSource:
+      | "artwork"
+      | "storyline"
+      | "shelf"
+      | "discover"
+      | null = null;
     let searchResultCount = 0;
 
     const feedEl = document.getElementById("feed") as TranquiloFeed;
@@ -598,6 +603,9 @@ class TranquiloApp {
       },
       requestOverlayClose: (closeFn) => {
         requestOverlayClose(closeFn);
+      },
+      returnToDiscover: () => {
+        shelvesModeEl.open();
       },
     };
     shelfModeEl.app = shelfModeHost;
@@ -1197,6 +1205,8 @@ class TranquiloApp {
     const openedShelf = initialShelfId
       ? shelfModeEl.open(initialShelfId)
       : false;
+    const openedDiscover = slugCodec.isDiscoverLocation();
+    if (openedDiscover) shelvesModeEl.open();
 
     // Either deep-link form means the same thing for this banner: the
     // intro slide (and its Mission/Connect/Support cards) was skipped,
@@ -1205,7 +1215,10 @@ class TranquiloApp {
     // so forking into two independently-tracked states would only invite
     // them drifting out of sync.
     const arrivedViaShareLink =
-      hadDeepLinkArtwork || Boolean(initialStorylineId) || openedShelf;
+      hadDeepLinkArtwork ||
+      Boolean(initialStorylineId) ||
+      openedShelf ||
+      openedDiscover;
     if (
       arrivedViaShareLink &&
       !sessionStorage.getItem(SESSION_SHARE_BANNER_KEY)
@@ -1214,7 +1227,9 @@ class TranquiloApp {
         ? "artwork"
         : initialStorylineId
           ? "storyline"
-          : "shelf";
+          : openedDiscover
+            ? "discover"
+            : "shelf";
       topbarEl.showShareBanner();
       sessionStorage.setItem(SESSION_SHARE_BANNER_KEY, "1");
       trackEvent("share_banner_shown", { source: shareBannerSource });

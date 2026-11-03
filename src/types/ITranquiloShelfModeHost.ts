@@ -25,4 +25,5 @@ export interface ITranquiloShelfModeHost {
   ): void;
   pushOverlayHistoryState(name: string): void;
   requestOverlayClose(closeFn: () => void): void;
+  returnToDiscover(): void;
 }
