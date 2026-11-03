@@ -62,6 +62,10 @@
       "schedule": "13 8 * * *"
     },
     {
+      "path": "/api/cron?job=prune-visitor-data",
+      "schedule": "37 4 * * *"
+    },
+    {
       "path": "/api/cron?job=vercel-deployment-cleanup&commit=1",
       "schedule": "19 4 * * *"
     }

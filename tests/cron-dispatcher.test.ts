@@ -89,6 +89,7 @@ describe("api/cron/index.js dispatcher", () => {
     expect(Object.keys(dispatcherModule.REAL_JOBS).sort()).toEqual([
       "db-backup",
       "health-check",
+      "prune-visitor-data",
       "restore-drill-reminder",
       "vercel-deployment-cleanup",
       "warm-image-cache",
