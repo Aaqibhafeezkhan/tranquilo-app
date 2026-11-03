@@ -1,0 +1,119 @@
+// Per-visitor-IP budget on /api/items, charged by how many items a request
+// asks for, so a deep scrape drains it long before a person scrolling does.
+// Shares visitor_fetch_state with the image budget under an "items:" key
+// prefix; see sql/035_visitor_rate_state.sql.
+//
+// Fails open like the image budget: an unreachable database is not a reason
+// to refuse every visitor. Responses served from the edge cache never reach
+// this check.
+
+import { TRANQUILO_CONFIG } from "./config.generated.ts";
+import type { QuerySql } from "./img-store.ts";
+import { clientIp } from "./img-visitor-rate-limit.ts";
+
+interface Limits {
+  capacity: number;
+  refill_per_sec: number;
+  enforce: boolean;
+}
+
+interface CostedQuery {
+  limit?: number;
+  facets?: boolean;
+  suggest?: boolean;
+  counting?: boolean;
+  correction?: boolean;
+  lookup?: boolean;
+  requestedIds?: string[];
+}
+
+interface RequestWithHeaders {
+  headers?: Record<string, string | string[] | undefined>;
+}
+
+interface RateLimitResponse {
+  statusCode: number;
+  setHeader(name: string, value: string): unknown;
+  json(body: unknown): unknown;
+}
+
+interface Verdict {
+  allowed: boolean;
+  reason: string;
+  tokens: number | null;
+}
+
+const ACQUIRE_SQL =
+  "INSERT INTO visitor_fetch_state (ip, tokens, capacity, refill_per_sec, last_refill, updated_at) " +
+  "VALUES ($1, $3::real - $2::real, $3::real, $4::real, now(), now()) " +
+  "ON CONFLICT (ip) DO UPDATE SET " +
+  "  tokens = LEAST(visitor_fetch_state.capacity, " +
+  "    visitor_fetch_state.tokens + EXTRACT(EPOCH FROM (now() - visitor_fetch_state.last_refill)) " +
+  "      * visitor_fetch_state.refill_per_sec) - $2::real, " +
+  "  last_refill = now(), " +
+  "  updated_at = now() " +
+  "WHERE LEAST(visitor_fetch_state.capacity, " +
+  "    visitor_fetch_state.tokens + EXTRACT(EPOCH FROM (now() - visitor_fetch_state.last_refill)) " +
+  "      * visitor_fetch_state.refill_per_sec) >= $2::real " +
+  "RETURNING tokens";
+
+const configured = (): Limits => TRANQUILO_CONFIG.items_visitor_rate_limit;
+
+// One token for an aggregate answer, one per row for anything that returns
+// items.
+export function itemsCost(query: CostedQuery): number {
+  if (query.lookup) return Math.max(1, query.requestedIds?.length ?? 1);
+  return Math.max(1, query.limit ?? 1);
+}
+
+export async function acquireItemsBudget(
+  sql: QuerySql | null | undefined,
+  ip: string | null,
+  cost: number,
+  limits: Limits = configured(),
+): Promise<Verdict> {
+  if (!sql || !ip)
+    return { allowed: true, reason: "no-db-or-ip", tokens: null };
+  const charge = Math.min(cost, limits.capacity);
+  try {
+    const rows = (await sql.query(ACQUIRE_SQL, [
+      `items:${ip}`,
+      charge,
+      limits.capacity,
+      limits.refill_per_sec,
+    ])) as { tokens: string | number }[];
+    if (rows.length)
+      return { allowed: true, reason: "ok", tokens: Number(rows[0].tokens) };
+    return { allowed: false, reason: "rate-limited", tokens: 0 };
+  } catch (_err) {
+    return { allowed: true, reason: "error", tokens: null };
+  }
+}
+
+// True when the 429 has been sent and the caller must return. While
+// `enforce` is off a denial is only logged, so the limits can be tuned
+// against real traffic first.
+export async function itemsRateLimitOrRespond(
+  sql: QuerySql | null | undefined,
+  req: RequestWithHeaders,
+  res: RateLimitResponse,
+  cost: number,
+  limits: Limits = configured(),
+): Promise<boolean> {
+  const ip = clientIp(req);
+  const verdict = await acquireItemsBudget(sql, ip, cost, limits);
+  if (verdict.allowed) return false;
+  if (!limits.enforce) {
+    console.warn("items: rate limit would deny", { cost });
+    return false;
+  }
+  const retryAfter = Math.max(
+    1,
+    Math.ceil(Math.min(cost, limits.capacity) / limits.refill_per_sec),
+  );
+  res.statusCode = 429;
+  res.setHeader("Retry-After", String(retryAfter));
+  res.setHeader("Cache-Control", "no-store");
+  res.json({ error: "Too many requests", retryAfter });
+  return true;
+}

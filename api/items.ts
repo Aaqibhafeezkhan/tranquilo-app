@@ -18,9 +18,11 @@
 
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { TRANQUILO_CONFIG } from "../lib/config.generated.ts";
+import { signCursor, verifyCursor } from "../lib/cursor-signature.ts";
 import { getSql } from "../lib/db.ts";
 import { getHeroPool } from "../lib/hero-items.ts";
 import { FACETS, facetClauses } from "../lib/item-facets.ts";
+import { itemsCost, itemsRateLimitOrRespond } from "../lib/items-rate-limit.ts";
 import { LIVE_ITEMS_PREDICATE } from "../lib/items-sql.ts";
 import { getMusicBuckets } from "../lib/music.ts";
 import { printRegionFromHeaders } from "../lib/print-region.ts";
@@ -338,7 +340,7 @@ function encodeShuffleCursor(
   start: number | null | undefined,
   wrapped: boolean | undefined,
 ): string {
-  return Buffer.from(
+  const payload = Buffer.from(
     [
       String(shuffleKey),
       String(nativeId),
@@ -347,13 +349,16 @@ function encodeShuffleCursor(
     ].join("\u0000"),
     "utf8",
   ).toString("base64url");
+  return signCursor(payload, process.env.ITEMS_CURSOR_SECRET);
 }
 
 function decodeShuffleCursor(cursor: string) {
-  const parts = Buffer.from(String(cursor), "base64url")
+  const bad = Object.assign(new Error("malformed cursor"), { status: 400 });
+  const payload = verifyCursor(String(cursor), process.env.ITEMS_CURSOR_SECRET);
+  if (payload === null) throw bad;
+  const parts = Buffer.from(payload, "base64url")
     .toString("utf8")
     .split("\u0000");
-  const bad = Object.assign(new Error("malformed cursor"), { status: 400 });
   if (parts.length !== 4) throw bad;
   const key = parseFloat(parts[0]);
   const start = parseFloat(parts[2]);
@@ -948,6 +953,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       res.json({ suggestions: [] });
       return;
     }
+
+    if (await itemsRateLimitOrRespond(client, req, res, itemsCost(query)))
+      return;
 
     const rows = await client.query(query.text, query.params);
 
