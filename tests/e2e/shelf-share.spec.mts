@@ -4,7 +4,7 @@
 
 import type { Page } from "@playwright/test";
 import { expect, test } from "@playwright/test";
-import { gotoDiscover, gotoFeed, gotoShelf } from "./harness.mts";
+import { gotoFeed, gotoShelf } from "./harness.mts";
 
 declare global {
   interface Window {

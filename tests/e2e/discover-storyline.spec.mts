@@ -1,13 +1,13 @@
 // A storyline tile in Discover enters that storyline, and closing it
 // returns to Discover.
 
-import { expect, test } from "@playwright/test";
+import { expect, type Page, test } from "@playwright/test";
 import { gotoDiscover, ITEMS, STORYLINES } from "./harness.mts";
 
 const SHARED_COVER = "437536";
 
-function tileForCover(page: import("@playwright/test").Page, coverId: string) {
-  const cover = ITEMS.find((i: any) => String(i.id) === coverId);
+function tileForCover(page: Page, coverId: string) {
+  const cover = ITEMS.find((i: { id: unknown }) => String(i.id) === coverId);
   return page
     .locator('#shelvesMode .shelf[data-shelf-id="storylines"] .shelf-item')
     .filter({ hasText: cover.title })
@@ -29,7 +29,7 @@ test("a tile whose cover is also a member of another storyline opens its own", a
   await gotoDiscover(page);
   await tileForCover(page, SHARED_COVER).click();
   const own = STORYLINES.find(
-    (s: any) => String(s.cover_item_id) === SHARED_COVER,
+    (s: { cover_item_id: unknown }) => String(s.cover_item_id) === SHARED_COVER,
   );
   await expect(page.locator("#storylineHeaderTitle")).toHaveText(own.title);
 });
