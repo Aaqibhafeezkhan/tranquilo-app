@@ -10,9 +10,13 @@
 // Deliberately generous -- stops a single runaway client from spending
 // Vercel's Fluid CPU / Fast Origin Transfer budget alone, not meant to
 // throttle a real visitor scrolling the feed.
+//
+// Rows are keyed "img:<daily visitor hash>" (lib/visitor-hash.ts), never a
+// raw IP address. With no hashing secret configured the budget is skipped.
 
 import { TRANQUILO_CONFIG } from "./config.generated.ts";
 import type { QuerySql } from "./img-store.ts";
+import { visitorKey } from "./visitor-hash.ts";
 
 interface VisitorVerdict {
   allowed: boolean;
@@ -45,7 +49,7 @@ const ACQUIRE_SQL =
   "RETURNING tokens";
 
 /**
- * Spends one token for `ip`. Returns { allowed, reason, tokens }.
+ * Spends one token for the visitor `key`. Returns { allowed, reason, tokens }.
  *
  * Fails OPEN, not closed -- the opposite of the origin-side guards. Those
  * protect a museum's server from us and treat "we can't tell" as "don't
@@ -55,12 +59,12 @@ const ACQUIRE_SQL =
  */
 async function acquireVisitorToken(
   sql: QuerySql | null | undefined,
-  ip: string | null,
+  key: string | null,
 ): Promise<VisitorVerdict> {
-  if (!sql || !ip)
+  if (!sql || !key)
     return { allowed: true, reason: "no-db-or-ip", tokens: null };
   try {
-    const rows = (await sql.query(ACQUIRE_SQL, [ip])) as {
+    const rows = (await sql.query(ACQUIRE_SQL, [key])) as {
       tokens: string | number;
     }[];
     if (rows.length)
@@ -110,8 +114,11 @@ async function rateLimitOrRespond(
   req: RequestWithHeaders,
   res: RateLimitResponse,
 ): Promise<boolean> {
-  const ip = clientIp(req);
-  const verdict = await acquireVisitorToken(sql, ip);
+  const visitor = visitorKey(clientIp(req));
+  const verdict = await acquireVisitorToken(
+    sql,
+    visitor ? `img:${visitor}` : null,
+  );
   if (verdict.allowed) return false;
   const retryAfter = retryAfterSeconds();
   res.statusCode = 429;
