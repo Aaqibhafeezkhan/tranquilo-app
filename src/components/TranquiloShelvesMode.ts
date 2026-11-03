@@ -22,13 +22,18 @@
 // once bundled. This gives the real, current URL either way.
 import tranquiloFlowerVioletUrl from "../../assets/tranquilo-flower-violet.svg";
 import { ShelfType } from "../enums/ShelfType";
-import { resolveCuratedList, shelfRefs } from "../feed/curatedEntries";
+import {
+  resolveCuratedList,
+  sameCuratedItem,
+  shelfRefs,
+} from "../feed/curatedEntries";
 import { SHARE_SVG } from "../feed/slideBuilder";
 import { t, tn } from "../i18n/index";
 import { shelfRenderLimit } from "../logic/logic";
 import type { ITranquiloShelvesModeHost } from "../types/ITranquiloShelvesModeHost";
 import type { Item } from "../types/Item";
 import type { Shelf } from "../types/Shelf";
+import type { StorylineIndexEntry } from "../types/Storyline";
 import { on } from "../utils/on";
 import { isShareableShelf } from "./TranquiloShelfMode";
 
@@ -188,6 +193,24 @@ export class TranquiloShelvesMode extends HTMLElement {
     return meta;
   }
 
+  private pairStorylines(tiles: Item[]): (StorylineIndexEntry | undefined)[] {
+    const entries = this.requireApp().storylineIndex();
+    const claimed = new Set<number>();
+    return tiles.map((item) => {
+      const at = entries.findIndex(
+        (entry, i) =>
+          !claimed.has(i) &&
+          sameCuratedItem(
+            { id: entry.cover_item_id, source: entry.cover_source },
+            item,
+          ),
+      );
+      if (at < 0) return undefined;
+      claimed.add(at);
+      return entries[at];
+    });
+  }
+
   private buildShelfRow(
     shelf: Shelf,
     qualifying: Item[],
@@ -222,6 +245,10 @@ export class TranquiloShelvesMode extends HTMLElement {
       qualifying.length,
       SHELF_HYDRATE_LIMIT,
     );
+    const tileStorylines =
+      shelf.id === "storylines"
+        ? this.pairStorylines(qualifying.slice(0, renderCount))
+        : [];
     qualifying.slice(0, renderCount).forEach((item, idx) => {
       const btn = document.createElement("button");
       btn.className = "shelf-item";
@@ -230,8 +257,7 @@ export class TranquiloShelvesMode extends HTMLElement {
       // more here" cue as the in-feed storyline stack layers) plus an "N
       // works" subtitle, so they read as different from a regular tile
       // at a glance.
-      const storyline =
-        shelf.id === "storylines" ? host.storylineFor(item) : null;
+      const storyline = tileStorylines[idx] ?? null;
       const imgHtml = `<img src="${item.img}" alt="${escapeHtml(item.title || "Untitled")}" loading="lazy" decoding="async">`;
       btn.innerHTML = `${
         storyline
@@ -245,6 +271,10 @@ export class TranquiloShelvesMode extends HTMLElement {
       host.applyNudityGate(btn, item, true);
       on(btn, () => {
         this.close();
+        if (storyline) {
+          host.openStoryline(storyline.id);
+          return;
+        }
         host.openDetailModal(item, { items: qualifying, index: idx });
       });
       track.appendChild(btn);
@@ -375,6 +405,7 @@ export class TranquiloShelvesMode extends HTMLElement {
   restore(): void {
     this.classList.add("open");
     this.setAttribute("aria-hidden", "false");
+    history.replaceState(history.state, "", "/discover");
   }
 }
 

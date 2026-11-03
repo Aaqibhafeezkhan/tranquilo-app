@@ -23,7 +23,10 @@ export interface ITranquiloShelvesModeHost {
   resolveItemsByKeys(keys: string[]): Promise<Item[]>;
   hydrateItems(items: Item[]): Promise<void>;
   applyNudityGate(frame: HTMLElement, item: Item, compact?: boolean): void;
-  storylineFor(item: Item): StorylineIndexEntry | null;
+  // The storylines shelf shows one tile per entry, in this order; a tile is
+  // paired with its entry here because a cover item can belong to several.
+  storylineIndex(): StorylineIndexEntry[];
+  openStoryline(storylineId: string): void;
   trackEvent(name: string, props: Record<string, unknown>): void;
   openDetailModal(
     item: Item,

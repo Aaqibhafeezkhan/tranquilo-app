@@ -338,6 +338,9 @@ class TranquiloApp {
     ) as TranquiloShelfMode;
     // Which shelf surface the detail panel steps back to on close.
     let shelfReturnEl: { restore(): void } = shelvesModeEl;
+    // Set only when a Discover tile opens a storyline directly, so closing
+    // that storyline lands back on Discover rather than the feed.
+    let storylineReturnEl: { restore(): void } | null = null;
     const exportModalEl = document.getElementById(
       "exportModal",
     ) as TranquiloExportModal;
@@ -453,6 +456,7 @@ class TranquiloApp {
         setArtistFilter(artist);
       },
       openStorylineMode: (storylineId) => {
+        storylineReturnEl = null;
         storylineModeEl.open(storylineId);
       },
       openSetOfWorksMode: (setOfWorkId) => {
@@ -497,6 +501,11 @@ class TranquiloApp {
       },
       shareStoryline: (storyline) => {
         shareStoryline(storyline);
+      },
+      storylineClosed: () => {
+        const returnTo = storylineReturnEl;
+        storylineReturnEl = null;
+        returnTo?.restore();
       },
       pushOverlayHistoryState: (name) => {
         pushOverlayHistoryState(name);
@@ -557,7 +566,11 @@ class TranquiloApp {
       applyNudityGate: (frame, item, compact) => {
         applyNudityGate(frame, item, compact);
       },
-      storylineFor: (item) => storylineFor(item),
+      storylineIndex: () => storylineIndex,
+      openStoryline: (storylineId) => {
+        storylineReturnEl = shelvesModeEl;
+        storylineModeEl.open(storylineId);
+      },
       trackEvent: (name, props) => {
         trackEvent(name, props);
       },
@@ -751,6 +764,7 @@ class TranquiloApp {
           detailModalEl.open(item);
         },
         openStorylineMode: (storylineId: any) => {
+          storylineReturnEl = null;
           storylineModeEl.open(storylineId);
         },
         openSetOfWorksMode: (setOfWorkId: any) => {

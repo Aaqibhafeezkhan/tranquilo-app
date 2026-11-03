@@ -298,7 +298,7 @@ export class TranquiloStorylineMode extends HTMLElement {
     storylineId: string,
     position: number,
   ): void {
-    this.close();
+    this.hide();
     this.dispatchEvent(
       new CustomEvent<OpenDetailEventDetail>("open-detail", {
         detail: { item, storylineId, position },
@@ -527,13 +527,19 @@ export class TranquiloStorylineMode extends HTMLElement {
     if (atPosition) this.updateTimeline(atPosition);
   }
 
-  close(): void {
+  private hide(): boolean {
+    const wasOpen = this.classList.contains("open");
     this.classList.remove("open");
     this.setAttribute("aria-hidden", "true");
     this.observer?.disconnect();
     this.observer = null;
     // Invalidates any in-flight resolveStorylineDetail() via open()'s guard.
     this.pendingStorylineId = null;
+    return wasOpen;
+  }
+
+  close(): void {
+    if (this.hide()) this.requireApp().storylineClosed();
   }
 }
 
