@@ -21,7 +21,7 @@ beforeEach(async () => {
   process.env.CRON_SECRET = "cron-secret";
   sql = await makeSql([
     "035_visitor_rate_state.sql",
-    "060_items_budget_events.sql",
+    "060_visitor_budget_events.sql",
   ]);
 });
 

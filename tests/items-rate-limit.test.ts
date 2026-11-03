@@ -166,7 +166,7 @@ describe("itemsRateLimitOrRespond", () => {
 });
 
 describe("against a real database", () => {
-  const files = ["035_visitor_rate_state.sql", "060_items_budget_events.sql"];
+  const files = ["035_visitor_rate_state.sql", "060_visitor_budget_events.sql"];
 
   it("counts denials per visitor and day, and keeps them apart by budget", async () => {
     const sql = await makeSql(files);
