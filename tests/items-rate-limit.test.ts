@@ -1,11 +1,13 @@
 // Per-visitor-IP budget on /api/items, charged by how many items a request
 // asks for. See lib/items-rate-limit.ts.
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   acquireItemsBudget,
   itemsCost,
   itemsRateLimitOrRespond,
+  recordBudgetDenial,
 } from "../lib/items-rate-limit.ts";
+import { makeSql } from "./helpers/pg.ts";
 
 type Call = { text: string; params?: unknown[] };
 
@@ -58,21 +60,21 @@ describe("itemsCost", () => {
 describe("acquireItemsBudget", () => {
   it("spends the cost and allows the request", async () => {
     const sql = fakeSql([[{ tokens: 40 }]]);
-    const verdict = await acquireItemsBudget(sql, "203.0.113.7", 60, LIMITS);
+    const verdict = await acquireItemsBudget(sql, "visitor1", 60, LIMITS);
     expect(verdict).toMatchObject({ allowed: true, tokens: 40 });
-    expect(sql.calls[0].params).toEqual(["items:203.0.113.7", 60, 100, 0.5]);
+    expect(sql.calls[0].params).toEqual(["items:visitor1", 60, 100, 0.5]);
   });
 
   it("keeps its own bucket, apart from the image budget", async () => {
     const sql = fakeSql([[{ tokens: 1 }]]);
-    await acquireItemsBudget(sql, "203.0.113.7", 1, LIMITS);
-    expect(sql.calls[0].params?.[0]).not.toBe("203.0.113.7");
+    await acquireItemsBudget(sql, "visitor1", 1, LIMITS);
+    expect(sql.calls[0].params?.[0]).not.toBe("visitor1");
   });
 
   it("denies when the bucket cannot cover the cost", async () => {
     const verdict = await acquireItemsBudget(
       fakeSql([[]]),
-      "203.0.113.7",
+      "visitor1",
       60,
       LIMITS,
     );
@@ -81,14 +83,14 @@ describe("acquireItemsBudget", () => {
 
   it("never charges more than the bucket can hold", async () => {
     const sql = fakeSql([[{ tokens: 0 }]]);
-    await acquireItemsBudget(sql, "203.0.113.7", 5000, LIMITS);
+    await acquireItemsBudget(sql, "visitor1", 5000, LIMITS);
     expect(sql.calls[0].params?.[1]).toBe(100);
   });
 
   it("fails open when the database errors", async () => {
     const verdict = await acquireItemsBudget(
       fakeSql([new Error("down")]),
-      "203.0.113.7",
+      "visitor1",
       60,
       LIMITS,
     );
@@ -102,6 +104,13 @@ describe("acquireItemsBudget", () => {
 });
 
 describe("itemsRateLimitOrRespond", () => {
+  beforeEach(() => {
+    process.env.ITEMS_CURSOR_SECRET = "test-secret";
+  });
+  afterEach(() => {
+    delete process.env.ITEMS_CURSOR_SECRET;
+  });
+
   it("sends 429 with Retry-After when denied and enforcing", async () => {
     const res = fakeRes();
     const sent = await itemsRateLimitOrRespond(
@@ -118,7 +127,6 @@ describe("itemsRateLimitOrRespond", () => {
   });
 
   it("lets the request through when denied but not enforcing", async () => {
-    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
     const res = fakeRes();
     const sent = await itemsRateLimitOrRespond(fakeSql([[]]), req, res, 60, {
       ...LIMITS,
@@ -126,8 +134,21 @@ describe("itemsRateLimitOrRespond", () => {
     });
     expect(sent).toBe(false);
     expect(res.statusCode).toBe(200);
-    expect(warn).toHaveBeenCalled();
-    warn.mockRestore();
+  });
+
+  it("stores no IP address, in the bucket or the denial record", async () => {
+    const sql = fakeSql([[]]);
+    await itemsRateLimitOrRespond(sql, req, fakeRes(), 60, LIMITS);
+    expect(sql.calls).toHaveLength(2);
+    expect(JSON.stringify(sql.calls)).not.toContain("203.0.113.7");
+  });
+
+  it("skips the budget when no secret is configured to hash with", async () => {
+    delete process.env.ITEMS_CURSOR_SECRET;
+    const sql = fakeSql([[]]);
+    const sent = await itemsRateLimitOrRespond(sql, req, fakeRes(), 60, LIMITS);
+    expect(sent).toBe(false);
+    expect(sql.calls).toHaveLength(0);
   });
 
   it("lets an allowed request through", async () => {
@@ -141,5 +162,39 @@ describe("itemsRateLimitOrRespond", () => {
     );
     expect(sent).toBe(false);
     expect(res.statusCode).toBe(200);
+  });
+});
+
+describe("against a real database", () => {
+  const files = ["035_visitor_rate_state.sql", "060_items_budget_events.sql"];
+
+  it("counts denials per visitor and day, and keeps them apart by budget", async () => {
+    const sql = await makeSql(files);
+    await recordBudgetDenial(sql, "abc", "items", 60, false);
+    await recordBudgetDenial(sql, "abc", "items", 40, true);
+    await recordBudgetDenial(sql, "abc", "detail", 1, true);
+    const rows = await sql.query(
+      "SELECT kind, denied_requests, denied_cost, enforced FROM items_budget_events ORDER BY kind",
+    );
+    expect(rows).toEqual([
+      { kind: "detail", denied_requests: 1, denied_cost: 1, enforced: true },
+      { kind: "items", denied_requests: 2, denied_cost: 100, enforced: true },
+    ]);
+    await sql.$close();
+  });
+
+  it("denies once the bucket is spent and admits again after it refills", async () => {
+    const sql = await makeSql(files);
+    const first = await acquireItemsBudget(sql, "abc", 80, LIMITS);
+    const second = await acquireItemsBudget(sql, "abc", 80, LIMITS);
+    expect(first.allowed).toBe(true);
+    expect(second.allowed).toBe(false);
+    await sql.query(
+      "UPDATE visitor_fetch_state SET last_refill = now() - interval '10 minutes'",
+    );
+    expect((await acquireItemsBudget(sql, "abc", 80, LIMITS)).allowed).toBe(
+      true,
+    );
+    await sql.$close();
   });
 });

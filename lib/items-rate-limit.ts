@@ -1,7 +1,8 @@
 // Per-visitor-IP budget on /api/items, charged by how many items a request
 // asks for, so a deep scrape drains it long before a person scrolling does.
 // Shares visitor_fetch_state with the image budget under an "items:" key
-// prefix; see sql/035_visitor_rate_state.sql.
+// prefix; see sql/035_visitor_rate_state.sql. Buckets and denial counters are
+// keyed by lib/visitor-hash.ts, never a raw IP.
 //
 // Fails open like the image budget: an unreachable database is not a reason
 // to refuse every visitor. Responses served from the edge cache never reach
@@ -10,6 +11,7 @@
 import { TRANQUILO_CONFIG } from "./config.generated.ts";
 import type { QuerySql } from "./img-store.ts";
 import { clientIp } from "./img-visitor-rate-limit.ts";
+import { visitorKey } from "./visitor-hash.ts";
 
 interface Limits {
   capacity: number;
@@ -68,16 +70,16 @@ export function itemsCost(query: CostedQuery): number {
 
 export async function acquireItemsBudget(
   sql: QuerySql | null | undefined,
-  ip: string | null,
+  visitor: string | null,
   cost: number,
   limits: Limits = configured(),
 ): Promise<Verdict> {
-  if (!sql || !ip)
+  if (!sql || !visitor)
     return { allowed: true, reason: "no-db-or-ip", tokens: null };
   const charge = Math.min(cost, limits.capacity);
   try {
     const rows = (await sql.query(ACQUIRE_SQL, [
-      `items:${ip}`,
+      `items:${visitor}`,
       charge,
       limits.capacity,
       limits.refill_per_sec,
@@ -87,6 +89,29 @@ export async function acquireItemsBudget(
     return { allowed: false, reason: "rate-limited", tokens: 0 };
   } catch (_err) {
     return { allowed: true, reason: "error", tokens: null };
+  }
+}
+
+const RECORD_DENIAL_SQL =
+  "INSERT INTO items_budget_events (day, visitor, kind, denied_requests, denied_cost, enforced) " +
+  "VALUES ((now() AT TIME ZONE 'UTC')::date, $1, $2, 1, $3, $4) " +
+  "ON CONFLICT (day, visitor, kind) DO UPDATE SET " +
+  "  denied_requests = items_budget_events.denied_requests + 1, " +
+  "  denied_cost = items_budget_events.denied_cost + $3, " +
+  "  enforced = $4, " +
+  "  last_seen = now()";
+
+export async function recordBudgetDenial(
+  sql: QuerySql,
+  visitor: string,
+  kind: string,
+  cost: number,
+  enforced: boolean,
+): Promise<void> {
+  try {
+    await sql.query(RECORD_DENIAL_SQL, [visitor, kind, cost, enforced]);
+  } catch (_err) {
+    // Counting is best effort; never fail the request over it.
   }
 }
 
@@ -100,13 +125,11 @@ export async function itemsRateLimitOrRespond(
   cost: number,
   limits: Limits = configured(),
 ): Promise<boolean> {
-  const ip = clientIp(req);
-  const verdict = await acquireItemsBudget(sql, ip, cost, limits);
-  if (verdict.allowed) return false;
-  if (!limits.enforce) {
-    console.warn("items: rate limit would deny", { cost });
-    return false;
-  }
+  const visitor = visitorKey(clientIp(req));
+  const verdict = await acquireItemsBudget(sql, visitor, cost, limits);
+  if (verdict.allowed || !sql || !visitor) return false;
+  await recordBudgetDenial(sql, visitor, "items", cost, limits.enforce);
+  if (!limits.enforce) return false;
   const retryAfter = Math.max(
     1,
     Math.ceil(Math.min(cost, limits.capacity) / limits.refill_per_sec),
