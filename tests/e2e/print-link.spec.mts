@@ -63,7 +63,7 @@ test("is hidden, and the region is never looked up, unless enabled", async ({
 test("offers every product for a large image in a print region", async ({
   page,
 }) => {
-  await openDetail(page, { master: [3192, 4000], region: "us" });
+  await openDetail(page, { master: [3192, 4000], region: "uk" });
   const btn = page.locator("#detailModal .btn-print");
   const panel = page.locator("#detailModal .print-panel");
   await expect(btn).toBeVisible();
@@ -81,7 +81,7 @@ test("offers every product for a large image in a print region", async ({
 });
 
 test("lists only the products a smaller image can fill", async ({ page }) => {
-  await openDetail(page, { master: [2000, 4000], region: "us" });
+  await openDetail(page, { master: [2000, 4000], region: "uk" });
   await page.locator("#detailModal .btn-print").click();
   const products = page.locator("#detailModal .print-panel [data-product]");
   await expect(products).toHaveCount(2);
@@ -110,7 +110,7 @@ test("is not offered when the image's full size is unknown", async ({
 test("each product shows a thumbnail mock-up of the artwork", async ({
   page,
 }) => {
-  await openDetail(page, { master: [3192, 4000], region: "us" });
+  await openDetail(page, { master: [3192, 4000], region: "uk" });
   await page.locator("#detailModal .btn-print").click();
   const rows = page.locator("#detailModal .print-panel [data-product]");
   await expect(rows).toHaveCount(4);
@@ -186,19 +186,30 @@ test("shows an estimated price in the region's currency", async ({ page }) => {
     page.locator('#detailModal [data-product="poster"] .print-price'),
   ).toHaveText(/£24/);
   await expect(page.locator("#detailModal .print-panel")).toContainText(
-    /delivery/i,
+    /delivery included/i,
   );
 });
 
-test("leaves a product unpriced where its delivery cost is unknown", async ({
-  page,
-}) => {
-  await openDetail(page, { master: [3192, 4000], region: "us" });
+test("tells a Brazilian buyer they owe import taxes", async ({ page }) => {
+  await openDetail(page, { master: [3192, 4000], region: "br" });
   await page.locator("#detailModal .btn-print").click();
-  await expect(
-    page.locator('#detailModal [data-product="mini_print"] .print-price'),
-  ).toHaveCount(0);
+  await expect(page.locator("#detailModal .print-option")).toHaveCount(2);
   await expect(
     page.locator('#detailModal [data-product="poster"] .print-price'),
-  ).toHaveText(/\$27/);
+  ).toHaveCount(0);
+  await expect(
+    page.locator('#detailModal [data-product="mug"] .print-price'),
+  ).toHaveText("R$66.00 +");
+  const panel = page.locator("#detailModal .print-panel");
+  await expect(panel).toContainText(/import taxes in Brazil/i);
+  await expect(panel).toContainText(/delivery not included/i);
+  await expect(panel).not.toContainText(/delivery included/i);
+});
+
+test("does not mention import taxes outside Brazil", async ({ page }) => {
+  await openDetail(page, { master: [3192, 4000], region: "us" });
+  await page.locator("#detailModal .btn-print").click();
+  await expect(page.locator("#detailModal .print-panel")).not.toContainText(
+    /import tax/i,
+  );
 });

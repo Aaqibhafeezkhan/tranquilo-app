@@ -482,14 +482,20 @@ function wirePrint(
   const mockup = (p: string) =>
     `<div class="mockup mockup-${p}" data-orientation="${orientation}">` +
     `<div class="mockup-surface"><img src="${escapeHtml(item.img)}" alt="" loading="lazy" decoding="async"></div></div>`;
-  const priceText = (price: { amount: number; currency: string }) =>
-    t("detail.print.price", {
-      price: new Intl.NumberFormat(currentLocale(), {
-        style: "currency",
-        currency: price.currency,
-        maximumFractionDigits: 0,
-      }).format(price.amount),
-    });
+  const priceText = (price: {
+    amount: number;
+    currency: string;
+    startingAt?: true;
+  }) => {
+    const formatted = new Intl.NumberFormat(currentLocale(), {
+      style: "currency",
+      currency: price.currency,
+      maximumFractionDigits: price.startingAt ? 2 : 0,
+    }).format(price.amount);
+    return price.startingAt
+      ? t("detail.print.priceFrom", { price: formatted })
+      : t("detail.print.price", { price: formatted });
+  };
   host.printOffersFor(item).then((offers) => {
     if (!offers.length) return;
     panel.innerHTML =
@@ -509,7 +515,19 @@ function wirePrint(
           );
         })
         .join("") +
-      `<p class="print-soon">${escapeHtml(t("detail.print.estimate"))} ${escapeHtml(t("detail.print.soon"))}</p>`;
+      `<p class="print-soon">${[
+        offers.some((o) => o.price) &&
+          t(
+            offers.some((o) => o.price?.startingAt)
+              ? "detail.print.startingPrice"
+              : "detail.print.estimate",
+          ),
+        offers.some((o) => o.buyerPaysImportTax) && t("detail.print.importTax"),
+        t("detail.print.soon"),
+      ]
+        .filter(Boolean)
+        .map((text) => escapeHtml(text as string))
+        .join(" ")}</p>`;
     const rows = [...panel.querySelectorAll<HTMLElement>(".print-option")];
     for (const row of rows) {
       const thumb = row.querySelector<HTMLButtonElement>(".print-thumb");

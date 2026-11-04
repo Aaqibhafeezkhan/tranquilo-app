@@ -106,6 +106,7 @@ ca = "CA"
 eu = "AT,BE,BG,HR,CY,CZ,DK,EE,FI,FR,DE,GR,HU,IE,IT,LV,LT,LU,MT,NL,PL,PT,RO,SK,SI,ES,SE"
 uk = "GB"
 au = "AU"
+br = "BR"
 
 [print.min_short_edge_px]
 # Smallest master-image short edge each product prints well from.
@@ -113,14 +114,21 @@ mini_print = 1500
 poster = 2400
 framed = 2400
 tote = 1800
+mug = 1500
 
 [print.region_products]
 # Products offered per region, in display order.
-us = "mini_print,poster,framed,tote"
-ca = "mini_print,poster,framed,tote"
-eu = "mini_print,poster,framed,tote"
+# The mini print is left out where Gelato cannot ship it.
+us = "poster,framed,tote"
+ca = "poster,framed,tote"
+eu = "poster,framed,tote"
 uk = "mini_print,poster,framed,tote"
 au = "mini_print,poster,framed,tote"
+br = "mug,poster"
+
+[print.import_tax]
+# Regions where the buyer pays import taxes on delivery.
+buyer_pays = "br"
 
 [print.currency]
 us = "USD"
@@ -128,6 +136,7 @@ ca = "CAD"
 eu = "EUR"
 uk = "GBP"
 au = "AUD"
+br = "BRL"
 
 # Estimated retail prices, delivery included, tax excluded: the dearest
 # country's Gelato cost at a 30% margin after card fees. A product left out
@@ -158,3 +167,7 @@ mini_print = 35
 poster = 50
 framed = 110
 tote = 41
+
+# Where the range begins, shown with a trailing "+". Delivery is not included.
+[print.starting_prices.br]
+mug = 66

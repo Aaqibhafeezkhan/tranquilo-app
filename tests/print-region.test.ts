@@ -33,6 +33,7 @@ describe("mapping a country to a print region", () => {
     expect(regionForCountry("DE")).toBe("eu");
     expect(regionForCountry("GB")).toBe("uk");
     expect(regionForCountry("AU")).toBe("au");
+    expect(regionForCountry("BR")).toBe("br");
   });
 
   it("accepts lowercase codes", () => {
@@ -40,7 +41,6 @@ describe("mapping a country to a print region", () => {
   });
 
   it("offers nothing outside the launch regions", () => {
-    expect(regionForCountry("BR")).toBeNull();
     expect(regionForCountry("JP")).toBeNull();
   });
 
@@ -80,8 +80,8 @@ describe("?shape=print_region", () => {
   });
 
   it("reports the country but no region outside the launch regions", async () => {
-    const res = await get({ "x-vercel-ip-country": "BR" });
-    expect(res.body).toEqual({ country: "BR", region: null });
+    const res = await get({ "x-vercel-ip-country": "JP" });
+    expect(res.body).toEqual({ country: "JP", region: null });
   });
 });
 
@@ -110,8 +110,8 @@ describe("a local development country", () => {
   it("never overrides a real header", async () => {
     process.env.PRINT_REGION_DEV_COUNTRY = "US";
     process.env.VERCEL_ENV = "development";
-    const res = await get({ "x-vercel-ip-country": "BR" });
-    expect(res.body).toEqual({ country: "BR", region: null });
+    const res = await get({ "x-vercel-ip-country": "JP" });
+    expect(res.body).toEqual({ country: "JP", region: null });
   });
 
   it("is ignored in production", async () => {
