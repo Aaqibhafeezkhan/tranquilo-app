@@ -2,7 +2,9 @@ import type { Page, Route } from "@playwright/test";
 import { expect, test } from "@playwright/test";
 import { ITEMS, stubBackend } from "./harness.mts";
 
-const BASE = ITEMS.find((i: any) => i.title && i.img);
+type FixtureItem = { id: string | number; title?: string; img?: string };
+
+const BASE = ITEMS.find((i: FixtureItem) => i.title && i.img);
 
 async function openDetail(
   page: Page,
@@ -25,7 +27,7 @@ async function openDetail(
     master_width: master?.[0] ?? null,
     master_height: master?.[1] ?? null,
   };
-  const items = ITEMS.map((i: any) => (i.id === BASE.id ? item : i));
+  const items = ITEMS.map((i: FixtureItem) => (i.id === BASE.id ? item : i));
   await stubBackend(page, { items });
   const regionRequests: string[] = [];
   await page.route("**/api/items?shape=print_region**", (route: Route) => {

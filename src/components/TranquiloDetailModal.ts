@@ -536,11 +536,13 @@ function wirePrint(
       on(thumb, () => {
         const opening = large.hidden;
         for (const other of rows) {
-          other.querySelector<HTMLElement>(".print-mockup-large")!.hidden =
-            true;
+          const otherLarge = other.querySelector<HTMLElement>(
+            ".print-mockup-large",
+          );
+          if (otherLarge) otherLarge.hidden = true;
           other
-            .querySelector(".print-thumb")!
-            .setAttribute("aria-expanded", "false");
+            .querySelector(".print-thumb")
+            ?.setAttribute("aria-expanded", "false");
         }
         large.hidden = !opening;
         thumb.setAttribute("aria-expanded", String(opening));
