@@ -40,6 +40,12 @@ import {
   t,
   tHtml,
 } from "./i18n/index";
+import {
+  hasMasterSize,
+  type PrintOffer,
+  printLinkEnabled,
+  printOffersFor,
+} from "./logic/printOptions";
 import type { ITopbarHost } from "./types/ITopbarHost";
 import type { ITranquiloDetailModalHost } from "./types/ITranquiloDetailModalHost";
 import type { ITranquiloExportModalHost } from "./types/ITranquiloExportModalHost";
@@ -49,7 +55,7 @@ import type { ITranquiloSetOfWorksModeHost } from "./types/ITranquiloSetOfWorksM
 import type { ITranquiloShelfModeHost } from "./types/ITranquiloShelfModeHost";
 import type { ITranquiloShelvesModeHost } from "./types/ITranquiloShelvesModeHost";
 import type { ITranquiloStorylineModeHost } from "./types/ITranquiloStorylineModeHost";
-import type { Category } from "./types/Item";
+import type { Category, Item } from "./types/Item";
 import type { MusicBucketKey } from "./types/MusicBucket";
 import type { SetOfWork, SetOfWorkIndexEntry } from "./types/SetOfWork";
 import type { HeroShelf } from "./types/Shelf";
@@ -175,6 +181,17 @@ class TranquiloApp {
     }
     function fetchFeedPage(params: Record<string, unknown>) {
       return itemsApi.fetchFeedPage(params);
+    }
+    let printRegion: Promise<string | null> | null = null;
+    function itemPrintOffers(item: Item): Promise<PrintOffer[]> {
+      if (!printLinkEnabled(location.search) || !hasMasterSize(item)) {
+        return Promise.resolve([]);
+      }
+      printRegion ??= itemsApi.fetchPrintRegion().then(
+        (r) => r.region,
+        () => null,
+      );
+      return printRegion.then((region) => printOffersFor(item, region));
     }
     function fetchFacets() {
       return itemsApi.fetchFacets();
@@ -476,6 +493,7 @@ class TranquiloApp {
       showToast: (msg) => {
         showToast(msg);
       },
+      printOffersFor: (item: Item) => itemPrintOffers(item),
     };
     detailModalEl.app = detailModalHost;
     detailModalEl.addEventListener("storyline-handoff-restore", (e) => {
@@ -1256,10 +1274,10 @@ class TranquiloApp {
     function openDeepLinkedArtwork(slug: string) {
       const cut = slug.indexOf("-");
       resolveItemsByKeys([`${slug.slice(0, cut)}:${slug.slice(cut + 1)}`])
-        .then((found: any[]) => {
+        .then((found) => {
           if (found[0]) detailModalEl.open(found[0]);
         })
-        .catch((err: any) => {
+        .catch((err: unknown) => {
           console.error("deep link: detail open failed", err);
         });
     }

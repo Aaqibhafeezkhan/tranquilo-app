@@ -28,19 +28,19 @@ async function get(headers: Record<string, any>) {
 
 describe("mapping a country to a print region", () => {
   it("groups launch countries into their regions", () => {
-    expect(regionForCountry("US")).toBe("us_ca");
-    expect(regionForCountry("CA")).toBe("us_ca");
-    expect(regionForCountry("DE")).toBe("eu_uk");
-    expect(regionForCountry("GB")).toBe("eu_uk");
+    expect(regionForCountry("US")).toBe("us");
+    expect(regionForCountry("CA")).toBe("ca");
+    expect(regionForCountry("DE")).toBe("eu");
+    expect(regionForCountry("GB")).toBe("uk");
     expect(regionForCountry("AU")).toBe("au");
+    expect(regionForCountry("BR")).toBe("br");
   });
 
   it("accepts lowercase codes", () => {
-    expect(regionForCountry("fr")).toBe("eu_uk");
+    expect(regionForCountry("fr")).toBe("eu");
   });
 
   it("offers nothing outside the launch regions", () => {
-    expect(regionForCountry("BR")).toBeNull();
     expect(regionForCountry("JP")).toBeNull();
   });
 
@@ -64,7 +64,7 @@ describe("?shape=print_region", () => {
   it("answers from the visitor's country without touching the database", async () => {
     const res = await get({ "x-vercel-ip-country": "DE" });
     expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual({ country: "DE", region: "eu_uk" });
+    expect(res.body).toEqual({ country: "DE", region: "eu" });
   });
 
   it("is never cached where another visitor could receive it", async () => {
@@ -80,7 +80,44 @@ describe("?shape=print_region", () => {
   });
 
   it("reports the country but no region outside the launch regions", async () => {
-    const res = await get({ "x-vercel-ip-country": "BR" });
-    expect(res.body).toEqual({ country: "BR", region: null });
+    const res = await get({ "x-vercel-ip-country": "JP" });
+    expect(res.body).toEqual({ country: "JP", region: null });
+  });
+});
+
+describe("a local development country", () => {
+  const saved = {
+    dev: process.env.PRINT_REGION_DEV_COUNTRY,
+    env: process.env.VERCEL_ENV,
+  };
+  afterEach(() => {
+    for (const [k, v] of [
+      ["PRINT_REGION_DEV_COUNTRY", saved.dev],
+      ["VERCEL_ENV", saved.env],
+    ] as const) {
+      if (v === undefined) delete process.env[k];
+      else process.env[k] = v;
+    }
+  });
+
+  it("stands in for the missing header outside production", async () => {
+    process.env.PRINT_REGION_DEV_COUNTRY = "US";
+    process.env.VERCEL_ENV = "development";
+    const res = await get({});
+    expect(res.body).toEqual({ country: "US", region: "us" });
+  });
+
+  it("never overrides a real header", async () => {
+    process.env.PRINT_REGION_DEV_COUNTRY = "US";
+    process.env.VERCEL_ENV = "development";
+    const res = await get({ "x-vercel-ip-country": "JP" });
+    expect(res.body).toEqual({ country: "JP", region: null });
+  });
+
+  it("is ignored in production", async () => {
+    process.env.PRINT_REGION_DEV_COUNTRY = "US";
+    process.env.VERCEL_ENV = "production";
+    const res = await get({});
+    expect(res.body).toEqual({ country: null, region: null });
   });
 });

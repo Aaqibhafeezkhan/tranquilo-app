@@ -231,6 +231,8 @@ function serializeRow(row: ItemRow) {
     blur_placeholder: row.blur_placeholder,
     img_width: row.img_width,
     img_height: row.img_height,
+    master_width: row.master_width,
+    master_height: row.master_height,
     // Ranking inputs and fields the UI never reads are deliberately absent.
     url: safeHttpUrl(row.url),
     license: row.license,

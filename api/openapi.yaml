@@ -816,6 +816,14 @@ components:
           type: string
           description: '/img proxy URL for the lightbox tier.'
         blur_placeholder: { type: string, nullable: true }
+        master_width:
+          type: integer
+          nullable: true
+          description: Pixel width of the source's largest published image. Null until measured.
+        master_height:
+          type: integer
+          nullable: true
+          description: Pixel height of the source's largest published image. Null until measured.
         url: { type: string, nullable: true, description: Outbound link to the source institution's own page. }
         license: { type: string, nullable: true }
         category: { type: string, nullable: true }

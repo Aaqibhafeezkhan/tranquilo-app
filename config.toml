@@ -119,11 +119,88 @@ thrash_window_days = 7
 # while wrongly calling one degraded only costs a spurious one now.
 degraded_after_consecutive_failures = 5
 
+[print]
+# Shows the detail-panel print link; ?print=preview shows it regardless.
+link_enabled = false
+
 [print.regions]
 # Print-on-demand launch regions as comma-separated ISO country codes.
-us_ca = "US,CA"
-eu_uk = "AT,BE,BG,HR,CY,CZ,DK,EE,FI,FR,DE,GR,HU,IE,IT,LV,LT,LU,MT,NL,PL,PT,RO,SK,SI,ES,SE,GB"
+us = "US"
+ca = "CA"
+eu = "AT,BE,BG,HR,CY,CZ,DK,EE,FI,FR,DE,GR,HU,IE,IT,LV,LT,LU,MT,NL,PL,PT,RO,SK,SI,ES,SE"
+uk = "GB"
 au = "AU"
+br = "BR"
+
+[print.min_short_edge_px]
+# Smallest master-image short edge each product prints well from.
+mini_print = 1500
+poster = 2400
+framed = 2400
+tote = 1800
+mug = 1500
+
+[print.region_products]
+# Products offered per region, in display order.
+# The mini print is left out where Gelato cannot ship it.
+us = "poster,framed,tote"
+ca = "poster,framed,tote"
+eu = "poster,framed,tote"
+uk = "mini_print,poster,framed,tote"
+au = "mini_print,poster,framed,tote"
+br = "mug,poster"
+
+[print.eligible]
+# Only works under a public-domain dedication are sold as prints, and
+# never from the excluded sources.
+licenses = "cc0,public-domain,public-domain-mark,public-domain-ibram"
+excluded_sources = "tepapa,npm"
+
+[print.import_tax]
+# Regions where the buyer pays import taxes on delivery.
+buyer_pays = "br"
+
+[print.currency]
+us = "USD"
+ca = "CAD"
+eu = "EUR"
+uk = "GBP"
+au = "AUD"
+br = "BRL"
+
+# Estimated retail prices, delivery included, tax excluded: the dearest
+# country's Gelato cost at a 30% margin after card fees. A product left out
+# has no known delivery cost somewhere in the region.
+[print.prices.us]
+poster = 27
+framed = 101
+tote = 24
+
+[print.prices.ca]
+poster = 54
+framed = 146
+tote = 37
+
+[print.prices.eu]
+poster = 48
+framed = 92
+tote = 30
+
+[print.prices.uk]
+mini_print = 18
+poster = 24
+framed = 59
+tote = 21
+
+[print.prices.au]
+mini_print = 35
+poster = 50
+framed = 110
+tote = 41
+
+# Where the range begins, shown with a trailing "+". Delivery is not included.
+[print.starting_prices.br]
+mug = 66
 
 [patreon]
 # The Patreon page linked from the Support and Thank-you pages. Blank shows

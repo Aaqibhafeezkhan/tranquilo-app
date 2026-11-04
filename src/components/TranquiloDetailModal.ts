@@ -469,6 +469,96 @@ function wireCite(container: HTMLElement): void {
   }
 }
 
+function wirePrint(
+  container: HTMLElement,
+  item: Item,
+  host: ITranquiloDetailModalHost,
+): void {
+  const btn = container.querySelector<HTMLButtonElement>(".btn-print");
+  const panel = container.querySelector<HTMLElement>(".print-panel");
+  if (!btn || !panel) return;
+  const orientation =
+    (item.master_width ?? 0) > (item.master_height ?? 0) ? "hor" : "ver";
+  const mockup = (p: string) =>
+    `<div class="mockup mockup-${p}" data-orientation="${orientation}">` +
+    `<div class="mockup-surface"><img src="${escapeHtml(item.img)}" alt="" loading="lazy" decoding="async"></div></div>`;
+  const priceText = (price: {
+    amount: number;
+    currency: string;
+    startingAt?: true;
+  }) => {
+    const formatted = new Intl.NumberFormat(currentLocale(), {
+      style: "currency",
+      currency: price.currency,
+      maximumFractionDigits: price.startingAt ? 2 : 0,
+    }).format(price.amount);
+    return price.startingAt
+      ? t("detail.print.priceFrom", { price: formatted })
+      : t("detail.print.price", { price: formatted });
+  };
+  host.printOffersFor(item).then((offers) => {
+    if (!offers.length) return;
+    panel.innerHTML =
+      offers
+        .map(({ product: p, price }) => {
+          const name = t(`print.product.${p}` as MessageKey);
+          return (
+            `<div class="print-option" data-product="${p}">` +
+            `<button class="print-thumb" type="button" aria-expanded="false" aria-label="${escapeHtml(t("detail.print.showMockup", { product: name }))}">${mockup(p)}</button>` +
+            `<span class="print-label"><span class="print-name">${escapeHtml(name)}</span>` +
+            `<span class="print-size">${escapeHtml(t(`print.size.${p}` as MessageKey))}</span></span>` +
+            (price
+              ? `<span class="print-price">${escapeHtml(priceText(price))}</span>`
+              : "") +
+            `<div class="print-mockup-large" hidden>${mockup(p)}` +
+            `<p class="print-mockup-note">${escapeHtml(t("detail.print.mockupNote"))}</p></div></div>`
+          );
+        })
+        .join("") +
+      `<p class="print-soon">${[
+        offers.some((o) => o.price) &&
+          t(
+            offers.some((o) => o.price?.startingAt)
+              ? "detail.print.startingPrice"
+              : "detail.print.estimate",
+          ),
+        offers.some((o) => o.buyerPaysImportTax) && t("detail.print.importTax"),
+        t("detail.print.soon"),
+      ]
+        .filter(Boolean)
+        .map((text) => escapeHtml(text as string))
+        .join(" ")}</p>`;
+    const rows = [...panel.querySelectorAll<HTMLElement>(".print-option")];
+    for (const row of rows) {
+      const thumb = row.querySelector<HTMLButtonElement>(".print-thumb");
+      const large = row.querySelector<HTMLElement>(".print-mockup-large");
+      if (!thumb || !large) continue;
+      on(thumb, () => {
+        const opening = large.hidden;
+        for (const other of rows) {
+          const otherLarge = other.querySelector<HTMLElement>(
+            ".print-mockup-large",
+          );
+          if (otherLarge) otherLarge.hidden = true;
+          other
+            .querySelector(".print-thumb")
+            ?.setAttribute("aria-expanded", "false");
+        }
+        large.hidden = !opening;
+        thumb.setAttribute("aria-expanded", String(opening));
+      });
+    }
+    btn.hidden = false;
+  });
+  on(btn, () => {
+    panel.hidden = !panel.hidden;
+    btn.setAttribute("aria-expanded", String(!panel.hidden));
+    if (!panel.hidden) {
+      host.trackEvent("print_panel_open", { category: item.category ?? null });
+    }
+  });
+}
+
 function buildTeaSourcesHtml(item: Item): string {
   // Only Tea-tier captions have grounding. A Basic-tier item deliberately
   // has no caption_tea and no claims, and must not sprout an empty source
@@ -741,7 +831,7 @@ export class TranquiloDetailModal extends HTMLElement {
         // Actions, not metadata: grouped after a divider (.detail-actions).
         // sourceLinkLabel() rather than an inline lookup, so this and the
         // lightbox's link can't drift into naming the institution two ways.
-      }<div class="detail-actions"><div class="detail-actions-row"><a class="source-link" href="${escapeHtml(item.url ?? "")}" target="_blank" rel="noopener"><span class="link-text">${escapeHtml(host.sourceLinkText(item))}</span><span class="link-arrow" aria-hidden="true">&rarr;</span></a>${citeButtonHtml(item)}</div>${citePanelHtml(item)}</div>` +
+      }<div class="detail-actions"><div class="detail-actions-row"><a class="source-link" href="${escapeHtml(item.url ?? "")}" target="_blank" rel="noopener"><span class="link-text">${escapeHtml(host.sourceLinkText(item))}</span><span class="link-arrow" aria-hidden="true">&rarr;</span></a>${citeButtonHtml(item)}<button class="btn-print" type="button" aria-expanded="false" hidden>${escapeHtml(t("detail.print.button"))}</button></div>${citePanelHtml(item)}<div class="print-panel" hidden></div></div>` +
       `</div>`
     );
   }
@@ -775,6 +865,7 @@ export class TranquiloDetailModal extends HTMLElement {
     if (shareBtn) on(shareBtn, () => host.shareItem(item));
     wireReportMenu(container, item, host);
     wireCite(container);
+    wirePrint(container, item, host);
 
     const storylineChipBtn =
       container.querySelector<HTMLButtonElement>(".storyline-chip");
