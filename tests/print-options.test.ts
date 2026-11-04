@@ -8,6 +8,8 @@ import {
 const sized = (w: number, h: number) => ({
   master_width: w,
   master_height: h,
+  license: "cc0" as string | null,
+  source: "met",
 });
 
 describe("which print products an artwork qualifies for", () => {
@@ -147,5 +149,44 @@ describe("Brazil", () => {
 
   it("still needs a large enough master image", () => {
     expect(printOptionsFor(sized(1000, 4000), "br")).toEqual([]);
+  });
+});
+
+describe("which artworks may be sold as prints", () => {
+  const big = sized(3192, 4000);
+
+  it("accepts public-domain dedications", () => {
+    for (const license of [
+      "cc0",
+      "public-domain",
+      "public-domain-mark",
+      "public-domain-ibram",
+    ]) {
+      expect(printOptionsFor({ ...big, license }, "us")).not.toEqual([]);
+    }
+  });
+
+  it("rejects licences that need attribution or are not a grant", () => {
+    for (const license of [
+      "cc-by",
+      "cc-by-3.0",
+      "cc-by-4.0",
+      "open-government-data-license-1.0",
+      "no-known-copyright-restrictions",
+    ]) {
+      expect(printOptionsFor({ ...big, license }, "us")).toEqual([]);
+    }
+  });
+
+  it("rejects an artwork with no recorded licence", () => {
+    expect(printOptionsFor({ ...big, license: null }, "us")).toEqual([]);
+    expect(printOptionsFor({ ...big, license: undefined }, "us")).toEqual([]);
+  });
+
+  it("rejects excluded sources whatever their licence says", () => {
+    for (const source of ["tepapa", "npm"]) {
+      expect(printOptionsFor({ ...big, source }, "us")).toEqual([]);
+      expect(printOffersFor({ ...big, source }, "br")).toEqual([]);
+    }
   });
 });

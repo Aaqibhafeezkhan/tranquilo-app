@@ -20,6 +20,7 @@ async function openDetail(
 ) {
   const item = {
     ...BASE,
+    license: "cc0",
     ...extra,
     master_width: master?.[0] ?? null,
     master_height: master?.[1] ?? null,
@@ -212,4 +213,17 @@ test("does not mention import taxes outside Brazil", async ({ page }) => {
   await expect(page.locator("#detailModal .print-panel")).not.toContainText(
     /import tax/i,
   );
+});
+
+test("is not offered for an artwork that is not in the public domain", async ({
+  page,
+}) => {
+  const requests = await openDetail(page, {
+    master: [3192, 4000],
+    region: "us",
+    extra: { license: "cc-by" },
+  });
+  await expect.poll(() => requests.length).toBeGreaterThan(0);
+  await expect(page.locator("#detailModal .detail-actions")).toBeVisible();
+  await expect(page.locator("#detailModal .btn-print")).toBeHidden();
 });

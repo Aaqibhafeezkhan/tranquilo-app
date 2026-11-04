@@ -7,9 +7,28 @@ const MIN_SHORT_EDGE: Record<string, number> =
 const REGION_PRODUCTS: Record<string, string> =
   TRANQUILO_CONFIG["print.region_products"];
 
+const csv = (value: unknown): string[] =>
+  String(value)
+    .split(",")
+    .map((v) => v.trim());
+const ELIGIBLE_LICENSES = csv(TRANQUILO_CONFIG["print.eligible"].licenses);
+const EXCLUDED_SOURCES = csv(
+  TRANQUILO_CONFIG["print.eligible"].excluded_sources,
+);
+
 interface MasterSize {
   master_width?: number | null;
   master_height?: number | null;
+  license?: string | null;
+  source?: string | null;
+}
+
+function mayBeSold(item: MasterSize): boolean {
+  return (
+    !!item.license &&
+    ELIGIBLE_LICENSES.includes(item.license) &&
+    !(item.source && EXCLUDED_SOURCES.includes(item.source))
+  );
 }
 
 export function printOptionsFor(
@@ -18,6 +37,7 @@ export function printOptionsFor(
 ): PrintProduct[] {
   const { master_width: w, master_height: h } = item;
   if (!region || !w || !h || !(region in REGION_PRODUCTS)) return [];
+  if (!mayBeSold(item)) return [];
   const shortEdge = Math.min(w, h);
   return REGION_PRODUCTS[region]
     .split(",")

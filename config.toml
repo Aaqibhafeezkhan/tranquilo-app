@@ -126,6 +126,12 @@ uk = "mini_print,poster,framed,tote"
 au = "mini_print,poster,framed,tote"
 br = "mug,poster"
 
+[print.eligible]
+# Only works under a public-domain dedication are sold as prints, and
+# never from the excluded sources.
+licenses = "cc0,public-domain,public-domain-mark,public-domain-ibram"
+excluded_sources = "tepapa,npm"
+
 [print.import_tax]
 # Regions where the buyer pays import taxes on delivery.
 buyer_pays = "br"
