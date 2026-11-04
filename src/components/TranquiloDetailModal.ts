@@ -362,14 +362,14 @@ function wireReportMenu(
 // copy itself rather than a different badge or box treatment, so every
 // confidence tier shares one visual style.
 function buildTwistSectionHtml(item: Item): string {
-  if (!item.twist_category) return "";
+  if (!item.twist_category || !item.twist_story) return "";
   const sourceLinkHtml = item.twist_source_url
     ? `<a class="source-link" href="${escapeHtml(item.twist_source_url)}" target="_blank" rel="noopener"><span class="link-text">${escapeHtml(t("detail.source"))}</span><span class="link-arrow" aria-hidden="true">&rarr;</span></a>`
     : "";
   return (
     `<div class="twist-box">` +
     `<div class="twist-label">${TWIST_SVG}<span>${escapeHtml(t("detail.twist"))}</span></div>` +
-    `<p>${escapeHtml(item.twist_story || "")}</p>${sourceLinkHtml}</div>`
+    `<p>${escapeHtml(item.twist_story)}</p>${sourceLinkHtml}</div>`
   );
 }
 
@@ -534,6 +534,8 @@ export class TranquiloDetailModal extends HTMLElement {
   // rather than a dot timeline, since shelves aren't bounded to a small
   // fixed count. No wraparound at the boundaries.
   private shelfItems: Item[] | null = null;
+  private singleItem: Item[] | null = null;
+  private detailInFlight = new Set<string>();
   private shelfIndex = 0;
   private shelfObserver: IntersectionObserver | null = null;
 
@@ -623,6 +625,7 @@ export class TranquiloDetailModal extends HTMLElement {
     this.requireApp().sampleArtworkColor(this.shelfItems[index], (tint) => {
       this.style.backgroundColor = tint || "";
     });
+    this.ensureDetail(index);
   }
 
   private observeShelfTrack(): void {
@@ -746,10 +749,11 @@ export class TranquiloDetailModal extends HTMLElement {
   private wireDetailContentInteractions(
     container: HTMLElement,
     item: Item,
+    rewireFrame = true,
   ): void {
     const host = this.requireApp();
     const dFrame = container.querySelector<HTMLElement>(".d-frame");
-    if (dFrame) {
+    if (dFrame && rewireFrame) {
       // Always rendered together by buildDetailContentHtml, so guaranteed
       // present whenever dFrame is.
       const dSkeleton = dFrame.querySelector(".art-skeleton") as HTMLElement;
@@ -805,6 +809,44 @@ export class TranquiloDetailModal extends HTMLElement {
     wireCastSection(container);
   }
 
+  // Fetches the curated text for the page at `index` and its neighbours,
+  // then re-renders each page that is still showing. The artwork frame is
+  // carried over untouched so its image does not reload or flicker.
+  private ensureDetail(index: number): void {
+    const items = this.shelfItems ?? this.singleItem;
+    if (!items) return;
+    for (const at of [index, index + 1, index - 1]) {
+      const item = items[at];
+      const page = this.trackEl.children[at] as HTMLElement | undefined;
+      if (!item || !page || item._detail) continue;
+      const key = `${item.source}:${item.id}`;
+      if (this.detailInFlight.has(key)) continue;
+      this.detailInFlight.add(key);
+      this.requireApp()
+        .fetchItemDetail(item)
+        .then((detail) => {
+          Object.assign(item, detail);
+          item._detail = true;
+          const inner = page.querySelector<HTMLElement>(".detail-modal-inner");
+          if (inner?.isConnected) this.refreshPage(inner, item);
+        })
+        .catch((err) => {
+          console.error("detail: curated text failed to load", err);
+        })
+        .finally(() => {
+          this.detailInFlight.delete(key);
+        });
+    }
+  }
+
+  private refreshPage(inner: HTMLElement, item: Item): void {
+    const frame = inner.querySelector<HTMLElement>(".d-frame");
+    inner.innerHTML = this.buildDetailContentHtml(item);
+    const fresh = inner.querySelector<HTMLElement>(".d-frame");
+    if (frame && fresh) fresh.replaceWith(frame);
+    this.wireDetailContentInteractions(inner, item, !frame);
+  }
+
   private buildPage(item: Item): HTMLElement {
     const page = document.createElement("div");
     page.className = "detail-modal-page";
@@ -839,6 +881,7 @@ export class TranquiloDetailModal extends HTMLElement {
 
     const browsingShelf = !!(shelfContext && shelfContext.items.length > 1);
     this.shelfItems = browsingShelf && shelfContext ? shelfContext.items : null;
+    this.singleItem = browsingShelf ? null : [item];
 
     this.trackEl.innerHTML = "";
     (browsingShelf && shelfContext ? shelfContext.items : [item]).forEach(
@@ -870,6 +913,7 @@ export class TranquiloDetailModal extends HTMLElement {
       host.sampleArtworkColor(item, (tint) => {
         if (tint) this.style.backgroundColor = tint;
       });
+      this.ensureDetail(0);
     }
     host.pushOverlayHistoryState("detail");
   }
@@ -880,6 +924,7 @@ export class TranquiloDetailModal extends HTMLElement {
     this.shelfObserver?.disconnect();
     this.shelfObserver = null;
     this.shelfItems = null;
+    this.singleItem = null;
     this.shelfIndex = 0;
     // Restore Discover if that's where this view came from -- shelvesMode
     // was only closed to make room for this panel, not because the user

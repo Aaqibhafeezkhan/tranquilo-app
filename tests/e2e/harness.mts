@@ -381,6 +381,29 @@ export async function stubBackend(
       return json([]);
     }
 
+    // One item's curated text, as the endpoint's detail shape serves it.
+    if (shape === "detail") {
+      const key = url.searchParams.get("key") ?? "";
+      const found = keyed.find((i) => `${i.source}:${i.id}` === key);
+      if (!found) {
+        return route.fulfill({
+          status: 404,
+          contentType: "application/json",
+          body: JSON.stringify({ error: "No such item" }),
+        });
+      }
+      return json({
+        item: {
+          caption_tea: found.caption_tea ?? null,
+          tea_voice_sources: found.tea_voice_sources ?? null,
+          cast: found.cast ?? null,
+          cast_context: found.cast_context ?? null,
+          twist_story: found.twist_story ?? null,
+          twist_source_url: found.twist_source_url ?? null,
+        },
+      });
+    }
+
     // ?keys=source:native_id, split on the first colon like the endpoint.
     const wantedKeys = url.searchParams.getAll("keys");
     if (wantedKeys.length) {

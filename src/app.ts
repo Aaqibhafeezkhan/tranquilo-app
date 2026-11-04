@@ -447,6 +447,8 @@ class TranquiloApp {
         trackEvent(name, props);
       },
       hydrateItems: (items) => hydrateItems(items),
+      fetchItemDetail: (item) =>
+        itemsApi.fetchItemDetail(`${item.source}:${item.id}`),
       shareItem: (item) => {
         shareItem(item);
       },

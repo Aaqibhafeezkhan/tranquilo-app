@@ -2,7 +2,7 @@ import type { SearchFacets } from "../components/TranquiloSearchBar";
 import { TRANQUILO_CONFIG } from "../data/config.generated";
 import type { FeedPageResponse } from "../feed/recycleWindow";
 import type { HeroPoolEntry } from "../types/HeroPoolEntry";
-import type { Item } from "../types/Item";
+import type { Item, ItemDetail } from "../types/Item";
 import type { MusicBucket } from "../types/MusicBucket";
 import type { SetOfWork, SetOfWorkIndexEntry } from "../types/SetOfWork";
 import type { Shelf } from "../types/Shelf";
@@ -168,6 +168,15 @@ export class ItemsApiClient {
         console.error("items: count failed", err);
         return 0;
       });
+  }
+
+  // The curated text for one source:native_id item. Served apart from the
+  // page rows so it is budgeted per visitor, one request per opened item.
+  fetchItemDetail(key: string): Promise<ItemDetail> {
+    return this.fetchJson<{ item: ItemDetail }>(
+      this.apiUrl({ shape: "detail", key }),
+      "detail",
+    ).then((body) => body.item);
   }
 
   // Every live item with these native ids, from any source.

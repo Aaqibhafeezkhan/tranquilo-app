@@ -49,6 +49,7 @@ describe("prune-visitor-data", () => {
       "INSERT INTO visitor_fetch_state (ip, updated_at) VALUES " +
         "('items:old', now() - interval '3 days'), ('items:new', now()), " +
         "('img:old', now() - interval '3 days'), ('img:new', now()), " +
+        "('detail:old', now() - interval '3 days'), ('detail:new', now()), " +
         "('other-key', now() - interval '30 days')",
     );
     const { default: handler } = await import(
@@ -57,11 +58,12 @@ describe("prune-visitor-data", () => {
     const res = fakeRes();
     await handler(authed, res);
     expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual({ events: 1, buckets: 2 });
+    expect(res.body).toEqual({ events: 1, buckets: 3 });
     const left = await sql.query(
       "SELECT ip FROM visitor_fetch_state ORDER BY ip",
     );
     expect(left.map((r: { ip: string }) => r.ip)).toEqual([
+      "detail:new",
       "img:new",
       "items:new",
       "other-key",
