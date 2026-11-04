@@ -1274,10 +1274,10 @@ class TranquiloApp {
     function openDeepLinkedArtwork(slug: string) {
       const cut = slug.indexOf("-");
       resolveItemsByKeys([`${slug.slice(0, cut)}:${slug.slice(cut + 1)}`])
-        .then((found: any[]) => {
+        .then((found) => {
           if (found[0]) detailModalEl.open(found[0]);
         })
-        .catch((err: any) => {
+        .catch((err: unknown) => {
           console.error("deep link: detail open failed", err);
         });
     }
