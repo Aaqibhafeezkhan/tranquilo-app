@@ -116,9 +116,11 @@ export const en = {
   "detail.print.priceFrom": "{price} +",
   "detail.print.estimate": "Estimated prices, delivery included.",
   "detail.print.startingPrice": "Starting prices, delivery not included.",
-  "detail.print.importTax": "The buyer is responsible for import taxes in Brazil.",
+  "detail.print.importTax":
+    "The buyer is responsible for import taxes in Brazil.",
   "detail.print.showMockup": "Show the {product} mock-up",
-  "detail.print.mockupNote": "A preview. The printed colours and edges may differ slightly.",
+  "detail.print.mockupNote":
+    "A preview. The printed colours and edges may differ slightly.",
   "print.product.mini_print": "Mini print",
   "print.product.poster": "Poster",
   "print.product.framed": "Framed poster",

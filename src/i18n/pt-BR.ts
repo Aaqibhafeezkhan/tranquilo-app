@@ -91,9 +91,11 @@ export const ptBR: Dictionary = {
   "detail.print.priceFrom": "{price} +",
   "detail.print.estimate": "Preços estimados, entrega incluída.",
   "detail.print.startingPrice": "Preços iniciais, entrega não incluída.",
-  "detail.print.importTax": "O comprador é responsável pelos impostos de importação no Brasil.",
+  "detail.print.importTax":
+    "O comprador é responsável pelos impostos de importação no Brasil.",
   "detail.print.showMockup": "Ver a prévia: {product}",
-  "detail.print.mockupNote": "Uma prévia. As cores e bordas impressas podem variar um pouco.",
+  "detail.print.mockupNote":
+    "Uma prévia. As cores e bordas impressas podem variar um pouco.",
   "print.product.mini_print": "Mini impressão",
   "print.product.poster": "Pôster",
   "print.product.framed": "Pôster emoldurado",

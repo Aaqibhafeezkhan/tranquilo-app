@@ -206,3 +206,23 @@ describe("fetchItemsByKeys", () => {
     expect(body.missing).toEqual(["m", "m"]);
   });
 });
+
+describe("fetchItemDetail", () => {
+  it("asks for one item's curated text, in the page's language", async () => {
+    fetchMock.mockResolvedValueOnce(
+      jsonResponse({ item: { caption_tea: "A caption" } }),
+    );
+    const client = new ItemsApiClient(7, 40, "pt-BR");
+    const detail = await client.fetchItemDetail("met:1");
+    expect(fetchMock).toHaveBeenCalledWith(
+      "/api/items?shape=detail&key=met%3A1&locale=pt-BR&v=7",
+    );
+    expect(detail).toEqual({ caption_tea: "A caption" });
+  });
+
+  it("rejects when the server has no such item", async () => {
+    fetchMock.mockResolvedValueOnce(jsonResponse({}, false, 404));
+    const client = new ItemsApiClient(7, 40);
+    await expect(client.fetchItemDetail("met:404")).rejects.toThrow(/404/);
+  });
+});

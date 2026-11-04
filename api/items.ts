@@ -22,7 +22,11 @@ import { signCursor, verifyCursor } from "../lib/cursor-signature.ts";
 import { getSql } from "../lib/db.ts";
 import { getHeroPool } from "../lib/hero-items.ts";
 import { FACETS, facetClauses } from "../lib/item-facets.ts";
-import { itemsCost, itemsRateLimitOrRespond } from "../lib/items-rate-limit.ts";
+import {
+  detailRateLimitOrRespond,
+  itemsCost,
+  itemsRateLimitOrRespond,
+} from "../lib/items-rate-limit.ts";
 import { LIVE_ITEMS_PREDICATE } from "../lib/items-sql.ts";
 import { getMusicBuckets } from "../lib/music.ts";
 import { printRegionFromHeaders } from "../lib/print-region.ts";
@@ -82,6 +86,7 @@ interface BuiltQuery {
   vibeSearch?: true;
   counting?: true;
   lookup?: true;
+  detail?: true;
   requestedIds?: string[];
   byKey?: true;
   limit?: number;
@@ -257,6 +262,21 @@ function serializeRow(row: ItemRow) {
     twist_source_url: safeHttpUrl(row.twist_source_url),
     shuffle_key: row.shuffle_key,
   };
+}
+
+// The curated text the detail panel shows on open. Served one item at a
+// time by ?shape=detail, under its own visitor budget.
+const DETAIL_FIELDS = [
+  "caption_tea",
+  "tea_voice_sources",
+  "cast",
+  "cast_context",
+  "twist_story",
+  "twist_source_url",
+] as const;
+
+function pickDetail(item: Record<string, unknown>) {
+  return Object.fromEntries(DETAIL_FIELDS.map((field) => [field, item[field]]));
 }
 
 // The order manifest -- every live item, but only the fields needed
@@ -571,6 +591,24 @@ function vibeSearchQuery(params: QueryParams): BuiltQuery {
   };
 }
 
+function detailQuery(params: QueryParams): BuiltQuery {
+  const key = (scalar(params.key) ?? "").trim();
+  const cut = key.indexOf(":");
+  if (cut <= 0 || cut === key.length - 1) {
+    throw Object.assign(new Error("key must be source:native_id"), {
+      status: 400,
+    });
+  }
+  return {
+    text: `SELECT * FROM items WHERE ${
+      LIVE_ITEMS_PREDICATE
+    } AND source = $1 AND native_id = $2`,
+    params: [key.slice(0, cut), key.slice(cut + 1)],
+    detail: true,
+    requestedIds: [key],
+  };
+}
+
 function buildQuery(params: QueryParams): BuiltQuery {
   const shape = scalar(params.shape);
   const counting = shape === "count";
@@ -579,6 +617,8 @@ function buildQuery(params: QueryParams): BuiltQuery {
   if (shape === "suggest") return suggestQuery(params);
   if (shape === "correction") return correctionQuery(params);
   if (shape === "vibe_search") return vibeSearchQuery(params);
+
+  if (shape === "detail") return detailQuery(params);
 
   const where = [LIVE_ITEMS_PREDICATE];
   const values: unknown[] = [];
@@ -956,8 +996,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return;
     }
 
-    if (await itemsRateLimitOrRespond(client, req, res, itemsCost(query)))
-      return;
+    const limited = query.detail
+      ? await detailRateLimitOrRespond(client, req, res)
+      : await itemsRateLimitOrRespond(client, req, res, itemsCost(query));
+    if (limited) return;
 
     const rows = await client.query(query.text, query.params);
 
@@ -1037,6 +1079,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const items = itemRows.map(serializeRow);
     if (locale) await translateItems(client, itemRows, items, locale);
+
+    if (query.detail) {
+      if (!items.length) {
+        res.statusCode = 404;
+        res.json({ error: "No such item" });
+        return;
+      }
+      res.json({ item: pickDetail(items[0]) });
+      return;
+    }
 
     // Bounded and ranked, not paginated -- no cursor, same shape as the
     // My Collection / storyline-chapter / set-of-works lookups, which are
