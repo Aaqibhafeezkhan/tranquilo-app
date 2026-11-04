@@ -107,8 +107,22 @@ export interface Item {
   // whether they've since arrived via ?ids= -- absent/false means
   // "manifest row only, do not render yet."
   _full?: boolean;
+  // Set once the curated text (caption, cast, plot twist) has been
+  // requested via ?shape=detail and merged into the item.
+  _detail?: boolean;
   // Set alongside `_full` when the server reports an id as missing from an
   // ?ids= response, so an unresolvable id renders as a permanent empty
   // shell instead of retrying forever.
   _unavailable?: boolean;
 }
+
+// What ?shape=detail serves for one item.
+export type ItemDetail = Pick<
+  Item,
+  | "caption_tea"
+  | "tea_voice_sources"
+  | "cast"
+  | "cast_context"
+  | "twist_story"
+  | "twist_source_url"
+>;

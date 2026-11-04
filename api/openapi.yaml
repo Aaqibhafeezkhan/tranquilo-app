@@ -61,10 +61,13 @@ paths:
             may be null; it is never cached at the edge. `vocabulary` lists
             every controlled-vocabulary value with its display label in the
             requested `locale` (English without one) and takes no other
-            parameter; see `VocabularyLabels`.
+            parameter; see `VocabularyLabels`. `detail` returns one item's
+            curated text (caption, grounding sources, cast, plot twist) and
+            requires `key`; see `ItemDetail`. It has a per-visitor request
+            budget of its own, apart from the page budget.
           schema:
             type: string
-            enum: [manifest, facets, suggest, correction, count, storylines, storyline, shelves, music, heroes, print_region, vocabulary]
+            enum: [manifest, facets, suggest, correction, count, storylines, storyline, shelves, music, heroes, print_region, vocabulary, detail]
         - name: keys
           in: query
           description: >-
@@ -92,6 +95,12 @@ paths:
             items: { type: string }
           style: form
           explode: true
+        - name: key
+          in: query
+          description: >-
+            Required with `shape=detail` -- one `source:native_id`, split on
+            the first colon.
+          schema: { type: string }
         - name: id
           in: query
           description: Required with `shape=storyline` -- the storyline id to fetch.
@@ -227,6 +236,7 @@ paths:
                   - $ref: "#/components/schemas/CorrectionResult"
                   - $ref: "#/components/schemas/CountResult"
                   - $ref: "#/components/schemas/VocabularyLabels"
+                  - $ref: "#/components/schemas/ItemDetailResult"
                   - $ref: "#/components/schemas/StorylineIndexEntry"
                   - $ref: "#/components/schemas/Storyline"
                   - type: array
@@ -244,7 +254,7 @@ paths:
           content:
             application/json: { schema: { $ref: "#/components/schemas/Error" } }
         "404":
-          description: '`shape=storyline` with an `id` that doesn''t exist.'
+          description: '`shape=storyline` with an `id` that doesn''t exist, or `shape=detail` with a `key` that is not a live item.'
           content:
             application/json: { schema: { $ref: "#/components/schemas/Error" } }
         "500":
@@ -849,6 +859,24 @@ components:
         twist_story: { type: string, nullable: true }
         twist_source_url: { type: string, nullable: true }
         shuffle_key: { type: number }
+    ItemDetailResult:
+      type: object
+      description: '`?shape=detail&key=...` -- the curated text for one item.'
+      required: [item]
+      properties:
+        item: { $ref: "#/components/schemas/ItemDetail" }
+    ItemDetail:
+      type: object
+      description: >-
+        The curated fields of an item, with the same meaning and shape as on
+        `Item`. `caption_tea` is translated under `locale` like any item row.
+      properties:
+        caption_tea: { type: string, nullable: true }
+        tea_voice_sources: { $ref: "#/components/schemas/Item/properties/tea_voice_sources" }
+        cast: {}
+        cast_context: {}
+        twist_story: { type: string, nullable: true }
+        twist_source_url: { type: string, nullable: true }
     ManifestItem:
       type: object
       description: The lightweight order-manifest shape (`?shape=manifest`) -- identity and facets only, no heavy text/image fields.

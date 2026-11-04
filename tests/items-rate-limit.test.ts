@@ -3,6 +3,7 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   acquireItemsBudget,
+  detailRateLimitOrRespond,
   itemsCost,
   itemsRateLimitOrRespond,
   recordBudgetDenial,
@@ -162,6 +163,57 @@ describe("itemsRateLimitOrRespond", () => {
     );
     expect(sent).toBe(false);
     expect(res.statusCode).toBe(200);
+  });
+});
+
+describe("detailRateLimitOrRespond", () => {
+  beforeEach(() => {
+    process.env.ITEMS_CURSOR_SECRET = "test-secret";
+  });
+  afterEach(() => {
+    delete process.env.ITEMS_CURSOR_SECRET;
+  });
+
+  it("charges one token against its own bucket", async () => {
+    const sql = fakeSql([[{ tokens: 99 }]]);
+    const sent = await detailRateLimitOrRespond(sql, req, fakeRes(), LIMITS);
+    expect(sent).toBe(false);
+    expect(sql.calls[0].params?.[0]).toMatch(/^detail:[0-9a-f]{16}$/);
+    expect(sql.calls[0].params?.[1]).toBe(1);
+  });
+
+  it("records a denial under the detail kind", async () => {
+    const sql = fakeSql([[]]);
+    await detailRateLimitOrRespond(sql, req, fakeRes(), LIMITS);
+    expect(sql.calls[1].params?.[1]).toBe("detail");
+    expect(JSON.stringify(sql.calls)).not.toContain("203.0.113.7");
+  });
+
+  it("sends 429 when denied and enforcing", async () => {
+    const res = fakeRes();
+    const sent = await detailRateLimitOrRespond(
+      fakeSql([[]]),
+      req,
+      res,
+      LIMITS,
+    );
+    expect(sent).toBe(true);
+    expect(res.statusCode).toBe(429);
+  });
+
+  it("lets a denied request through while not enforcing", async () => {
+    const sent = await detailRateLimitOrRespond(fakeSql([[]]), req, fakeRes(), {
+      ...LIMITS,
+      enforce: false,
+    });
+    expect(sent).toBe(false);
+  });
+
+  it("skips the budget when no secret is configured", async () => {
+    delete process.env.ITEMS_CURSOR_SECRET;
+    const sql = fakeSql([]);
+    await detailRateLimitOrRespond(sql, req, fakeRes(), LIMITS);
+    expect(sql.calls).toHaveLength(0);
   });
 });
 

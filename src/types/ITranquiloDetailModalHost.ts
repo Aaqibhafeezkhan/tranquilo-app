@@ -8,7 +8,7 @@
 // (storyline-handoff-open/storyline-handoff-restore), since neither
 // component owns the other.
 import type { ImageState } from "../feed/slideBuilder";
-import type { Item } from "./Item";
+import type { Item, ItemDetail } from "./Item";
 import type { SetOfWorkIndexEntry } from "./SetOfWork";
 import type { StorylineIndexEntry } from "./Storyline";
 
@@ -34,6 +34,9 @@ export interface ITranquiloDetailModalHost {
   // A shelf card or storyline chapter can hand this an item the feed's
   // recycling window never hydrated.
   hydrateItems(items: Item[]): Promise<void>;
+  // The curated text (caption, cast, plot twist) for one item, fetched when
+  // its panel is about to be read rather than carried on every page row.
+  fetchItemDetail(item: Item): Promise<ItemDetail>;
   shareItem(item: Item): void;
   sourceLinkLabel(item: Item): string;
   sourceLinkText(item: Item): string;

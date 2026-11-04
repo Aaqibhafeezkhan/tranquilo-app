@@ -59,7 +59,11 @@ const ACQUIRE_SQL =
   "      * visitor_fetch_state.refill_per_sec) >= $2::real " +
   "RETURNING tokens";
 
+type BudgetKind = "items" | "detail";
+
 const configured = (): Limits => TRANQUILO_CONFIG.items_visitor_rate_limit;
+const configuredDetail = (): Limits =>
+  TRANQUILO_CONFIG.detail_visitor_rate_limit;
 
 // One token for an aggregate answer, one per row for anything that returns
 // items.
@@ -74,12 +78,22 @@ export async function acquireItemsBudget(
   cost: number,
   limits: Limits = configured(),
 ): Promise<Verdict> {
+  return acquireBudget(sql, visitor, cost, limits, "items");
+}
+
+async function acquireBudget(
+  sql: QuerySql | null | undefined,
+  visitor: string | null,
+  cost: number,
+  limits: Limits,
+  kind: BudgetKind,
+): Promise<Verdict> {
   if (!sql || !visitor)
     return { allowed: true, reason: "no-db-or-ip", tokens: null };
   const charge = Math.min(cost, limits.capacity);
   try {
     const rows = (await sql.query(ACQUIRE_SQL, [
-      `items:${visitor}`,
+      `${kind}:${visitor}`,
       charge,
       limits.capacity,
       limits.refill_per_sec,
@@ -125,10 +139,33 @@ export async function itemsRateLimitOrRespond(
   cost: number,
   limits: Limits = configured(),
 ): Promise<boolean> {
+  return rateLimitOrRespond(sql, req, res, cost, limits, "items");
+}
+
+// One item's curated text costs one token from a bucket of its own, far
+// smaller than the page budget: a person opens a handful of details a
+// minute, a scraper wants thousands.
+export async function detailRateLimitOrRespond(
+  sql: QuerySql | null | undefined,
+  req: RequestWithHeaders,
+  res: RateLimitResponse,
+  limits: Limits = configuredDetail(),
+): Promise<boolean> {
+  return rateLimitOrRespond(sql, req, res, 1, limits, "detail");
+}
+
+async function rateLimitOrRespond(
+  sql: QuerySql | null | undefined,
+  req: RequestWithHeaders,
+  res: RateLimitResponse,
+  cost: number,
+  limits: Limits,
+  kind: BudgetKind,
+): Promise<boolean> {
   const visitor = visitorKey(clientIp(req));
-  const verdict = await acquireItemsBudget(sql, visitor, cost, limits);
+  const verdict = await acquireBudget(sql, visitor, cost, limits, kind);
   if (verdict.allowed || !sql || !visitor) return false;
-  await recordBudgetDenial(sql, visitor, "items", cost, limits.enforce);
+  await recordBudgetDenial(sql, visitor, kind, cost, limits.enforce);
   if (!limits.enforce) return false;
   const retryAfter = Math.max(
     1,
