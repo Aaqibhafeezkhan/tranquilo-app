@@ -1207,7 +1207,9 @@ class TranquiloApp {
     if (hadDeepLinkArtwork) {
       pendingDeepLinkSlug = initialSlug;
     }
-    feedEl.render();
+    feedEl.render(
+      hadDeepLinkArtwork ? () => openDeepLinkedArtwork(initialSlug) : undefined,
+    );
 
     // Opens after the feed renders (not instead of), so closing the
     // storyline leaves a real feed behind rather than a blank page.
@@ -1247,6 +1249,17 @@ class TranquiloApp {
       topbarEl.showShareBanner();
       sessionStorage.setItem(SESSION_SHARE_BANNER_KEY, "1");
       trackEvent("share_banner_shown", { source: shareBannerSource });
+    }
+
+    function openDeepLinkedArtwork(slug: string) {
+      const cut = slug.indexOf("-");
+      resolveItemsByKeys([`${slug.slice(0, cut)}:${slug.slice(cut + 1)}`])
+        .then((found: any[]) => {
+          if (found[0]) detailModalEl.open(found[0]);
+        })
+        .catch((err: any) => {
+          console.error("deep link: detail open failed", err);
+        });
     }
 
     function slugFromLocation() {

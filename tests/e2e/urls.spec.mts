@@ -115,6 +115,16 @@ test("a /v/{slug} URL opens that artwork directly", async ({ page }) => {
   expect(await landedOn(page, slug)).toBe(true);
 });
 
+test("a /v/{slug} URL opens that artwork's detail view", async ({ page }) => {
+  const item = ITEMS[7];
+  await stubBackend(page);
+  await page.goto(`/v/${item.source}-${item.id}`);
+  await expect(page.locator("#detailModal")).toHaveClass(/open/, {
+    timeout: 15000,
+  });
+  await expect(page.locator("#detailModal")).toContainText(item.title);
+});
+
 test("the legacy #slug form still resumes", async ({ page }) => {
   // Old links are in people's messages and bookmarks permanently; dropping
   // the hash form would break every one of them.

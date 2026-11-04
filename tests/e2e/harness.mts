@@ -9,7 +9,7 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { Page, Route } from "@playwright/test";
+import { expect, type Page, type Route } from "@playwright/test";
 import * as realApi from "../../api/items.ts";
 import { shelfTitleSlug } from "../../lib/shelves.ts";
 import { MUSIC_BUCKETS } from "../../src/data/music.ts";
@@ -768,6 +768,12 @@ export async function gotoArtwork(
   await stubBackend(page);
   await page.goto(`/v/${encodeURIComponent(`${source}-${id}`)}`);
   await page.waitForFunction(() => (window.__tranquiloFeedRenders || 0) > 0);
+  // The deep link opens the detail view on top of the feed; dismissed so
+  // callers get the feed positioned on the artwork, as before.
+  const detail = page.locator("#detailModal");
+  await expect(detail).toHaveClass(/open/);
+  await page.keyboard.press("Escape");
+  await expect(detail).not.toHaveClass(/open/);
   await page.evaluate(() => new Promise(requestAnimationFrame));
   return page.locator("#feed .slide").first();
 }
