@@ -5,9 +5,7 @@
 
 ## Testing
 
-<!-- Both suites must pass locally before this merges -- CI here is
-     unreliable by design (see CONTRIBUTING.md), so a green CI check is not
-     the gate. -->
+<!-- Both suites MUST pass before this merges; CI runs them on every PR. -->
 
 - [ ] `bun run test:all` passes (vitest + Playwright)
 - [ ] `bun run typecheck` passes, if TypeScript changed

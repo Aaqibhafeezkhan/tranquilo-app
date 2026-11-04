@@ -49,9 +49,14 @@ async function main() {
     );
   }
   const artists = await ourArtists();
-  const names = artists.map((a) => a.artist);
   const counts = new Map(artists.map((a) => [a.artist, a.n]));
-  console.log(`${names.length} attributed artist names in the catalogue`);
+  console.log(`${counts.size} attributed artist names in the catalogue`);
+  // A merge renames rows to a spelling ULAN may lack; the old name keeps
+  // the subject in the subset.
+  const previous: string[] = fs.existsSync(OUT)
+    ? Object.keys(JSON.parse(fs.readFileSync(OUT, "utf8")).artists)
+    : [];
+  const names = [...new Set([...counts.keys(), ...previous])];
 
   // Only keep TERM rows whose normalised text is one of ours -- the dump
   // has millions of terms and we care about a few thousand.
@@ -152,7 +157,18 @@ async function main() {
   }
   fs.writeFileSync(
     OUT,
-    `${JSON.stringify({ merges: groups, artists: out }, null, 2)}\n`,
+    `${JSON.stringify(
+      {
+        merges: groups
+          .map((g) => ({ ...g, ourNames: [...g.ourNames].sort() }))
+          .sort((a, b) => a.subjectId.localeCompare(b.subjectId)),
+        artists: Object.fromEntries(
+          Object.entries(out).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)),
+        ),
+      },
+      null,
+      2,
+    )}\n`,
   );
   console.log(`\nwritten to ${path.relative(ROOT, OUT)}`);
 }

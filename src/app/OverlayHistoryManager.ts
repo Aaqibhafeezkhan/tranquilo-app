@@ -1,4 +1,4 @@
-// All seven overlays are pure classList/flag show-hide with no
+// All eight overlays are pure classList/flag show-hide with no
 // browser-history entry by default, so back would otherwise exit the app
 // entirely instead of closing one. Each open function calls push(); the
 // popstate listener attach() registers is the single place that runs the
@@ -12,6 +12,7 @@ export interface OverlayHistoryHost {
     isReturningToShelves?: boolean;
   };
   shelvesModeEl: { classList: DOMTokenList; close(): void };
+  shelfModeEl: { classList: DOMTokenList; close(): void };
   storylineModeEl: { classList: DOMTokenList; close(): void };
   setOfWorksModeEl: { classList: DOMTokenList; close(): void };
   lightboxEl: { classList: DOMTokenList; close(): void };
@@ -68,6 +69,7 @@ export class OverlayHistoryManager {
     const {
       detailModalEl,
       shelvesModeEl,
+      shelfModeEl,
       storylineModeEl,
       setOfWorksModeEl,
       lightboxEl,
@@ -79,6 +81,7 @@ export class OverlayHistoryManager {
     // pre-close state is what keeps one back press closing one overlay.
     const wasDetailOpen = detailModalEl.classList.contains("open");
     const wasShelvesOpen = shelvesModeEl.classList.contains("open");
+    const wasShelfOpen = shelfModeEl.classList.contains("open");
     const wasStorylineOpen = storylineModeEl.classList.contains("open");
     const wasSetOfWorksOpen = setOfWorksModeEl.classList.contains("open");
     const wasLightboxOpen = lightboxEl.classList.contains("open");
@@ -95,6 +98,8 @@ export class OverlayHistoryManager {
       storylineModeEl.close();
     } else if (wasSetOfWorksOpen) {
       setOfWorksModeEl.close();
+    } else if (wasShelfOpen) {
+      shelfModeEl.close();
     } else if (wasShelvesOpen) {
       shelvesModeEl.close();
     } else if (wasDetailOpen) {
@@ -111,6 +116,7 @@ export class OverlayHistoryManager {
     const {
       detailModalEl,
       shelvesModeEl,
+      shelfModeEl,
       storylineModeEl,
       setOfWorksModeEl,
       lightboxEl,
@@ -119,6 +125,7 @@ export class OverlayHistoryManager {
     const overlayOpen =
       detailModalEl.classList.contains("open") ||
       shelvesModeEl.classList.contains("open") ||
+      shelfModeEl.classList.contains("open") ||
       storylineModeEl.classList.contains("open") ||
       setOfWorksModeEl.classList.contains("open") ||
       lightboxEl.classList.contains("open") ||
@@ -141,6 +148,7 @@ export class OverlayHistoryManager {
     setOfWorksModeEl.close();
     if (!wasReturningToShelves) {
       shelvesModeEl.close();
+      shelfModeEl.close();
     }
     lightboxEl.close();
     exportModalEl.close();

@@ -5,10 +5,11 @@ info:
     Vercel Serverless Functions backing tranquilo.art. Every function under
     api/ is documented here (public routes and internal Vercel Cron
     endpoints alike) -- see CONVENTIONS.md for why these stay one file per
-    route rather than a framework. Not machine-verified against the
-    handlers (no contract-testing setup exists yet) -- kept in sync by hand
-    as routes change; treat a mismatch as this file being stale, not the
-    handler.
+    route rather than a framework. Kept in sync by hand as routes change;
+    treat a mismatch as this file being stale, not the handler. The locale
+    and translation contract (`x-supported-locales`,
+    `x-translatable-fields`, `Translated`) is checked against the code by
+    tests/openapi-locale-contract.test.ts.
   version: "1.0.0"
   license:
     name: UNLICENSED
@@ -20,7 +21,7 @@ tags:
   - name: catalogue
     description: The live art catalogue and its derived facets/search
   - name: sharing
-    description: Per-artwork/per-storyline share pages and preview images
+    description: Per-artwork/per-storyline/per-shelf share pages and preview images
   - name: engagement
     description: Analytics, waitlists, feedback and collection submissions
   - name: cron
@@ -38,38 +39,54 @@ paths:
       operationId: getItems
       description: >-
         One endpoint for every shape of "what's in the catalogue" question:
-        a page of full item rows, the lightweight order manifest, a shuffled
-        feed page, an explicit id lookup, or one of three bounded
-        aggregates (facets/suggest/correction). Exactly one of `shape`,
-        `ids`, or the plain filter+paging parameters applies per request --
-        see the individual parameter descriptions for how they interact.
-        There is no longer an unpaginated "give me everything" response;
-        omitting both `limit`/`cursor` and `shape=manifest` is a 400.
+        a shuffled page of the lightweight order manifest, an explicit id
+        lookup, a count, or one of the bounded aggregates
+        (facets/suggest/correction). Full item rows are served only by `keys`
+        or `ids` lookups. A request that is neither a lookup, a shuffled
+        manifest page, a count, nor one of the other shapes is a 400.
       parameters:
         - name: shape
           in: query
           description: >-
-            Selects a whole-catalogue aggregate or the paging-exempt order
-            manifest instead of a page of full rows. `manifest` returns
-            every live item's identity/facets (paged only when combined
-            with `order=shuffle`); `facets`/`suggest`/`correction` return
+            Selects a whole-catalogue aggregate or the order manifest
+            instead of a page of full rows. `manifest` returns a page of
+            live items' identity/facets and requires `order=shuffle`;
+            `facets`/`suggest`/`correction` return
             answers bounded by distinct-value count, not catalogue size;
             `storylines`/`storyline`/`shelves`/`music`/`heroes` dispatch to a
             different table entirely (see below) and take no other
             catalogue filter. `print_region` returns the visitor's
             country (from the request's geolocation) and the print-on-demand
             region it belongs to, as `{ country, region }`, either of which
-            may be null; it is never cached at the edge.
+            may be null; it is never cached at the edge. `vocabulary` lists
+            every controlled-vocabulary value with its display label in the
+            requested `locale` (English without one) and takes no other
+            parameter; see `VocabularyLabels`.
           schema:
             type: string
-            enum: [manifest, facets, suggest, correction, count, storylines, storyline, shelves, music, heroes, print_region]
+            enum: [manifest, facets, suggest, correction, count, storylines, storyline, shelves, music, heroes, print_region, vocabulary]
+        - name: keys
+          in: query
+          description: >-
+            Repeated `source:native_id` params (`?keys=met:1&keys=npm:U:15646`),
+            split on the first colon -- native ids may contain one. Resolves
+            exactly these items regardless of any other filter; short-circuits
+            everything else in this list. Native ids repeat across sources,
+            so this is the lookup to use when the source is known. Max 100
+            per request; not combinable with `ids`.
+          schema:
+            type: array
+            items: { type: string }
+          style: form
+          explode: true
         - name: ids
           in: query
           description: >-
             Repeated params (`?ids=a&ids=b`), never comma-joined -- some
-            native ids contain a literal comma. Resolves exactly these
-            items regardless of any other filter; short-circuits
-            everything else in this list. Max 500 per request.
+            native ids contain a literal comma. Resolves every live item
+            with these native ids, from any source, regardless of any other
+            filter; short-circuits everything else in this list. Max 100
+            per request.
           schema:
             type: array
             items: { type: string }
@@ -130,45 +147,86 @@ paths:
           schema: { type: number }
         - name: limit
           in: query
-          description: Page size. Default 60, max 200.
+          description: Manifest page size. Default 60, max 200.
           schema: { type: integer, minimum: 1, maximum: 200, default: 60 }
         - name: cursor
           in: query
           description: >-
             Opaque continuation token from a previous page's `next_cursor`.
-            Not valid together with `shape=manifest` (the plain,
-            non-shuffled manifest is never paged).
           schema: { type: string }
         - name: locale
           in: query
           description: >-
-            Language to return content in, as a code from the site's locale
-            registry (e.g. "pt-BR"), matched case-insensitively; an unknown
-            code is a 400. Applies to item rows (full and manifest),
-            `shape=storyline` and `shape=shelves`: each translatable field is
-            replaced by an approved translation of its current text, trying
-            the requested locale and then English, and keeps its source text
-            when there is none. Every replaced field is listed under the
-            object's `translated`. Without `locale`, no field is translated.
+            Language to return content in, as one of `x-supported-locales`
+            (e.g. "pt-BR"), matched case-insensitively; an unknown code is a
+            400. `Accept-Language` is not read, so a response depends only on
+            the URL. Without `locale`, no field is translated.
+
+
+            Applies to item rows (full and manifest), `shape=storyline` and
+            `shape=shelves`. An item's translatable fields are listed under
+            `x-translatable-fields` on `Item`. A field is replaced only by a
+            human-reviewed translation (or the source's own text in that
+            language) of its current text, trying the requested locale and
+            then English; machine drafts are never served, and a translation
+            of text that has since changed is hidden, not served stale. Every
+            replaced field is listed under the object's `translated`.
+
+
+            `medium`, `culture`, `place_of_origin`, `artist_nationality` and
+            `tags` are translated per term: one reviewed translation of a
+            term applies to every item that uses it, following the item's own
+            capitalization. `tags` is translated per comma-separated tag, and
+            a tag without a translation keeps its source text. A translation
+            written for one item wins over a term's.
+
+
+            Source text is as supplied by the institution, in whatever
+            language that is, and there is no per-item source-language
+            field. A request for `en` can therefore return Portuguese for a
+            Portuguese-source item until an English translation exists.
+
+
+            With `q`, a `locale` request also matches that locale's reviewed
+            translations of `medium`, `tags` and `place_of_origin`, in
+            addition to source text. With `shape=suggest` and
+            `shape=correction`, it also offers them, in place of a source
+            medium or tag that has one.
+
+
+            Adding a locale, a translatable field or a `translated` key is
+            not a breaking change; removing or renaming one is.
           schema: { type: string }
+          x-supported-locales: [en, pt-BR]
+        - name: coverage
+          in: query
+          description: >-
+            `1`, with `shape=facets` and a `locale`, adds `translation` to the
+            facets answer: for each translatable field, how many live items
+            have a value and how many of those are served translated in that
+            locale. Without a `locale` it is a 400. Counts the requested
+            locale only, not the English fallback, and uses the rules
+            `locale` serves under (a reviewed term or an approved translation
+            of the current text; for `tags`, every tag translated). A field
+            the source already supplies in that language counts as not
+            translated.
+          schema: { type: string, enum: ["1"] }
       responses:
         "200":
           description: >-
-            Shape depends on the request -- see the four response schemas
-            below (page, manifest array, aggregate, or lookup-with-missing).
+            Shape depends on the request -- see the response schemas below
+            (page, manifest page, aggregate, or lookup-with-missing).
           content:
             application/json:
               schema:
                 oneOf:
-                  - $ref: "#/components/schemas/ItemPage"
                   - $ref: "#/components/schemas/ItemLookupResult"
-                  - type: array
-                    items: { $ref: "#/components/schemas/ManifestItem" }
                   - $ref: "#/components/schemas/ShuffledManifestPage"
                   - $ref: "#/components/schemas/FacetsResult"
                   - $ref: "#/components/schemas/SuggestResult"
                   - $ref: "#/components/schemas/CorrectionResult"
                   - $ref: "#/components/schemas/CountResult"
+                  - $ref: "#/components/schemas/VocabularyLabels"
                   - $ref: "#/components/schemas/StorylineIndexEntry"
                   - $ref: "#/components/schemas/Storyline"
                   - type: array
@@ -178,9 +236,11 @@ paths:
                     items: { $ref: "#/components/schemas/HeroPoolEntry" }
         "400":
           description: >-
-            Caller error -- a malformed/too-large `ids` list, a malformed
-            cursor, an out-of-range `start`, an unwhitelisted facet, or
-            omitting both paging and `shape=manifest`.
+            Caller error -- a malformed or too-large `keys` or `ids` list,
+            both given at once, a malformed cursor, an out-of-range `start`,
+            an unwhitelisted facet, a full-row request that is not a
+            lookup, or `shape=manifest`
+            without `order=shuffle`.
           content:
             application/json: { schema: { $ref: "#/components/schemas/Error" } }
         "404":
@@ -373,10 +433,64 @@ paths:
           content:
             application/json: { schema: { $ref: "#/components/schemas/Error" } }
 
+  /api/webhooks/patreon:
+    post:
+      tags: [engagement]
+      summary: Patreon member webhook
+      operationId: patreonWebhook
+      description: >-
+        Registered in Patreon's developer portal (PATREON_WEBHOOK_SECRET),
+        not called by this site's own client. X-Patreon-Signature is the hex
+        HMAC-MD5 of the raw body. On a members:* or members:pledge:* event,
+        stores the member's name, status and tiers for the About page's
+        patron list; members:delete blanks the stored name. Every other
+        event type is acknowledged and ignored.
+      parameters:
+        - name: X-Patreon-Event
+          in: header
+          required: true
+          schema: { type: string }
+        - name: X-Patreon-Signature
+          in: header
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        description: Raw Patreon JSON:API payload whose `data` is a member resource.
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        "200":
+          description: Event acknowledged (and, for a member event, stored).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok: { type: boolean }
+                  handled:
+                    type: boolean
+                    description: false for an event type other than members:*.
+        "400":
+          description: Unreadable body, or not a member resource.
+          content:
+            application/json: { schema: { $ref: "#/components/schemas/Error" } }
+        "401":
+          description: Signature verification failed.
+          content:
+            application/json: { schema: { $ref: "#/components/schemas/Error" } }
+        "405":
+          $ref: "#/components/responses/MethodNotAllowed"
+        "500":
+          description: PATREON_WEBHOOK_SECRET not configured, or the database write failed.
+          content:
+            application/json: { schema: { $ref: "#/components/schemas/Error" } }
+
   /v/{slug}:
     get:
       tags: [sharing]
-      summary: Per-artwork or per-storyline share page
+      summary: Per-artwork, per-storyline or per-shelf share page
       operationId: getSharePage
       description: >-
         Rewritten from `/v/:slug` (vercel.json) to `/api/v/[slug]`. Serves
@@ -384,12 +498,13 @@ paths:
         `<meta>`/OpenGraph/Twitter Card tags injected in place -- a crawler
         sees a fully-formed preview, a human gets the real running app at a
         real, bookmarkable URL. `/s/{id}` (a storyline) rewrites here too,
-        as slug `s-{id}`.
+        as slug `s-{id}`, and `/shelf/{slug}` (a Discover shelf) as slug
+        `shelf-{slug}`.
       parameters:
         - name: slug
           in: path
           required: true
-          description: '`{source}-{nativeId}` for an artwork (split on the first hyphen only), or `s-{storylineId}` for a storyline.'
+          description: '`{source}-{nativeId}` for an artwork (split on the first hyphen only), `s-{storylineId}` for a storyline, or `shelf-{shelfSlug}` for a shelf (its title slug, or its id for older links).'
           schema: { type: string }
       responses:
         "200":
@@ -414,6 +529,23 @@ paths:
           content:
             text/html: { schema: { type: string } }
 
+  /shelf/{slug}:
+    get:
+      tags: [sharing]
+      summary: Shelf share page (alias)
+      operationId: getShelfSharePageAlias
+      description: Rewrites to `/v/shelf-{slug}` -- see `/v/{slug}`. Accepts the shelf's title slug, or its id for older links.
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: See `/v/{slug}`.
+          content:
+            text/html: { schema: { type: string } }
+
   /og/{slug}.png:
     get:
       tags: [sharing]
@@ -424,12 +556,13 @@ paths:
         card via @vercel/og (Satori) -- the artwork's own image tinted with
         its accent color, or a title/caption-only card if the source is
         under a health hold or the image fetch fails. `slug` matching
-        `s-{id}` renders the storyline variant instead.
+        `s-{id}` renders the storyline variant instead, and `shelf-{slug}`
+        the shelf variant (title, work count, one cover image).
       parameters:
         - name: slug
           in: path
           required: true
-          description: '`{source}-{nativeId}`, or `s-{storylineId}` for a storyline card. The `.png` suffix is stripped by the rewrite.'
+          description: '`{source}-{nativeId}`, `s-{storylineId}` for a storyline card, or `shelf-{shelfSlug}` for a shelf card. The `.png` suffix is stripped by the rewrite.'
           schema: { type: string }
       responses:
         "200":
@@ -645,6 +778,7 @@ components:
     Item:
       type: object
       description: A full catalogue row, as returned in a paged/lookup response.
+      x-translatable-fields: [title, caption_tea, caption_basic, medium, culture, place_of_origin, artist_nationality, tags]
       properties:
         id: { type: string, description: "native_id" }
         translated: { $ref: "#/components/schemas/Translated" }
@@ -695,7 +829,6 @@ components:
         caption_tea: { type: string, nullable: true }
         caption_basic: { type: string, nullable: true }
         tea_voice_status: { type: string, nullable: true }
-        tea_voice_eligible: { type: boolean }
         tea_voice_sources:
           type: array
           nullable: true
@@ -722,9 +855,7 @@ components:
         twist_category: { type: string, nullable: true }
         twist_hook: { type: string, nullable: true }
         twist_story: { type: string, nullable: true }
-        twist_confidence: { type: number, nullable: true }
         twist_source_url: { type: string, nullable: true }
-        music_mood: { type: string, nullable: true }
         shuffle_key: { type: number }
     ManifestItem:
       type: object
@@ -747,23 +878,15 @@ components:
         contains_nudity: { type: boolean }
         twist_category: { type: string, nullable: true }
         shuffle_key: { type: number }
-    ItemPage:
-      type: object
-      properties:
-        items: { type: array, items: { $ref: "#/components/schemas/Item" } }
-        next_cursor:
-          type: string
-          nullable: true
-          description: Pass back as `?cursor=` to continue; null means this was the last page.
     ItemLookupResult:
       type: object
-      description: 'Response to an explicit `?ids=` lookup.'
+      description: 'Response to an explicit `?keys=` or `?ids=` lookup.'
       properties:
         items: { type: array, items: { $ref: "#/components/schemas/Item" } }
         missing:
           type: array
           items: { type: string }
-          description: Requested ids that resolved to nothing (quarantined, rejected, or never existed).
+          description: Requested keys or ids, as given, that resolved to nothing (quarantined, rejected, or never existed).
     ShuffledManifestPage:
       type: object
       description: '`?shape=manifest&order=shuffle` -- a page of the manifest in shuffled order.'
@@ -820,6 +943,21 @@ components:
             type: object
             properties: { value: { type: string }, count: { type: integer } }
         total: { type: integer }
+        translation:
+          type: object
+          description: Only present for `coverage=1` with a `locale`.
+          required: [locale, fields]
+          properties:
+            locale: { type: string }
+            fields:
+              type: object
+              description: One entry per translatable field (`x-translatable-fields` on `Item`).
+              additionalProperties:
+                type: object
+                required: [items, translated]
+                properties:
+                  items: { type: integer, description: Live items with a value in the field. }
+                  translated: { type: integer, description: Of those, how many are served translated. }
     SuggestResult:
       type: object
       properties:
@@ -839,12 +977,39 @@ components:
       type: object
       properties:
         total: { type: integer }
+    VocabularyLabels:
+      type: object
+      description: >-
+        Every controlled-vocabulary value under the filter parameter that
+        takes it (`x-vocabulary-fields`), with a display label in `locale`.
+        `value` is the stable code: it is what every filter and facet matches
+        on, it is never translated, and it never changes with `locale`. A
+        value with no label in the locale falls back to its English label,
+        and `label` is never empty. Values the live catalogue holds that
+        this vocabulary does not list are not included.
+      x-vocabulary-fields: [category, region_primary, timeframe, media_type, palette, subject_type]
+      required: [locale, fields]
+      properties:
+        locale: { type: string, description: The locale the labels are in. }
+        fields:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: object
+              required: [value, label]
+              properties:
+                value: { type: string }
+                label: { type: string }
     StorylineIndexEntry:
       type: object
       description: 'One entry of `?shape=storylines`''s array response.'
       properties:
         id: { type: string }
         cover_item_id: { type: string }
+        cover_source:
+          type: string
+          description: Source of the cover item, present where its native id is shared across sources.
         title: { type: string }
     Storyline:
       type: object
@@ -855,12 +1020,18 @@ components:
         intro_caption: { type: string }
         translated: { $ref: "#/components/schemas/Translated" }
         cover_item_id: { type: string }
+        cover_source:
+          type: string
+          description: Source of the cover item, present where its native id is shared across sources.
         items:
           type: array
           items:
             type: object
             properties:
               item_id: { type: string }
+              source:
+                type: string
+                description: Present where the native id is shared across sources.
               chapter_caption: { type: string, nullable: true }
               translated: { $ref: "#/components/schemas/Translated" }
     Shelf:
@@ -869,6 +1040,9 @@ components:
       required: [id, title, type]
       properties:
         id: { type: string }
+        slug:
+          type: string
+          description: URL form of the untranslated title, used by `/shelf/{slug}` share links.
         title: { type: string }
         translated: { $ref: "#/components/schemas/Translated" }
         type: { type: string, enum: [hero, rule] }

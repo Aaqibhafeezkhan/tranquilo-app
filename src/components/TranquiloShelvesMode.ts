@@ -22,12 +22,20 @@
 // once bundled. This gives the real, current URL either way.
 import tranquiloFlowerVioletUrl from "../../assets/tranquilo-flower-violet.svg";
 import { ShelfType } from "../enums/ShelfType";
-import { t } from "../i18n/index";
+import {
+  resolveCuratedList,
+  sameCuratedItem,
+  shelfRefs,
+} from "../feed/curatedEntries";
+import { SHARE_SVG } from "../feed/slideBuilder";
+import { t, tn } from "../i18n/index";
 import { shelfRenderLimit } from "../logic/logic";
 import type { ITranquiloShelvesModeHost } from "../types/ITranquiloShelvesModeHost";
 import type { Item } from "../types/Item";
 import type { Shelf } from "../types/Shelf";
+import type { StorylineIndexEntry } from "../types/Storyline";
 import { on } from "../utils/on";
+import { isShareableShelf } from "./TranquiloShelfMode";
 
 // The overlay covers the top bar, so without a mark of its own the tulip
 // would disappear the moment Discover opens. It's a real link home,
@@ -126,7 +134,7 @@ export class TranquiloShelvesMode extends HTMLElement {
       // Curated order is the point of a hero shelf, and resolveItemsByIds()
       // returns items in the given order, dropping any that no longer
       // resolve rather than rendering a blank card.
-      return host.resolveItemsByIds(shelf.itemIds.map(String)).catch((err) => {
+      return resolveCuratedList(host, shelfRefs(shelf.itemIds)).catch((err) => {
         console.error("items: hero shelf lookup failed", err);
         return [];
       });
@@ -149,6 +157,60 @@ export class TranquiloShelvesMode extends HTMLElement {
       });
   }
 
+  private buildShelfMeta(shelf: Shelf, qualifyingCount: number): HTMLElement {
+    const host = this.requireApp();
+    const meta = document.createElement("div");
+    meta.className = "shelf-meta";
+    const count = document.createElement("span");
+    count.className = "shelf-count";
+    count.textContent = tn("shelf.works", qualifyingCount);
+    // A rule shelf's sample is capped, so a full sample needs a real count.
+    if (shelf.type === ShelfType.Rule && qualifyingCount >= SHELF_FETCH_LIMIT) {
+      host
+        .fetchJson(
+          host.apiUrl({ shape: "count", ...shelf.filter }),
+          "shelf count",
+        )
+        .then((body) => {
+          if (typeof body.total === "number") {
+            count.textContent = tn("shelf.works", body.total);
+          }
+        })
+        .catch((err) => {
+          console.error("items: shelf count failed", err);
+        });
+    }
+    const share = document.createElement("button");
+    share.type = "button";
+    share.className = "btn-share shelf-share";
+    share.setAttribute("aria-label", t("shelf.share"));
+    share.title = t("shelf.share");
+    share.innerHTML = SHARE_SVG;
+    on(share, () => {
+      host.shareShelf(shelf);
+    });
+    meta.append(count, share);
+    return meta;
+  }
+
+  private pairStorylines(tiles: Item[]): (StorylineIndexEntry | undefined)[] {
+    const entries = this.requireApp().storylineIndex();
+    const claimed = new Set<number>();
+    return tiles.map((item) => {
+      const at = entries.findIndex(
+        (entry, i) =>
+          !claimed.has(i) &&
+          sameCuratedItem(
+            { id: entry.cover_item_id, source: entry.cover_source },
+            item,
+          ),
+      );
+      if (at < 0) return undefined;
+      claimed.add(at);
+      return entries[at];
+    });
+  }
+
   private buildShelfRow(
     shelf: Shelf,
     qualifying: Item[],
@@ -157,14 +219,21 @@ export class TranquiloShelvesMode extends HTMLElement {
     const host = this.requireApp();
     const row = document.createElement("div");
     row.className = "shelf";
+    row.dataset.shelfId = shelf.id;
     // A shelf whose name the section header already states doesn't
     // repeat it. Compared rather than hardcoded, so a second hero shelf
     // with its own name still labels itself.
     if (!suppressTitle) {
+      const headEl = document.createElement("div");
+      headEl.className = "shelf-head";
       const titleEl = document.createElement("div");
       titleEl.className = "shelf-title";
       titleEl.textContent = shelf.title;
-      row.appendChild(titleEl);
+      headEl.appendChild(titleEl);
+      if (isShareableShelf(shelf)) {
+        headEl.appendChild(this.buildShelfMeta(shelf, qualifying.length));
+      }
+      row.appendChild(headEl);
     }
     const track = document.createElement("div");
     track.className = "shelf-row";
@@ -176,6 +245,10 @@ export class TranquiloShelvesMode extends HTMLElement {
       qualifying.length,
       SHELF_HYDRATE_LIMIT,
     );
+    const tileStorylines =
+      shelf.id === "storylines"
+        ? this.pairStorylines(qualifying.slice(0, renderCount))
+        : [];
     qualifying.slice(0, renderCount).forEach((item, idx) => {
       const btn = document.createElement("button");
       btn.className = "shelf-item";
@@ -184,8 +257,7 @@ export class TranquiloShelvesMode extends HTMLElement {
       // more here" cue as the in-feed storyline stack layers) plus an "N
       // works" subtitle, so they read as different from a regular tile
       // at a glance.
-      const storyline =
-        shelf.id === "storylines" ? host.storylineFor(item) : null;
+      const storyline = tileStorylines[idx] ?? null;
       const imgHtml = `<img src="${item.img}" alt="${escapeHtml(item.title || "Untitled")}" loading="lazy" decoding="async">`;
       btn.innerHTML = `${
         storyline
@@ -199,6 +271,10 @@ export class TranquiloShelvesMode extends HTMLElement {
       host.applyNudityGate(btn, item, true);
       on(btn, () => {
         this.close();
+        if (storyline) {
+          host.openStoryline(storyline.id);
+          return;
+        }
         host.openDetailModal(item, { items: qualifying, index: idx });
       });
       track.appendChild(btn);
@@ -311,11 +387,15 @@ export class TranquiloShelvesMode extends HTMLElement {
     this.classList.add("open");
     this.setAttribute("aria-hidden", "false");
     host.pushOverlayHistoryState("shelves");
+    history.replaceState(history.state, "", "/discover");
   }
 
   close(): void {
     this.classList.remove("open");
     this.setAttribute("aria-hidden", "true");
+    if (/^\/(discover|shelf\/)/.test(location.pathname)) {
+      history.replaceState(history.state, "", "/");
+    }
   }
 
   // Reopens without re-rendering or re-pushing history, for
@@ -325,6 +405,7 @@ export class TranquiloShelvesMode extends HTMLElement {
   restore(): void {
     this.classList.add("open");
     this.setAttribute("aria-hidden", "false");
+    history.replaceState(history.state, "", "/discover");
   }
 }
 

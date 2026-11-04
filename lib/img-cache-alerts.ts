@@ -31,10 +31,12 @@
  * about a decision we made), a Retry-After cooldown (the guard
  * working, self-clearing), and an empty bucket nobody is requesting
  * (not a problem, just quiet). */
-async function checkTokenBuckets(sql: any): Promise<string[]> {
+async function checkTokenBuckets(
+  sql: QuerySql | null | undefined,
+): Promise<string[]> {
   if (!sql) return [];
   try {
-    const rows = await sql.query(
+    const rows = (await sql.query(
       "SELECT s.source, s.tokens, s.refill_per_sec, " +
         "       COALESCE(a.attempts, 0) AS attempts " +
         "  FROM source_fetch_state s " +
@@ -46,9 +48,14 @@ async function checkTokenBuckets(sql: any): Promise<string[]> {
         "   AND s.tokens < 1 " +
         "   AND COALESCE(a.attempts, 0) >= $1",
       [TOKEN_STARVATION_MIN_ATTEMPTS],
-    );
+    )) as {
+      source: string;
+      tokens: string | number;
+      refill_per_sec: number | string;
+      attempts: number | string;
+    }[];
     return rows.map(
-      (r: any) =>
+      (r) =>
         `Image source '${r.source}' has an empty fetch budget (${Number(
           r.tokens,
         ).toFixed(1)} tokens, refilling at ${
@@ -73,17 +80,19 @@ async function checkTokenBuckets(sql: any): Promise<string[]> {
  * the key threshold while every source was storing normally. Held
  * sources are excluded for the same reason checkTokenBuckets() excludes
  * them -- unstored by decision, not by failure. */
-async function checkEvictionThrash(sql: any): Promise<string[]> {
+async function checkEvictionThrash(
+  sql: QuerySql | null | undefined,
+): Promise<string[]> {
   if (!sql) return [];
   try {
-    const rows = await sql.query(
+    const rows = (await sql.query(
       "SELECT count(*)::int AS n FROM img_cache_entries e " +
         " WHERE e.bytes IS NULL AND e.requests >= $1 " +
         "   AND e.last_seen >= now() - make_interval(days => $2) " +
         "   AND NOT EXISTS (SELECT 1 FROM source_fetch_state s " +
         "                    WHERE s.source = e.source AND s.hold_reason IS NOT NULL)",
       [THRASH_MIN_REQUESTS, THRASH_WINDOW_DAYS],
-    );
+    )) as { n: number | string }[];
     const n = rows.length ? Number(rows[0].n) : 0;
     if (n < THRASH_MIN_KEYS) return [];
     return [
@@ -103,17 +112,19 @@ async function checkEvictionThrash(sql: any): Promise<string[]> {
 /* Safety net for anything the real-time 429 alert missed (a function
  * that died before Sentry flushed, or its own once-per-window guard
  * suppressing a repeat). */
-async function checkRateLimits(sql: any): Promise<string[]> {
+async function checkRateLimits(
+  sql: QuerySql | null | undefined,
+): Promise<string[]> {
   if (!sql) return [];
   try {
     // The last COMPLETE day, not a rolling window -- img_cache_stats
     // is day-granular, so a rolling window would report each 429 twice.
-    const rows = await sql.query(
+    const rows = (await sql.query(
       "SELECT source, SUM(origin_429)::int AS n FROM img_cache_stats " +
         " WHERE day = CURRENT_DATE - 1 GROUP BY source HAVING SUM(origin_429) > 0",
-    );
+    )) as { source: string; n: number }[];
     return rows.map(
-      (r: any) =>
+      (r) =>
         `Image source '${r.source}' returned ${r.n} rate-limit ` +
         `(429) response(s) yesterday. This is the failure mode that ` +
         `produced the Wikimedia rate-limit hold -- check the per-host budgets before ` +
@@ -130,19 +141,21 @@ async function checkRateLimits(sql: any): Promise<string[]> {
  * stampede). Everything else means a budget, cooldown, failing origin
  * or tripped breaker. Same last-complete-day reasoning as
  * checkRateLimits(). */
-async function checkShedReasons(sql: any): Promise<string[]> {
+async function checkShedReasons(
+  sql: QuerySql | null | undefined,
+): Promise<string[]> {
   if (!sql) return [];
   try {
-    const rows = await sql.query(
+    const rows = (await sql.query(
       "SELECT source, reason, SUM(n)::int AS n FROM img_shed_stats " +
         " WHERE day = CURRENT_DATE - 1 " +
         "   AND reason NOT IN ('not-admitted', 'in-flight') " +
         " GROUP BY source, reason HAVING SUM(n) >= $1 " +
         " ORDER BY SUM(n) DESC",
       [SHED_REASON_MIN],
-    );
+    )) as { source: string; reason: string; n: number }[];
     return rows.map(
-      (r: any) =>
+      (r) =>
         `Image source '${r.source}' shed ${r.n} request(s) ` +
         `yesterday for reason '${r.reason}' -- not admission control. ` +
         `Its cache is not filling for a reason worth understanding: every one ` +
@@ -156,6 +169,7 @@ async function checkShedReasons(sql: any): Promise<string[]> {
 // Thresholds live in config.toml's [img_cache_alerts] -- baked in at
 // build time, never read live.
 import { TRANQUILO_CONFIG } from "./config.generated.ts";
+import type { QuerySql } from "./img-store.ts";
 
 const SHED_REASON_MIN = TRANQUILO_CONFIG.img_cache_alerts.shed_reason_min;
 const TOKEN_STARVATION_MIN_ATTEMPTS =

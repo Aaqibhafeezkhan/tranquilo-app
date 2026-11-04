@@ -160,4 +160,49 @@ describe("fetchItemsByIds", () => {
       "api/items lookup responded with 404",
     );
   });
+  it("splits a long list into lookups of at most 100 ids and merges them", async () => {
+    fetchMock.mockImplementation((url: string) => {
+      const ids = new URL(url, "https://x.test").searchParams.getAll("ids");
+      return Promise.resolve(
+        jsonResponse({
+          items: ids.filter((id) => id !== "n7").map((id) => ({ id })),
+          missing: ids.filter((id) => id === "n7"),
+        }),
+      );
+    });
+    const client = new ItemsApiClient(1, 40);
+    const ids = Array.from({ length: 250 }, (_, i) => `n${i}`);
+
+    const body = await client.fetchItemsByIds(ids);
+
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+    for (const [url] of fetchMock.mock.calls) {
+      const sent = new URL(url, "https://x.test").searchParams.getAll("ids");
+      expect(sent.length).toBeLessThanOrEqual(100);
+    }
+    expect(body.items).toHaveLength(249);
+    expect(body.missing).toEqual(["n7"]);
+  });
+});
+
+describe("fetchItemsByKeys", () => {
+  it("sends one keys= parameter per source:native_id", async () => {
+    fetchMock.mockResolvedValueOnce(jsonResponse({ items: [], missing: [] }));
+    const client = new ItemsApiClient(3, 40);
+    await client.fetchItemsByKeys(["met:107208", "npm:U:15646"]);
+    const [url] = fetchMock.mock.calls[0];
+    expect(url).toBe("/api/items?keys=met%3A107208&keys=npm%3AU%3A15646&v=3");
+  });
+
+  it("splits more than one request's worth into parallel lookups", async () => {
+    fetchMock.mockImplementation(() =>
+      Promise.resolve(jsonResponse({ items: [{ id: "x" }], missing: ["m"] })),
+    );
+    const client = new ItemsApiClient(1, 40);
+    const keys = Array.from({ length: 150 }, (_, i) => `met:${i}`);
+    const body = await client.fetchItemsByKeys(keys);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(body.items).toHaveLength(2);
+    expect(body.missing).toEqual(["m", "m"]);
+  });
 });

@@ -18,6 +18,36 @@
 // inform: a caption is a piece of writing, and a checker that fails a batch
 // over sentence length would be routed around within a week.
 
+interface Finding {
+  level: "error" | "warning";
+  message: string;
+}
+
+interface Publication {
+  title?: string;
+  acquisition_url?: string;
+}
+
+interface Claim {
+  text?: string;
+  source_url?: string;
+  source_kind?: string;
+  publication?: Publication | null;
+  status?: string;
+}
+
+interface Draft {
+  caption_tea?: string;
+  tea_voice_claims?: Claim[];
+  links?: string[];
+}
+
+interface CheckedItem {
+  url?: string | null;
+  source?: string;
+  native_id?: string | number;
+}
+
 // Hosts we serve items from. A link to one of these is a claim about THIS
 // object and must match the stored url; anything else is third-party grounding
 // and is none of this checker's business.
@@ -53,15 +83,15 @@ const SEQUENCE_PATTERNS = [
 const MAX_WORDS = 120; // well past a normal caption's length is wall text
 const MAX_SENTENCE_WORDS = 45; // "wall texty" tracks sentence length most
 
-function hostOf(url: any): any {
+function hostOf(url: unknown): string | null {
   try {
-    return new URL(url).hostname.replace(/^www\./, "");
+    return new URL(String(url)).hostname.replace(/^www\./, "");
   } catch (_e) {
     return null;
   }
 }
 
-function isInstitutionUrl(url: any): boolean {
+function isInstitutionUrl(url: unknown): boolean {
   const host = hostOf(url);
   if (!host) return false;
   return INSTITUTION_HOSTS.some((h) => host === h || host.endsWith(`.${h}`));
@@ -85,9 +115,9 @@ const NON_OBJECT_PATH_PREFIXES = [
   "/about",
 ];
 
-function isObjectPageUrl(url: any): boolean {
+function isObjectPageUrl(url: string): boolean {
   if (!isInstitutionUrl(url)) return false;
-  let path: any;
+  let path: string;
   try {
     path = new URL(url).pathname.toLowerCase();
   } catch (_e) {
@@ -99,16 +129,19 @@ function isObjectPageUrl(url: any): boolean {
 }
 
 /** Any link to an institution OBJECT page must be the stored url, exactly. */
-function checkLinks(item: any, urls: any): any[] {
-  const out: any[] = [];
+function checkLinks(
+  item: CheckedItem | null | undefined,
+  urls: string[] | null | undefined,
+): Finding[] {
+  const out: Finding[] = [];
   const stored = item?.url || "";
   for (const url of urls || []) {
     if (!isObjectPageUrl(url)) continue; // third-party or essay grounding
     if (!stored) {
       out.push({
         level: "warning",
-        message: `no stored url for ${item.source}:${
-          item.native_id
+        message: `no stored url for ${item?.source}:${
+          item?.native_id
         } -- cannot verify ${url}`,
       });
       continue;
@@ -126,7 +159,7 @@ function checkLinks(item: any, urls: any): any[] {
 }
 
 /** Captions must stand alone; the feed order is random. */
-function checkCrossReferences(caption: any): any[] {
+function checkCrossReferences(caption: unknown): Finding[] {
   const text = String(caption || "");
   for (const re of SEQUENCE_PATTERNS) {
     if (re.test(text)) {
@@ -144,9 +177,9 @@ function checkCrossReferences(caption: any): any[] {
 }
 
 /** Volume must not loosen grounding. */
-function checkClaims(claims: any): any[] {
-  const out: any[] = [];
-  (claims || []).forEach((c: any, i: number) => {
+function checkClaims(claims: Claim[] | null | undefined): Finding[] {
+  const out: Finding[] = [];
+  (claims || []).forEach((c, i) => {
     if (!c?.source_url) {
       out.push({
         level: "error",
@@ -161,7 +194,10 @@ function checkClaims(claims: any): any[] {
 }
 
 /** A cited book needs a title and a link to where a reader can get it. */
-function checkPublication(claim: any, i: number): any[] {
+function checkPublication(
+  claim: Claim | null | undefined,
+  i: number,
+): Finding[] {
   const pub = claim?.publication;
   if (!pub) {
     return claim?.source_kind === "book"
@@ -173,7 +209,7 @@ function checkPublication(claim: any, i: number): any[] {
         ]
       : [];
   }
-  const out: any[] = [];
+  const out: Finding[] = [];
   if (!pub.title) {
     out.push({
       level: "error",
@@ -190,8 +226,8 @@ function checkPublication(claim: any, i: number): any[] {
 }
 
 /** Wall text, as a warning. */
-function checkReadability(caption: any): any[] {
-  const out: any[] = [];
+function checkReadability(caption: unknown): Finding[] {
+  const out: Finding[] = [];
   const text = String(caption || "").trim();
   if (!text) return out;
 
@@ -223,8 +259,8 @@ function checkReadability(caption: any): any[] {
 // not making requests at all).
 const REFUSING_HOSTS = ["artuk.org"];
 
-function checkRefusingHosts(claims: any): any[] {
-  const out: any[] = [];
+function checkRefusingHosts(claims: Claim[] | null | undefined): Finding[] {
+  const out: Finding[] = [];
   for (const c of claims || []) {
     const host = hostOf(c?.source_url);
     if (!host) continue;
@@ -240,8 +276,8 @@ function checkRefusingHosts(claims: any): any[] {
   return out;
 }
 
-function checkItem(draft: any, item?: any): any[] {
-  const urls: any[] = [];
+function checkItem(draft: Draft, item?: CheckedItem | null): Finding[] {
+  const urls: string[] = [];
   const caption = draft?.caption_tea || "";
   const linkRe = /https?:\/\/[^\s)"'\]]+/g;
   let m: RegExpExecArray | null = linkRe.exec(caption);
@@ -249,14 +285,14 @@ function checkItem(draft: any, item?: any): any[] {
     urls.push(m[0]);
     m = linkRe.exec(caption);
   }
-  (draft.tea_voice_claims || []).forEach((c: any) => {
+  (draft.tea_voice_claims || []).forEach((c) => {
     if (c.source_url) urls.push(c.source_url);
   });
-  (draft.links || []).forEach((u: any) => {
+  (draft.links || []).forEach((u) => {
     urls.push(u);
   });
 
-  return ([] as any[])
+  return ([] as Finding[])
     .concat(checkLinks(item, urls))
     .concat(checkCrossReferences(caption))
     .concat(checkClaims(draft.tea_voice_claims))
@@ -264,6 +300,7 @@ function checkItem(draft: any, item?: any): any[] {
     .concat(checkRefusingHosts(draft.tea_voice_claims));
 }
 
+export type { CheckedItem, Claim, Draft, Finding };
 export {
   checkClaims,
   checkCrossReferences,

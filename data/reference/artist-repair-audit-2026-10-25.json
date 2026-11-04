@@ -1,0 +1,781 @@
+{
+  "applied_at": "2026-10-25T17:58:57.469Z",
+  "rows": [
+    {
+      "source": "cleveland",
+      "native_id": "112063",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "1733–1808",
+      "title": "Le Poteau"
+    },
+    {
+      "source": "met",
+      "native_id": "339702",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "Paris 1733–1808 Paris",
+      "title": "Young Artists in the Studio"
+    },
+    {
+      "source": "met",
+      "native_id": "339699",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "Paris 1733–1808 Paris",
+      "title": "Figures in One of Michelangelo's Niches on the Apse of St. Peter's, Rome"
+    },
+    {
+      "source": "met",
+      "native_id": "339700",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "Paris 1733–1808 Paris",
+      "title": "Figures in a Roman Arcade"
+    },
+    {
+      "source": "met",
+      "native_id": "339701",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "Paris 1733–1808 Paris",
+      "title": "Artist Sketching a Young Girl"
+    },
+    {
+      "source": "met",
+      "native_id": "437481",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "Paris 1733–1808 Paris",
+      "title": "Wandering Minstrels"
+    },
+    {
+      "source": "nga",
+      "native_id": "143838",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "1733 - 1808",
+      "title": "A Roman Capriccio with the Pyramid of Gaius Cestius"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "128876",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "1733–1808",
+      "title": "Roman Ruins, Villa Pamfili"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "112072",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "1733–1808",
+      "title": "Le Temple Antique"
+    },
+    {
+      "source": "met",
+      "native_id": "339704",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "Paris 1733–1808 Paris",
+      "title": "Washerwomen in a Ruined Gallery"
+    },
+    {
+      "source": "met",
+      "native_id": "437473",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "Paris 1733–1808 Paris",
+      "title": "The Bathing Pool"
+    },
+    {
+      "source": "nga",
+      "native_id": "41665",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "1733 - 1808",
+      "title": "The Ponte Salario"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "166642",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "1733–1808",
+      "title": "A Palace with an Arched Bridge (A Roman Villa)"
+    },
+    {
+      "source": "nga",
+      "native_id": "70235",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "1733 - 1808",
+      "title": "The Garden Gate"
+    },
+    {
+      "source": "met",
+      "native_id": "908862",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "Paris 1733–1808 Paris",
+      "title": "Figure studies mounted on an album page"
+    },
+    {
+      "source": "met",
+      "native_id": "437479",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "Paris 1733–1808 Paris",
+      "title": "The Return of the Cattle"
+    },
+    {
+      "source": "nga",
+      "native_id": "72014",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "1733 - 1808",
+      "title": "The Oval Fountain in the Gardens of the Villa d'Este, Tivoli"
+    },
+    {
+      "source": "met",
+      "native_id": "339691",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "Paris 1733–1808 Paris",
+      "title": "Visitors leaving a prison"
+    },
+    {
+      "source": "mia",
+      "native_id": "516",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "1733–1808",
+      "title": "The Rustic Bridge, Château de Méréville, France"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "112065",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "1733–1808",
+      "title": "Le Puits"
+    },
+    {
+      "source": "nga",
+      "native_id": "47111",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "1733 - 1808",
+      "title": "Charitable Ladies"
+    },
+    {
+      "source": "met",
+      "native_id": "339693",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "Paris 1733–1808 Paris",
+      "title": "Figures in a Colonnade"
+    },
+    {
+      "source": "nga",
+      "native_id": "219361",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "1733 - 1808",
+      "title": "A Roman Capriccio"
+    },
+    {
+      "source": "met",
+      "native_id": "339695",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "Paris 1733–1808 Paris",
+      "title": "Young Women in a Landscape with Architectural Fragments"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "151310",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "1733–1808",
+      "title": "Les Soirées de Rome: The Stairs"
+    },
+    {
+      "source": "nga",
+      "native_id": "56627",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "1733 - 1808",
+      "title": "Herdsmen Crossing a Waterfall"
+    },
+    {
+      "source": "met",
+      "native_id": "399274",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "Paris 1733–1808 Paris",
+      "title": "Plate 8: The Triumphal Arch: a man standing atop an architectural fragment in center with two men below, seen from behind, remains of a triumphal arch in the background and the ruins of an arcade to right, from \"Les soirées de Rome\""
+    },
+    {
+      "source": "cleveland",
+      "native_id": "112067",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "1733–1808",
+      "title": "Title Page"
+    },
+    {
+      "source": "nga",
+      "native_id": "74282",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "1733 - 1808",
+      "title": "Italian Park with a Tempietto"
+    },
+    {
+      "source": "met",
+      "native_id": "459382",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "Paris 1733–1808 Paris",
+      "title": "Interior of Saint Peter's"
+    },
+    {
+      "source": "nga",
+      "native_id": "47112",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "1733 - 1808",
+      "title": "The Peasant Dance"
+    },
+    {
+      "source": "met",
+      "native_id": "339696",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "Paris 1733–1808 Paris",
+      "title": "The Nymphaeum of the Villa di Papa Giulio, Rome"
+    },
+    {
+      "source": "nga",
+      "native_id": "65907",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "1733 - 1808",
+      "title": "Three Ladies Chatting"
+    },
+    {
+      "source": "nga",
+      "native_id": "136765",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "1733 - 1808",
+      "title": "Couple by a Fountain"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "108829",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "1733–1808",
+      "title": "Vaulted Staircase"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "112064",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "1733–1808",
+      "title": "Les Soirées de Rome: L'Arc de triomphe"
+    },
+    {
+      "source": "nga",
+      "native_id": "65620",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "1733 - 1808",
+      "title": "Young Woman with Donkeys Riding under a Natural Bridge"
+    },
+    {
+      "source": "nga",
+      "native_id": "219318",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "1733 - 1808",
+      "title": "Ruins of the Church of the Saints-Innocents, Paris"
+    },
+    {
+      "source": "met",
+      "native_id": "343206",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "Paris 1733–1808 Paris",
+      "title": "Study for a Triumphal Arch (recto); Alternate Study for a Triumphal Arch (verso)"
+    },
+    {
+      "source": "nga",
+      "native_id": "47113",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "1733 - 1808",
+      "title": "Ruined Farm"
+    },
+    {
+      "source": "nga",
+      "native_id": "66758",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "1733 - 1808",
+      "title": "Fantasy on an Ancient Campidoglio"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "112069",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "1733–1808",
+      "title": "The Statue in Front of Ruins"
+    },
+    {
+      "source": "nga",
+      "native_id": "69976",
+      "from": "Niccolo dell' Abbate",
+      "to": "Hubert Robert",
+      "artist_lifespan": "1733 - 1808",
+      "title": "Architectural Fantasy with a Triumphal Bridge"
+    },
+    {
+      "source": "nga",
+      "native_id": "221600",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "1814 - 1875",
+      "title": "Path in the Countryside, Vichy"
+    },
+    {
+      "source": "nga",
+      "native_id": "9190",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "1814 - 1875",
+      "title": "The Newborn"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "107953",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "1814–1875",
+      "title": "Maternal Precaution"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "166889",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "1814–1875",
+      "title": "Seated Peasant Resting on a Hoe"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "104088",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "1814–1875",
+      "title": "The Maternal Precaution"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "98376",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "1814–1875",
+      "title": "The Gleaners"
+    },
+    {
+      "source": "met",
+      "native_id": "337779",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "Gruchy 1814–1875 Barbizon",
+      "title": "Shepherdess Knitting"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "98375",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "1814–1875",
+      "title": "Woman Churning Butter"
+    },
+    {
+      "source": "nga",
+      "native_id": "168821",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "1814 - 1875",
+      "title": "Shepherd Returning with His Flock"
+    },
+    {
+      "source": "nga",
+      "native_id": "168822",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "1814 - 1875",
+      "title": "Falling Leaves"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "98383",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "1814–1875",
+      "title": "Woman Sewing"
+    },
+    {
+      "source": "met",
+      "native_id": "337778",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "Gruchy 1814–1875 Barbizon",
+      "title": "Woman with a Churn"
+    },
+    {
+      "source": "met",
+      "native_id": "337801",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "Gruchy 1814–1875 Barbizon",
+      "title": "Landscape, Vichy"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "98379",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "1814–1875",
+      "title": "Going to work"
+    },
+    {
+      "source": "met",
+      "native_id": "337803",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "Gruchy 1814–1875 Barbizon",
+      "title": "Landscape, Vichy"
+    },
+    {
+      "source": "met",
+      "native_id": "337796",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "Gruchy 1814–1875 Barbizon",
+      "title": "A Woman Burning Weeds"
+    },
+    {
+      "source": "met",
+      "native_id": "337799",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "Gruchy 1814–1875 Barbizon",
+      "title": "Woodcutter Trimming Faggots"
+    },
+    {
+      "source": "nga",
+      "native_id": "169701",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "1814 - 1875",
+      "title": "The Wool Carder (La Cardeuse)"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "125542",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "1814–1875",
+      "title": "Peasant with a Wheelbarrow"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "107955",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "1814–1875",
+      "title": "A Woman Emptying a Bucket"
+    },
+    {
+      "source": "met",
+      "native_id": "337782",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "Gruchy 1814–1875 Barbizon",
+      "title": "Man with a Spade"
+    },
+    {
+      "source": "met",
+      "native_id": "371483",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "Gruchy 1814–1875 Barbizon",
+      "title": "Peasant Seated on the Ground"
+    },
+    {
+      "source": "nga",
+      "native_id": "168820",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "1814 - 1875",
+      "title": "Calling Home the Cows"
+    },
+    {
+      "source": "met",
+      "native_id": "337797",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "Gruchy 1814–1875 Barbizon",
+      "title": "A Shepherdess and Her Flock in the Shade of Trees"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "103898",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "1814–1875",
+      "title": "Peasant Returning from the Manure Heap"
+    },
+    {
+      "source": "met",
+      "native_id": "337776",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "Gruchy 1814–1875 Barbizon",
+      "title": "Roadworkers at Lunch"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "138515",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "1814–1875",
+      "title": "First Steps"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "98384",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "1814–1875",
+      "title": "The Large Shepherdess"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "98381",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "1814–1875",
+      "title": "Plate with Sketches"
+    },
+    {
+      "source": "met",
+      "native_id": "337798",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "Gruchy 1814–1875 Barbizon",
+      "title": "Sheepshearing Beneath a Tree"
+    },
+    {
+      "source": "met",
+      "native_id": "337784",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "Gruchy 1814–1875 Barbizon",
+      "title": "A Shepherdess with Her Flock"
+    },
+    {
+      "source": "nga",
+      "native_id": "9189",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "1814 - 1875",
+      "title": "The Sower"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "98380",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "1814–1875",
+      "title": "Kelp Gatherers"
+    },
+    {
+      "source": "nga",
+      "native_id": "143816",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "1814 - 1875",
+      "title": "Costume Studies"
+    },
+    {
+      "source": "met",
+      "native_id": "337802",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "Gruchy 1814–1875 Barbizon",
+      "title": "A Seated Shepherd with His Dog and Sheep"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "166682",
+      "from": "Francisque Millet",
+      "to": "Jean-François Millet",
+      "artist_lifespan": "1814–1875",
+      "title": "Liberty"
+    },
+    {
+      "source": "nga",
+      "native_id": "139341",
+      "from": "Bernardo Bellotto",
+      "to": "Antonio Canaletto",
+      "artist_lifespan": "1697 - 1768",
+      "title": "The \"Giovedì Grasso\" Festival before the Ducal Palace in Venice"
+    },
+    {
+      "source": "nga",
+      "native_id": "66548",
+      "from": "Bernardo Bellotto",
+      "to": "Antonio Canaletto",
+      "artist_lifespan": "1697 - 1768",
+      "title": "The Portico with the Lantern"
+    },
+    {
+      "source": "nga",
+      "native_id": "71393",
+      "from": "Bernardo Bellotto",
+      "to": "Antonio Canaletto",
+      "artist_lifespan": "1697 - 1768",
+      "title": "A Venetian Courtyard, in the Procuratie Nuove"
+    },
+    {
+      "source": "nga",
+      "native_id": "749",
+      "from": "Bernardo Bellotto",
+      "to": "Antonio Canaletto",
+      "artist_lifespan": "1697 - 1768",
+      "title": "Title Plate"
+    },
+    {
+      "source": "nga",
+      "native_id": "66541",
+      "from": "Bernardo Bellotto",
+      "to": "Antonio Canaletto",
+      "artist_lifespan": "1697 - 1768",
+      "title": "Mestre"
+    },
+    {
+      "source": "nga",
+      "native_id": "750",
+      "from": "Bernardo Bellotto",
+      "to": "Antonio Canaletto",
+      "artist_lifespan": "1697 - 1768",
+      "title": "La Torre di Malghera"
+    },
+    {
+      "source": "nga",
+      "native_id": "47091",
+      "from": "Bernardo Bellotto",
+      "to": "Antonio Canaletto",
+      "artist_lifespan": "1697 - 1768",
+      "title": "Ascension Day Festival at Venice"
+    },
+    {
+      "source": "nga",
+      "native_id": "66540",
+      "from": "Bernardo Bellotto",
+      "to": "Antonio Canaletto",
+      "artist_lifespan": "1697 - 1768",
+      "title": "La Torre di Malghera"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "129363",
+      "from": "Lucas Cranach the Elder",
+      "to": "Lucas Cranach the Younger",
+      "artist_lifespan": "1515–1586",
+      "title": "Philipp Melanchthon"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "308611",
+      "from": "Lucas Cranach the Elder",
+      "to": "Lucas Cranach the Younger",
+      "artist_lifespan": "1515–1586",
+      "title": "Coat of Arms of Philip, Landgrave of Hesse"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "133664",
+      "from": "Lucas Cranach the Elder",
+      "to": "Lucas Cranach the Younger",
+      "artist_lifespan": "1515–1586",
+      "title": "Dr. Christian Brück"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "710191",
+      "from": "Lucas Cranach the Elder",
+      "to": "Lucas Cranach the Younger",
+      "artist_lifespan": "1515–1586",
+      "title": "Sibylle of Cleves"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "308606",
+      "from": "Lucas Cranach the Elder",
+      "to": "Lucas Cranach the Younger",
+      "artist_lifespan": "1515–1586",
+      "title": "Coat of Arms of John Frederic, Elector of Saxony, called the Magnanimous"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "151311",
+      "from": "Jan van de Velde II",
+      "to": "Jan van de Velde III",
+      "artist_lifespan": "1620–1662",
+      "title": "The Castle with Two Towers"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "159574",
+      "from": "Jan van de Velde II",
+      "to": "Jan van de Velde III",
+      "artist_lifespan": "1620–1662",
+      "title": "Landscapes, part III: Roman Ruins in Wooded Surroundings"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "79078",
+      "from": "Hans Holbein the Younger",
+      "to": "Hans Holbein the Elder",
+      "artist_lifespan": "c. 1465–1524",
+      "title": "Erasmus (Didier Erasme)"
+    },
+    {
+      "source": "cleveland",
+      "native_id": "144938",
+      "from": "Hans Holbein the Younger",
+      "to": "Hans Holbein the Elder",
+      "artist_lifespan": "c. 1465–1524",
+      "title": "Head of an Old Woman"
+    },
+    {
+      "source": "nga",
+      "native_id": "195701",
+      "from": "Joseph Wright of Derby",
+      "to": "Joseph Wright",
+      "artist_lifespan": "1756 - 1793",
+      "title": "Elizabeth Stevens Carle"
+    }
+  ]
+}

@@ -31,6 +31,10 @@
 # a page is the horizon now, not the whole catalogue.
 page_size = 60
 
+# Most ids one ?ids= lookup accepts. api/items.ts rejects more, and the
+# client splits longer lists into lookups of this size.
+max_ids_per_lookup = 100
+
 # How close to the end of the loaded shells the visitor gets before the
 # next page is requested. Comfortably more than the recycling window's own
 # radius, so the fetch is already in flight by the time those slides are
@@ -68,6 +72,16 @@ claim_ttl_seconds = 30
 # visitor_fetch_state once there is data, same as the admission thresholds.
 capacity = 60
 refill_per_sec = 1
+
+[items_visitor_rate_limit]
+# Per-IP budget on /api/items, charged per item returned (an aggregate answer
+# costs 1) -- see lib/items-rate-limit.ts. 2000 items of burst is about 33
+# feed pages (page_size = 60); 0.5/sec refills 1,800 an hour, well above a
+# person scrolling and far below a catalogue scrape. While enforce is false a
+# denial is only logged, so retune against real traffic before turning it on.
+capacity = 2000
+refill_per_sec = 0.5
+enforce = false
 
 [img_cache_alerts]
 # A handful of shed requests is ordinary noise (one slow origin, one
@@ -177,3 +191,8 @@ tote = 41
 # Where the range begins, shown with a trailing "+". Delivery is not included.
 [print.starting_prices.br]
 mug = 66
+
+[patreon]
+# The Patreon page linked from the Support and Thank-you pages. Blank shows
+# "opens soon"; only an https patreon.com URL is ever linked.
+url = "https://patreon.com/Tranquiloart"

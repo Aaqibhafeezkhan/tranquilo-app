@@ -193,6 +193,54 @@ describe("an English page", () => {
 // review pair each translated paragraph with the English it translates
 // (review-app's translation import does exactly this), and it catches a
 // paragraph dropped or merged in translation.
+function alternates(html: string): string[] {
+  return Array.from(
+    html.matchAll(/<link rel="alternate" hreflang="([^"]+)" href="([^"]+)">/g),
+    (m) => `${m[1]} ${m[2]}`,
+  ).sort();
+}
+
+function canonical(html: string): string | undefined {
+  return /<link rel="canonical" href="([^"]+)">/.exec(html)?.[1];
+}
+
+describe.skipIf(!ptShipped)(
+  "hreflang alternates in a static page's head",
+  () => {
+    it("names the same set on every language version of a page", async () => {
+      for (const file of TRANSLATED_PAGES["pt-BR"] ?? []) {
+        const english = alternates(await built(`pages/${file}`));
+        const portuguese = alternates(await built(`pages/pt-BR/${file}`));
+        expect(english.length, file).toBeGreaterThan(0);
+        expect(portuguese, file).toEqual(english);
+      }
+    });
+
+    it("includes each page's own canonical URL, plus x-default", async () => {
+      for (const rel of ["pages/about.html", "pages/pt-BR/about.html"]) {
+        const html = await built(rel);
+        const set = alternates(html).map((a) => a.split(" ")[1]);
+        expect(set, rel).toContain(canonical(html));
+        expect(
+          alternates(html).some((a) => a.startsWith("x-default ")),
+          rel,
+        ).toBe(true);
+      }
+    });
+  },
+);
+
+describe("hreflang alternates on pages without a translation", () => {
+  it("are absent", async () => {
+    const untranslated = ENGLISH_PAGES.filter(
+      (file) => !Object.values(TRANSLATED_PAGES).some((f) => f.includes(file)),
+    );
+    for (const file of untranslated) {
+      expect(alternates(await built(`pages/${file}`)), file).toEqual([]);
+    }
+  });
+});
+
 describe("translated pages mirror their English structure", () => {
   const blockTags = (html: string): string[] => {
     const main = html.slice(

@@ -182,6 +182,12 @@ export const en = {
     "Payment is handled by Stripe — Tranquilo never sees your card details. Amounts are shown in your own currency at checkout.",
   "support.once.note": "Choose your own amount",
 
+  // <tranquilo-patreon-link> on the Support and Thank-you pages.
+  "support.patreon.body":
+    "Prefer a membership? Join us on Patreon and follow along as Tranquilo grows.",
+  "support.patreon.join": "Join on Patreon",
+  "support.patreon.soon": "Patreon opens soon.",
+
   // Discover (shelves) mode.
   "shelves.home": "Tranquilo, back to the homepage",
   "shelves.title": "Discover",
@@ -190,6 +196,10 @@ export const en = {
   "shelves.storylines.subtitle": "Curated stories behind the art",
   "shelves.moods.title": "Shelves, Curated by Hand",
   "shelves.moods.subtitle": "Pick a mood and enjoy",
+  "shelf.close": "Close shelf",
+  "shelf.share": "Copy link to this shelf",
+  "shelf.works.one": "{count} work",
+  "shelf.works.other": "{count} works",
 
   // Storyline mode.
   "storyline.close": "Close storyline",
@@ -232,6 +242,7 @@ export const en = {
     "Tranquilo is built in the open, with help from these people. Thank you.",
   "community.contributors": "Contributors on GitHub",
   "community.donors": "Supporters",
+  "community.patrons": "Patrons on Patreon",
   "community.avatarAlt": "{handle} on GitHub",
 
   // Email sign-up forms on static pages (src/pages/*.ts).
@@ -342,6 +353,10 @@ export const en = {
   "facet.subject_type.genre-scene": "Genre scene",
   "facet.subject_type.still-life": "Still life",
   "facet.subject_type.other": "Other",
+
+  // The templated caption shown when an item has no written one.
+  "caption.basic.untitled": "Untitled",
+  "caption.basic.by": "by {artist}",
 } as const;
 
 export type MessageKey = keyof typeof en;

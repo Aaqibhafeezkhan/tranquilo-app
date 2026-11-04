@@ -20,8 +20,11 @@ const REQUIRED_FIELDS = [
   "description",
 ];
 
+type FormBody = Record<string, unknown>;
+type NotificationRow = [label: string, value: unknown];
+
 // Registered locale or "(not given)" -- never the raw request value.
-function languageLine(body: any): string {
+function languageLine(body: FormBody): string {
   return requestLocale(body.locale) || "(not given)";
 }
 
@@ -38,7 +41,7 @@ async function sendNotification(
     heading,
   }: {
     subject: string;
-    rows?: any[];
+    rows?: NotificationRow[];
     text?: string;
     html?: string;
     replyTo?: string | null;
@@ -68,20 +71,27 @@ async function sendNotification(
   const textBody =
     text !== undefined
       ? text
-      : (rows || []).map((r: any) => `${r[0]}: ${r[1]}`).join("\n");
+      : (rows || []).map((r) => `${r[0]}: ${r[1]}`).join("\n");
   const htmlBody =
     html !== undefined
       ? html
       : `<h2>${escapeHtml(heading || "")}</h2><table>${(rows || [])
           .map(
-            (r: any) =>
+            (r) =>
               `<tr><td style="padding:4px 12px 4px 0;color:#666;">${escapeHtml(
                 r[0],
               )}</td><td>${escapeHtml(r[1]).replace(/\n/g, "<br>")}</td></tr>`,
           )
           .join("")}</table>`;
 
-  const payload: any = {
+  const payload: {
+    from: string;
+    to: string[];
+    subject: string;
+    text: string;
+    html: string;
+    reply_to?: string;
+  } = {
     from: fromEmail,
     to: [notifyEmail],
     subject: subject,
@@ -92,7 +102,7 @@ async function sendNotification(
   // malformed reply_to.
   if (replyTo) payload.reply_to = replyTo;
 
-  let resendRes: any, errText: any;
+  let resendRes: Response, errText: string;
   try {
     resendRes = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -144,9 +154,9 @@ const FEEDBACK_MAX: Record<string, number> = {
 async function handleFeedback(
   _req: VercelRequest,
   res: VercelResponse,
-  body: any,
+  body: FormBody,
 ): Promise<void> {
-  let i: number, field: any;
+  let i: number, field: string;
   for (i = 0; i < FEEDBACK_REQUIRED_FIELDS.length; i++) {
     field = FEEDBACK_REQUIRED_FIELDS[i];
     if (!body[field] || !String(body[field]).trim()) {
@@ -173,12 +183,13 @@ async function handleFeedback(
   }
 
   const type =
-    FEEDBACK_TYPES.indexOf(body.feedbackType) !== -1
+    typeof body.feedbackType === "string" &&
+    FEEDBACK_TYPES.includes(body.feedbackType)
       ? body.feedbackType
       : // Falls back rather than 400s -- an unknown type is our bug, not
         // theirs, and shouldn't lose a written report.
         "Something else";
-  const email = body.email && String(body.email).trim();
+  const email = body.email ? String(body.email).trim() : "";
 
   await sendNotification(res, {
     heading: "New Tranquilo feedback",
@@ -220,9 +231,9 @@ function reportTimestamp(): string {
 async function handleReport(
   _req: VercelRequest,
   res: VercelResponse,
-  body: any,
+  body: FormBody,
 ): Promise<void> {
-  let i: number, field: any;
+  let i: number, field: string;
   for (i = 0; i < REPORT_REQUIRED_FIELDS.length; i++) {
     field = REPORT_REQUIRED_FIELDS[i];
     if (!body[field] || !String(body[field]).trim()) {
@@ -241,13 +252,13 @@ async function handleReport(
 
   // Checkboxes, so zero or more; an unrecognised entry is dropped
   // rather than substituted.
-  const rawCategories: any[] = Array.isArray(body.categories)
+  const rawCategories: unknown[] = Array.isArray(body.categories)
     ? body.categories
     : [];
   const categories = rawCategories.filter(
-    (c: any) => REPORT_CATEGORIES.indexOf(c) !== -1,
+    (c): c is string => typeof c === "string" && REPORT_CATEGORIES.includes(c),
   );
-  const comment = (body.comment && String(body.comment).trim()) || "";
+  const comment = body.comment ? String(body.comment).trim() : "";
 
   // Nothing to act on -- worth a real 400, not a silently "successful"
   // empty report.
@@ -286,7 +297,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  const body = req.body || {};
+  const body: FormBody = req.body || {};
 
   if (body.kind === "feedback") {
     await handleFeedback(req, res, body);
@@ -297,7 +308,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  let i: number, field: any;
+  let i: number, field: string;
   for (i = 0; i < REQUIRED_FIELDS.length; i++) {
     field = REQUIRED_FIELDS[i];
     if (!body[field] || !String(body[field]).trim()) {
@@ -317,7 +328,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  const rows: any[] = [
+  const rows: NotificationRow[] = [
     ["Collection name", body.collectionName],
     ["Submitted by", `${body.submitterName} <${body.submitterEmail}>`],
     ["Collection link", body.collectionLink],

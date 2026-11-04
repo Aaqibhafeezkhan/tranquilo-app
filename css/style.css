@@ -754,7 +754,9 @@ html,body{
    the overflow on some mobile browsers, so the ellipsis appeared but a
    sliver of the third line still painted past the border (a follow-up fix,
    reported live on tranquilo.art). A plain span has no such internal box. */
-.art-title-btn-text{
+.art-title-btn-text,
+.art-medium,
+.twist-hook span{
   display:-webkit-box;
   -webkit-box-orient:vertical;
   -webkit-line-clamp:2;
@@ -793,6 +795,42 @@ html,body{
 .art-meta button.artist:hover{ text-decoration-color:var(--gold-soft); color:#fff; }
 .art-meta button.artist:focus-visible{ outline:2px solid var(--gold-soft); outline-offset:2px; border-radius:2px; }
 .art-meta .sep{ margin:0 6px; color:rgba(242,239,230,0.4); }
+
+/* Feed caption: the date drops below the artist when they don't fit together. */
+.caption .art-meta{
+  overflow:hidden;
+  padding:4px;
+  margin:-4px -4px -2px;
+}
+.caption .meta-row{
+  display:flex;
+  flex-wrap:wrap;
+  margin-left:-14px;
+}
+.caption .meta-row > .artist,
+.caption .meta-row > .date{
+  margin-left:14px;
+  min-width:0;
+  max-width:calc(100% - 14px);
+}
+.caption .meta-row > .date{ position:relative; }
+/* Sits in the gap; the clipped .art-meta hides it when the date starts a line. */
+.caption .meta-row > .date::before{
+  content:"\00b7";
+  position:absolute;
+  left:-9px;
+  color:rgba(242,239,230,0.4);
+}
+.caption .artist-text,
+.caption .date-text{
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  text-align:left;
+}
+.caption .date-text{ -webkit-line-clamp:1; }
 
 .art-medium{
   font-family:var(--sans);
@@ -2212,6 +2250,14 @@ html,body{
   color:var(--text);
   margin:24px 0 12px;
 }
+.community-tier{
+  font-family:var(--sans);
+  font-size:0.8rem;
+  letter-spacing:0.04em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  margin:16px 0 8px;
+}
 .community-contributors,
 .community-donors{
   list-style:none;
@@ -2603,6 +2649,21 @@ html,body{
 
 /* Pre-launch state: a line of text, not a disabled button -- a button that
    can't be pressed invites a press and then refuses it. */
+.support-patreon{
+  display:block;
+  margin:0 auto 26px;
+  max-width:420px;
+  text-align:center;
+}
+.support-patreon .support-strip-soon{ display:inline-block; }
+.support-patreon-body{
+  font-family:var(--sans);
+  font-weight:300;
+  font-size:0.92rem;
+  line-height:1.6;
+  color:var(--ink-soft);
+  margin:0 0 14px;
+}
 .support-strip-soon{
   font-family:var(--sans);
   font-size:0.76rem;

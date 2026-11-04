@@ -71,13 +71,15 @@ function backupSelectSql() {
 // Moves each aliased value onto its real column name and drops the alias, so
 // the backup's shape is unchanged and column order stays stable. to_char(NULL)
 // is NULL, so a null timestamp stays null rather than the string "null".
-function applyMicrosecondColumns(rows: any) {
+function applyMicrosecondColumns<T extends Record<string, unknown>>(
+  rows: T[],
+): T[] {
   for (const row of rows) {
     for (const col of MICROSECOND_COLUMNS) {
       const alias = col + US_SUFFIX;
       if (!(alias in row)) continue;
-      row[col] = row[alias];
-      delete row[alias];
+      (row as Record<string, unknown>)[col] = row[alias];
+      delete (row as Record<string, unknown>)[alias];
     }
   }
   return rows;

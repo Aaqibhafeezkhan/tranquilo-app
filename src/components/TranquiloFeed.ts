@@ -21,6 +21,7 @@
 
 import type { Pager } from "../feed/recycleWindow";
 import { HERO_COUNT, pickHeroes } from "../logic/logic";
+import type { HeroPoolEntry } from "../types/HeroPoolEntry";
 import type {
   FeedFilterState,
   ITranquiloFeedHost,
@@ -107,7 +108,7 @@ const URL_SYNC_DEBOUNCE_MS = 60;
 // through as literal text.
 function encodeSlugId(source: string, rawId: string): string {
   let idPart = rawId;
-  let m: any;
+  let m: RegExpExecArray | null;
   if (source === "commons" && idPart.slice(0, 5) === "File:") {
     idPart = idPart.slice(5);
   } else if (source === "europeana") {
@@ -142,7 +143,7 @@ export class TranquiloFeed extends HTMLElement {
   // The hero-rotation pool (sql/027_hero_items.sql), assigned once by
   // app.ts's init fetch. Each entry is {source, native_id, media_type};
   // pickHeroes() below narrows it to one session's actual pick.
-  heroPool: { source: string; native_id: string; media_type: string }[] = [];
+  heroPool: HeroPoolEntry[] = [];
 
   private feedPager: Pager | null = null;
   private activeRenderToken = 0;
@@ -153,9 +154,7 @@ export class TranquiloFeed extends HTMLElement {
   // Picked once per page load, so filtering into a category and back to
   // "All" keeps the same opening rather than reshuffling under the visitor.
   // null until the first render() that actually needs it.
-  private sessionHeroes:
-    | { source: string; native_id: string; media_type: string }[]
-    | null = null;
+  private sessionHeroes: HeroPoolEntry[] | null = null;
 
   // Decided once per page load, same reasoning as sessionHeroes above:
   // markFeedSeen() flips the localStorage flag the moment the first
@@ -185,11 +184,7 @@ export class TranquiloFeed extends HTMLElement {
     return this.allModeStart;
   }
 
-  private pickSessionHeroes(): {
-    source: string;
-    native_id: string;
-    media_type: string;
-  }[] {
+  private pickSessionHeroes(): HeroPoolEntry[] {
     if (this.sessionHeroes) return this.sessionHeroes;
     this.sessionHeroes = pickHeroes(this.heroPool, HERO_COUNT, heroRandom());
     return this.sessionHeroes;
@@ -217,7 +212,7 @@ export class TranquiloFeed extends HTMLElement {
   // activeStorylineFilter ANDing on top.
   //
   // Two modes are deliberately not paged, since both are already bounded:
-  // the collection (capped by MAX_IDS) and a deep link (one item deciding
+  // the collection (an id lookup) and a deep link (one item deciding
   // where the ordinary feed starts).
   render(onSettled?: () => void): void {
     const host = this.requireApp();
@@ -263,7 +258,8 @@ export class TranquiloFeed extends HTMLElement {
       // record 0.
     } else {
       const introEl = host.buildIntroSlide();
-      this.appendChild(introEl);
+      // Ahead of the skeleton, so removing it shifts nothing.
+      this.prepend(introEl);
       this.slideRecords.push({
         el: introEl,
         item: null,
@@ -302,17 +298,16 @@ export class TranquiloFeed extends HTMLElement {
     // path.
     let firstBatch: Promise<Item[]>;
     if (fixedItems) {
-      const collected = host.getCollection();
-      const ids = collected.map((entry) => {
-        // A collection entry is either a source-qualified key or a bare id
-        // depending on when it was saved; ?ids= matches native_id, so the
-        // qualifier is stripped here.
-        const colon = String(entry).indexOf(":");
-        return colon === -1 ? String(entry) : String(entry).slice(colon + 1);
-      });
-      firstBatch = ids.length
-        ? host
-            .resolveItemsByIds(ids)
+      const collected = host.getCollection().map(String);
+      // An entry is a source:native_id key, or a bare id saved before keys.
+      const keys = collected.filter((entry) => host.isCollectionKey(entry));
+      const bareIds = collected.filter((entry) => !host.isCollectionKey(entry));
+      firstBatch = collected.length
+        ? Promise.all([
+            host.resolveItemsByKeys(keys),
+            host.resolveItemsByIds(bareIds),
+          ])
+            .then(([byKey, byId]) => byKey.concat(byId))
             .then((rows) =>
               // Same membership test as the client filter, applied to what
               // came back rather than the catalogue.
@@ -346,7 +341,7 @@ export class TranquiloFeed extends HTMLElement {
         // Only what this session opens with -- excluding the whole pool
         // would hide the rest of its good items from the tail.
         this.pickSessionHeroes().forEach((h) => {
-          exclusions[String(h.native_id)] = true;
+          exclusions[`${h.source}:${h.native_id}`] = true;
         });
       }
       const pager = host.createPager(params, checkCategory, heroExclusions);
@@ -493,8 +488,7 @@ export class TranquiloFeed extends HTMLElement {
 
   // Resolve a share slug to its item. slugFor() is `(source||"met")+"-"+id`,
   // so the source is everything before the first hyphen (ids legitimately
-  // contain hyphens, sources don't). The source then disambiguates, since
-  // ?ids= matches native_id alone and some items share one across sources.
+  // contain hyphens, sources don't).
   private resolveSlug(slug: string): Promise<Item | null> {
     const host = this.requireApp();
     const raw = String(slug || "");
@@ -504,12 +498,8 @@ export class TranquiloFeed extends HTMLElement {
     const id = raw.slice(cut + 1);
     if (!id) return Promise.resolve(null);
     return host
-      .fetchItemsByIds([id])
-      .then((body) => {
-        const rows = host.absorbPage(body.items || []);
-        const exact = rows.filter((i) => (i.source || "met") === source);
-        return exact[0] || rows[0] || null;
-      })
+      .fetchItemsByKeys([`${source}:${id}`])
+      .then((body) => host.absorbPage(body.items || [])[0] || null)
       .catch((err) => {
         // A feed starting at a random offset beats no feed, so a failed
         // lookup degrades to an ordinary session.
@@ -521,12 +511,12 @@ export class TranquiloFeed extends HTMLElement {
   private fetchHeroItems(): Promise<Item[]> {
     const host = this.requireApp();
     const picked = this.pickSessionHeroes();
-    // resolveItemsByIds(), not fetchItemsByIds()+absorbPage(): absorbPage()
-    // marks rows `_full = false`, which is wrong here since ?ids= returns
+    // resolveItemsByKeys(), not fetchItemsByKeys()+absorbPage(): absorbPage()
+    // marks rows `_full = false`, which is wrong here since ?keys= returns
     // fully hydrated rows -- absorbing them as unhydrated made the
     // recycling window immediately re-fetch the same ids.
     return host
-      .resolveItemsByIds(picked.map((h) => h.native_id))
+      .resolveItemsByKeys(picked.map((h) => `${h.source}:${h.native_id}`))
       .catch((err) => {
         // A missing opener is a worse feed, not a broken one.
         console.error("items: hero lookup failed", err);

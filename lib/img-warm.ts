@@ -3,7 +3,64 @@
 // lib/cron/warm-image-cache.ts (a deployed Vercel function) never imports
 // from scripts/ (local-only tooling, not part of the function bundle) --
 // scripts/warm_image_cache.mts now re-exports this module for the CLI.
+import type { S3Credentials } from "./img-s3.ts";
+import type { ImgS3Config, QuerySql } from "./img-store.ts";
 import { LIVE_ITEMS_AND } from "./items-sql.ts";
+
+export type WarmTier = "display" | "lightbox";
+
+export interface ColdItemRow {
+  source: string;
+  native_id: string;
+  img: string | null;
+  full_img: string | null;
+  title: string | null;
+}
+
+interface HostFetchRow {
+  host: string;
+  source: string;
+  refill_per_sec: number | string | null;
+}
+
+interface TransformOutput {
+  buf: Buffer;
+  contentType?: string;
+}
+
+export interface WarmDeps {
+  proxy: {
+    transformForTier(
+      raw: Buffer,
+      contentType: string,
+      tier: string,
+    ): Promise<TransformOutput | Buffer>;
+  };
+  objectKey: {
+    contentHash(body: Buffer): string;
+    objectKeyFor(
+      source: string,
+      id: string,
+      tier: string,
+      hash: string,
+    ): string;
+  };
+  store: {
+    configFromEnv(): ImgS3Config;
+    recordObjectSql(): string;
+  };
+  s3: {
+    putObject(
+      config: S3Credentials,
+      key: string,
+      body: Buffer,
+      contentType: string,
+    ): Promise<{ ok: boolean; status: number }>;
+  };
+  identity: {
+    imageFetchHeaders(source: string): Record<string, string>;
+  };
+}
 
 // Exported so it can be asserted against directly: this used to hand-roll
 // its own review_status filter, which drifted from
@@ -52,15 +109,16 @@ export function makeBreaker() {
 // transformForTier returns { buf, contentType }. An earlier version guessed
 // at the key (`out.buffer || out.body || out`) and silently fell back to the
 // whole object; an unrecognised shape now throws rather than falling through.
-export function bufferFrom(out: any) {
-  if (out && Buffer.isBuffer(out.buf)) return out.buf;
+export function bufferFrom(out: unknown): Buffer {
   if (Buffer.isBuffer(out)) return out;
+  const buf = (out as Partial<TransformOutput> | null | undefined)?.buf;
+  if (Buffer.isBuffer(buf)) return buf;
   throw new Error(
     "transform returned no buffer -- expected { buf, contentType }",
   );
 }
 
-export function assertSourceAllowed(source: any) {
+export function assertSourceAllowed(source: string | null | undefined) {
   if (HELD_SOURCES.indexOf(String(source || "").toLowerCase()) !== -1) {
     throw new Error(
       `refusing to warm '${source}': the Wikimedia/Commons hold is in force. ` +
@@ -69,20 +127,22 @@ export function assertSourceAllowed(source: any) {
   }
 }
 
-export function sourcesToWarm(requested: any) {
+export function sourcesToWarm(requested?: string | null) {
   if (!requested) return ALL_SOURCES.slice();
   assertSourceAllowed(requested);
   return [requested];
 }
 
 // The host's own sanctioned rate, never faster than the floor.
-export function intervalMsFor(hostRow: any) {
+export function intervalMsFor(
+  hostRow?: Partial<Pick<HostFetchRow, "refill_per_sec">> | null,
+) {
   const rate = hostRow && Number(hostRow.refill_per_sec);
   if (!rate || !Number.isFinite(rate) || rate <= 0) return DEFAULT_INTERVAL_MS;
   return Math.max(MIN_INTERVAL_MS, Math.round(1000 / rate));
 }
 
-export function estimate(count: any, intervalMs: any) {
+export function estimate(count: number, intervalMs: number) {
   return {
     requests: count,
     hours: +((count * intervalMs) / 3600000).toFixed(2),
@@ -92,13 +152,16 @@ export function estimate(count: any, intervalMs: any) {
 // A row existing is not "warm" -- most rows without an object_key were only
 // admission bookkeeping for images seen once, and those are what this
 // exists to store.
-export function needsWarming(entry: any) {
+export function needsWarming(entry?: { object_key?: string | null } | null) {
   return !entry?.object_key;
 }
 
 // Mirrors api/items.ts's own choice, so the object lands on the key the
 // visitor's URL will ask for.
-export function originFor(item: any, tier: any) {
+export function originFor(
+  item: Partial<Pick<ColdItemRow, "img" | "full_img">> | null | undefined,
+  tier: string,
+): string | null {
   if (!item) return null;
   const url = tier === "lightbox" ? item.full_img || item.img : item.img;
   return url || null;
@@ -112,18 +175,12 @@ export function originFor(item: any, tier: any) {
 // `commit: false` stops after planning -- the same dry-run contract the CLI
 // has always had.
 export async function warmBatch(opts: {
-  sql: any;
-  tier: any;
-  sources: any;
+  sql: QuerySql;
+  tier: WarmTier;
+  sources: string[];
   limit?: number | null;
   commit: boolean;
-  deps?: {
-    proxy?: any;
-    objectKey?: any;
-    store?: any;
-    s3?: any;
-    identity?: any;
-  };
+  deps?: Partial<WarmDeps>;
   shouldStop?: () => boolean;
   onProgress?: (line: string) => void;
   sleepMs?: (ms: number) => Promise<void>;
@@ -137,28 +194,30 @@ export async function warmBatch(opts: {
   const sleep =
     opts.sleepMs || ((ms: number) => new Promise((r) => setTimeout(r, ms)));
 
-  const cold = await sql.query(coldItemsSql(), [tier, opts.sources]);
+  const cold = (await sql.query(coldItemsSql(), [
+    tier,
+    opts.sources,
+  ])) as ColdItemRow[];
 
-  const hosts = await sql.query(
+  const hosts = (await sql.query(
     `SELECT host, source, refill_per_sec FROM host_fetch_state`,
-  );
-  const byHost: any = {};
+  )) as HostFetchRow[];
+  const byHost: Record<string, HostFetchRow> = {};
   for (const h of hosts) byHost[h.host] = h;
 
   const work = limit ? cold.slice(0, limit) : cold;
-  const perSource: any = {};
-  for (const r of work as any[])
-    perSource[r.source] = (perSource[r.source] || 0) + 1;
+  const perSource: Record<string, number> = {};
+  for (const r of work) perSource[r.source] = (perSource[r.source] || 0) + 1;
 
-  const intervals = work.map((r: any) => {
-    const host: any = (() => {
+  const intervals = work.map((r) => {
+    const host = ((): string | null => {
       try {
-        return new URL(originFor(r, tier)).host;
+        return new URL(originFor(r, tier) as string).host;
       } catch {
         return null;
       }
     })();
-    return intervalMsFor(byHost[host]);
+    return intervalMsFor(byHost[host ?? ""]);
   });
   const slowest = intervals.length
     ? Math.max(...intervals)
@@ -171,13 +230,11 @@ export async function warmBatch(opts: {
 
   if (!opts.commit) {
     return {
-      committed: false,
+      committed: false as const,
       workLength: work.length,
       // Only the preview needs the actual rows; the committed branch below
       // never returns them, since a real run can be thousands long.
-      firstThree: work
-        .slice(0, 3)
-        .map((r: any) => `${r.source}:${r.native_id}`),
+      firstThree: work.slice(0, 3).map((r) => `${r.source}:${r.native_id}`),
       perSource,
       estimatedHours: plan.hours,
       done: 0,
@@ -189,13 +246,9 @@ export async function warmBatch(opts: {
     };
   }
 
-  const store = deps.store;
+  const { store, proxy, objectKey, s3, identity } = deps as WarmDeps;
   const cfg = store.configFromEnv();
   if (!cfg.enabled) throw new Error("S3 is not configured -- refusing to run");
-  const proxy = deps.proxy;
-  const objectKey = deps.objectKey;
-  const s3 = deps.s3;
-  const identity = deps.identity;
 
   let done = 0,
     failed = 0,
@@ -225,7 +278,7 @@ export async function warmBatch(opts: {
       continue;
     }
 
-    let host = null;
+    let host: string;
     try {
       host = new URL(origin).host;
     } catch {
@@ -250,7 +303,7 @@ export async function warmBatch(opts: {
 
       const out = await proxy.transformForTier(raw, contentType, tier);
       const body = bufferFrom(out);
-      const type = out.contentType || contentType;
+      const type = (!Buffer.isBuffer(out) && out.contentType) || contentType;
 
       const hash = objectKey.contentHash(body);
       const key = objectKey.objectKeyFor(row.source, row.native_id, tier, hash);
@@ -283,11 +336,11 @@ export async function warmBatch(opts: {
         const mins = ((Date.now() - started) / 60000).toFixed(1);
         log(`  ${done}/${work.length} warmed, ${failed} failed, ${mins} min`);
       }
-    } catch (err: any) {
+    } catch (err) {
       failed++;
       breaker.fail();
       log(
-        `  ERR ${row.source}:${row.native_id} -- ${String(err?.message || err)}`,
+        `  ERR ${row.source}:${row.native_id} -- ${String((err instanceof Error && err.message) || err)}`,
       );
     }
     await sleep(interval);
@@ -300,8 +353,9 @@ export async function warmBatch(opts: {
   );
 
   return {
-    committed: true,
+    committed: true as const,
     workLength: work.length,
+    firstThree: [] as string[],
     perSource,
     estimatedHours: plan.hours,
     done,

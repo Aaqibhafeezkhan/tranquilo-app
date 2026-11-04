@@ -11,7 +11,33 @@
 // Required env vars: CRON_SECRET, VERCEL_API_TOKEN, plus the
 // auto-exposed VERCEL_PROJECT_ID and VERCEL_ORG_ID (if the project
 // lives under a team).
+import type { CronRequest, CronResponse } from "../cron-types.ts";
 import { reportError, Sentry } from "../sentry.ts";
+
+interface VercelDeployment {
+  uid: string;
+  url?: string;
+  target?: string | null;
+  state?: string;
+  readyState?: string;
+  createdAt?: number;
+  created?: number;
+}
+
+interface FetchResponse {
+  ok: boolean;
+  status: number;
+  json(): Promise<unknown>;
+}
+
+type FetchFn = (
+  url: string,
+  init?: { method?: string; headers?: Record<string, string> },
+) => Promise<FetchResponse>;
+
+interface HandlerOptions {
+  fetch?: FetchFn;
+}
 
 const KEEP_COUNT = 10;
 const API_BASE = "https://api.vercel.com";
@@ -53,10 +79,10 @@ function withTeam(url: URL, teamId?: string) {
 async function listAllDeployments(
   projectId: string,
   teamId?: string,
-  opts?: any,
-) {
+  opts?: HandlerOptions,
+): Promise<VercelDeployment[]> {
   const fetchFn = opts?.fetch || fetch;
-  let deployments: any[] = [];
+  let deployments: VercelDeployment[] = [];
   let until: number | undefined;
   for (;;) {
     const url = withTeam(new URL(`${API_BASE}/v6/deployments`), teamId);
@@ -69,7 +95,10 @@ async function listAllDeployments(
         `Vercel API error listing deployments: HTTP ${res.status}`,
       );
     }
-    const json = await res.json();
+    const json = (await res.json()) as {
+      deployments?: VercelDeployment[];
+      pagination?: { next?: number };
+    };
     deployments = deployments.concat(json.deployments || []);
     if (!json.pagination?.next) break;
     until = json.pagination.next;
@@ -80,7 +109,9 @@ async function listAllDeployments(
 // The deployment ids to actually delete, given the full list. Pure function
 // (no network) so the selection logic is unit-testable without a live
 // Vercel account.
-function selectDeploymentsToDelete(deployments: any[]): any[] {
+function selectDeploymentsToDelete(
+  deployments: VercelDeployment[],
+): VercelDeployment[] {
   const sorted = deployments
     .slice()
     .sort(
@@ -88,7 +119,7 @@ function selectDeploymentsToDelete(deployments: any[]): any[] {
         (b.createdAt || b.created || 0) - (a.createdAt || a.created || 0),
     );
   const keepIds = new Set(sorted.slice(0, KEEP_COUNT).map((d) => d.uid));
-  let productionId = null;
+  let productionId: string | null = null;
   for (let i = 0; i < sorted.length; i++) {
     if (sorted[i].target === "production") {
       productionId = sorted[i].uid;
@@ -100,7 +131,7 @@ function selectDeploymentsToDelete(deployments: any[]): any[] {
   return sorted.filter((d) => {
     if (keepIds.has(d.uid)) return false;
     const state = d.state || d.readyState;
-    return DELETABLE_STATES.has(state);
+    return state !== undefined && DELETABLE_STATES.has(state);
   });
 }
 
@@ -108,7 +139,7 @@ async function deleteDeployment(
   id: string,
   projectId: string,
   teamId: string | undefined,
-  fetchFn: any,
+  fetchFn: FetchFn,
 ) {
   const url = withTeam(new URL(`${API_BASE}/v13/deployments/${id}`), teamId);
   url.searchParams.set("projectId", projectId);
@@ -119,8 +150,12 @@ async function deleteDeployment(
   return { ok: res.ok, status: res.status };
 }
 
-export default async function handler(req: any, res: any, opts?: any) {
-  const auth = req.headers.authorization || "";
+export default async function handler(
+  req: CronRequest,
+  res: CronResponse,
+  opts?: HandlerOptions,
+) {
+  const auth = req.headers?.authorization || "";
   if (
     !process.env.CRON_SECRET ||
     auth !== `Bearer ${process.env.CRON_SECRET}`
@@ -151,7 +186,7 @@ export default async function handler(req: any, res: any, opts?: any) {
     return;
   }
 
-  const fetchFn = opts?.fetch || fetch;
+  const fetchFn: FetchFn = opts?.fetch || fetch;
   const commit = String(req.query?.commit || "") === "1";
 
   try {
@@ -160,7 +195,8 @@ export default async function handler(req: any, res: any, opts?: any) {
     });
     const toDelete = selectDeploymentsToDelete(deployments);
 
-    const results: any[] = [];
+    const results: { id: string; url?: string; ok: boolean; status: number }[] =
+      [];
     if (commit) {
       for (let i = 0; i < toDelete.length; i++) {
         const d = toDelete[i];

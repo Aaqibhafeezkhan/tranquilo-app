@@ -131,3 +131,44 @@ describe("storylineIdFromLocation", () => {
     expect(codec.storylineIdFromLocation()).toBe("");
   });
 });
+
+describe("shelfIdFromLocation", () => {
+  beforeEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("reads the /shelf/{id} path form", () => {
+    vi.stubGlobal("location", { pathname: "/shelf/pets-in-art" });
+    expect(new SlugCodec().shelfIdFromLocation()).toBe("pets-in-art");
+  });
+
+  it("returns an empty string off any other path", () => {
+    vi.stubGlobal("location", { pathname: "/s/el-greco-evolution" });
+    expect(new SlugCodec().shelfIdFromLocation()).toBe("");
+  });
+});
+
+describe("isDiscoverLocation", () => {
+  beforeEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it("matches /discover with or without a trailing slash", () => {
+    vi.stubGlobal("location", { pathname: "/discover" });
+    expect(new SlugCodec().isDiscoverLocation()).toBe(true);
+    vi.stubGlobal("location", { pathname: "/discover/" });
+    expect(new SlugCodec().isDiscoverLocation()).toBe(true);
+  });
+
+  it("does not match other paths", () => {
+    for (const pathname of [
+      "/",
+      "/discovery",
+      "/discover/x",
+      "/shelf/discover",
+    ]) {
+      vi.stubGlobal("location", { pathname });
+      expect(new SlugCodec().isDiscoverLocation()).toBe(false);
+    }
+  });
+});

@@ -98,7 +98,7 @@ describe("bumpShedReason -- aggregate on write", () => {
       throw new Error("db down");
     };
     await expect(
-      guard.bumpShedReason(broken, "met", "display", "held"),
+      guard.bumpShedReason(broken as never, "met", "display", "held"),
     ).resolves.toBeUndefined();
     await expect(
       guard.bumpShedReason(null, "met", "display", "held"),
@@ -173,6 +173,6 @@ describe("the alert this unlocks", () => {
     const broken = async () => {
       throw new Error("db down");
     };
-    expect(await alerts.checkShedReasons(broken)).toEqual([]);
+    expect(await alerts.checkShedReasons(broken as never)).toEqual([]);
   });
 });

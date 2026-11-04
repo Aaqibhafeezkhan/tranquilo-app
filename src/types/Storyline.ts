@@ -3,28 +3,31 @@
 // written as JS numbers wherever the source native id is numeric.
 export type StoryItemId = number | string;
 
-export interface StorylineChapter {
+export type StorylineChapter = {
   id: StoryItemId;
+  // Set where the native id is shared across sources.
+  source?: string;
   position: number;
   chapter_caption: string;
-}
+};
 
 // `tier` is a plain string literal union, not the StorylineTier enum,
 // since the frozen fixture data was never converted to reference it.
 // `type` is a free-text editorial label describing the kind of connection,
 // not a controlled vocabulary.
-export interface Storyline {
+export type Storyline = {
   id: string;
   title: string;
   type: string;
   tier: "structural" | "narrative";
   cover_item_id: StoryItemId;
+  cover_source?: string;
   intro_caption: string;
   // Required when tier is "narrative"; a "structural" storyline's
   // connection is already visible in the items' own fields.
   source_note?: string;
   items: StorylineChapter[];
-}
+};
 
 // The eager half of a storyline, fetched once at feed-init for the two
 // always-on consumers: slideBuilder's chip/position label and the
@@ -34,5 +37,6 @@ export interface Storyline {
 export interface StorylineIndexEntry {
   id: string;
   cover_item_id: StoryItemId;
-  items: Pick<StorylineChapter, "id" | "position">[];
+  cover_source?: string;
+  items: Pick<StorylineChapter, "id" | "source" | "position">[];
 }

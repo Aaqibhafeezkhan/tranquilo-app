@@ -95,6 +95,7 @@ const RESTORE_COLUMNS = [
   "contributor_nationality",
   "photograph_date",
   "photographer",
+  "contributors",
   "palette_hex",
   "phash",
   "img_width",
@@ -111,7 +112,12 @@ function restoreColumns() {
 // JSONB columns need to go in as JSON, not as a string that looks like JSON.
 // api/items.ts carries parseJsonbField() specifically because getting this
 // wrong ships a stringified blob to the UI and nothing throws.
-const JSONB = new Set(["cast", "cast_context", "tea_voice_claims"]);
+const JSONB = new Set([
+  "cast",
+  "cast_context",
+  "tea_voice_claims",
+  "contributors",
+]);
 const _ARRAYS = new Set(["region_alt", "storyline_ids"]);
 
 // Split on semicolons, but NOT inside a $$ ... $$ block -- a naive split
@@ -241,6 +247,53 @@ describe("the data survives the round trip", () => {
         if (row[col] === null) continue;
         expect(typeof row[col], `${row.id}.${col}`).not.toBe("string");
       }
+    }
+  });
+
+  it("keeps contributors as a JSON array, and NULL where none were recorded", async () => {
+    const contributors = [
+      {
+        name: "Léon Davent",
+        role: "engraver",
+        label: "engraver",
+        certainty: "certain",
+        relation: null,
+        kind: "person",
+        bio: "",
+        nationality: "French",
+      },
+    ];
+    const base = SAMPLE[0];
+    const values = columns.map((c: string) => {
+      if (c === "id") return "contrib-test:1";
+      if (c === "source") return "contrib-test";
+      if (c === "native_id") return "1";
+      if (c === "contributors") return JSON.stringify(contributors);
+      const v = base[c];
+      if (v === undefined) return null;
+      if (JSONB.has(c) && v !== null) return JSON.stringify(v);
+      return v;
+    });
+    const quoted = columns.map((c: string) => (c === "cast" ? '"cast"' : c));
+    const placeholders = columns
+      .map((_: string, i: number) => `$${i + 1}`)
+      .join(", ");
+    await db.query(
+      `INSERT INTO items (${quoted.join(", ")}) VALUES (${placeholders})`,
+      values,
+    );
+    try {
+      const stored = await db.query(
+        "SELECT contributors FROM items WHERE id = 'contrib-test:1'",
+      );
+      expect(Array.isArray(stored.rows[0].contributors)).toBe(true);
+      expect(stored.rows[0].contributors).toEqual(contributors);
+      const others = await db.query(
+        "SELECT count(*)::int AS n FROM items WHERE source <> 'contrib-test' AND contributors IS NOT NULL",
+      );
+      expect(others.rows[0].n).toBe(0);
+    } finally {
+      await db.query("DELETE FROM items WHERE id = 'contrib-test:1'");
     }
   });
 

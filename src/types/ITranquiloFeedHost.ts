@@ -25,7 +25,7 @@ export interface ITranquiloFeedHost {
   createPager(
     params: Record<string, unknown>,
     checkCategory?: boolean,
-    excludeIds?: Record<string, boolean> | null,
+    excludeKeys?: Record<string, boolean> | null,
   ): Pager;
   loadNextPage(pager: Pager): Promise<Item[]>;
   fillFirstScreen(pager: Pager, firstPage?: Item[]): Promise<Item[]>;
@@ -36,8 +36,9 @@ export interface ITranquiloFeedHost {
   // ---- Item resolution/cache (app.js's private network + cache layer,
   // shared with shelves and storylines, not feed-exclusive).
   resolveItemsByIds(ids: (string | number)[]): Promise<Item[]>;
-  fetchItemsByIds(
-    ids: string[],
+  resolveItemsByKeys(keys: string[]): Promise<Item[]>;
+  fetchItemsByKeys(
+    keys: string[],
   ): Promise<{ items?: Item[]; missing?: string[] }>;
   absorbPage(rows: Item[]): Item[];
 
@@ -49,6 +50,7 @@ export interface ITranquiloFeedHost {
   // elsewhere via ISlideBuilderHost's isCollected/toggleCollect.
   getCollection(): string[];
   collectionKeyFor(item: Item): string;
+  isCollectionKey(entry: string): boolean;
 
   // ---- Which mode is active right now.
   getFilterState(): FeedFilterState;

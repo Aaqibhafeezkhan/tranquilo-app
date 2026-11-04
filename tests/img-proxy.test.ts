@@ -496,7 +496,7 @@ describe("the S3-write-failure path", () => {
     "utf8",
   );
   const section = src.slice(
-    src.indexOf("s3Location = null;"),
+    src.indexOf("let s3Location"),
     src.indexOf("// S3 not configured at all"),
   );
 

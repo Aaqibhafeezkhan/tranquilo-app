@@ -35,7 +35,16 @@ function readRawBody(req: VercelRequest): Promise<string> {
   });
 }
 
-function describeEvent(event: any): string {
+interface ResendEvent {
+  type: string;
+  data?: {
+    to?: string | string[];
+    subject?: string;
+    bounce?: { type?: string; subType?: string; message?: string };
+  };
+}
+
+function describeEvent(event: ResendEvent): string {
   const data = event.data || {};
   const to = Array.isArray(data.to) ? data.to.join(", ") : data.to;
   let detail = "";
@@ -86,7 +95,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  let rawBody: any;
+  let rawBody: string;
   try {
     rawBody = await readRawBody(req);
   } catch (_err) {
@@ -95,13 +104,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  let event: any, wh: any;
   try {
-    wh = new Webhook(process.env.RESEND_WEBHOOK_SECRET);
-    event = wh.verify(rawBody, req.headers as Record<string, string>);
+    // svix 2.x verify() throws on a bad signature and returns nothing.
+    new Webhook(process.env.RESEND_WEBHOOK_SECRET).verify(
+      rawBody,
+      req.headers as Record<string, string>,
+    );
   } catch (_err) {
     res.statusCode = 401;
     res.json({ error: "Signature verification failed" });
+    return;
+  }
+
+  let event: ResendEvent;
+  try {
+    event = JSON.parse(rawBody);
+  } catch (_err) {
+    res.statusCode = 400;
+    res.json({ error: "Body is not valid JSON" });
     return;
   }
 

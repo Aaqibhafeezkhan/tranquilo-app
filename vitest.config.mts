@@ -2,10 +2,34 @@
 // playwright -> tests/e2e/*.spec.mts  real browser, stubbed backend
 import { defineConfig } from "vitest/config";
 
+// Blanked so a shell with production env loaded cannot reach real services.
+const PRODUCTION_ONLY_ENV = [
+  "SENTRY_DSN",
+  "VERCEL_ENV",
+  "DATABASE_URL",
+  "RESEND_API_KEY",
+  "RESEND_WEBHOOK_SECRET",
+  "PATREON_WEBHOOK_SECRET",
+  "PATREON_CREATOR_TOKEN",
+  "SUBMIT_NOTIFY_EMAIL",
+  "OPS_ALERT_EMAIL",
+  "VERCEL_API_TOKEN",
+  "GITHUB_BACKUP_TOKEN",
+  "BLOB_READ_WRITE_TOKEN",
+  "S3_BUCKET",
+  "S3_ACCESS_KEY_ID",
+  "S3_SECRET_ACCESS_KEY",
+  "CRON_SECRET",
+  "FIREWALL_BYPASS_TOKEN",
+];
+
 export default defineConfig({
   test: {
+    // PGlite's WASM boot is slow on loaded CI runners under coverage.
+    testTimeout: 20_000,
     include: ["tests/**/*.test.ts"],
     exclude: ["tests/e2e/**", "node_modules/**"],
+    env: Object.fromEntries(PRODUCTION_ONLY_ENV.map((name) => [name, ""])),
     coverage: {
       provider: "v8",
       reporter: ["text", "html", "json-summary", "lcov"],

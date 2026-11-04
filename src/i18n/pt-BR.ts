@@ -51,7 +51,7 @@ export const ptBR: Dictionary = {
   "slide.position": "{index} de {total}",
   "slide.setPosition": "{index} de {total} no conjunto",
   "slide.share": "Copiar link para compartilhar",
-  "slide.collect.add": "Salvar esta obra",
+  "slide.collect.add": "Adicionar à coleção",
   "slide.collect.remove": "Remover da coleção",
 
   "detail.close": "Fechar",
@@ -70,7 +70,7 @@ export const ptBR: Dictionary = {
   "detail.meta.artist": "Artista",
   "detail.meta.created": "Criado em",
   "detail.meta.material": "Material",
-  "detail.meta.artistOrigin": "Origem do artista",
+  "detail.meta.artistOrigin": "Origem do(a) artista",
   "detail.meta.objectOrigin": "Origem do objeto",
   "detail.meta.origin": "Origem",
   "detail.meta.culture": "Cultura",
@@ -154,6 +154,11 @@ export const ptBR: Dictionary = {
     "O pagamento é feito por Stripe — Tranquilo nunca vê os dados do seu cartão. Os valores aparecem na sua moeda no momento do pagamento.",
   "support.once.note": "Escolha o valor",
 
+  "support.patreon.body":
+    "Prefere uma assinatura? Apoie no Patreon e acompanhe o crescimento do Tranquilo.",
+  "support.patreon.join": "Apoiar no Patreon",
+  "support.patreon.soon": "O Patreon abre em breve.",
+
   "shelves.home": "Tranquilo, voltar à página inicial",
   "shelves.title": "Descobrir",
   "shelves.close": "Fechar Descobrir",
@@ -161,6 +166,10 @@ export const ptBR: Dictionary = {
   "shelves.storylines.subtitle": "Histórias selecionadas por trás da arte",
   "shelves.moods.title": "Prateleiras, curadas à mão",
   "shelves.moods.subtitle": "Escolha um clima e aproveite",
+  "shelf.close": "Fechar a prateleira",
+  "shelf.share": "Copiar link desta prateleira",
+  "shelf.works.one": "{count} obra",
+  "shelf.works.other": "{count} obras",
 
   "storyline.close": "Fechar a narrativa",
   "storyline.prev": "Página anterior",
@@ -196,6 +205,7 @@ export const ptBR: Dictionary = {
     "Tranquilo é feito de forma aberta, com a ajuda destas pessoas. Agradecemos de coração.",
   "community.contributors": "Contribuições no GitHub",
   "community.donors": "Apoio financeiro",
+  "community.patrons": "Apoie no Patreon",
   "community.avatarAlt": "{handle} no GitHub",
 
   "form.joining": "Inscrevendo…",
@@ -228,7 +238,7 @@ export const ptBR: Dictionary = {
   "topbar.shareBanner.dismiss": "Fechar",
   "topbar.home": "Tranquilo, voltar ao início",
   "topbar.music": "Ligar ou desligar a música",
-  "topbar.search": "Buscar",
+  "topbar.search": "Busca",
   "topbar.discover": "Descobrir prateleiras",
   "topbar.collection.label": "Minha coleção",
   "topbar.collection.empty": "Minha coleção, vazia",
@@ -293,4 +303,7 @@ export const ptBR: Dictionary = {
   "facet.subject_type.genre-scene": "Cena de gênero",
   "facet.subject_type.still-life": "Natureza-morta",
   "facet.subject_type.other": "Outro",
+
+  "caption.basic.untitled": "Sem título",
+  "caption.basic.by": "de {artist}",
 };

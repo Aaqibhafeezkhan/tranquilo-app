@@ -2,6 +2,7 @@
 // directly by every other module that needs it (app.ts included);
 // `vite build` bundles it into each page's output the same as any other
 // dependency.
+import type { HeroPoolEntry } from "../types/HeroPoolEntry";
 import type { Item } from "../types/Item";
 import type { Shelf } from "../types/Shelf";
 
@@ -157,9 +158,9 @@ export const HERO_COUNT = 5;
 
 // Fisher-Yates on a copy. The pool is a module-level constant and shuffling it
 // in place would make every call depend on every call before it.
-function shuffleWith(arr: any, rand: any) {
+function shuffleWith<T>(arr: readonly T[], rand: () => number): T[] {
   const out = arr.slice();
-  let i: number, j: number, t: any;
+  let i: number, j: number, t: T;
   for (i = out.length - 1; i > 0; i--) {
     j = Math.floor(rand() * (i + 1));
     t = out[i];
@@ -174,25 +175,29 @@ function shuffleWith(arr: any, rand: any) {
 // opened on four paintings in a row would be a worse first impression.
 // Count wins over adjacency: when remaining candidates are all one medium,
 // returning fewer than `count` would silently shorten the opening.
-export function pickHeroes(pool: any, count: any, rand: any) {
+export function pickHeroes<T extends Pick<HeroPoolEntry, "media_type">>(
+  pool: readonly T[] | null | undefined,
+  count: number,
+  rand?: (() => number) | null,
+): T[] {
   if (!pool?.length) return [];
   const random = rand || Math.random;
   const shuffled = shuffleWith(pool, random);
   const wanted = Math.min(count, shuffled.length);
-  const picked = [];
-  let prev: any, idx: number, i: number;
+  const picked: T[] = [];
+  let prev: string | null | undefined, idx: number, i: number;
   while (picked.length < wanted) {
-    prev = picked.length ? picked[picked.length - 1].media_type : null;
+    prev = picked.length ? picked[picked.length - 1]?.media_type : null;
     idx = -1;
     for (i = 0; i < shuffled.length; i++) {
-      if (shuffled[i].media_type !== prev) {
+      if (shuffled[i]?.media_type !== prev) {
         idx = i;
         break;
       }
     }
     // Nothing left of a different medium: take the next one anyway.
     if (idx === -1) idx = 0;
-    picked.push(shuffled.splice(idx, 1)[0]);
+    picked.push(...shuffled.splice(idx, 1));
   }
   return picked;
 }
@@ -214,12 +219,15 @@ export const FEED_DEPTH_MILESTONES = [1, 5, 10, 25, 50, 100];
 // deep link can land at slide 25 without passing through 5 and 10, and
 // every milestone crossed is still true -- reporting only the highest
 // would make the funnel non-monotonic.
-export function feedDepthMilestones(slidesSeen: any, alreadyFired: any) {
+export function feedDepthMilestones(
+  slidesSeen: number,
+  alreadyFired?: number[] | null,
+): number[] {
   const fired = alreadyFired || [];
-  const out = [];
-  let i: number, m: any;
+  const out: number[] = [];
+  let i: number, m: number;
   for (i = 0; i < FEED_DEPTH_MILESTONES.length; i++) {
-    m = FEED_DEPTH_MILESTONES[i];
+    m = FEED_DEPTH_MILESTONES[i] as number;
     if (slidesSeen >= m && fired.indexOf(m) === -1) out.push(m);
   }
   return out;
@@ -629,7 +637,7 @@ export function recycleDelta(
 // since "10k+" at 9,914 items would advertise works we don't have; the "+"
 // carries the rest honestly. Below 1,000 it prints the exact number, since
 // rounding "847" to "0k+" loses everything and gains nothing.
-export function roundedWorkCount(n: any) {
+export function roundedWorkCount(n: unknown) {
   const count = Math.floor(Number(n));
   if (!Number.isFinite(count) || count <= 0) return "0";
   if (count < 1000) return String(count);

@@ -1,0 +1,2513 @@
+{
+  "applied_at": "2026-11-02T14:39:30.859Z",
+  "rows": [
+    {
+      "native_id": "7999",
+      "title": "Sugar Box",
+      "artist": {
+        "from": "John Coney",
+        "to": "Probably John Coney"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "10028",
+      "title": "Orange Branch",
+      "artist": null,
+      "credit": {
+        "from": "Gift of J. William Middendorf II, 1966",
+        "to": "Gift of J. William Middendorf II, 1966. Formerly attributed to John La Farge."
+      }
+    },
+    {
+      "native_id": "11191",
+      "title": "Mary Inman",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Mrs. Dave Hennen Coddington, in memory of her husband, 1964",
+        "to": "Gift of Mrs. Dave Hennen Coddington, in memory of her husband, 1964. Formerly attributed to Henry Inman."
+      }
+    },
+    {
+      "native_id": "12739",
+      "title": "Nightlife in Philadelphia—an Oyster Barrow in front of the Chestnut Street Theater",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1942",
+        "to": "Rogers Fund, 1942. Formerly attributed to Pavel Petrovich Svinin."
+      }
+    },
+    {
+      "native_id": "12977",
+      "title": "Portrait of a Man",
+      "artist": null,
+      "credit": {
+        "from": "Gift of The Chester Dale Collection, 1954",
+        "to": "Gift of The Chester Dale Collection, 1954. Formerly attributed to John Smibert."
+      }
+    },
+    {
+      "native_id": "36021",
+      "title": "Luohan",
+      "artist": null,
+      "credit": {
+        "from": "John Stewart Kennedy Fund, 1913",
+        "to": "John Stewart Kennedy Fund, 1913. Formerly attributed to Guanxiu."
+      }
+    },
+    {
+      "native_id": "36032",
+      "title": "Immortals and Sages",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1918",
+        "to": "Rogers Fund, 1918. Formerly Attributed to Li Gonglin."
+      }
+    },
+    {
+      "native_id": "36033",
+      "title": "One hundred water buffalo",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1918",
+        "to": "Rogers Fund, 1918. Formerly Attributed to Jiang Shen."
+      }
+    },
+    {
+      "native_id": "36049",
+      "title": "Streams and Mountains Without End",
+      "artist": null,
+      "credit": {
+        "from": "From the Collection of A. W. Bahr, Purchase, Fletcher Fund, 1947",
+        "to": "From the Collection of A. W. Bahr, Purchase, Fletcher Fund, 1947. Formerly Attributed to Guo Xi."
+      }
+    },
+    {
+      "native_id": "36066",
+      "title": "Portraits of Emperors of Successive Dynasties",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Mrs. Edward S. Harkness, 1947",
+        "to": "Gift of Mrs. Edward S. Harkness, 1947. Formerly Attributed to Yao Wenhan."
+      }
+    },
+    {
+      "native_id": "36146",
+      "title": "Copy of a Portrait of Zhao Mengfu",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Robert Hatfield Ellsworth, in memory of La Ferne Hatfield Ellsworth, 1986",
+        "to": "Gift of Robert Hatfield Ellsworth, in memory of La Ferne Hatfield Ellsworth, 1986. Formerly attributed to Wang Gong."
+      }
+    },
+    {
+      "native_id": "51389",
+      "title": "Minah Bird on a Loquat Branch",
+      "artist": null,
+      "credit": {
+        "from": "John Stewart Kennedy Fund, 1913",
+        "to": "John Stewart Kennedy Fund, 1913. Formerly attributed to Wu Bing."
+      }
+    },
+    {
+      "native_id": "221463",
+      "title": "Pair of wall panels",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1923",
+        "to": "Rogers Fund, 1923. Formerly attributed to Jean François Bony."
+      }
+    },
+    {
+      "native_id": "267935",
+      "title": "City Point, Virginia",
+      "artist": null,
+      "credit": {
+        "from": "Harris Brisbane Dick Fund, 1933",
+        "to": "Harris Brisbane Dick Fund, 1933. Formerly attributed to Mathew B. Brady."
+      }
+    },
+    {
+      "native_id": "267977",
+      "title": "[Earthwork Fortifications at Edge of Forest]",
+      "artist": null,
+      "credit": {
+        "from": "Harris Brisbane Dick Fund, 1933",
+        "to": "Harris Brisbane Dick Fund, 1933. Formerly attributed to Mathew B. Brady."
+      }
+    },
+    {
+      "native_id": "267978",
+      "title": "Cannon",
+      "artist": null,
+      "credit": {
+        "from": "Harris Brisbane Dick Fund, 1933",
+        "to": "Harris Brisbane Dick Fund, 1933. Formerly attributed to Mathew B. Brady."
+      }
+    },
+    {
+      "native_id": "267981",
+      "title": "[Winter Quarters of a Cavalry Regiment in the Army of the Potomac, Near Brandy Station, Virginia]",
+      "artist": null,
+      "credit": {
+        "from": "Harris Brisbane Dick Fund, 1933",
+        "to": "Harris Brisbane Dick Fund, 1933. Formerly attributed to Mathew B. Brady."
+      }
+    },
+    {
+      "native_id": "267997",
+      "title": "Heavy Artillery",
+      "artist": null,
+      "credit": {
+        "from": "Harris Brisbane Dick Fund, 1933",
+        "to": "Harris Brisbane Dick Fund, 1933. Formerly attributed to Mathew B. Brady."
+      }
+    },
+    {
+      "native_id": "268029",
+      "title": "[Line of Soldiers, 30th Pennsylvania Infantry]",
+      "artist": null,
+      "credit": {
+        "from": "Harris Brisbane Dick Fund, 1933",
+        "to": "Harris Brisbane Dick Fund, 1933. Formerly attributed to Mathew B. Brady."
+      }
+    },
+    {
+      "native_id": "268059",
+      "title": "Deep Bottom, James River",
+      "artist": null,
+      "credit": {
+        "from": "Harris Brisbane Dick Fund, 1933",
+        "to": "Harris Brisbane Dick Fund, 1933. Formerly attributed to Mathew B. Brady."
+      }
+    },
+    {
+      "native_id": "268100",
+      "title": "[Yellow House [also known as Yellow Tavern], Headquarters of the 6th Army Corps, Warren Station, in Front of Petersburg, Virginia]",
+      "artist": null,
+      "credit": {
+        "from": "Harris Brisbane Dick Fund, 1933",
+        "to": "Harris Brisbane Dick Fund, 1933. Formerly attributed to Mathew B. Brady."
+      }
+    },
+    {
+      "native_id": "268101",
+      "title": "Campbell Hospital, D.C.",
+      "artist": null,
+      "credit": {
+        "from": "Harris Brisbane Dick Fund, 1933",
+        "to": "Harris Brisbane Dick Fund, 1933. Formerly attributed to Mathew B. Brady."
+      }
+    },
+    {
+      "native_id": "268121",
+      "title": "6th Vermont Infantry, Camp Griffen",
+      "artist": null,
+      "credit": {
+        "from": "Harris Brisbane Dick Fund, 1933",
+        "to": "Harris Brisbane Dick Fund, 1933. Formerly attributed to Mathew B. Brady."
+      }
+    },
+    {
+      "native_id": "268128",
+      "title": "Officers of U.S.S. Hunchback",
+      "artist": null,
+      "credit": {
+        "from": "Harris Brisbane Dick Fund, 1933",
+        "to": "Harris Brisbane Dick Fund, 1933. Formerly attributed to Mathew B. Brady."
+      }
+    },
+    {
+      "native_id": "268178",
+      "title": "[Distant view of Wards, Harewood Hospital, Near Washington, D.C.]",
+      "artist": null,
+      "credit": {
+        "from": "Harris Brisbane Dick Fund, 1933",
+        "to": "Harris Brisbane Dick Fund, 1933. Formerly attributed to Mathew B. Brady."
+      }
+    },
+    {
+      "native_id": "268216",
+      "title": "Chattanooga, Tennessee. Government Stable",
+      "artist": null,
+      "credit": {
+        "from": "Harris Brisbane Dick Fund, 1933",
+        "to": "Harris Brisbane Dick Fund, 1933. Formerly attributed to Mathew B. Brady."
+      }
+    },
+    {
+      "native_id": "268217",
+      "title": "[Office of Post Quartermaster, Chattanooga, Tennesee]",
+      "artist": null,
+      "credit": {
+        "from": "Harris Brisbane Dick Fund, 1933",
+        "to": "Harris Brisbane Dick Fund, 1933. Formerly attributed to Mathew B. Brady."
+      }
+    },
+    {
+      "native_id": "268225",
+      "title": "Tennessee River at Chattanooga (81 Lookout Mountain Spur)",
+      "artist": null,
+      "credit": {
+        "from": "Harris Brisbane Dick Fund, 1933",
+        "to": "Harris Brisbane Dick Fund, 1933. Formerly attributed to Mathew B. Brady."
+      }
+    },
+    {
+      "native_id": "268360",
+      "title": "Niagara Falls from the Canadian Side",
+      "artist": {
+        "from": "Platt D. Babbitt",
+        "to": "Attributed to Platt D. Babbitt"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "283897",
+      "title": "[Interior of Confederate Fort Darling, Drewry's Bluff, James River, Virginia]",
+      "artist": null,
+      "credit": {
+        "from": "Harris Brisbane Dick Fund, 1933",
+        "to": "Harris Brisbane Dick Fund, 1933. Formerly attributed to Mathew B. Brady."
+      }
+    },
+    {
+      "native_id": "302676",
+      "title": "The Evacuation of Fort Sumter, April 1861",
+      "artist": {
+        "from": "Alma A. Pelot",
+        "to": "Attributed to Alma A. Pelot"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "334241",
+      "title": "Men Spitting at a Fire",
+      "artist": null,
+      "credit": {
+        "from": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1962",
+        "to": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1962. Formerly attributed to Goya (Francisco de Goya y Lucientes)."
+      }
+    },
+    {
+      "native_id": "334258",
+      "title": "Man Dreaming",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Mrs. Max J.H. Rossbach, 1964",
+        "to": "Gift of Mrs. Max J.H. Rossbach, 1964. Formerly attributed to copy after Honoré Daumier."
+      }
+    },
+    {
+      "native_id": "334313",
+      "title": "The Head of a Recumbent Lion",
+      "artist": null,
+      "credit": {
+        "from": "Bequest of Walter C. Baker, 1971",
+        "to": "Bequest of Walter C. Baker, 1971. Formerly attributed to Eugène Delacroix."
+      }
+    },
+    {
+      "native_id": "334314",
+      "title": "Standing Man with His Right Hand on His Chest",
+      "artist": null,
+      "credit": {
+        "from": "Bequest of Walter C. Baker, 1971",
+        "to": "Bequest of Walter C. Baker, 1971. Formerly attributed to Jacques Louis David."
+      }
+    },
+    {
+      "native_id": "334696",
+      "title": "Lot and His Daughters",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Katrin Bellinger, 1998",
+        "to": "Gift of Katrin Bellinger, 1998. Formerly attributed to Jean Bernard Restout."
+      }
+    },
+    {
+      "native_id": "334697",
+      "title": "Design for a Doorway",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Katrin Bellinger, 1998",
+        "to": "Gift of Katrin Bellinger, 1998. Formerly attributed to Hans Baldung (called Hans Baldung Grien). Formerly attributed to Anonymous, German, 16th century."
+      }
+    },
+    {
+      "native_id": "334702",
+      "title": "Cupid with Two Doves",
+      "artist": null,
+      "credit": {
+        "from": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1998",
+        "to": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1998. Formerly attributed to Martin Fréminet."
+      }
+    },
+    {
+      "native_id": "334781",
+      "title": "Bust of a Young Woman",
+      "artist": null,
+      "credit": {
+        "from": "Fletcher Fund, 1936",
+        "to": "Fletcher Fund, 1936. Formerly attributed to Albrecht Dürer."
+      }
+    },
+    {
+      "native_id": "334795",
+      "title": "A Saint Triumphant Over the Devil",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cephas G. Thompson, 1887",
+        "to": "Gift of Cephas G. Thompson, 1887. Formerly attributed to Johann Georg Bergmüller."
+      }
+    },
+    {
+      "native_id": "334800",
+      "title": "Saint Catherine",
+      "artist": {
+        "from": "Lucas Cranach the Elder",
+        "to": "Workshop of Lucas Cranach the Elder"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "334803",
+      "title": "Design for a Powder Flask",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1946",
+        "to": "Rogers Fund, 1946. Formerly attributed to Wendel Dietterlin, the Elder."
+      }
+    },
+    {
+      "native_id": "334818",
+      "title": "Bittern's Wings: study showing both sides",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1919",
+        "to": "Rogers Fund, 1919. Formerly attributed to Albrecht Dürer."
+      }
+    },
+    {
+      "native_id": "334821",
+      "title": "Group of Men",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1922",
+        "to": "Rogers Fund, 1922. Formerly attributed to Adam Elsheimer."
+      }
+    },
+    {
+      "native_id": "334858",
+      "title": "Christ in the Garden of Gethsemane (Matthew 26:36-46)",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cornelius Vanderbilt, 1880",
+        "to": "Gift of Cornelius Vanderbilt, 1880. Formerly attributed to Federico Zuccaro (Zuccari)."
+      }
+    },
+    {
+      "native_id": "334859",
+      "title": "Susannah and the Elders",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cornelius Vanderbilt, 1880",
+        "to": "Gift of Cornelius Vanderbilt, 1880. Formerly attributed to Jacopo Tintoretto (Jacopo Robusti)."
+      }
+    },
+    {
+      "native_id": "334862",
+      "title": "Interior of Farm House",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cephas G. Thompson, 1887",
+        "to": "Gift of Cephas G. Thompson, 1887. Formerly attributed to Anonymous, German, 19th century."
+      }
+    },
+    {
+      "native_id": "334863",
+      "title": "Raising of Lazarus",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cephas G. Thompson, 1887",
+        "to": "Gift of Cephas G. Thompson, 1887. Formerly attributed to Anonymous, German, 19th century."
+      }
+    },
+    {
+      "native_id": "334864",
+      "title": "The Entombment",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cephas G. Thompson, 1887",
+        "to": "Gift of Cephas G. Thompson, 1887. Formerly attributed to Johann Friedrich Overbeck."
+      }
+    },
+    {
+      "native_id": "334867",
+      "title": "Three Angels Visiting Abraham",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Harry G. Friedman, 1960",
+        "to": "Gift of Harry G. Friedman, 1960. Formerly attributed to Anonymous, German, 19th century."
+      }
+    },
+    {
+      "native_id": "334874",
+      "title": "Design for a Table Fountain",
+      "artist": null,
+      "credit": {
+        "from": "Clifford A. Furst Bequest, by exchange and The Elisha Whittelsey Collection, The Elisha Whittesey Fund, 1997",
+        "to": "Clifford A. Furst Bequest, by exchange and The Elisha Whittelsey Collection, The Elisha Whittesey Fund, 1997. Formerly attributed to Hans Holbein the Younger. Formerly attributed to Anonymous, German, 16th century."
+      }
+    },
+    {
+      "native_id": "334883",
+      "title": "Neptune in his Chariot",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cornelius Vanderbilt, 1880",
+        "to": "Gift of Cornelius Vanderbilt, 1880. Formerly attributed to Joseph Heintz the Elder."
+      }
+    },
+    {
+      "native_id": "334891",
+      "title": "The Standing Virgin Lamenting the Dead Christ at the Foot of the Cross",
+      "artist": null,
+      "credit": {
+        "from": "Bequest of Harry G. Sperling, 1971",
+        "to": "Bequest of Harry G. Sperling, 1971. Formerly attributed to Johann Matthias Kager."
+      }
+    },
+    {
+      "native_id": "334894",
+      "title": "Design for an Ornamental Panel with the Figure of Astronomy",
+      "artist": null,
+      "credit": {
+        "from": "Purchase, Bequest of Helen Hay Whitney, by exchange, Mr. and Mrs. E. Powis Jones Gift, and Harry G. Sperling Fund, 1996",
+        "to": "Purchase, Bequest of Helen Hay Whitney, by exchange, Mr. and Mrs. E. Powis Jones Gift, and Harry G. Sperling Fund, 1996. Formerly attributed to Lucas Kilian."
+      }
+    },
+    {
+      "native_id": "334923",
+      "title": "Christ Appearing to Mary Magdalen",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Walter Lowery, 1957",
+        "to": "Gift of Walter Lowery, 1957. Formerly attributed to Anonymous, German."
+      }
+    },
+    {
+      "native_id": "334930",
+      "title": "Studies of Fruits, Insects and Shells",
+      "artist": null,
+      "credit": {
+        "from": "Fletcher Fund, 1939",
+        "to": "Fletcher Fund, 1939. Formerly attributed to Maria Sibylla Merian."
+      }
+    },
+    {
+      "native_id": "334970",
+      "title": "King Herod Receiving the Three Magi",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cornelius Vanderbilt, 1880",
+        "to": "Gift of Cornelius Vanderbilt, 1880. Formerly attributed to Israhel van Meckenem."
+      }
+    },
+    {
+      "native_id": "334997",
+      "title": "Italian Comedians Performing in a Public Square",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Mrs. O'Donnell Hoover, 1973",
+        "to": "Gift of Mrs. O'Donnell Hoover, 1973. Formerly attributed to Claude Gillot."
+      }
+    },
+    {
+      "native_id": "335037",
+      "title": "Sculptor at Work on a Colossal Statue",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Jean-Luc Baroni and Colnaghi, in honor of Jacob Bean, 1992",
+        "to": "Gift of Jean-Luc Baroni and Colnaghi, in honor of Jacob Bean, 1992. Formerly attributed to Johann Tobias Sergel."
+      }
+    },
+    {
+      "native_id": "335044",
+      "title": "Adoration of the Shepherds",
+      "artist": null,
+      "credit": {
+        "from": "Bequest of Harry G. Sperling, 1971",
+        "to": "Bequest of Harry G. Sperling, 1971. Formerly attributed to Pieter Aertsen."
+      }
+    },
+    {
+      "native_id": "335110",
+      "title": "Imaginary Hilly Landscape with Ruins",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1926",
+        "to": "Rogers Fund, 1926. Formerly attributed to Paul Bril."
+      }
+    },
+    {
+      "native_id": "335119",
+      "title": "Dutch Landscape with Windmills",
+      "artist": null,
+      "credit": {
+        "from": "Fletcher Fund, 1942",
+        "to": "Fletcher Fund, 1942. Formerly attributed to Jan Brueghel the Elder."
+      }
+    },
+    {
+      "native_id": "335120",
+      "title": "Peasants and Hay Wagon on a Country Road",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1961",
+        "to": "Rogers Fund, 1961. Formerly attributed to Jan Brueghel the Elder."
+      }
+    },
+    {
+      "native_id": "335123",
+      "title": "Studies of Peasants",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cornelius Vanderbilt, 1880",
+        "to": "Gift of Cornelius Vanderbilt, 1880. Formerly attributed to School of Jan Brueghel the Elder."
+      }
+    },
+    {
+      "native_id": "335125",
+      "title": "Village View",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1906",
+        "to": "Rogers Fund, 1906. Formerly attributed to Pieter Bruegel the Elder. Formerly attributed to Cornelis Cort. Formerly attributed to Pieter Brueghel the Younger. Formerly attributed to Joos van Liere."
+      }
+    },
+    {
+      "native_id": "335173",
+      "title": "Venus Triumphant",
+      "artist": null,
+      "credit": {
+        "from": "Purchase, The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1961",
+        "to": "Purchase, The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1961. Formerly attributed to Peter Candid (Pieter de Witte, Pietro Candido)."
+      }
+    },
+    {
+      "native_id": "335177",
+      "title": "Joachim's Offering Refused",
+      "artist": null,
+      "credit": {
+        "from": "Frederick C. Hewitt Fund, 1917",
+        "to": "Frederick C. Hewitt Fund, 1917. Formerly attributed to Dirck Vellert."
+      }
+    },
+    {
+      "native_id": "335202",
+      "title": "Pastoral Landscape with Roman Ruins",
+      "artist": null,
+      "credit": {
+        "from": "Bequest of Alexandrine Sinsheimer, 1958",
+        "to": "Bequest of Alexandrine Sinsheimer, 1958. Formerly attributed to Simon van der Does."
+      }
+    },
+    {
+      "native_id": "335261",
+      "title": "Two Figures and a Dog",
+      "artist": null,
+      "credit": {
+        "from": "Roger's Fund, 1906",
+        "to": "Roger's Fund, 1906. Formerly attributed to Allart van Everdingen."
+      }
+    },
+    {
+      "native_id": "335262",
+      "title": "Landscape with Windmill",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1906",
+        "to": "Rogers Fund, 1906. Formerly attributed to Anonymous, Netherlandish, 17th century."
+      }
+    },
+    {
+      "native_id": "335268",
+      "title": "Landscape",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1944",
+        "to": "Rogers Fund, 1944. Formerly attributed to Anonymous, Dutch, 17th century."
+      }
+    },
+    {
+      "native_id": "335269",
+      "title": "Summer",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1944",
+        "to": "Rogers Fund, 1944. Formerly attributed to Anonymous, Netherlandish, 17th century."
+      }
+    },
+    {
+      "native_id": "335270",
+      "title": "Autumn",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1944",
+        "to": "Rogers Fund, 1944. Formerly attributed to Anonymous, Netherlandish, 17th century."
+      }
+    },
+    {
+      "native_id": "335272",
+      "title": "Thatched Cottage by a Brook",
+      "artist": null,
+      "credit": {
+        "from": "Bequest of Alexandrine Sinsheimer, 1958",
+        "to": "Bequest of Alexandrine Sinsheimer, 1958. Formerly attributed to Anonymous, Dutch, 17th century."
+      }
+    },
+    {
+      "native_id": "335276",
+      "title": "The Flood",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Dr. H.G. Hesslein, 1976",
+        "to": "Gift of Dr. H.G. Hesslein, 1976. Formerly attributed to Anonymous, Netherlandish, 16th century."
+      }
+    },
+    {
+      "native_id": "335328",
+      "title": "The Vision of St. Eustace",
+      "artist": null,
+      "credit": {
+        "from": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1950",
+        "to": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1950. Formerly attributed to Anonymous, Netherlandish, 16th century."
+      }
+    },
+    {
+      "native_id": "335365",
+      "title": "The Sense of Hearing",
+      "artist": null,
+      "credit": {
+        "from": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1954",
+        "to": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1954. Formerly attributed to Hans von Aachen."
+      }
+    },
+    {
+      "native_id": "335368",
+      "title": "Landscape with Ornamental Frame",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Philip Hofer, 1942",
+        "to": "Gift of Philip Hofer, 1942. Formerly attributed to Johann Jakob Scheuchzer."
+      }
+    },
+    {
+      "native_id": "335416",
+      "title": "Study for a Mantel and Overmantel",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Mr. and Mrs. Charles Wrightsman, 1970",
+        "to": "Gift of Mr. and Mrs. Charles Wrightsman, 1970. Formerly attributed to Juste Aurèle Meissonnier."
+      }
+    },
+    {
+      "native_id": "335428",
+      "title": "Architectural Ground Plan",
+      "artist": null,
+      "credit": {
+        "from": "Gift of the Seiferheld Gallery, 1970",
+        "to": "Gift of the Seiferheld Gallery, 1970. Formerly attributed to Jean Jacques Huvé."
+      }
+    },
+    {
+      "native_id": "335448",
+      "title": "Christ on the Cross; verso: St. Jerome Reading by Candlelight, and Sketch of Male Torso (?)",
+      "artist": null,
+      "credit": {
+        "from": "Bequest of Walter C. Baker, 1971",
+        "to": "Bequest of Walter C. Baker, 1971. Formerly attributed to Anthony van Dyck."
+      }
+    },
+    {
+      "native_id": "335501",
+      "title": "Planting Trees",
+      "artist": null,
+      "credit": {
+        "from": "Bequest of Alexandrine Sinsheimer, 1958",
+        "to": "Bequest of Alexandrine Sinsheimer, 1958. Formerly attributed to Anonymous, Netherlandish, 16th century."
+      }
+    },
+    {
+      "native_id": "335513",
+      "title": "Cephalus and Procris",
+      "artist": null,
+      "credit": {
+        "from": "Purchase, David Tunick Gift, 1996",
+        "to": "Purchase, David Tunick Gift, 1996. Formerly attributed to Anonymous, Flemish, 18th century. Formerly attributed to Denijs Calvaert. Formerly attributed to Jan de Bisschop."
+      }
+    },
+    {
+      "native_id": "335683",
+      "title": "The Sacerdotal Atrium in Perspective",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Philip Hofer, 1942",
+        "to": "Gift of Philip Hofer, 1942. Formerly attributed to Johann Jakob Scheuchzer."
+      }
+    },
+    {
+      "native_id": "335685",
+      "title": "Horses and Dog",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1947",
+        "to": "Rogers Fund, 1947. Formerly attributed to Pieter Soutman. Formerly attributed to Pieter de Kempeneer."
+      }
+    },
+    {
+      "native_id": "335690",
+      "title": "Design for a Ceiling showing the Virgin, Catherine, and Agnes",
+      "artist": null,
+      "credit": {
+        "from": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1954",
+        "to": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1954. Formerly attributed to Matthias Wolf."
+      }
+    },
+    {
+      "native_id": "335711",
+      "title": "Triumph of Mordecai",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Harry S. Friedman, 1953",
+        "to": "Gift of Harry S. Friedman, 1953. Formerly attributed to Tobias Stimmer."
+      }
+    },
+    {
+      "native_id": "335714",
+      "title": "Interior Scene",
+      "artist": null,
+      "credit": {
+        "from": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1967",
+        "to": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1967. Formerly attributed to Moritz von Schwind."
+      }
+    },
+    {
+      "native_id": "335772",
+      "title": "Pietà",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Harry G. Friedman, 1957",
+        "to": "Gift of Harry G. Friedman, 1957. Formerly attributed to Anonymous, German, 19th century."
+      }
+    },
+    {
+      "native_id": "335778",
+      "title": "A Pope Recieving a Saint",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Harry G. Friedman, 1957",
+        "to": "Gift of Harry G. Friedman, 1957. Formerly attributed to Anonymous, German, 19th century."
+      }
+    },
+    {
+      "native_id": "335794",
+      "title": "Design for a Funerary Monument",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Allen T. Terrell, 1969",
+        "to": "Gift of Allen T. Terrell, 1969. Formerly attributed to Anonymous, German, 19th century."
+      }
+    },
+    {
+      "native_id": "335812",
+      "title": "Design for Ceiling: Apollo and the Hours",
+      "artist": null,
+      "credit": {
+        "from": "Rogers, Harris Brisbane Dick, and The Elisha Whittelsey Funds; and Gift of John Sise, by exchange, 1958",
+        "to": "Rogers, Harris Brisbane Dick, and The Elisha Whittelsey Funds; and Gift of John Sise, by exchange, 1958. Formerly attributed to Giovanni Battista Cipriani."
+      }
+    },
+    {
+      "native_id": "335813",
+      "title": "Design for a Stove and Wall Fountain (?)",
+      "artist": null,
+      "credit": {
+        "from": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1955",
+        "to": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1955. Formerly attributed to Anonymous, German, 16th century."
+      }
+    },
+    {
+      "native_id": "335814",
+      "title": "Caricature of an Engraver (recto); Sketch for a Caricature (verso)",
+      "artist": null,
+      "credit": {
+        "from": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1960",
+        "to": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1960. Formerly attributed to Ennemond Alexandre Petitot."
+      }
+    },
+    {
+      "native_id": "335830",
+      "title": "Diana with Two Dogs",
+      "artist": null,
+      "credit": {
+        "from": "Harris Brisbane Dick Fund, 1947",
+        "to": "Harris Brisbane Dick Fund, 1947. Formerly attributed to Georges Lallemand."
+      }
+    },
+    {
+      "native_id": "335859",
+      "title": "Young Boy Disrobing",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Harry G. Friedman, 1964",
+        "to": "Gift of Harry G. Friedman, 1964. Formerly attributed to Anonymous, Netherlandish, 16th century."
+      }
+    },
+    {
+      "native_id": "335862",
+      "title": "Deathbed Scene",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Mrs. John H. Wright, 1949",
+        "to": "Gift of Mrs. John H. Wright, 1949. Formerly attributed to Anonymous, Netherlandish, 16th century."
+      }
+    },
+    {
+      "native_id": "335864",
+      "title": "Portrait of Bartholomeo Ehrenfüller(?)",
+      "artist": null,
+      "credit": {
+        "from": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1949",
+        "to": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1949. Formerly attributed to Anonymous, Netherlandish, 16th century."
+      }
+    },
+    {
+      "native_id": "335865",
+      "title": "Portrait of Rambaldo, graf von Collalto",
+      "artist": null,
+      "credit": {
+        "from": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1949",
+        "to": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1949. Formerly attributed to Anonymous, Netherlandish, 16th century."
+      }
+    },
+    {
+      "native_id": "335866",
+      "title": "Portrait of Christoph Mondragon",
+      "artist": null,
+      "credit": {
+        "from": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1949",
+        "to": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1949. Formerly attributed to Anonymous, Netherlandish, 16th century."
+      }
+    },
+    {
+      "native_id": "335872",
+      "title": "Man in Turkish Costume Holding a Shield",
+      "artist": null,
+      "credit": {
+        "from": "Harris Brisbane Dick Fund, 1947",
+        "to": "Harris Brisbane Dick Fund, 1947. Formerly attributed to Anonymous, Netherlandish, 16th century. Formerly attributed to Anonymous, Italian, 16th century. Formerly attributed to Hendrick Goltzius."
+      }
+    },
+    {
+      "native_id": "335874",
+      "title": "The Childhood of Christ, in the carpenter's shop",
+      "artist": null,
+      "credit": {
+        "from": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1950",
+        "to": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1950. Formerly attributed to Anonymous, Netherlandish, 16th century. Formerly attributed to an artist of the circle of Jan Gossart (called Mabuse)."
+      }
+    },
+    {
+      "native_id": "335877",
+      "title": "Study of Three Figures Skating",
+      "artist": null,
+      "credit": {
+        "from": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1960",
+        "to": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1960. Formerly attributed to Anonymous, Netherlandish, 16th century."
+      }
+    },
+    {
+      "native_id": "335878",
+      "title": "Allegorical Scene",
+      "artist": null,
+      "credit": {
+        "from": "Harris Brisbane Dick Fund, 1947",
+        "to": "Harris Brisbane Dick Fund, 1947. Formerly attributed to Anonymous, Netherlandish, 16th century."
+      }
+    },
+    {
+      "native_id": "335880",
+      "title": "Compositional Sketch for The Request for Admission into the Union, a Painting in the Town Hall of 's-Hertogenbosch. The Province of Brabant requests the same status as the seven provinces of the Dutch Republic",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Harry G. Friedman, 1957",
+        "to": "Gift of Harry G. Friedman, 1957. Formerly attributed to Anonymous, Flemish, 17th century."
+      }
+    },
+    {
+      "native_id": "335885",
+      "title": "Design for a Bucket",
+      "artist": null,
+      "credit": {
+        "from": "Bequest of Harry G. Sperling, 1971",
+        "to": "Bequest of Harry G. Sperling, 1971. Formerly attributed to Anonymous, 16th century."
+      }
+    },
+    {
+      "native_id": "335886",
+      "title": "Design for Spoon, Fork, Two Knives (Crossed over scissors), Scissors, Ear Spoon and Toothpick",
+      "artist": null,
+      "credit": {
+        "from": "Bequest of Harry G. Sperling, 1971",
+        "to": "Bequest of Harry G. Sperling, 1971. Formerly attributed to Anonymous, 16th century."
+      }
+    },
+    {
+      "native_id": "335893",
+      "title": "Design for a Silver- gilt Flask Decorated with Strapwork, Masks, Moresques",
+      "artist": null,
+      "credit": {
+        "from": "Bequest of Harry G. Sperling, 1971",
+        "to": "Bequest of Harry G. Sperling, 1971. Formerly attributed to Anonymous, 16th century."
+      }
+    },
+    {
+      "native_id": "335899",
+      "title": "Design for a Bronze Vessel",
+      "artist": null,
+      "credit": {
+        "from": "Bequest of Harry G. Sperling, 1971",
+        "to": "Bequest of Harry G. Sperling, 1971. Formerly attributed to Anonymous, 16th century."
+      }
+    },
+    {
+      "native_id": "335900",
+      "title": "Design for a Bucket",
+      "artist": null,
+      "credit": {
+        "from": "Bequest of Harry G. Sperling, 1971",
+        "to": "Bequest of Harry G. Sperling, 1971. Formerly attributed to Anonymous, 16th century."
+      }
+    },
+    {
+      "native_id": "335901",
+      "title": "Design for a Sword",
+      "artist": null,
+      "credit": {
+        "from": "Bequest of Harry G. Sperling, 1971",
+        "to": "Bequest of Harry G. Sperling, 1971. Formerly attributed to Anonymous, 16th century."
+      }
+    },
+    {
+      "native_id": "335913",
+      "title": "Caricature of a Printer",
+      "artist": null,
+      "credit": {
+        "from": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1960",
+        "to": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1960. Formerly attributed to Ennemond Alexandre Petitot."
+      }
+    },
+    {
+      "native_id": "335914",
+      "title": "Caricature of Engravers \"à la Grecque\"",
+      "artist": null,
+      "credit": {
+        "from": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1960",
+        "to": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1960. Formerly attributed to Ennemond Alexandre Petitot."
+      }
+    },
+    {
+      "native_id": "335915",
+      "title": "Caricature of a Print seller",
+      "artist": null,
+      "credit": {
+        "from": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1960",
+        "to": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1960. Formerly attributed to Ennemond Alexandre Petitot."
+      }
+    },
+    {
+      "native_id": "335916",
+      "title": "Caricature of a Sculptor",
+      "artist": null,
+      "credit": {
+        "from": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1960",
+        "to": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1960. Formerly attributed to Ennemond Alexandre Petitot."
+      }
+    },
+    {
+      "native_id": "335917",
+      "title": "Caricature of a Junkman (recto); Caricature of a School Master (verso)",
+      "artist": null,
+      "credit": {
+        "from": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1960",
+        "to": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1960. Formerly attributed to Ennemond Alexandre Petitot."
+      }
+    },
+    {
+      "native_id": "336021",
+      "title": "Frieze with Fruit, Foliage and Putti Climbing through Strapwork",
+      "artist": null,
+      "credit": {
+        "from": "The Elisha Whittelsey Fund, 1967",
+        "to": "The Elisha Whittelsey Fund, 1967. Formerly attributed to Hans Speckaert."
+      }
+    },
+    {
+      "native_id": "336088",
+      "title": "Orpheus Playing to the Animals",
+      "artist": null,
+      "credit": {
+        "from": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1998",
+        "to": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1998. Formerly attributed to Peter Vischer the Younger."
+      }
+    },
+    {
+      "native_id": "336089",
+      "title": "Allegory of Peace",
+      "artist": null,
+      "credit": {
+        "from": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1998",
+        "to": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1998. Formerly attributed to Peter Vischer the Younger. Formerly attributed to Anonymous, German, 16th century."
+      }
+    },
+    {
+      "native_id": "336408",
+      "title": "Christ and the Centurion",
+      "artist": null,
+      "credit": {
+        "from": "Bequest of Harry G. Sperling, 1971",
+        "to": "Bequest of Harry G. Sperling, 1971. Formerly attributed to Sébastien Bourdon."
+      }
+    },
+    {
+      "native_id": "336483",
+      "title": "The Flight into Egypt",
+      "artist": null,
+      "credit": {
+        "from": "Bequest of Alexandrine Sinsheimer, 1958",
+        "to": "Bequest of Alexandrine Sinsheimer, 1958. Formerly attributed to Claude Lorrain (Claude Gellée)."
+      }
+    },
+    {
+      "native_id": "336666",
+      "title": "The Assumption of the Virgin",
+      "artist": null,
+      "credit": {
+        "from": "Harry G. Sperling Fund, 1981",
+        "to": "Harry G. Sperling Fund, 1981. Formerly attributed to Noël Coypel."
+      }
+    },
+    {
+      "native_id": "336776",
+      "title": "Portrait of La Val de Pramence",
+      "artist": null,
+      "credit": {
+        "from": "Bequest of Walter C. Baker, 1971",
+        "to": "Bequest of Walter C. Baker, 1971. Formerly attributed to Anonymous, French, 16th century."
+      }
+    },
+    {
+      "native_id": "336777",
+      "title": "Neptune and other Marine Deities Paying Homage to Louis XIV",
+      "artist": null,
+      "credit": {
+        "from": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1973",
+        "to": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1973. Formerly attributed to Michel Corneille the Elder."
+      }
+    },
+    {
+      "native_id": "336890",
+      "title": "Elaborately Framed Roundel of Christ Washing the Feel of the Apostles",
+      "artist": null,
+      "credit": {
+        "from": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1961",
+        "to": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1961. Formerly attributed to Anonymous, Italian, 18th century."
+      }
+    },
+    {
+      "native_id": "336899",
+      "title": "Ceres and Bacchus",
+      "artist": null,
+      "credit": {
+        "from": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1949",
+        "to": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1949. Formerly attributed to Jan Muller."
+      }
+    },
+    {
+      "native_id": "336937",
+      "title": "Design for an Emblem with a Child Picking Flowers",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Harry G. Friedman, 1964",
+        "to": "Gift of Harry G. Friedman, 1964. Formerly attributed to Anonymous, German, 17th century. Formerly attributed to (?) Godefroy Stein."
+      }
+    },
+    {
+      "native_id": "336948",
+      "title": "Study for the Muse Urania",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1970",
+        "to": "Rogers Fund, 1970. Formerly attributed to Francesco Solimena."
+      }
+    },
+    {
+      "native_id": "336977",
+      "title": "Interior of Halle aux Blés, Paris [The Corn Exchange]",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cornelius Vanderbilt, 1880",
+        "to": "Gift of Cornelius Vanderbilt, 1880. Formerly attributed to Anonymous, French, 18th century."
+      }
+    },
+    {
+      "native_id": "337078",
+      "title": "The Sacrifice of Manoah",
+      "artist": null,
+      "credit": {
+        "from": "Purchase, David L. Klein Jr. Memorial Foundation Inc. Gift, 1982",
+        "to": "Purchase, David L. Klein Jr. Memorial Foundation Inc. Gift, 1982. Formerly attributed to Louis de Silvestre."
+      }
+    },
+    {
+      "native_id": "337081",
+      "title": "Standing Soldier: Garde Française",
+      "artist": null,
+      "credit": {
+        "from": "Bequest of Harry G. Sperling, 1971",
+        "to": "Bequest of Harry G. Sperling, 1971. Formerly attributed to Antoine Watteau."
+      }
+    },
+    {
+      "native_id": "337189",
+      "title": "Jockey on a Horse",
+      "artist": null,
+      "credit": {
+        "from": "Bequest of Harry G. Sperling, 1971",
+        "to": "Bequest of Harry G. Sperling, 1971. Formerly attributed to Théodore Géricault."
+      }
+    },
+    {
+      "native_id": "337191",
+      "title": "Drummer Boy Attacked by a Cossack",
+      "artist": null,
+      "credit": {
+        "from": "Bequest of Joan Whitney Payson, 1976",
+        "to": "Bequest of Joan Whitney Payson, 1976. Formerly attributed to Théodore Géricault."
+      }
+    },
+    {
+      "native_id": "337196",
+      "title": "Figures in Theatrical Costumes",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1906",
+        "to": "Rogers Fund, 1906. Formerly attributed to Antoine Watteau."
+      }
+    },
+    {
+      "native_id": "337197",
+      "title": "Figures in Theatrical Costumes",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1909",
+        "to": "Rogers Fund, 1909. Formerly attributed to Antoine Watteau."
+      }
+    },
+    {
+      "native_id": "337202",
+      "title": "A Scene of Sacrifice",
+      "artist": null,
+      "credit": {
+        "from": "Bequest of Harry G. Sperling, 1971",
+        "to": "Bequest of Harry G. Sperling, 1971. Formerly attributed to Anne Louis Girodet-Trioson."
+      }
+    },
+    {
+      "native_id": "337346",
+      "title": "Country Houses, couple and cornfield in the foreground, from the series The Small Landscapes (Praediorum Villarum)",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1922",
+        "to": "Rogers Fund, 1922. Formerly attributed to Pieter Bruegel the Elder."
+      }
+    },
+    {
+      "native_id": "337425",
+      "title": "Head of a Bearded Old Man",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Mrs. John H. Wright, 1949",
+        "to": "Gift of Mrs. John H. Wright, 1949. Formerly attributed to Hans Baldung (called Hans Baldung Grien). Formerly attributed to Sebald Beham."
+      }
+    },
+    {
+      "native_id": "337482",
+      "title": "Historical Scene",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cornelius Vanderbilt, 1880",
+        "to": "Gift of Cornelius Vanderbilt, 1880. Formerly attributed to Jean-Baptiste Jouvenet."
+      }
+    },
+    {
+      "native_id": "337511",
+      "title": "The Vision of St. John of the Cross",
+      "artist": null,
+      "credit": {
+        "from": "Purchase, David L. Klein Jr. Memorial Foundation Inc. Gift, 1981",
+        "to": "Purchase, David L. Klein Jr. Memorial Foundation Inc. Gift, 1981. Formerly attributed to Antonio de Pereda."
+      }
+    },
+    {
+      "native_id": "337526",
+      "title": "Standing Woman Facing Right",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1907",
+        "to": "Rogers Fund, 1907. Formerly attributed to Antoine Watteau."
+      }
+    },
+    {
+      "native_id": "337586",
+      "title": "Medea",
+      "artist": null,
+      "credit": {
+        "from": "Harris Brisbane Dick Fund, 1953",
+        "to": "Harris Brisbane Dick Fund, 1953. Formerly attributed to Charles Le Brun."
+      }
+    },
+    {
+      "native_id": "337682",
+      "title": "Studies of Hands and Feet",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1906",
+        "to": "Rogers Fund, 1906. Formerly attributed to circle of Antoine Watteau."
+      }
+    },
+    {
+      "native_id": "337689",
+      "title": "Farmyard",
+      "artist": null,
+      "credit": {
+        "from": "Purchase, Mrs. Carl L. Selden Gift, in memory of Mr. Carl L. Selden, 1983",
+        "to": "Purchase, Mrs. Carl L. Selden Gift, in memory of Mr. Carl L. Selden, 1983. Formerly attributed to Nicolas Bernard Lépicié."
+      }
+    },
+    {
+      "native_id": "337694",
+      "title": "The Château de Versailles Seen from the Gardens",
+      "artist": null,
+      "credit": {
+        "from": "Bequest of Susan Dwight Bliss, 1966",
+        "to": "Bequest of Susan Dwight Bliss, 1966. Formerly attributed to Anonymous, French, 18th century."
+      }
+    },
+    {
+      "native_id": "337695",
+      "title": "Versailles Seen from the Southwest",
+      "artist": null,
+      "credit": {
+        "from": "Bequest of Susan Dwight Bliss, 1966",
+        "to": "Bequest of Susan Dwight Bliss, 1966. Formerly attributed to Anonymous, French, 18th century."
+      }
+    },
+    {
+      "native_id": "337697",
+      "title": "Figure Studies",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Harry G. Friedman, 1964",
+        "to": "Gift of Harry G. Friedman, 1964. Formerly attributed to Eustache Le Sueur."
+      }
+    },
+    {
+      "native_id": "337775",
+      "title": "Allegorical Figures for a Ceiling Decoration",
+      "artist": null,
+      "credit": {
+        "from": "Fletcher Fund, 1972",
+        "to": "Fletcher Fund, 1972. Formerly attributed to Pierre Mignard."
+      }
+    },
+    {
+      "native_id": "337804",
+      "title": "A Building",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cornelius Vanderbilt, 1880",
+        "to": "Gift of Cornelius Vanderbilt, 1880. Formerly attributed to Jonas Umbach. Formerly attributed to Anonymous, German, 18th century."
+      }
+    },
+    {
+      "native_id": "337875",
+      "title": "The Body of Saint Catherine of Siena carried in Procession, after Francesco Vanni",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Carlos van Hasselt and Andrej Niewglowski, in memory of Lawrence Turcic, 1989",
+        "to": "Gift of Carlos van Hasselt and Andrej Niewglowski, in memory of Lawrence Turcic, 1989. Formerly attributed to Charles Joseph Natoire."
+      }
+    },
+    {
+      "native_id": "337900",
+      "title": "View of Gray",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Harry G. Friedman, 1962",
+        "to": "Gift of Harry G. Friedman, 1962. Formerly attributed to Jean Pierre Norblin de la Gourdaine."
+      }
+    },
+    {
+      "native_id": "338018",
+      "title": "Landscape with a Fortified Building",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cornelius Vanderbilt, 1880",
+        "to": "Gift of Cornelius Vanderbilt, 1880. Formerly attributed to Carracci School."
+      }
+    },
+    {
+      "native_id": "338043",
+      "title": "Landscape with a Ruined Temple",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cornelius Vanderbilt, 1880",
+        "to": "Gift of Cornelius Vanderbilt, 1880. Formerly attributed to Carracci School."
+      }
+    },
+    {
+      "native_id": "338046",
+      "title": "Enthroned Warrior Distributing Crowns",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cornelius Vanderbilt, 1880",
+        "to": "Gift of Cornelius Vanderbilt, 1880. Formerly attributed to Carracci School."
+      }
+    },
+    {
+      "native_id": "338055",
+      "title": "Horses",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cornelius Vanderbilt, 1880",
+        "to": "Gift of Cornelius Vanderbilt, 1880. Formerly attributed to Francesco Allegrini."
+      }
+    },
+    {
+      "native_id": "338112",
+      "title": "The Holy Women at the Sepulchre",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cephas G. Thompson, 1887",
+        "to": "Gift of Cephas G. Thompson, 1887. Formerly attributed to Luigi Garzi."
+      }
+    },
+    {
+      "native_id": "338152",
+      "title": "John Ward, 2nd Viscount Dudley and Ward",
+      "artist": null,
+      "credit": {
+        "from": "Morris K. Jesup Fund, 1955",
+        "to": "Morris K. Jesup Fund, 1955. Formerly attributed to John Singleton Copley."
+      }
+    },
+    {
+      "native_id": "338153",
+      "title": "George Montagu, 4th Duke of Manchester, William, 2nd Viscount Courtenay, de jure 8th Earl of Devon, and George William Coventry, 6th Earl of Coventry",
+      "artist": null,
+      "credit": {
+        "from": "Morris K. Jesup Fund, 1955",
+        "to": "Morris K. Jesup Fund, 1955. Formerly attributed to John Singleton Copley."
+      }
+    },
+    {
+      "native_id": "338154",
+      "title": "John Hinchcliffe, Bishop of Peterborough",
+      "artist": null,
+      "credit": {
+        "from": "Morris K. Jesup Fund, 1955",
+        "to": "Morris K. Jesup Fund, 1955. Formerly attributed to John Singleton Copley."
+      }
+    },
+    {
+      "native_id": "338155",
+      "title": "William Murray, 1st Earl of Mansfield",
+      "artist": null,
+      "credit": {
+        "from": "Morris K. Jesup Fund, 1955",
+        "to": "Morris K. Jesup Fund, 1955. Formerly attributed to John Singleton Copley."
+      }
+    },
+    {
+      "native_id": "338156",
+      "title": "William Henry Cavendish Bentinck, 3rd Duke of Portland",
+      "artist": null,
+      "credit": {
+        "from": "Morris K. Jesup Fund, 1955",
+        "to": "Morris K. Jesup Fund, 1955. Formerly attributed to John Singleton Copley."
+      }
+    },
+    {
+      "native_id": "338157",
+      "title": "Richard Brocklesby, physician",
+      "artist": null,
+      "credit": {
+        "from": "Morris K. Jesup Fund, 1955",
+        "to": "Morris K. Jesup Fund, 1955. Formerly attributed to John Singleton Copley."
+      }
+    },
+    {
+      "native_id": "338158",
+      "title": "Charles Pratt, Baron Camden (later 1st Earl Camden)",
+      "artist": null,
+      "credit": {
+        "from": "Morris K. Jesup Fund, 1955",
+        "to": "Morris K. Jesup Fund, 1955. Formerly attributed to John Singleton Copley."
+      }
+    },
+    {
+      "native_id": "338159",
+      "title": "Frederick, Lord North",
+      "artist": null,
+      "credit": {
+        "from": "Morris K. Jesup Fund, 1955",
+        "to": "Morris K. Jesup Fund, 1955. Formerly attributed to John Singleton Copley."
+      }
+    },
+    {
+      "native_id": "338160",
+      "title": "Thomas Howard, 3rd Earl of Effingham and 9th Baron Howard",
+      "artist": null,
+      "credit": {
+        "from": "Morris K. Jesup Fund, 1955",
+        "to": "Morris K. Jesup Fund, 1955. Formerly attributed to John Singleton Copley."
+      }
+    },
+    {
+      "native_id": "338195",
+      "title": "Four Studies of a Nude Child",
+      "artist": null,
+      "credit": {
+        "from": "Bequest of Harry G. Sperling, 1971",
+        "to": "Bequest of Harry G. Sperling, 1971. Formerly attributed to Anonymous, French, 18th century."
+      }
+    },
+    {
+      "native_id": "338364",
+      "title": "Fanciful Landscape (Landscape with Villa Building and Equestrian Monument)",
+      "artist": {
+        "from": "Antonio Canaletto",
+        "to": "After Antonio Canaletto"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "338371",
+      "title": "Nude Man Reclining (recto); Man Facing Left with Out-stretched Arms (verso)",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cephas G. Thompson, 1887",
+        "to": "Gift of Cephas G. Thompson, 1887. Formerly attributed to Antonio Canova."
+      }
+    },
+    {
+      "native_id": "338372",
+      "title": "Nude Study",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cephas G. Thompson, 1887",
+        "to": "Gift of Cephas G. Thompson, 1887. Formerly attributed to Antonio Canova."
+      }
+    },
+    {
+      "native_id": "338373",
+      "title": "Nude Study",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cephas G. Thompson, 1887",
+        "to": "Gift of Cephas G. Thompson, 1887. Formerly attributed to Antonio Canova."
+      }
+    },
+    {
+      "native_id": "338374",
+      "title": "Standing Male Nude",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cephas G. Thompson, 1887",
+        "to": "Gift of Cephas G. Thompson, 1887. Formerly attributed to Antonio Canova."
+      }
+    },
+    {
+      "native_id": "338375",
+      "title": "Nude Study",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cephas G. Thompson, 1887",
+        "to": "Gift of Cephas G. Thompson, 1887. Formerly attributed to Antonio Canova."
+      }
+    },
+    {
+      "native_id": "338376",
+      "title": "Nude Study",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cephas G. Thompson, 1887",
+        "to": "Gift of Cephas G. Thompson, 1887. Formerly attributed to Antonio Canova."
+      }
+    },
+    {
+      "native_id": "338377",
+      "title": "Four Studies of Nude Men",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cephas G. Thompson, 1887",
+        "to": "Gift of Cephas G. Thompson, 1887. Formerly attributed to Antonio Canova."
+      }
+    },
+    {
+      "native_id": "338424",
+      "title": "Head of a Young Man",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1912",
+        "to": "Rogers Fund, 1912. Formerly attributed to Carracci School."
+      }
+    },
+    {
+      "native_id": "338427",
+      "title": "Study of an Old Man",
+      "artist": null,
+      "credit": {
+        "from": "Bequest of Walter C. Baker, 1971",
+        "to": "Bequest of Walter C. Baker, 1971. Formerly attributed to Carracci School."
+      }
+    },
+    {
+      "native_id": "338432",
+      "title": "Pastoral Scene: Shepherds and Their Flock",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1908",
+        "to": "Rogers Fund, 1908. Formerly attributed to and circle of Giovanni Benedetto Castiglione (Il Grechetto)."
+      }
+    },
+    {
+      "native_id": "338491",
+      "title": "Study of a Seated Putto Looking at His Right (recto); A Woman's Head, Study after the Antique (verso)",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Henry Walters, 1917",
+        "to": "Gift of Henry Walters, 1917. Formerly attributed to Cavaliere d'Arpino (Giuseppe Cesari)."
+      }
+    },
+    {
+      "native_id": "338528",
+      "title": "The Creation of Eve",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Harry G. Friedman, 1961",
+        "to": "Gift of Harry G. Friedman, 1961. Formerly attributed to Anonymous, Italian, 18th century."
+      }
+    },
+    {
+      "native_id": "338561",
+      "title": "Studies for a Ceiling (recto and verso)",
+      "artist": null,
+      "credit": {
+        "from": "Edward Pearce Casey and Harry G. Sperling Funds, 1995",
+        "to": "Edward Pearce Casey and Harry G. Sperling Funds, 1995. Formerly attributed to Pietro da Cortona (Pietro Berrettini)."
+      }
+    },
+    {
+      "native_id": "338708",
+      "title": "Fleet of Galleys Escorted by a Caravel from The Sailing Vessels",
+      "artist": {
+        "from": "Pieter Bruegel the Elder",
+        "to": "After Pieter Bruegel the Elder"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "338778",
+      "title": "Two Studies of a Woman in Peasant Costume",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Alexander B.V. Johnson and Roberta J.M. Olson, in honor of Karen B. Cohen, 1999",
+        "to": "Gift of Alexander B.V. Johnson and Roberta J.M. Olson, in honor of Karen B. Cohen, 1999. Formerly attributed to Alexandr Andreevic Ivanov."
+      }
+    },
+    {
+      "native_id": "339162",
+      "title": "Paté d'Anguille",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Mr. and Mrs. Bruno de Bayser, 2000",
+        "to": "Gift of Mr. and Mrs. Bruno de Bayser, 2000. Formerly attributed to Gabriel de Saint-Aubin."
+      }
+    },
+    {
+      "native_id": "339685",
+      "title": "Dido's Sacrifice to Juno",
+      "artist": null,
+      "credit": {
+        "from": "Van Day Truex Fund, 1983",
+        "to": "Van Day Truex Fund, 1983. Formerly attributed to Joseph Marie Vien. Formerly attributed to Jean-Baptiste Marie Pierre."
+      }
+    },
+    {
+      "native_id": "339692",
+      "title": "Entrance to the Grotto of Posillipo",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Harold K. Hochschild, 1940",
+        "to": "Gift of Harold K. Hochschild, 1940. Formerly attributed to Anonymous, French, 19th century."
+      }
+    },
+    {
+      "native_id": "339703",
+      "title": "Gardens of the Villa Pamphili, Rome",
+      "artist": null,
+      "credit": {
+        "from": "Bequest of Harry G. Sperling, 1971",
+        "to": "Bequest of Harry G. Sperling, 1971. Formerly attributed to Hubert Robert."
+      }
+    },
+    {
+      "native_id": "339724",
+      "title": "Standing Female Nude",
+      "artist": null,
+      "credit": {
+        "from": "Bequest of Miss Adelaide Milton de Groot (1876-1967), 1967",
+        "to": "Bequest of Miss Adelaide Milton de Groot (1876-1967), 1967. Formerly attributed to Auguste Rodin."
+      }
+    },
+    {
+      "native_id": "339725",
+      "title": "Copy after a reproduction of a Rodin drawing",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Grégoire Tarnopol, 1971",
+        "to": "Gift of Grégoire Tarnopol, 1971. Formerly attributed to Auguste Rodin."
+      }
+    },
+    {
+      "native_id": "339768",
+      "title": "Lady with a Mirror",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1963",
+        "to": "Rogers Fund, 1963. Formerly attributed to Bernard Picart."
+      }
+    },
+    {
+      "native_id": "339770",
+      "title": "Ladies Bathing",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1963",
+        "to": "Rogers Fund, 1963. Formerly attributed to Bernard Picart."
+      }
+    },
+    {
+      "native_id": "339771",
+      "title": "A Picnic Party",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1963",
+        "to": "Rogers Fund, 1963. Formerly attributed to Bernard Picart."
+      }
+    },
+    {
+      "native_id": "339780",
+      "title": "The Palazzo Reale at Pórtici with Vesuvius in the Background",
+      "artist": null,
+      "credit": {
+        "from": "Purchase, David L. Klein Jr. Memorial Foundation Inc. Gift, 1987",
+        "to": "Purchase, David L. Klein Jr. Memorial Foundation Inc. Gift, 1987. Formerly attributed to Joseph Benoît Suvée."
+      }
+    },
+    {
+      "native_id": "339786",
+      "title": "Bust of a Gentleman in an Oval Field",
+      "artist": null,
+      "credit": {
+        "from": "Gift of John M. Brealey, 1984",
+        "to": "Gift of John M. Brealey, 1984. Formerly attributed to Robert Levrac de Tournières."
+      }
+    },
+    {
+      "native_id": "339799",
+      "title": "The Wedding Feast of Bacchus and Ariadne",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1964",
+        "to": "Rogers Fund, 1964. Formerly attributed to Charles Le Brun."
+      }
+    },
+    {
+      "native_id": "339806",
+      "title": "Standing Warrior",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1960",
+        "to": "Rogers Fund, 1960. Formerly attributed to Carle (Antoine Charles Horace) Vernet."
+      }
+    },
+    {
+      "native_id": "339816",
+      "title": "Battle of the Pyramids, July 21, 1798",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1951",
+        "to": "Rogers Fund, 1951. Formerly attributed to baron Antoine Jean Gros."
+      }
+    },
+    {
+      "native_id": "339819",
+      "title": "Caricature of the Painter Pierre-Charles Jombert",
+      "artist": null,
+      "credit": {
+        "from": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1967",
+        "to": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1967. Formerly attributed to Jean-Baptiste Mauzaisse."
+      }
+    },
+    {
+      "native_id": "339834",
+      "title": "Landscape with a Cottage and Well",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cornelius Vanderbilt, 1880",
+        "to": "Gift of Cornelius Vanderbilt, 1880. Formerly attributed to Antoine Watteau. Formerly attributed to Anonymous, French, 18th century."
+      }
+    },
+    {
+      "native_id": "339835",
+      "title": "Landscape with a Country House",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cornelius Vanderbilt, 1880",
+        "to": "Gift of Cornelius Vanderbilt, 1880. Formerly attributed to Antoine Watteau. Formerly attributed to Anonymous, French, 18th century."
+      }
+    },
+    {
+      "native_id": "339895",
+      "title": "Rustic Scene – A Woman Washing Clothes in a Stream",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cornelius Vanderbilt, 1880",
+        "to": "Gift of Cornelius Vanderbilt, 1880. Formerly attributed to Jean Michel Moreau le Jeune."
+      }
+    },
+    {
+      "native_id": "339896",
+      "title": "Landscape – Cottage in a Wood",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cornelius Vanderbilt, 1880",
+        "to": "Gift of Cornelius Vanderbilt, 1880. Formerly attributed to Jean Michel Moreau le Jeune."
+      }
+    },
+    {
+      "native_id": "339900",
+      "title": "Christ Carrying the Cross",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cornelius Vanderbilt, 1880",
+        "to": "Gift of Cornelius Vanderbilt, 1880. Formerly attributed to Jean-Baptiste Greuze."
+      }
+    },
+    {
+      "native_id": "339903",
+      "title": "Child's Head",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cephas G. Thompson, 1887",
+        "to": "Gift of Cephas G. Thompson, 1887. Formerly attributed to Elisabeth Louise Vigée Le Brun."
+      }
+    },
+    {
+      "native_id": "339904",
+      "title": "Alexander and Bucephalus",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cephas G. Thompson, 1887",
+        "to": "Gift of Cephas G. Thompson, 1887. Formerly attributed to Johan Carl Loth."
+      }
+    },
+    {
+      "native_id": "339906",
+      "title": "A tree and figure",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cephas G. Thompson, 1887",
+        "to": "Gift of Cephas G. Thompson, 1887. Formerly attributed to Claude Lorrain (Claude Gellée)."
+      }
+    },
+    {
+      "native_id": "339911",
+      "title": "Portrait of Marie de Rabutin-Chantal, Marquise de Sévigné",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1911",
+        "to": "Rogers Fund, 1911. Formerly attributed to Robert Nanteuil."
+      }
+    },
+    {
+      "native_id": "339914",
+      "title": "Portrait of a Lady, seated",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1920",
+        "to": "Rogers Fund, 1920. Formerly attributed to Jean-Baptiste Joseph Pater."
+      }
+    },
+    {
+      "native_id": "339918",
+      "title": "The Nativity",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Spencer Bickerton, 1935",
+        "to": "Gift of Spencer Bickerton, 1935. Formerly attributed to school of Nicolas Poussin. Formerly attributed to Anonymous, French, 17th century."
+      }
+    },
+    {
+      "native_id": "339923",
+      "title": "Portrait of cardinal d'Ossat",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Edith Sachs, 1951",
+        "to": "Gift of Edith Sachs, 1951. Formerly attributed to Pierre Dumonstier. Formerly attributed to Anonymous, French, 16th century."
+      }
+    },
+    {
+      "native_id": "339932",
+      "title": "Study of the Costume of Monsieur Clément",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1961",
+        "to": "Rogers Fund, 1961. Formerly attributed to Joseph Marie Vien."
+      }
+    },
+    {
+      "native_id": "339936",
+      "title": "Allegory of Winter, after Sébastien Le Clerc",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1963",
+        "to": "Rogers Fund, 1963. Formerly attributed to Sébastien Le Clerc, le Jeune."
+      }
+    },
+    {
+      "native_id": "339937",
+      "title": "Allegory of Spring, after Sébastien Leclerc",
+      "artist": null,
+      "credit": {
+        "from": "Rogers Fund, 1963",
+        "to": "Rogers Fund, 1963. Formerly attributed to Sébastien Le Clerc, le Jeune."
+      }
+    },
+    {
+      "native_id": "340804",
+      "title": "Group of Caricatured Figures with an Artist Drawing",
+      "artist": null,
+      "credit": {
+        "from": "Bequest of Harry G. Sperling, 1971",
+        "to": "Bequest of Harry G. Sperling, 1971. Formerly attributed to Pier Francesco Mola."
+      }
+    },
+    {
+      "native_id": "341599",
+      "title": "Nude Man Standing with One Arm Raised",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cephas G. Thompson, 1887",
+        "to": "Gift of Cephas G. Thompson, 1887. Formerly attributed to Antonio Canova."
+      }
+    },
+    {
+      "native_id": "342614",
+      "title": "Pan spying of the nymph Syrinx who is seated on a rock, combing her hair",
+      "artist": null,
+      "credit": {
+        "from": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1949",
+        "to": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1949. Formerly attributed to Marcantonio Raimondi."
+      }
+    },
+    {
+      "native_id": "343322",
+      "title": "Costume Design for a Demon (Señor Remon), for a performance held during the celebration of the wedding of Marie-Louise de Bourbon with Archduke Léopold de Habsbourg-Lorraine, hosted by the Marquis of Ossuna in Madrid in 1764",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Alexander B.V. Johnson and Roberta J.M. Olson, 2000",
+        "to": "Gift of Alexander B.V. Johnson and Roberta J.M. Olson, 2000. Formerly attributed to Pierre Jean Boquet."
+      }
+    },
+    {
+      "native_id": "343361",
+      "title": "Plans of the Ground and First Floors of the Chateau of Marly",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Mr. and Mrs. Charles Wrightsman, 1970",
+        "to": "Gift of Mr. and Mrs. Charles Wrightsman, 1970. Formerly attributed to Ange Antoine Gabriel."
+      }
+    },
+    {
+      "native_id": "344703",
+      "title": "Architectural Design for a Monumental Altar, with a Composition with Saint Michael Against Satan and two Saints (Saints Peter and Paul?)",
+      "artist": null,
+      "credit": {
+        "from": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1969",
+        "to": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1969. Formerly attributed to Cavaliere d'Arpino (Giuseppe Cesari)."
+      }
+    },
+    {
+      "native_id": "345445",
+      "title": "Design for Two Urns",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Raphael Esmerian, 1963",
+        "to": "Gift of Raphael Esmerian, 1963. Formerly attributed to Johann Gottlob Matthai."
+      }
+    },
+    {
+      "native_id": "347375",
+      "title": "Mordecai rides through the Streets in the Apparel the King has sent him.",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Cornelius Vanderbilt, 1880",
+        "to": "Gift of Cornelius Vanderbilt, 1880. Formerly attributed to School of Lucas van Leyden."
+      }
+    },
+    {
+      "native_id": "347609",
+      "title": "Design for a Wall Decoration",
+      "artist": {
+        "from": "Rosso Fiorentino",
+        "to": "Attributed to Rosso Fiorentino"
+      },
+      "credit": {
+        "from": "Gift of Harry G. Friedman, 1955",
+        "to": "Gift of Harry G. Friedman, 1955. Formerly attributed to Anonymous, French, School of Fontainebleau, 16th century."
+      }
+    },
+    {
+      "native_id": "347667",
+      "title": "The Month of June, Shearing Sheep (recto); Couples Drinking Wine, The Month of October (verso)",
+      "artist": null,
+      "credit": {
+        "from": "Bequest of Harry G. Sperling, 1971",
+        "to": "Bequest of Harry G. Sperling, 1971. Formerly attributed to Bernard van Orley."
+      }
+    },
+    {
+      "native_id": "350972",
+      "title": "Mountainous Landscape",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Walter Lowry, 1956",
+        "to": "Gift of Walter Lowry, 1956. Formerly attributed to Tobias Verhaecht. Formerly attributed to Roelandt Savery."
+      }
+    },
+    {
+      "native_id": "352026",
+      "title": "Neptune and Amphitrite",
+      "artist": null,
+      "credit": {
+        "from": "Ian Woodner Family Collection Fund, 2002",
+        "to": "Ian Woodner Family Collection Fund, 2002. Formerly attributed to Matthäus Gundelach."
+      }
+    },
+    {
+      "native_id": "360256",
+      "title": "The Prodigal Son Squanders his Fortune with Prostitutes",
+      "artist": null,
+      "credit": {
+        "from": "Harry G. Sperling Fund, 2003",
+        "to": "Harry G. Sperling Fund, 2003. Formerly attributed to Sebastiaen Vrancx."
+      }
+    },
+    {
+      "native_id": "362216",
+      "title": "Design for a Ceiling with Square Central Compartment and Semicircular Ends, the Ornament of Foliage and Grotesque Motifs",
+      "artist": null,
+      "credit": {
+        "from": "Gift of Harry G. Friedman, 1962",
+        "to": "Gift of Harry G. Friedman, 1962. Formerly attributed to School of Robert Adam."
+      }
+    },
+    {
+      "native_id": "365645",
+      "title": "Woman Soaking a Cloth in a Bowl Held by a Girl (copy from Guercino's Saint Sebastian Tended by Irene)",
+      "artist": {
+        "from": "Giovanni Francesco Barbieri, called Guercino",
+        "to": "After Giovanni Francesco Barbieri, called Guercino"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "366825",
+      "title": "Homeward Bound (New York)",
+      "artist": {
+        "from": "Erskine Nicol",
+        "to": "After Erskine Nicol"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "367772",
+      "title": "Neptune Seated Blowing a Conch Shell",
+      "artist": null,
+      "credit": {
+        "from": "Harris Brisbane Dick Fund, 1926",
+        "to": "Harris Brisbane Dick Fund, 1926. Formerly attributed to Giorgio Ghisi."
+      }
+    },
+    {
+      "native_id": "369785",
+      "title": "The Wagonner",
+      "artist": null,
+      "credit": {
+        "from": "Harris Brisbane Dick Fund, 1925",
+        "to": "Harris Brisbane Dick Fund, 1925. Formerly attributed to Peter Paul Rubens. Formerly attributed to Lucas van Uden."
+      }
+    },
+    {
+      "native_id": "371790",
+      "title": "The Festival of Fools",
+      "artist": {
+        "from": "Pieter Bruegel the Elder",
+        "to": "After Pieter Bruegel the Elder"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "371859",
+      "title": "Two Women and Two Cupids, from \"Ex Antiquis Cameorum et Gemmae Delineata/ Liber Secundus/et ab Enea Vico Parmen Incis\"",
+      "artist": null,
+      "credit": {
+        "from": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1949",
+        "to": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1949. Formerly attributed to Enea Vico."
+      }
+    },
+    {
+      "native_id": "383674",
+      "title": "The Descent of Man into the Vale of Death, from \"The Grave,\" a Poem by Robert Blair",
+      "artist": {
+        "from": "William Blake",
+        "to": "After William Blake"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "383958",
+      "title": "Ornament Design",
+      "artist": null,
+      "credit": {
+        "from": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1960",
+        "to": "The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 1960. Formerly attributed to Anonymous, German, 19th century."
+      }
+    },
+    {
+      "native_id": "385669",
+      "title": "Allegory of Europe, from \"The Four Continents\"",
+      "artist": {
+        "from": "Marcus Gheeraerts the Elder",
+        "to": "After Marcus Gheeraerts the Elder"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "395790",
+      "title": "Abraham and the Three Angels",
+      "artist": null,
+      "credit": {
+        "from": "Purchase, Jeffrey L. Berenson Gift and The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 2011",
+        "to": "Purchase, Jeffrey L. Berenson Gift and The Elisha Whittelsey Collection, The Elisha Whittelsey Fund, 2011. Formerly attributed to Wolfgang Krodel the Elder. Formerly attributed to Lucas Cranach the Younger."
+      }
+    },
+    {
+      "native_id": "396651",
+      "title": "Landscape with a Bridge and a Village Church",
+      "artist": null,
+      "credit": {
+        "from": "Harry G. Sperling Fund, 2011",
+        "to": "Harry G. Sperling Fund, 2011. Formerly attributed to Ferdinand Kobell."
+      }
+    },
+    {
+      "native_id": "397027",
+      "title": "The Virgin seated, resting her head on her right hand and holding the sleeping infant Christ on her lap",
+      "artist": {
+        "from": "Lorenzo Loli",
+        "to": "Attributed to Lorenzo Loli"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "403672",
+      "title": "St. Peter's, from \"Speculum Romanae Magnificentiae\"",
+      "artist": {
+        "from": "Antonio da Sangallo, the Younger",
+        "to": "After Antonio da Sangallo, the Younger"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "416719",
+      "title": "St. Agnes (copy)",
+      "artist": {
+        "from": "Hans Baldung",
+        "to": "After Hans Baldung"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "435730",
+      "title": "Madonna and Child with Two Angels",
+      "artist": {
+        "from": "Botticelli (Alessandro di Mariano Filipepi)",
+        "to": "Attributed to Botticelli (Alessandro di Mariano Filipepi)"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "435731",
+      "title": "The Coronation of the Virgin",
+      "artist": {
+        "from": "Botticelli (Alessandro di Mariano Filipepi)",
+        "to": "Follower of Botticelli (Alessandro di Mariano Filipepi)"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "436493",
+      "title": "Madonna and Child with Angels",
+      "artist": {
+        "from": "Domenico Ghirlandaio (Domenico Bigordi)",
+        "to": "Workshop of Domenico Ghirlandaio (Domenico Bigordi)"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "436548",
+      "title": "Majas on a Balcony",
+      "artist": {
+        "from": "Francisco de Goya",
+        "to": "Attributed to Francisco de Goya"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "436549",
+      "title": "Don Bernardo de Iriarte (1735–1814)",
+      "artist": {
+        "from": "Francisco de Goya",
+        "to": "Copy after Francisco de Goya"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "436552",
+      "title": "María Luisa of Parma (1751–1819), Queen of Spain",
+      "artist": {
+        "from": "Francisco de Goya",
+        "to": "Copy after Francisco de Goya"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "436553",
+      "title": "A City on a Rock",
+      "artist": {
+        "from": "Francisco de Goya",
+        "to": "Style of Francisco de Goya"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "436554",
+      "title": "Bullfight in a Divided Ring",
+      "artist": {
+        "from": "Francisco de Goya",
+        "to": "Attributed to Francisco de Goya"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "436568",
+      "title": "Saint John the Baptist Bearing Witness",
+      "artist": {
+        "from": "Francesco Granacci (Francesco di Andrea di Marco)",
+        "to": "Workshop of Francesco Granacci (Francesco di Andrea di Marco)"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "436577",
+      "title": "Saint Andrew",
+      "artist": {
+        "from": "El Greco",
+        "to": "Workshop of El Greco"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "436874",
+      "title": "Barbara Villiers (1640–1709), Duchess of Cleveland",
+      "artist": {
+        "from": "Sir Peter Lely (Pieter van der Faes)",
+        "to": "Workshop of Sir Peter Lely (Pieter van der Faes)"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "437403",
+      "title": "Christ and the Woman of Samaria",
+      "artist": {
+        "from": "Rembrandt van Rijn",
+        "to": "Style of Rembrandt van Rijn"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "437404",
+      "title": "Head of Christ",
+      "artist": {
+        "from": "Rembrandt van Rijn",
+        "to": "Style of Rembrandt van Rijn"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "437406",
+      "title": "Portrait of a Man (\"The Auctioneer\")",
+      "artist": {
+        "from": "Rembrandt van Rijn",
+        "to": "Follower of Rembrandt van Rijn"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "437407",
+      "title": "Christ with a Staff",
+      "artist": {
+        "from": "Rembrandt van Rijn",
+        "to": "Follower of Rembrandt van Rijn"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "437408",
+      "title": "Man in a Beret",
+      "artist": {
+        "from": "Rembrandt van Rijn",
+        "to": "Style of Rembrandt van Rijn"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "437409",
+      "title": "Portrait of a Woman",
+      "artist": {
+        "from": "Rembrandt van Rijn",
+        "to": "Style of Rembrandt van Rijn"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "437411",
+      "title": "Man with a Steel Gorget",
+      "artist": {
+        "from": "Rembrandt van Rijn",
+        "to": "Style of Rembrandt van Rijn"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "437413",
+      "title": "Man in a Red Cloak",
+      "artist": {
+        "from": "Rembrandt van Rijn",
+        "to": "Style of Rembrandt van Rijn"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "437414",
+      "title": "Pilate Washing His Hands",
+      "artist": {
+        "from": "Rembrandt van Rijn",
+        "to": "Style of Rembrandt van Rijn"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "437416",
+      "title": "Man in Armor (Mars?)",
+      "artist": {
+        "from": "Rembrandt van Rijn",
+        "to": "Style of Rembrandt van Rijn"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "437418",
+      "title": "Man with a Beard",
+      "artist": {
+        "from": "Rembrandt van Rijn",
+        "to": "Style of Rembrandt van Rijn"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "437419",
+      "title": "Rembrandt (1606–1669) as a Young Man",
+      "artist": {
+        "from": "Rembrandt van Rijn",
+        "to": "Style of Rembrandt van Rijn"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "437421",
+      "title": "Study Head of an Old Man",
+      "artist": {
+        "from": "Rembrandt van Rijn",
+        "to": "Style of Rembrandt van Rijn"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "437646",
+      "title": "Madonna and Child with Saints and Donors",
+      "artist": {
+        "from": "Sebastiano del Piombo (Sebastiano Luciani)",
+        "to": "Attributed to Sebastiano del Piombo (Sebastiano Luciani)"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "437872",
+      "title": "Mariana of Austria (1634–1696), Queen of Spain",
+      "artist": {
+        "from": "Velázquez (Diego Rodríguez de Silva y Velázquez)",
+        "to": "Workshop of Velázquez (Diego Rodríguez de Silva y Velázquez)"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "440985",
+      "title": "The Crucifixion",
+      "artist": {
+        "from": "Ugolino da Siena (Ugolino di Nerio)",
+        "to": "Attributed to Ugolino da Siena (Ugolino di Nerio)"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "459418",
+      "title": "Madonna and Child with Saint John the Evangelist",
+      "artist": {
+        "from": "Andrea da Murano",
+        "to": "Attributed to Andrea da Murano"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "641664",
+      "title": "Cain and Abel, from \"Dalziels' Bible Gallery\"",
+      "artist": {
+        "from": "Frederic, Lord Leighton",
+        "to": "After Frederic, Lord Leighton"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "642827",
+      "title": "Mary, Queen of Scots",
+      "artist": {
+        "from": "Isaac Oliver",
+        "to": "After Isaac Oliver"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "642884",
+      "title": "Moses Slaying the Egyptian, from \"Dalziels' Bible Gallery\"",
+      "artist": {
+        "from": "Sir Edward John Poynter",
+        "to": "After Sir Edward John Poynter"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "726235",
+      "title": "Targhe ed altri ornati di varie e capricciose invenzioni (Cartouches and other ornaments of various and capricious invention, page 12)",
+      "artist": {
+        "from": "Jacob Floris",
+        "to": "After Jacob Floris"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "744100",
+      "title": "Tenplus Veneris, from a Series of Prints depicting (reconstructed) Buildings from Roman Antiquity",
+      "artist": null,
+      "credit": {
+        "from": "Harris Brisbane Dick Fund, 1926",
+        "to": "Harris Brisbane Dick Fund, 1926. Formerly attributed to Monogrammist G.A. with the Caltrop."
+      }
+    },
+    {
+      "native_id": "811658",
+      "title": "Fourth View of Italy",
+      "artist": {
+        "from": "Claude-Joseph Vernet",
+        "to": "After Claude-Joseph Vernet"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "811884",
+      "title": "Departure of the Ship",
+      "artist": {
+        "from": "Claude-Joseph Vernet",
+        "to": "After Claude-Joseph Vernet"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "811943",
+      "title": "Fishermen at Work",
+      "artist": {
+        "from": "Claude-Joseph Vernet",
+        "to": "After Claude-Joseph Vernet"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "828300",
+      "title": "Fille Turque, jouant du Canon, plate 50 from \"Recueil de cent estampes représentent differentes nations du Levant\"",
+      "artist": {
+        "from": "Jean Baptiste Vanmour",
+        "to": "After Jean Baptiste Vanmour"
+      },
+      "credit": null
+    },
+    {
+      "native_id": "830975",
+      "title": "White House, Camp Nelson, Kentucky",
+      "artist": {
+        "from": "G. W. Foster",
+        "to": "Unidentified artist"
+      },
+      "credit": {
+        "from": "Purchase, Vital Projects Fund Inc. Gift, through Joyce and Robert Menschel, 2019",
+        "to": "Purchase, Vital Projects Fund Inc. Gift, through Joyce and Robert Menschel, 2019. Possibly F. Glessner or G. W. Foster."
+      }
+    }
+  ]
+}

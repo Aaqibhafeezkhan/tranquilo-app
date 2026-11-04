@@ -22,11 +22,6 @@ async function openDetailFor(page: Page, item: any) {
   // recycling has something ordinary to work with.
   await stubBackend(page, { items: [item, ...ITEMS.slice(0, 5)] });
   await page.goto(`/v/${encodeURIComponent(`${item.source}-${item.id}`)}`);
-  await page.waitForFunction(() => (window.__tranquiloFeedRenders || 0) > 0);
-  const slide = page
-    .locator(`#feed .slide[data-slug$="-${String(item.id)}"]`)
-    .first();
-  await slide.locator(".art-title-btn").click();
   await expect(page.locator("#detailModal")).toHaveClass(/open/);
 }
 

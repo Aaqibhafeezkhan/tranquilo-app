@@ -24,6 +24,14 @@
       "destination": "/api/v/s-:id"
     },
     {
+      "source": "/discover",
+      "destination": "/api/v/discover"
+    },
+    {
+      "source": "/shelf/:id",
+      "destination": "/api/v/shelf-:id"
+    },
+    {
       "source": "/sitemap.xml",
       "destination": "/api/sitemap"
     },
@@ -52,6 +60,10 @@
     {
       "path": "/api/cron?job=health-check",
       "schedule": "13 8 * * *"
+    },
+    {
+      "path": "/api/cron?job=prune-visitor-data",
+      "schedule": "37 4 * * *"
     },
     {
       "path": "/api/cron?job=vercel-deployment-cleanup&commit=1",

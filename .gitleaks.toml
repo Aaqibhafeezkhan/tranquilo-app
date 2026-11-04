@@ -17,3 +17,8 @@ useDefault = true
 description = "Sentry alert_key tag literals"
 regexTarget = "line"
 regexes = ['''alert_key:\s*"[a-z0-9-]+"''']
+
+[[allowlists]]
+description = "SQL migration filenames listed in test fixtures"
+regexTarget = "match"
+regexes = ['''\d{3}_[a-z0-9_]*key[a-z0-9_]*\.sql",\s*"\d{3}_[a-z0-9_]+\.sql"''']

@@ -1,9 +1,9 @@
-// How the tooling reads the whole catalogue now that /api/items no longer
-// serves it in one response (the old endpoint was an unbounded SELECT *,
-// ~390MB at the 200k target). Two shapes: fetchAllItems() pages with a
-// cursor for callers needing full fields (title, medium, tags, bio);
-// fetchManifest() is one ~20KB gzipped request when only identity/facets
-// matter.
+// How the tooling reads the whole catalogue. /api/items serves full rows
+// only by lookups, so fetchAllItems() lists source:id keys from the
+// shuffled manifest and resolves them in batches; fetchManifest() is
+// enough when only identity/facets matter.
+import type { Item } from "../src/types/Item.ts";
+import { TRANQUILO_CONFIG } from "./config.generated.ts";
 
 const DEFAULT_API = "https://tranquilo.art/api/items";
 
@@ -13,31 +13,76 @@ export function resolveApi(argv: string[] = process.argv): string {
   return process.env.FIXTURE_API || DEFAULT_API;
 }
 
-export async function fetchManifest(api: string): Promise<any> {
-  const res = await fetch(`${api}?shape=manifest`);
-  if (!res.ok) throw new Error(`${api}?shape=manifest responded ${res.status}`);
-  return res.json();
+// Production's Bot Protection challenges scripted requests without this header.
+export function apiFetch(url: string): Promise<Response> {
+  const token = process.env.FIREWALL_BYPASS_TOKEN;
+  return fetch(
+    url,
+    token ? { headers: { "x-tranquilo-bypass": token } } : undefined,
+  );
+}
+
+type PageOptions = { limit?: number; maxPages?: number };
+
+const MAX_IDS_PER_LOOKUP = TRANQUILO_CONFIG.feed.max_ids_per_lookup;
+
+export async function fetchAllItems(api: string, options: PageOptions = {}) {
+  const manifest = await fetchManifest(api, options);
+  const items: typeof manifest = [];
+  for (let at = 0; at < manifest.length; at += MAX_IDS_PER_LOOKUP) {
+    // By key, not bare id: native ids repeat across sources.
+    const keys = manifest
+      .slice(at, at + MAX_IDS_PER_LOOKUP)
+      .map((entry) => `${entry.source}:${entry.id}`);
+    const query = keys
+      .map((key) => `keys=${encodeURIComponent(key)}`)
+      .join("&");
+    const res = await apiFetch(`${api}?${query}`);
+    if (!res.ok) throw new Error(`${api} key lookup responded ${res.status}`);
+    const body = await res.json();
+    if (body.missing?.length) {
+      throw new Error(
+        `key lookup could not resolve manifest entries: ${body.missing.join(", ")}`,
+      );
+    }
+    items.push(...body.items);
+  }
+  return items;
+}
+
+export function fetchManifest(
+  api: string,
+  { limit = 200, maxPages = 2000 }: PageOptions = {},
+) {
+  return fetchAllPages(
+    (cursor) =>
+      `${api}?shape=manifest&order=shuffle&limit=${limit}${
+        cursor ? `&cursor=${encodeURIComponent(cursor)}` : "&start=0"
+      }`,
+    maxPages,
+  );
 }
 
 // Pages with a cursor until the endpoint says there is no next page. The
 // page ceiling is a guard against a cursor that stops advancing (happened
 // once when a millisecond-truncated created_at defeated the native_id
 // tiebreak) -- terminating loudly beats hanging.
-export async function fetchAllItems(
-  api: string,
-  { limit = 200, maxPages = 2000 }: { limit?: number; maxPages?: number } = {},
-): Promise<any[]> {
-  const items: any[] = [];
+async function fetchAllPages(
+  pageUrl: (cursor: string | null) => string,
+  maxPages: number,
+): Promise<Item[]> {
+  const items: Item[] = [];
   let cursor: string | null = null;
   let pages = 0;
 
   while (pages < maxPages) {
-    const url: string = `${api}?limit=${limit}${
-      cursor ? `&cursor=${encodeURIComponent(cursor)}` : ""
-    }`;
-    const res: Response = await fetch(url);
+    const url = pageUrl(cursor);
+    const res: Response = await apiFetch(url);
     if (!res.ok) throw new Error(`${url} responded ${res.status}`);
-    const body: any = await res.json();
+    const body = (await res.json()) as {
+      items: Item[];
+      next_cursor: string | null;
+    };
     pages++;
 
     items.push(...body.items);

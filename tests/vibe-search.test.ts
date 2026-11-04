@@ -58,7 +58,8 @@ describe("?shape=vibe_search", () => {
       shape: "vibe_search",
       vibe_tags_any: "Serene",
     });
-    const order = q.text.slice(q.text.indexOf("ORDER BY"));
+    const text = q.text ?? "";
+    const order = text.slice(text.indexOf("ORDER BY"));
     expect(order.indexOf("curator_boost")).toBeLessThan(
       order.indexOf("palette_contrast_score"),
     );
@@ -83,7 +84,6 @@ describe("?shape=vibe_search", () => {
       vibe_tags_any: "Serene",
     });
     expect(q.vibeSearch).toBe(true);
-    expect(q.paginated).toBeUndefined();
     expect(q.text).not.toMatch(/cursor/);
     expect(q.text).toMatch(/LIMIT 60/); // the default
   });

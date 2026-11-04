@@ -7,8 +7,11 @@
 //
 // Long-form pages are translated as whole documents rather than split into
 // dictionary keys: prose doesn't translate well fragment by fragment.
+import { DEFAULT_LOCALE, LOCALES, type LocaleInfo } from "./locales.ts";
 
-export const TRANSLATED_PAGES: Readonly<Record<string, readonly string[]>> = {
+type TranslatedPages = Readonly<Record<string, readonly string[]>>;
+
+export const TRANSLATED_PAGES: TranslatedPages = {
   "pt-BR": [
     "about.html",
     "curator.html",
@@ -30,4 +33,32 @@ export function localizedPagePath(locale: string, file: string): string {
   return TRANSLATED_PAGES[locale]?.includes(file)
     ? `/pages/${locale}/${file}`
     : `/pages/${file}`;
+}
+
+/**
+ * Every shipped language version of a static page, plus x-default, for
+ * hreflang alternates in the sitemap and each page's <head>. Empty when no
+ * shipped locale translates the page: a lone English page needs none.
+ */
+export function staticPageAlternates(
+  file: string,
+  locales: readonly LocaleInfo[] = LOCALES,
+  translatedPages: TranslatedPages = TRANSLATED_PAGES,
+): Array<{ hreflang: string; path: string }> {
+  const englishPath = `/pages/${file}`;
+  const translations = locales.filter(
+    (l) =>
+      l.status === "shipped" &&
+      l.code !== DEFAULT_LOCALE &&
+      translatedPages[l.code]?.includes(file),
+  );
+  if (translations.length === 0) return [];
+  return [
+    { hreflang: DEFAULT_LOCALE, path: englishPath },
+    ...translations.map((l) => ({
+      hreflang: l.code,
+      path: `/pages/${l.code}/${file}`,
+    })),
+    { hreflang: "x-default", path: englishPath },
+  ];
 }

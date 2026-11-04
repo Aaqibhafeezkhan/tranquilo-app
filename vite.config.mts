@@ -4,6 +4,7 @@ import { TRANSLATED_PAGES } from "./src/i18n/pages.ts";
 import baseTemplate from "./vite-plugins/base-template.mts";
 import communityPartial from "./vite-plugins/community-partial.mts";
 import headPartial from "./vite-plugins/head-partial.mts";
+import imgCdnPreconnect from "./vite-plugins/img-cdn-preconnect.mts";
 import pageChromePartial from "./vite-plugins/page-chrome-partial.mts";
 
 // Translated static pages (pages/<locale>/<file>), one build input each,
@@ -36,6 +37,7 @@ export default defineConfig({
   plugins: [
     baseTemplate(import.meta.dirname),
     headPartial(import.meta.dirname),
+    imgCdnPreconnect(),
     pageChromePartial(import.meta.dirname),
     communityPartial(import.meta.dirname),
   ],

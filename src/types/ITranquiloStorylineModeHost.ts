@@ -14,6 +14,8 @@ export interface ITranquiloStorylineModeHost {
   // to resolveItemsByIds().
   getItem(id: string): Item | undefined;
   resolveItemsByIds(ids: string[]): Promise<Item[]>;
+  getItemByKey(key: string): Item | undefined;
+  resolveItemsByKeys(keys: string[]): Promise<Item[]>;
   // Same sync-getter/async-fetch-and-cache pair as above, for the
   // storyline's own full content instead of its chapter items.
   getStorylineDetail(id: string): Storyline | undefined;
@@ -22,6 +24,9 @@ export interface ITranquiloStorylineModeHost {
   trackEvent(name: string, props: Record<string, unknown>): void;
   openLightbox(src: string, alt: string, item: Item): void;
   shareStoryline(storyline: Storyline): void;
+  // Fired when the reader closes the storyline, not when it steps aside
+  // for a chapter's detail panel.
+  storylineClosed(): void;
   // Every overlay pushes one history entry on open so the hardware back
   // button closes it instead of leaving the app; requestOverlayClose routes
   // an explicit close through history.back() when an entry is pending.

@@ -1,5 +1,5 @@
 // OverlayHistoryManager owns the browser-history integration for the
-// app's seven mutually-exclusive overlays -- a single flat depth counter
+// app's eight mutually-exclusive overlays -- a single flat depth counter
 // plus the popstate/Escape reducers. No DOM environment is configured for
 // this suite, so window/document/history/location are stubbed directly.
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -24,6 +24,7 @@ function makeHost(overrides: Partial<OverlayHistoryHost> = {}) {
   const host = {
     detailModalEl: fakeOverlayEl(),
     shelvesModeEl: fakeOverlayEl(),
+    shelfModeEl: fakeOverlayEl(),
     storylineModeEl: fakeOverlayEl(),
     setOfWorksModeEl: fakeOverlayEl(),
     lightboxEl: fakeOverlayEl(),
@@ -126,7 +127,7 @@ describe("attach", () => {
 
 describe("popstate handling", () => {
   // Real stacking order: lightbox (300) > storyline (250) > set-of-works
-  // (245) > shelves (240) > detail-modal/export-modal (200) > search.
+  // (245) > shelf (242) > shelves (240) > detail-modal/export-modal (200) > search.
   it("closes only the topmost-open overlay when several are flagged open", () => {
     const host = makeHost({
       detailModalEl: fakeOverlayEl(true),
@@ -156,6 +157,22 @@ describe("popstate handling", () => {
     expect(host.storylineModeEl.close).not.toHaveBeenCalled();
   });
 
+  it("closes a shelf view ahead of Discover and the detail panel", () => {
+    const host = makeHost({
+      shelvesModeEl: fakeOverlayEl(true),
+      shelfModeEl: fakeOverlayEl(true),
+      detailModalEl: fakeOverlayEl(true),
+    });
+    const manager = new OverlayHistoryManager(host);
+    manager.attach();
+
+    popstateHandlers[0]();
+
+    expect(host.shelfModeEl.close).toHaveBeenCalledOnce();
+    expect(host.shelvesModeEl.close).not.toHaveBeenCalled();
+    expect(host.detailModalEl.close).not.toHaveBeenCalled();
+  });
+
   it("falls through to closeSearch() when search is the only thing open", () => {
     const host = makeHost({ isSearchOpen: vi.fn(() => true) });
     const manager = new OverlayHistoryManager(host);
@@ -176,6 +193,7 @@ describe("popstate handling", () => {
     for (const el of [
       host.detailModalEl,
       host.shelvesModeEl,
+      host.shelfModeEl,
       host.storylineModeEl,
       host.setOfWorksModeEl,
       host.lightboxEl,
@@ -222,6 +240,7 @@ describe("Escape handling", () => {
     expect(host.storylineModeEl.close).toHaveBeenCalledOnce();
     expect(host.setOfWorksModeEl.close).toHaveBeenCalledOnce();
     expect(host.shelvesModeEl.close).toHaveBeenCalledOnce();
+    expect(host.shelfModeEl.close).toHaveBeenCalledOnce();
     expect(host.lightboxEl.close).toHaveBeenCalledOnce();
     expect(host.exportModalEl.close).toHaveBeenCalledOnce();
     expect(host.closeSearch).toHaveBeenCalledOnce();
@@ -242,5 +261,6 @@ describe("Escape handling", () => {
     keydownHandlers[0]({ key: "Escape" });
 
     expect(host.shelvesModeEl.close).not.toHaveBeenCalled();
+    expect(host.shelfModeEl.close).not.toHaveBeenCalled();
   });
 });

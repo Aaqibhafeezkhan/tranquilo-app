@@ -1,3 +1,5 @@
+import type { Sql } from "./db.ts";
+
 // Server-side access to ambient-music buckets (in Postgres, see
 // sql/023_music_buckets.sql/sql/024_music_buckets_seed.sql).
 //
@@ -9,10 +11,29 @@
 // map in the response either: each bucket carries its own `category`, and a
 // hand-written duplicate of that 1:1 relationship used to drift -- the
 // caller derives it with one reduce instead.
-async function getMusicBuckets(sql: any): Promise<Record<string, any>> {
-  const rows = await sql`SELECT * FROM music_buckets`;
-  const buckets: Record<string, any> = {};
-  rows.forEach((row: any) => {
+interface MusicBucketRow {
+  key: string;
+  label: string;
+  category: string;
+  track: string;
+  credit: string;
+  credit_url: string | null;
+  license: string;
+}
+
+interface MusicBucket {
+  label: string;
+  category: string;
+  track: string;
+  credit: string;
+  creditUrl: string | null;
+  license: string;
+}
+
+async function getMusicBuckets(sql: Sql): Promise<Record<string, MusicBucket>> {
+  const rows = (await sql`SELECT * FROM music_buckets`) as MusicBucketRow[];
+  const buckets: Record<string, MusicBucket> = {};
+  rows.forEach((row) => {
     buckets[row.key] = {
       label: row.label,
       category: row.category,

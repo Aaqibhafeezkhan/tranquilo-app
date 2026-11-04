@@ -14,13 +14,18 @@
 
 import dbBackup from "../../lib/cron/db-backup.ts";
 import healthCheck from "../../lib/cron/health-check.ts";
+import pruneVisitorData from "../../lib/cron/prune-visitor-data.ts";
 import restoreDrillReminder from "../../lib/cron/restore-drill-reminder.ts";
 import vercelDeploymentCleanup from "../../lib/cron/vercel-deployment-cleanup.ts";
 import warmImageCache from "../../lib/cron/warm-image-cache.ts";
+import type { CronRequest, CronResponse } from "../../lib/cron-types.ts";
 
-const REAL_JOBS = {
+type CronJob = (req: CronRequest, res: CronResponse) => unknown;
+
+const REAL_JOBS: Record<string, CronJob> = {
   "db-backup": dbBackup,
   "health-check": healthCheck,
+  "prune-visitor-data": pruneVisitorData,
   "restore-drill-reminder": restoreDrillReminder,
   "vercel-deployment-cleanup": vercelDeploymentCleanup,
   // Reachable by hand but not in vercel.json's `crons` -- a rare-backfill
@@ -29,10 +34,16 @@ const REAL_JOBS = {
   "warm-image-cache": warmImageCache,
 };
 
-async function handler(req: any, res: any, opts?: any) {
+async function handler(
+  req: CronRequest,
+  res: CronResponse,
+  opts?: { jobs?: Record<string, CronJob> },
+) {
   const jobs = opts?.jobs || REAL_JOBS;
   const job = req.query?.job;
-  const fn = (jobs as any)[job];
+  // Own keys only: `jobs.constructor` would otherwise dispatch to Object.
+  const fn =
+    typeof job === "string" && Object.hasOwn(jobs, job) ? jobs[job] : undefined;
   if (!fn) {
     res.statusCode = 400;
     res.json({ error: "Unknown or missing ?job", known: Object.keys(jobs) });

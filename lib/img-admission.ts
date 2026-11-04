@@ -12,6 +12,15 @@
 //
 // Both overridable by env var since the right numbers depend on the
 // one-off share of traffic, answerable from img_cache_entries.requests.
+import type { QuerySql } from "./img-store.ts";
+
+interface AdmissionVerdict {
+  admit: boolean;
+  requests: number;
+  reason: string;
+  threshold?: number;
+}
+
 const DEFAULT_THRESHOLDS: Record<string, number> = { display: 2, lightbox: 2 };
 
 function thresholdFor(tier: string): number {
@@ -56,16 +65,16 @@ function fastPathWindowSeconds(): number {
 // since Commons ids contain colons and would corrupt a split (see
 // lib/img-eviction.ts's CACHE_KEY_ID_SQL).
 async function noteRequest(
-  sql: any,
+  sql: QuerySql | null | undefined,
   cacheKey: string,
   source: string,
   tier: string,
-  nativeId?: any,
-): Promise<any> {
+  nativeId?: string | number | null,
+): Promise<AdmissionVerdict> {
   if (!sql) return { admit: false, requests: 0, reason: "no-db" };
   const threshold = thresholdFor(tier);
   try {
-    const rows = await sql.query(
+    const rows = (await sql.query(
       "INSERT INTO img_cache_entries (cache_key, source, tier, native_id, requests, first_seen, last_seen) " +
         "VALUES ($1, $2, $3, $4, 1, now(), now()) " +
         "ON CONFLICT (cache_key) DO UPDATE " +
@@ -81,7 +90,11 @@ async function noteRequest(
         // resetting every request.
         "RETURNING requests, bytes, EXTRACT(EPOCH FROM (now() - first_seen))::float8 AS seconds_since_first",
       [cacheKey, source, tier, nativeId == null ? null : String(nativeId)],
-    );
+    )) as {
+      requests: string | number;
+      bytes: number | null;
+      seconds_since_first: number | string;
+    }[];
     if (!rows.length) return { admit: false, requests: 0, reason: "no-row" };
     const requests = Number(rows[0].requests);
     // Already stored: this is a re-request of something we hold. Nothing to
@@ -133,7 +146,7 @@ async function noteRequest(
  * cache that is half empty.
  */
 async function markStored(
-  sql: any,
+  sql: QuerySql | null | undefined,
   cacheKey: string,
   bytes: number,
 ): Promise<void> {
@@ -155,7 +168,10 @@ async function markStored(
 
 /** Refreshes recency on a cache HIT, so a popular item does not look cold to
  *  the eviction scan just because it has been in the cache a long time. */
-async function touch(sql: any, cacheKey: string): Promise<void> {
+async function touch(
+  sql: QuerySql | null | undefined,
+  cacheKey: string,
+): Promise<void> {
   if (!sql) return;
   try {
     await sql.query(

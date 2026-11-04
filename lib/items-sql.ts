@@ -22,9 +22,8 @@
 // item is recoverable and accidentally hiding everything is an outage. The
 // NOT NULL DEFAULT 'ok' on the column is what makes that safe.
 //
-// Photography is suspended catalogue-wide, kept separate from
-// review_status so no row's review state needs re-doing when the category
-// returns.
+// Photography is prohibited in the catalogue; this is a second line of
+// defence behind rejecting it at ingestion and by review_status.
 const LIVE_ITEMS_PREDICATE =
   "review_status NOT IN ('quarantined', 'rejected', 'delisted') AND category != 'Photography'";
 

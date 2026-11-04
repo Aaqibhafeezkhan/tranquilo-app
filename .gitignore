@@ -24,6 +24,7 @@ Temp/
 # run it by hand after editing config.toml without running one of those.
 /src/data/config.generated.ts
 /lib/config.generated.ts
+/lib/vocabulary.generated.ts
 
 # Internal-only docs -- operational/business detail not meant for the public
 # repo (org names, provider account specifics, restore runbooks, the full

@@ -14,7 +14,10 @@ const { default: handler } = await import("../api/items.ts");
 const SCHEMA = [
   "001_items_schema.sql",
   "003_items_harmonization.sql",
+  "006_items_region_alt.sql",
+  "017_items_shuffle_key.sql",
   "019_storylines.sql",
+  "033_items_set_of_work_id.sql",
   "021_shelves.sql",
 ];
 
@@ -77,6 +80,7 @@ beforeAll(async () => {
       title: "Self-portrait",
       medium: "Oil on canvas",
       category: "Paintings & Portraits",
+      shuffle_key: 0.25,
     });
     await insert(sql, "items", {
       id: "met:2",
@@ -85,6 +89,7 @@ beforeAll(async () => {
       title: "Harbour",
       medium: "Etching",
       category: "Works on Paper",
+      shuffle_key: 0.75,
     });
     await insert(sql, "storylines", {
       id: "harbours",
@@ -194,8 +199,13 @@ describe("artworks", () => {
 
   it("translates titles in the feed manifest too", async () => {
     db.sql = withTable;
-    const res = await get({ shape: "manifest", locale: "pt-BR" });
-    const item = res.body.find((i: any) => i.id === "1");
+    const res = await get({
+      shape: "manifest",
+      order: "shuffle",
+      start: "0",
+      locale: "pt-BR",
+    });
+    const item = res.body.items.find((i: any) => i.id === "1");
     expect(item.title).toBe("Autorretrato");
   });
 

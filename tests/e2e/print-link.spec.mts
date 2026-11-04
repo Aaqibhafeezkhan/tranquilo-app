@@ -40,10 +40,6 @@ async function openDetail(
     `/v/${encodeURIComponent(`${BASE.source || "met"}-${BASE.id}`)}${search}`,
   );
   await page.waitForFunction(() => (window.__tranquiloFeedRenders || 0) > 0);
-  const slide = page
-    .locator(`#feed .slide[data-slug$="-${String(BASE.id)}"]`)
-    .first();
-  await slide.locator(".art-title-btn").click();
   await expect(page.locator("#detailModal")).toHaveClass(/open/);
   return regionRequests;
 }

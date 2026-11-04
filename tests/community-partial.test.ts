@@ -126,7 +126,6 @@ describe("parseSupporters", () => {
       readFileSync(path.join(ROOT, "data/supporters.json"), "utf8"),
     );
     expect(Array.isArray(raw.donors)).toBe(true);
-    expect(Array.isArray(raw.patrons)).toBe(true);
     expect(parseSupporters(raw).donors).toHaveLength(raw.donors.length);
   });
 });
@@ -204,6 +203,41 @@ describe("expandCommunityPartial", () => {
     expect(heading(en)).toBeTruthy();
     expect(heading(pt)).toBeTruthy();
     expect(heading(pt)).not.toBe(heading(en));
+  });
+
+  it("renders patrons grouped by tier, untitled group without a label", () => {
+    const html = expandCommunityPartial(page, {
+      contributors: null,
+      donors: [],
+      patrons: [
+        { title: "Steward", names: ["Bia L."] },
+        { title: null, names: ["Ana S."] },
+      ],
+    });
+    expect(html).toContain("community-patrons");
+    expect(html.indexOf("Steward")).toBeLessThan(html.indexOf("Bia L."));
+    expect(html.indexOf("Bia L.")).toBeLessThan(html.indexOf("Ana S."));
+    expect(html.match(/class="community-tier"/g)).toHaveLength(1);
+  });
+
+  it("shows no patrons heading while there are no patrons", () => {
+    const html = expandCommunityPartial(page, {
+      contributors: parseContributors([human]),
+      donors: [],
+      patrons: [{ title: "Friend", names: [] }],
+    });
+    expect(html).not.toContain("community-patrons");
+    expect(html).not.toContain("Friend");
+  });
+
+  it("escapes patron names and tier titles", () => {
+    const html = expandCommunityPartial(page, {
+      contributors: null,
+      donors: [],
+      patrons: [{ title: "<b>Tier</b>", names: ["<script>x</script>"] }],
+    });
+    expect(html).not.toContain("<script>");
+    expect(html).not.toContain("<b>");
   });
 
   it("leaves pages without the marker untouched", () => {

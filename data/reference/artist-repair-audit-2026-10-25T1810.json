@@ -1,0 +1,117 @@
+{
+  "applied_at": "2026-10-25T18:10:41.725Z",
+  "rows": [
+    {
+      "source": "cleveland",
+      "native_id": "99807",
+      "artist_lifespan": "",
+      "title": "Sword Guard",
+      "from": "Utagawa Kuniyoshi",
+      "to": "Kuniyoshi"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/9200579/j4shz7rn",
+      "artist_lifespan": "",
+      "title": "An alchemist in his laboratory. Oil painting by a follower of David Teniers the younger.",
+      "from": "David Teniers the Younger",
+      "to": "Follower of David Teniers the Younger"
+    },
+    {
+      "source": "europeana",
+      "native_id": "/9200579/pj4j3cdj",
+      "artist_lifespan": "",
+      "title": "An alchemist in his laboratory. Oil painting by a follower of David Teniers the younger.",
+      "from": "David Teniers the Younger",
+      "to": "Follower of David Teniers the Younger"
+    },
+    {
+      "source": "met",
+      "native_id": "501524",
+      "artist_lifespan": "active first half 19th century",
+      "title": "Flageolet in F",
+      "from": "Francisque Millet",
+      "to": "Millet"
+    },
+    {
+      "source": "met",
+      "native_id": "436611",
+      "artist_lifespan": "",
+      "title": "Portrait of a Woman",
+      "from": "Peter Adolf Hall",
+      "to": "Style of Peter Adolf Hall"
+    },
+    {
+      "source": "met",
+      "native_id": "436613",
+      "artist_lifespan": "",
+      "title": "Portrait of a Woman",
+      "from": "Peter Adolf Hall",
+      "to": "Style of Peter Adolf Hall"
+    },
+    {
+      "source": "met",
+      "native_id": "436627",
+      "artist_lifespan": "",
+      "title": "Frans Hals (1582/83–1666)",
+      "from": "Frans Hals",
+      "to": "Copy after Frans Hals"
+    },
+    {
+      "source": "met",
+      "native_id": "436664",
+      "artist_lifespan": "",
+      "title": "Lady Guildford (Mary Wotton, 1499–1558)",
+      "from": "Hans Holbein the Younger",
+      "to": "Copy after Hans Holbein the Younger"
+    },
+    {
+      "source": "met",
+      "native_id": "436666",
+      "artist_lifespan": "",
+      "title": "Portrait of a Man, Said to Be Arnold Franz",
+      "from": "Hans Holbein the Younger",
+      "to": "Imitator of Hans Holbein the Younger"
+    },
+    {
+      "source": "met",
+      "native_id": "437338",
+      "artist_lifespan": "",
+      "title": "The Crucifixion",
+      "from": "Jan Provoost",
+      "to": "Circle of Jan Provoost"
+    },
+    {
+      "source": "met",
+      "native_id": "459305",
+      "artist_lifespan": "",
+      "title": "Barges Moored by Cottages",
+      "from": "Claes Jansz. Visscher the Younger",
+      "to": "Style of Claes Jansz. Visscher the Younger"
+    },
+    {
+      "source": "met",
+      "native_id": "437886",
+      "artist_lifespan": "",
+      "title": "Harbor Scene with a Grotto and Fishermen Hauling in Nets",
+      "from": "Claude-Joseph Vernet",
+      "to": "Style of Joseph Vernet"
+    },
+    {
+      "source": "met",
+      "native_id": "436406",
+      "artist_lifespan": "",
+      "title": "Study of a Nude Man",
+      "from": "Pierre Narcisse Guérin",
+      "to": "Follower of Pierre Narcisse Guérin"
+    },
+    {
+      "source": "met",
+      "native_id": "436589",
+      "artist_lifespan": "",
+      "title": "Sir Joshua Reynolds (1723–1792)",
+      "from": "William Grimaldi",
+      "to": "Style of William Grimaldi"
+    }
+  ]
+}

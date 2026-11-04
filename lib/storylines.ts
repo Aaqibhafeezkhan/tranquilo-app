@@ -13,6 +13,15 @@
 // getStoryline()/getStorylineIndex() take an already-open `sql` client
 // rather than opening their own, since every /api handler here already
 // manages exactly one Neon client per invocation.
+
+import type {
+  StoryItemId,
+  Storyline,
+  StorylineChapter,
+  StorylineIndexEntry,
+} from "../src/types/Storyline.ts";
+import type { Sql } from "./db.ts";
+
 const STORYLINE_SLUG_PREFIX = "s";
 
 function storylineSlug(id: string | number): string {
@@ -32,8 +41,8 @@ function parseStorylineSlug(slug?: string | null): string | null {
 
 // JSONB columns come back already parsed under this project's driver family,
 // handled defensively anyway so a wrong assumption fails soft.
-function parseItemsField(value: any): any[] {
-  if (Array.isArray(value)) return value;
+function parseItemsField<T>(value: unknown): T[] {
+  if (Array.isArray(value)) return value as T[];
   if (typeof value === "string") {
     try {
       return JSON.parse(value);
@@ -44,25 +53,51 @@ function parseItemsField(value: any): any[] {
   return [];
 }
 
-function rowToStoryline(row: any): any {
+interface StorylineRow {
+  id: string;
+  title: string;
+  type: string;
+  tier: Storyline["tier"];
+  cover_item_id: StoryItemId;
+  intro_caption: string;
+  source_note: string | null;
+  items: unknown;
+}
+
+// The cover is one of the chapters, so its source is that chapter's.
+function coverSource(
+  coverId: unknown,
+  chapters: Pick<StorylineChapter, "id" | "source">[],
+): string | undefined {
+  return chapters.find((c) => String(c.id) === String(coverId))?.source;
+}
+
+function rowToStoryline(row: StorylineRow): Storyline {
+  const chapters = parseItemsField<StorylineChapter>(row.items);
   return {
     id: row.id,
     title: row.title,
     type: row.type,
     tier: row.tier,
     cover_item_id: row.cover_item_id,
+    cover_source: coverSource(row.cover_item_id, chapters),
     intro_caption: row.intro_caption,
     source_note: row.source_note || undefined,
-    items: parseItemsField(row.items),
+    items: chapters,
   };
 }
 
 // Full storyline detail, everything TranquiloStorylineMode.ts's open() needs
 // to render. The LAZY half: fetched only when a reader opens that storyline,
 // not on every page load.
-async function getStoryline(sql: any, id?: string | null): Promise<any> {
+async function getStoryline(
+  sql: Sql,
+  id?: string | null,
+): Promise<Storyline | null> {
   if (!id) return null;
-  const rows = await sql.query("SELECT * FROM storylines WHERE id = $1", [id]);
+  const rows = (await sql.query("SELECT * FROM storylines WHERE id = $1", [
+    id,
+  ])) as StorylineRow[];
   return rows[0] ? rowToStoryline(rows[0]) : null;
 }
 
@@ -70,16 +105,25 @@ async function getStoryline(sql: any, id?: string | null): Promise<any> {
 // chip/position label, shelves.ts's "Storylines" hero shelf), deliberately
 // omitting title/intro_caption/source_note/chapter_caption -- the reason
 // this is split out from getStoryline() at all.
-async function getStorylineIndex(sql: any): Promise<any[]> {
-  const rows = await sql`SELECT id, cover_item_id, items FROM storylines`;
-  return rows.map((row: any) => ({
-    id: row.id,
-    cover_item_id: row.cover_item_id,
-    items: parseItemsField(row.items).map((chapter: any) => ({
-      id: chapter.id,
-      position: chapter.position,
-    })),
-  }));
+async function getStorylineIndex(sql: Sql): Promise<StorylineIndexEntry[]> {
+  const rows =
+    (await sql`SELECT id, cover_item_id, items FROM storylines`) as Pick<
+      StorylineRow,
+      "id" | "cover_item_id" | "items"
+    >[];
+  return rows.map((row) => {
+    const chapters = parseItemsField<StorylineChapter>(row.items);
+    return {
+      id: row.id,
+      cover_item_id: row.cover_item_id,
+      cover_source: coverSource(row.cover_item_id, chapters),
+      items: chapters.map((chapter) => ({
+        id: chapter.id,
+        source: chapter.source,
+        position: chapter.position,
+      })),
+    };
+  });
 }
 
 export {

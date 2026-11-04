@@ -1,5 +1,6 @@
 import path from "node:path";
 import type { Plugin } from "vite";
+import { staticPageAlternates } from "../src/i18n/pages.ts";
 
 const SITE_ORIGIN = "https://tranquilo.art";
 const OG_IMAGE = `${SITE_ORIGIN}/og/met-436528.png`;
@@ -43,13 +44,22 @@ export function expandHeadPartial(root: string, filename: string, html: string):
       : "";
   const canonicalPath = relPath === "index.html" ? "/" : `/${relPath}`;
   const canonicalUrl = `${SITE_ORIGIN}${canonicalPath}`;
+  const pageFile = /^pages\/(?:[^/]+\/)?([^/]+\.html)$/.exec(relPath)?.[1];
+  const alternates = pageFile
+    ? staticPageAlternates(pageFile)
+        .map(
+          (a) =>
+            `\n<link rel="alternate" hreflang="${a.hreflang}" href="${SITE_ORIGIN}${a.path}">`,
+        )
+        .join("")
+    : "";
 
   const shared = `<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="icon" type="image/svg+xml" href="${assetPrefix}assets/favicon.svg">
 <link rel="stylesheet" href="${assetPrefix}css/tokens.css">
 <link rel="stylesheet" href="${assetPrefix}css/style.css">
-<link rel="canonical" href="${canonicalUrl}">
+<link rel="canonical" href="${canonicalUrl}">${alternates}
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Tranquilo">${ogLocale}
 <meta property="og:url" content="${canonicalUrl}">

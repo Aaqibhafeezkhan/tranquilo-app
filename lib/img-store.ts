@@ -15,11 +15,34 @@
 // that imports its expectation from the thing it guards isn't much of one.
 const OBJECT_PREFIX = "img-cache";
 
+interface ImgS3Config {
+  bucket: string;
+  region: string;
+  accessKeyId: string;
+  cdnBaseUrl: string;
+  enabled: boolean;
+  secret(): string;
+}
+
+interface ImgCacheEntry {
+  object_key?: string | null;
+  content_hash?: string | null;
+}
+
+type CacheHit = { from: "blob" } | { from: "cdn"; url: string };
+
+interface QuerySql {
+  query(text: string, params?: unknown[]): Promise<unknown[]>;
+}
+
 // The double-prefix guard is the point: object keys already begin with
 // "img-cache/", so a base URL ending in the same segment would 404 silently
 // (presenting as "images fall back to origin", not an error) -- caught here
 // loudly instead, at URL-build time.
-function cdnUrlFor(baseUrl: any, objectKey: any): string {
+function cdnUrlFor(
+  baseUrl: string | null | undefined,
+  objectKey: string,
+): string {
   const base = String(baseUrl || "").replace(/\/+$/, "");
   if (!/^https?:\/\//i.test(base)) {
     throw new Error(
@@ -40,7 +63,10 @@ function cdnUrlFor(baseUrl: any, objectKey: any): string {
 // Returns { from: "cdn", url } or { from: "blob" } -- the caller keeps its
 // existing Blob logic for the latter, so every row written before the
 // migration (object_key NULL) behaves exactly as it did before.
-function resolveHit(entry: any, config: any): any {
+function resolveHit(
+  entry: ImgCacheEntry | null | undefined,
+  config: Partial<Pick<ImgS3Config, "cdnBaseUrl">> | null | undefined,
+): CacheHit {
   const key = entry?.object_key;
   const base = config?.cdnBaseUrl;
   if (!key || !base) return { from: "blob" };
@@ -55,7 +81,7 @@ function resolveHit(entry: any, config: any): any {
 // The secret is deliberately not stored on the returned object (config
 // objects end up in logs and Sentry breadcrumbs); `secret()` hands it over
 // only to a caller that explicitly asks.
-function configFromEnv(env?: any): any {
+function configFromEnv(env?: Record<string, string | undefined>): ImgS3Config {
   const e = env || process.env;
   const bucket = e.S3_BUCKET || "";
   const region = e.S3_REGION || "";
@@ -65,13 +91,13 @@ function configFromEnv(env?: any): any {
 
   const enabled = !!(bucket && region && keyId && secretValue && cdnBaseUrl);
 
-  const config: any = {
+  const config = {
     bucket: bucket,
     region: region,
     accessKeyId: keyId,
     cdnBaseUrl: cdnBaseUrl,
     enabled: enabled,
-  };
+  } as ImgS3Config;
   // Non-enumerable, so JSON.stringify() and console.log() cannot reach it.
   Object.defineProperty(config, "secret", {
     enumerable: false,
@@ -93,10 +119,15 @@ function touchAndResolveSql(): string {
   );
 }
 
-async function touchAndResolve(sql: any, cacheKey: any): Promise<any> {
+async function touchAndResolve(
+  sql: QuerySql | null | undefined,
+  cacheKey: string,
+): Promise<ImgCacheEntry | null> {
   if (!sql) return null;
   try {
-    const rows = await sql.query(touchAndResolveSql(), [cacheKey]);
+    const rows = (await sql.query(touchAndResolveSql(), [cacheKey])) as
+      | ImgCacheEntry[]
+      | undefined;
     return rows?.[0] || null;
   } catch (_err) {
     // A bookkeeping failure must never fail an image. Returning null falls the
@@ -121,11 +152,11 @@ function recordObjectSql(): string {
 }
 
 async function recordObject(
-  sql: any,
-  cacheKey: any,
-  objectKey: any,
-  contentHash: any,
-  bytes: any,
+  sql: QuerySql | null | undefined,
+  cacheKey: string,
+  objectKey: string,
+  contentHash: string,
+  bytes: number,
 ): Promise<boolean> {
   if (!sql) return false;
   try {
@@ -143,6 +174,7 @@ async function recordObject(
   }
 }
 
+export type { CacheHit, ImgCacheEntry, ImgS3Config, QuerySql };
 export {
   cdnUrlFor,
   configFromEnv,

@@ -12,6 +12,7 @@
 // Required env vars: CRON_SECRET, RESEND_API_KEY, and OPS_ALERT_EMAIL or
 // SUBMIT_NOTIFY_EMAIL.
 import * as Sentry from "@sentry/node";
+import type { CronRequest, CronResponse } from "../cron-types.ts";
 import { reportError } from "../sentry.ts";
 
 const MONITOR_SLUG = "restore-drill-reminder";
@@ -37,7 +38,7 @@ const BODY =
   "cast / cast_context / storyline_ids populated.\n" +
   "4. Delete the branch.\n";
 
-export default async function handler(req: any, res: any) {
+export default async function handler(req: CronRequest, res: CronResponse) {
   const auth = req.headers?.authorization || "";
   if (
     !process.env.CRON_SECRET ||

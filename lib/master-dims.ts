@@ -1,3 +1,4 @@
+import type { Sql } from "./db.ts";
 import { LIVE_ITEMS_AND } from "./items-sql.ts";
 
 export const MEASURABLE_SOURCES = ["met", "cleveland"];
@@ -92,7 +93,7 @@ async function readHeader(
 }
 
 export async function measureBatch(opts: {
-  sql: any;
+  sql: Sql;
   source: string;
   commit: boolean;
   fetchImpl?: typeof fetch;
@@ -168,9 +169,9 @@ export async function measureBatch(opts: {
         result.unreadable++;
         log(`  unreadable ${row.id} (HTTP ${status})`);
       }
-    } catch (err: any) {
+    } catch (err) {
       consecutiveErrors++;
-      log(`  ERR ${row.id} -- ${String(err?.message || err)}`);
+      log(`  ERR ${row.id} -- ${String((err as Error)?.message || err)}`);
       if (consecutiveErrors >= ERROR_LIMIT) {
         result.stoppedBy = `${ERROR_LIMIT} consecutive network errors`;
         break;

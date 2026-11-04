@@ -1,5 +1,10 @@
 import { isRealArtist } from "../logic/logic";
-import { smithsonianMuseum, tainacanMuseum } from "./sourceLinks";
+import type { Item } from "../types/Item";
+import {
+  type SourceLinkItem,
+  smithsonianMuseum,
+  tainacanMuseum,
+} from "./sourceLinks";
 
 // Builds and downloads a CSV of the visitor's saved collection, entirely
 // client-side with no server call. An unmapped source falls back to its raw
@@ -23,7 +28,7 @@ export const EXPORT_SOURCE_NAMES: Record<string, string> = {
 // The full name of the institution an item belongs to: per museum for the
 // umbrella sources, per source otherwise. Shared by the CSV export and the
 // detail panel's citations, so the two can't credit a work differently.
-export function institutionName(item: any): string {
+export function institutionName(item: SourceLinkItem): string {
   if (item?.source === "smithsonian") return smithsonianMuseum(item.url);
   if (item?.source === "tainacan") return tainacanMuseum(item.url);
   return EXPORT_SOURCE_NAMES[item?.source || "met"] || item?.source || "";
@@ -35,9 +40,9 @@ function csvField(value: unknown): string {
 }
 
 export class ExportService {
-  exportCollectionCsv(collectedItems: any[]): void {
+  exportCollectionCsv(collectedItems: Partial<Item>[]): void {
     const header = ["Title", "Artist", "Date", "Category", "Source", "URL"];
-    const rows = collectedItems.map((item: any) =>
+    const rows = collectedItems.map((item) =>
       [
         item.title || "Untitled",
         isRealArtist(item.artist) ? item.artist : "Unknown",

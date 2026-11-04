@@ -5,25 +5,34 @@
 // SHELVES itself is handed over as a plain property
 // (`shelvesModeEl.shelves = SHELVES`) rather than through this host.
 import type { Item } from "./Item";
+import type { Shelf } from "./Shelf";
 import type { StorylineIndexEntry } from "./Storyline";
 
 export interface ITranquiloShelvesModeHost {
   apiUrl(params: Record<string, unknown>): string;
-  fetchJson(url: string, what: string): Promise<{ items?: unknown[] }>;
+  fetchJson(
+    url: string,
+    what: string,
+  ): Promise<{ items?: unknown[]; total?: number }>;
   // Merges fetched rows into app.js's own itemsById/items state, returning
   // the resolved Item objects a rule shelf's qualifying set draws from.
   absorbPage(rows: unknown[]): Item[];
   // Resolves a hero shelf's itemIds in order, dropping whatever no longer
   // exists rather than rendering a blank card.
   resolveItemsByIds(ids: string[]): Promise<Item[]>;
+  resolveItemsByKeys(keys: string[]): Promise<Item[]>;
   hydrateItems(items: Item[]): Promise<void>;
   applyNudityGate(frame: HTMLElement, item: Item, compact?: boolean): void;
-  storylineFor(item: Item): StorylineIndexEntry | null;
+  // The storylines shelf shows one tile per entry, in this order; a tile is
+  // paired with its entry here because a cover item can belong to several.
+  storylineIndex(): StorylineIndexEntry[];
+  openStoryline(storylineId: string): void;
   trackEvent(name: string, props: Record<string, unknown>): void;
   openDetailModal(
     item: Item,
     shelfContext: { items: Item[]; index: number },
   ): void;
+  shareShelf(shelf: Shelf): void;
   // Every overlay pushes one history entry on open so the hardware back
   // button closes it instead of leaving the app; requestOverlayClose routes
   // an explicit close through history.back() when an entry is pending.

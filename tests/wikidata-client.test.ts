@@ -140,7 +140,7 @@ describe("ambiguity is recorded, never guessed", () => {
   it("keeps every candidate rather than choosing", () => {
     const [row] = wd.parseArtists(twoPainters);
     expect(row.candidates).toHaveLength(2);
-    expect(row.candidates.map((c: any) => c.wikidata).sort()).toEqual([
+    expect((row.candidates ?? []).map((c: any) => c.wikidata).sort()).toEqual([
       "http://www.wikidata.org/entity/Q111",
       "http://www.wikidata.org/entity/Q222",
     ]);
@@ -249,17 +249,22 @@ describe("multi-valued facts", () => {
 
   it("keeps every distinct nationality", () => {
     const [row] = wd.parseArtists(multi);
-    expect(row.nationality.sort()).toEqual(["Denmark", "France"]);
+    expect((row.nationality ?? []).sort()).toEqual(["Denmark", "France"]);
   });
 
   it("keeps every distinct movement", () => {
     const [row] = wd.parseArtists(multi);
-    expect(row.movement.sort()).toEqual(["Impressionism", "Neo-Impressionism"]);
+    expect((row.movement ?? []).sort()).toEqual([
+      "Impressionism",
+      "Neo-Impressionism",
+    ]);
   });
 
   it("does not repeat a value that appeared in several rows", () => {
     const [row] = wd.parseArtists(multi);
-    expect(row.nationality.filter((n: any) => n === "France")).toHaveLength(1);
+    expect(
+      (row.nationality ?? []).filter((n: any) => n === "France"),
+    ).toHaveLength(1);
   });
 });
 
@@ -368,7 +373,7 @@ describe("matching on aliases as well as the main label", () => {
     });
     expect(r.ambiguous).toBe(true);
     // Only the label matches are the real contenders.
-    expect(r.candidates.map((c: any) => c.wikidata).sort()).toEqual([
+    expect((r.candidates ?? []).map((c: any) => c.wikidata).sort()).toEqual([
       "http://www.wikidata.org/entity/Q1",
       "http://www.wikidata.org/entity/Q2",
     ]);

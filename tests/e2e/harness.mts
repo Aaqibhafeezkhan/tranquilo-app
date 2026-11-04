@@ -9,8 +9,9 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { Page, Route } from "@playwright/test";
+import { expect, type Page, type Route } from "@playwright/test";
 import * as realApi from "../../api/items.ts";
+import { shelfTitleSlug } from "../../lib/shelves.ts";
 import { MUSIC_BUCKETS } from "../../src/data/music.ts";
 import { SHELVES } from "../../src/data/shelves.ts";
 
@@ -23,6 +24,7 @@ declare module "@playwright/test" {
     __failImages?: (url: string) => boolean;
     __tallImages?: (url: string) => boolean;
     __wideImages?: (url: string) => boolean;
+    __heroPool?: { source: string; native_id: string; media_type: string }[];
   }
 }
 
@@ -249,6 +251,15 @@ export async function stubBackend(
     route.fulfill({ status: 200, contentType: "text/html", body: appHtml }),
   );
 
+  await page.route(/\/discover\/?$/, (route: Route) =>
+    route.fulfill({ status: 200, contentType: "text/html", body: appHtml }),
+  );
+
+  // /shelf/{id} too, same rewrite into the same handler.
+  await page.route(/\/shelf\/[^/]+$/, (route: Route) =>
+    route.fulfill({ status: 200, contentType: "text/html", body: appHtml }),
+  );
+
   // The stub emulates the endpoint's shapes, not just its data: the client
   // makes three different requests against /api/items, each structurally
   // different, so a stub answering all three with the same array would
@@ -334,9 +345,16 @@ export async function stubBackend(
       return json(
         SHELVES.map((s) =>
           s.type === "hero"
-            ? { id: s.id, title: s.title, type: s.type, itemIds: s.itemIds }
+            ? {
+                id: s.id,
+                slug: shelfTitleSlug(s.title),
+                title: s.title,
+                type: s.type,
+                itemIds: s.itemIds,
+              }
             : {
                 id: s.id,
+                slug: shelfTitleSlug(s.title),
                 title: s.title,
                 type: s.type,
                 filter: s.filter,
@@ -353,7 +371,7 @@ export async function stubBackend(
     // pool means pickHeroes() returns nothing, the same fail-soft path a
     // genuinely empty production pool would take.
     if (shape === "heroes") {
-      return json([]);
+      return json(page.__heroPool ?? []);
     }
     // Same reasoning as heroes above: no e2e spec exercises set-of-works
     // content specifically, and app.ts fetches this index unconditionally
@@ -361,6 +379,19 @@ export async function stubBackend(
     // gotoFeed() rather than just the ones that care about it.
     if (shape === "set_of_works") {
       return json([]);
+    }
+
+    // ?keys=source:native_id, split on the first colon like the endpoint.
+    const wantedKeys = url.searchParams.getAll("keys");
+    if (wantedKeys.length) {
+      const found = keyed.filter((i) =>
+        wantedKeys.includes(`${i.source}:${i.id}`),
+      );
+      const foundKeys = new Set(found.map((i) => `${i.source}:${i.id}`));
+      return json({
+        items: found,
+        missing: wantedKeys.filter((key) => !foundKeys.has(key)),
+      });
     }
 
     // ?ids=a&ids=b, one param per id. getAll(), never a comma split: 41
@@ -407,6 +438,14 @@ export async function stubBackend(
       ]) {
         const v = url.searchParams.get(facet);
         if (v) rows = rows.filter((i) => String(i[facet] ?? "") === v);
+      }
+      const countRegion = url.searchParams.get("region_primary");
+      if (countRegion) {
+        rows = rows.filter(
+          (i) =>
+            i.region_primary === countRegion ||
+            (Array.isArray(i.region_alt) && i.region_alt.includes(countRegion)),
+        );
       }
       if (url.searchParams.get("has_storyline") === "1") {
         rows = rows.filter(
@@ -686,6 +725,18 @@ export async function stubBackend(
 }
 
 // Waits for the feed to have rendered its slides.
+// Opt-in hero pool of fixture items; the stub answers with an empty pool
+// unless a spec calls this before gotoFeed().
+export function useHeroPool(page: Page, size = 8) {
+  page.__heroPool = ITEMS.slice(0, size).map(
+    (i: { source?: string; id: string; media_type?: string }) => ({
+      source: i.source || "met",
+      native_id: i.id,
+      media_type: i.media_type || "image",
+    }),
+  );
+}
+
 export async function gotoFeed(page: Page, hash = "") {
   await stubBackend(page);
   // Heroes rotate per page load in production, varying slide positions
@@ -717,6 +768,12 @@ export async function gotoArtwork(
   await stubBackend(page);
   await page.goto(`/v/${encodeURIComponent(`${source}-${id}`)}`);
   await page.waitForFunction(() => (window.__tranquiloFeedRenders || 0) > 0);
+  // The deep link opens the detail view on top of the feed; dismissed so
+  // callers get the feed positioned on the artwork, as before.
+  const detail = page.locator("#detailModal");
+  await expect(detail).toHaveClass(/open/);
+  await page.keyboard.press("Escape");
+  await expect(detail).not.toHaveClass(/open/);
   await page.evaluate(() => new Promise(requestAnimationFrame));
   return page.locator("#feed .slide").first();
 }
@@ -739,6 +796,28 @@ export async function gotoStoryline(
   return page.locator("#storylineMode");
 }
 
+// Cold load of /discover; waits for feed, then overlay.
+export async function gotoDiscover(page: Page) {
+  await stubBackend(page);
+  await page.goto("/discover");
+  await page.waitForFunction(
+    () => document.querySelectorAll("#feed .slide").length > 1,
+  );
+  await page.waitForSelector("#shelvesMode.open .shelf");
+  return page.locator("#shelvesMode");
+}
+
+// Cold load of /shelf/{id}; waits for feed, then overlay.
+export async function gotoShelf(page: Page, id: string) {
+  await stubBackend(page);
+  await page.goto(`/shelf/${encodeURIComponent(id)}`);
+  await page.waitForFunction(
+    () => document.querySelectorAll("#feed .slide").length > 1,
+  );
+  await page.waitForSelector("#shelfMode.open");
+  return page.locator("#shelfMode");
+}
+
 // The feed scrolls its own container, which animates (`scroll-behavior:
 // smooth`) and self-adjusts (scroll-snap mandatory), so reading scrollTop
 // straight after assigning it returns the old value. Assign, then poll
@@ -759,11 +838,25 @@ export async function waitForFeedRender(
   since: number,
   timeout = 10000,
 ) {
-  await page.waitForFunction(
-    (n: number) => (window.__tranquiloFeedRenders || 0) > n,
-    since,
-    { polling: 50, timeout },
-  );
+  try {
+    await page.waitForFunction(
+      (n: number) => (window.__tranquiloFeedRenders || 0) > n,
+      since,
+      { polling: 50, timeout },
+    );
+  } catch (err) {
+    const state = await page
+      .evaluate(() => ({
+        renders: window.__tranquiloFeedRenders || 0,
+        slides: document.querySelectorAll("#feed .slide").length,
+        skeletonShowing: !!document.querySelector("#feed .slide-skeleton"),
+      }))
+      .catch(() => null);
+    throw new Error(
+      `feed did not settle after render ${since} within ${timeout}ms: ${JSON.stringify(state)}`,
+      { cause: err },
+    );
+  }
   // The recycling window runs on requestAnimationFrame, so the shells exist by
   // the line above but their contents land a frame later.
   await page.evaluate(() => new Promise(requestAnimationFrame));

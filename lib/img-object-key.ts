@@ -23,7 +23,7 @@ const TIERS = ["display", "lightbox"];
 // ~3e-8 for four extra characters.
 const HASH_CHARS = 16;
 
-function contentHash(buf: any): string {
+function contentHash(buf: string | NodeJS.ArrayBufferView): string {
   return crypto
     .createHash("sha256")
     .update(buf)
@@ -57,7 +57,7 @@ const ID_HASH_CHARS = 12;
 // so a future widening wouldn't need re-keying existing objects.
 const SHARD_CHARS = 2;
 
-function shardFor(id: any): string {
+function shardFor(id: string | number): string {
   return crypto
     .createHash("sha256")
     .update(String(id))
@@ -65,7 +65,7 @@ function shardFor(id: any): string {
     .slice(0, SHARD_CHARS);
 }
 
-function idSegment(id: any): string {
+function idSegment(id: string | number): string {
   const raw = String(id);
   const readable = raw
     .replace(/[^A-Za-z0-9._-]+/g, "-") // collapse everything unsafe
@@ -85,7 +85,12 @@ function idSegment(id: any): string {
 // first, so everything about an item stays under one prefix (lifecycle
 // rules, targeted deletes, and "what do we hold for this item" are all
 // prefix operations).
-function objectKeyFor(source: any, id: any, tier: any, hash: any): string {
+function objectKeyFor(
+  source: string,
+  id: string | number,
+  tier: string,
+  hash: string | null | undefined,
+): string {
   if (!hash) {
     throw new Error(
       "objectKeyFor requires a content hash -- an unversioned key is exactly " +
@@ -102,7 +107,7 @@ function objectKeyFor(source: any, id: any, tier: any, hash: any): string {
 // (source, native_id) alone locate an item's objects for bulk listing, with
 // no lookup table needed:
 //   aws s3 ls "s3://$BUCKET/$(node scripts/s3_prefix_for.mjs met 436535)"
-function prefixFor(source: any, id: any): string {
+function prefixFor(source: string, id: string | number): string {
   return `img-cache/${String(source).replace(
     /[^A-Za-z0-9._-]+/g,
     "-",
@@ -115,7 +120,11 @@ function prefixFor(source: any, id: any): string {
 // institution 429 happened). Reproduced exactly as
 // api/img/[source]/[id]/[tier].ts builds it, since this has to address
 // objects that already exist.
-function legacyBlobPathname(source: any, id: any, tier: any): string {
+function legacyBlobPathname(
+  source: string,
+  id: string | number,
+  tier: string,
+): string {
   const safeId = String(id).replace(/\//g, "_");
   return `img-cache/${source}/${safeId}/${tier}`;
 }

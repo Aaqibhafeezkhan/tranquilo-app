@@ -16,7 +16,7 @@ import * as Sentry from "@sentry/node";
 // rather than silently inheriting one that could change upstream.
 // scrubEvent() is a second, redundant layer stripping cookies/auth
 // headers/any `user` object before an event leaves the process.
-function scrubEvent(event: any) {
+function scrubEvent<T extends Sentry.Event>(event: T): T {
   if (event?.request) {
     delete event.request.cookies;
     if (event.request.headers) {

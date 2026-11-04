@@ -5,6 +5,7 @@
 // it looks them up via document.getElementById() once they've upgraded.
 
 import { Analytics } from "./app/Analytics";
+import { ArtworkViewTracker } from "./app/ArtworkViewTracker";
 import { wireAiDisclosureToggle } from "./app/aiDisclosureToggle";
 import { CatalogueCache } from "./app/CatalogueCache";
 import { COLLECTION_SOURCES, CollectionStore } from "./app/CollectionStore";
@@ -51,21 +52,40 @@ import type { ITranquiloExportModalHost } from "./types/ITranquiloExportModalHos
 import type { ITranquiloFeedHost } from "./types/ITranquiloFeedHost";
 import type { ITranquiloLightboxHost } from "./types/ITranquiloLightboxHost";
 import type { ITranquiloSetOfWorksModeHost } from "./types/ITranquiloSetOfWorksModeHost";
+import type { ITranquiloShelfModeHost } from "./types/ITranquiloShelfModeHost";
 import type { ITranquiloShelvesModeHost } from "./types/ITranquiloShelvesModeHost";
 import type { ITranquiloStorylineModeHost } from "./types/ITranquiloStorylineModeHost";
+import type { Category } from "./types/Item";
+import type { MusicBucketKey } from "./types/MusicBucket";
+import type { SetOfWork, SetOfWorkIndexEntry } from "./types/SetOfWork";
+import type { HeroShelf } from "./types/Shelf";
+import type { Storyline, StorylineIndexEntry } from "./types/Storyline";
 
 import "./components/TranquiloSupportStrip";
 import "./components/TranquiloNewsletterModal";
+import type { TranquiloTopbar } from "./components/TranquiloTopbar";
 import "./components/TranquiloTopbar";
+import type { TranquiloMusicToggle } from "./components/TranquiloMusicToggle";
 import "./components/TranquiloMusicToggle";
+import type { TranquiloSearchBar } from "./components/TranquiloSearchBar";
 import "./components/TranquiloSearchBar";
+import type { TranquiloLightbox } from "./components/TranquiloLightbox";
 import "./components/TranquiloLightbox";
+import type { TranquiloDetailModal } from "./components/TranquiloDetailModal";
 import "./components/TranquiloDetailModal";
+import type { TranquiloStorylineMode } from "./components/TranquiloStorylineMode";
 import "./components/TranquiloStorylineMode";
+import type { TranquiloSetOfWorksMode } from "./components/TranquiloSetOfWorksMode";
 import "./components/TranquiloSetOfWorksMode";
+import type { TranquiloShelvesMode } from "./components/TranquiloShelvesMode";
 import "./components/TranquiloShelvesMode";
+import type { TranquiloShelfMode } from "./components/TranquiloShelfMode";
+import "./components/TranquiloShelfMode";
+import type { TranquiloExportModal } from "./components/TranquiloExportModal";
 import "./components/TranquiloExportModal";
+import type { TranquiloUpsellToast } from "./components/TranquiloUpsellToast";
 import "./components/TranquiloUpsellToast";
+import type { TranquiloFeed } from "./components/TranquiloFeed";
 import "./components/TranquiloFeed";
 
 import "./analytics/cloudflareBeacon";
@@ -98,7 +118,7 @@ class TranquiloApp {
         "curio:musicOn": "tranquilo:musicOn",
         "curio:searchHistory": "tranquilo:searchHistory",
       };
-      Object.keys(legacyMap).forEach((oldKey: any) => {
+      Object.keys(legacyMap).forEach((oldKey) => {
         const newKey = legacyMap[oldKey];
         const oldValue = localStorage.getItem(oldKey);
         if (oldValue !== null && localStorage.getItem(newKey) === null) {
@@ -153,13 +173,13 @@ class TranquiloApp {
       FEED_PAGE_SIZE,
       currentLocale(),
     );
-    function apiUrl(params: any) {
+    function apiUrl(params: Record<string, unknown>) {
       return itemsApi.apiUrl(params);
     }
-    function fetchJson(url: any, what: any) {
-      return itemsApi.fetchJson(url, what);
+    function fetchJson<T>(url: string, what: string) {
+      return itemsApi.fetchJson<T>(url, what);
     }
-    function fetchFeedPage(params: any) {
+    function fetchFeedPage(params: Record<string, unknown>) {
       return itemsApi.fetchFeedPage(params);
     }
     let printRegion: Promise<string | null> | null = null;
@@ -188,29 +208,33 @@ class TranquiloApp {
     function fetchHeroPool() {
       return itemsApi.fetchHeroPool();
     }
-    function fetchStorylineDetail(id: any) {
+    function fetchStorylineDetail(id: string) {
       return itemsApi.fetchStorylineDetail(id);
     }
     function fetchSetOfWorksIndex() {
       return itemsApi.fetchSetOfWorksIndex();
     }
-    function fetchSetOfWorkDetail(id: any) {
+    function fetchSetOfWorkDetail(id: string) {
       return itemsApi.fetchSetOfWorkDetail(id);
     }
 
-    function countMatches(params: any) {
+    function countMatches(params: Record<string, unknown>) {
       return itemsApi.countMatches(params);
     }
 
-    function fetchItemsByIds(ids: any) {
+    function fetchItemsByIds(ids: string[]) {
       return itemsApi.fetchItemsByIds(ids);
+    }
+
+    function fetchItemsByKeys(keys: string[]) {
+      return itemsApi.fetchItemsByKeys(keys);
     }
 
     const catalogueCache = new CatalogueCache();
     const items = catalogueCache.items;
     const itemsById = catalogueCache.itemsById;
     const itemsByKey = catalogueCache.itemsByKey;
-    function absorbPage(rows: any) {
+    function absorbPage(rows: Parameters<CatalogueCache["absorbPage"]>[0]) {
       return catalogueCache.absorbPage(rows);
     }
 
@@ -231,55 +255,58 @@ class TranquiloApp {
     const musicBuckets = initFetches[3];
     const heroPool = initFetches[4];
     const setOfWorksIndex = initFetches[5];
-    const categoryToMusicBucket: Record<string, string> = {};
-    Object.keys(musicBuckets).forEach((key: string) => {
+    const categoryToMusicBucket = {} as Record<Category, MusicBucketKey>;
+    (Object.keys(musicBuckets) as MusicBucketKey[]).forEach((key) => {
       const category = musicBuckets[key].category;
       if (category) categoryToMusicBucket[category] = key;
     });
     const categories = ["All"].concat(
-      facets.categories.map((c: any) => c.value),
+      (facets.categories ?? []).map((c) => c.value),
     );
-    const storylinesById: Record<string, any> = {};
-    storylineIndex.forEach((s: any) => {
+    const storylinesById: Record<string, StorylineIndexEntry> = {};
+    storylineIndex.forEach((s) => {
       storylinesById[s.id] = s;
     });
-    const setOfWorksById: Record<string, any> = {};
-    setOfWorksIndex.forEach((s: any) => {
+    const setOfWorksById: Record<string, SetOfWorkIndexEntry> = {};
+    setOfWorksIndex.forEach((s) => {
       setOfWorksById[s.id] = s;
     });
     // Postgres can't derive this itself, so it's computed here from the
     // storyline index fetched alongside it.
-    const storylinesShelf = shelves.filter(
-      (s: any) => s.id === "storylines",
-    )[0];
+    const storylinesShelf = shelves.find((s) => s.id === "storylines") as
+      | HeroShelf
+      | undefined;
     if (storylinesShelf) {
-      storylinesShelf.itemIds = storylineIndex.map((s: any) => s.cover_item_id);
+      storylinesShelf.itemIds = storylineIndex.map((s) => ({
+        id: s.cover_item_id,
+        source: s.cover_source,
+      }));
     }
     // Lazy cache: only populated once a storyline is actually opened.
-    const storylineDetailById: Record<string, any> = {};
-    function resolveStorylineDetail(id: any) {
+    const storylineDetailById: Record<string, Storyline> = {};
+    function resolveStorylineDetail(id: string) {
       if (storylineDetailById[id])
         return Promise.resolve(storylineDetailById[id]);
       return fetchStorylineDetail(id)
-        .then((storyline: any) => {
+        .then((storyline) => {
           storylineDetailById[id] = storyline;
           return storyline;
         })
-        .catch((err: any) => {
+        .catch((err: unknown) => {
           console.error("storylines: detail fetch failed", err);
           return null;
         });
     }
-    const setOfWorkDetailById: Record<string, any> = {};
-    function resolveSetOfWorkDetail(id: any) {
+    const setOfWorkDetailById: Record<string, SetOfWork> = {};
+    function resolveSetOfWorkDetail(id: string) {
       if (setOfWorkDetailById[id])
         return Promise.resolve(setOfWorkDetailById[id]);
       return fetchSetOfWorkDetail(id)
-        .then((setOfWork: any) => {
+        .then((setOfWork) => {
           setOfWorkDetailById[id] = setOfWork;
           return setOfWork;
         })
-        .catch((err: any) => {
+        .catch((err: unknown) => {
           console.error("set of works: detail fetch failed", err);
           return null;
         });
@@ -291,36 +318,63 @@ class TranquiloApp {
     // Captured once at share-banner show-time, reused by its dismiss/CTA
     // handlers so every event in the funnel -- not just the impression --
     // is attributable to which entry type (artwork vs storyline) triggered it.
-    let shareBannerSource: "artwork" | "storyline" | null = null;
+    let shareBannerSource:
+      | "artwork"
+      | "storyline"
+      | "shelf"
+      | "discover"
+      | null = null;
     let searchResultCount = 0;
 
-    const feedEl = document.getElementById("feed") as any;
-    const lightboxEl = document.getElementById("lightbox") as any;
-    const scrollHint = document.getElementById("scrollHint") as any;
+    const feedEl = document.getElementById("feed") as TranquiloFeed;
+    const lightboxEl = document.getElementById("lightbox") as TranquiloLightbox;
+    const scrollHint = document.getElementById("scrollHint") as HTMLElement;
     // index.html carries the English text as a no-JS fallback.
     scrollHint.textContent = t("feed.scrollHint");
-    const detailModalEl = document.getElementById("detailModal") as any;
+    const detailModalEl = document.getElementById(
+      "detailModal",
+    ) as TranquiloDetailModal;
     // Kept outside the topbar host so SearchController's outside-click
     // check can reference it directly.
-    const searchToggle = document.getElementById("searchToggle") as any;
-    const toastEl = document.getElementById("toast") as any;
-    const upsellToastEl = document.getElementById("upsellToast") as any;
-    const storylineModeEl = document.getElementById("storylineMode") as any;
-    const setOfWorksModeEl = document.getElementById("setOfWorksMode") as any;
-    const shelvesModeEl = document.getElementById("shelvesMode") as any;
-    const exportModalEl = document.getElementById("exportModal") as any;
+    const searchToggle = document.getElementById("searchToggle") as HTMLElement;
+    const toastEl = document.getElementById("toast") as HTMLElement;
+    const upsellToastEl = document.getElementById(
+      "upsellToast",
+    ) as TranquiloUpsellToast;
+    const storylineModeEl = document.getElementById(
+      "storylineMode",
+    ) as TranquiloStorylineMode;
+    const setOfWorksModeEl = document.getElementById(
+      "setOfWorksMode",
+    ) as TranquiloSetOfWorksMode;
+    const shelvesModeEl = document.getElementById(
+      "shelvesMode",
+    ) as TranquiloShelvesMode;
+    const shelfModeEl = document.getElementById(
+      "shelfMode",
+    ) as TranquiloShelfMode;
+    // Which shelf surface the detail panel steps back to on close.
+    let shelfReturnEl: { restore(): void } = shelvesModeEl;
+    // Set only when a Discover tile opens a storyline directly, so closing
+    // that storyline lands back on Discover rather than the feed.
+    let storylineReturnEl: { restore(): void } | null = null;
+    const exportModalEl = document.getElementById(
+      "exportModal",
+    ) as TranquiloExportModal;
     // Assigned as a property, not an attribute, since it carries live
     // functions rather than strings.
-    const topbarEl = document.querySelector(".topbar") as any;
+    const topbarEl = document.querySelector(".topbar") as TranquiloTopbar;
     const musicToggleEl = document.querySelector(
       "tranquilo-music-toggle",
-    ) as any;
+    ) as TranquiloMusicToggle;
     musicToggleEl.musicBuckets = musicBuckets;
     musicToggleEl.categoryToBucket = categoryToMusicBucket;
-    const searchBarEl = document.querySelector("tranquilo-search-bar") as any;
+    const searchBarEl = document.querySelector(
+      "tranquilo-search-bar",
+    ) as TranquiloSearchBar;
     searchBarEl.facets = facets;
-    searchBarEl.addEventListener("search-submit", (e: any) => {
-      runSearch(e.detail.query);
+    searchBarEl.addEventListener("search-submit", (e) => {
+      runSearch((e as CustomEvent<{ query: string }>).detail.query);
     });
     searchBarEl.addEventListener("search-close-request", () => {
       requestOverlayClose(closeSearch);
@@ -330,11 +384,10 @@ class TranquiloApp {
     // later in this function, not hoisted -- a direct reference here
     // would capture undefined.
     const feedHost: ITranquiloFeedHost = {
-      createPager: (params: any, checkCategory: any, excludeIds: any) =>
-        createPager(params, checkCategory, excludeIds),
-      loadNextPage: (pager: any) => loadNextPage(pager),
-      fillFirstScreen: (pager: any, firstPage: any) =>
-        fillFirstScreen(pager, firstPage),
+      createPager: (params, checkCategory, excludeKeys) =>
+        createPager(params, checkCategory, excludeKeys),
+      loadNextPage: (pager) => loadNextPage(pager),
+      fillFirstScreen: (pager, firstPage) => fillFirstScreen(pager, firstPage),
       activeSlideIndex: () => activeSlideIndex(),
       updateRecycleWindow: () => {
         updateRecycleWindow();
@@ -342,12 +395,15 @@ class TranquiloApp {
       resetRecycleWindow: () => {
         resetRecycleWindow();
       },
-      resolveItemsByIds: (ids: any) => resolveItemsByIds(ids),
-      fetchItemsByIds: (ids: any) => fetchItemsByIds(ids),
-      absorbPage: (rows: any) => absorbPage(rows),
-      createSlideShell: (item: any) => createSlideShell(item),
+      resolveItemsByIds: (ids) => resolveItemsByIds(ids),
+      resolveItemsByKeys: (keys: string[]) => resolveItemsByKeys(keys),
+      fetchItemsByKeys: (keys: string[]) => fetchItemsByKeys(keys),
+      absorbPage: (rows) => absorbPage(rows),
+      createSlideShell: (item) => createSlideShell(item),
       getCollection: () => getCollection(),
-      collectionKeyFor: (item: any) => collectionKeyFor(item),
+      collectionKeyFor: (item) => collectionKeyFor(item),
+      isCollectionKey: (entry: string) =>
+        collectionStore.isCollectionKey(entry),
       getFilterState: () => filterState.snapshot(),
       // Read-and-clear atomically, so a second render() never re-honours
       // a link already consumed.
@@ -368,112 +424,111 @@ class TranquiloApp {
     feedEl.app = feedHost;
     feedEl.heroPool = heroPool;
     const lightboxHost: ITranquiloLightboxHost = {
-      wireArtworkImageState: (
-        frame: any,
-        skeleton: any,
-        img: any,
-        src: any,
-        item: any,
-        tier: any,
-      ) => wireArtworkImageState(frame, skeleton, img, src, item, tier),
-      applyNudityGate: (frame: any, item: any) => {
+      wireArtworkImageState: (frame, skeleton, img, src, item, tier) =>
+        wireArtworkImageState(frame, skeleton, img, src, item, tier),
+      applyNudityGate: (frame, item) => {
         applyNudityGate(frame, item);
       },
-      sampleArtworkColor: (item: any, callback: any) => {
+      sampleArtworkColor: (item, callback) => {
         sampleArtworkColor(item, callback);
       },
-      trackEvent: (name: any, props: any) => {
+      trackEvent: (name, props) => {
         trackEvent(name, props);
       },
-      sourceLinkLabel: (item: any) => sourceLinkLabel(item),
-      isAggregatorSource: (item: any) => isAggregatorSource(item),
-      pushOverlayHistoryState: (name: any) => {
+      sourceLinkLabel: (item) => sourceLinkLabel(item),
+      isAggregatorSource: (item) => isAggregatorSource(item),
+      pushOverlayHistoryState: (name) => {
         pushOverlayHistoryState(name);
       },
-      requestOverlayClose: (closeFn: any) => {
+      requestOverlayClose: (closeFn) => {
         requestOverlayClose(closeFn);
       },
     };
     lightboxEl.app = lightboxHost;
     const detailModalHost: ITranquiloDetailModalHost = {
-      wireArtworkImageState: (
-        frame: any,
-        skeleton: any,
-        img: any,
-        src: any,
-        item: any,
-        tier: any,
-      ) => wireArtworkImageState(frame, skeleton, img, src, item, tier),
-      applyNudityGate: (frame: any, item: any) => {
+      wireArtworkImageState: (frame, skeleton, img, src, item, tier) =>
+        wireArtworkImageState(frame, skeleton, img, src, item, tier),
+      applyNudityGate: (frame, item) => {
         applyNudityGate(frame, item);
       },
-      sampleArtworkColor: (item: any, callback: any) => {
+      sampleArtworkColor: (item, callback) => {
         sampleArtworkColor(item, callback);
       },
-      storylineFor: (item: any) => storylineFor(item),
-      storylinePositionLabel: (item: any, storyline: any) =>
+      storylineFor: (item) => storylineFor(item),
+      storylinePositionLabel: (item, storyline) =>
         storylinePositionLabel(item, storyline),
-      setOfWorkFor: (item: any) => setOfWorkFor(item),
-      setOfWorkPositionLabel: (item: any, setOfWork: any) =>
+      setOfWorkFor: (item) => setOfWorkFor(item),
+      setOfWorkPositionLabel: (item, setOfWork) =>
         setOfWorkPositionLabel(item, setOfWork),
-      trackEvent: (name: any, props: any) => {
+      trackEvent: (name, props) => {
         trackEvent(name, props);
       },
-      hydrateItems: (items: any) => hydrateItems(items),
-      shareItem: (item: any) => {
+      hydrateItems: (items) => hydrateItems(items),
+      shareItem: (item) => {
         shareItem(item);
       },
-      sourceLinkLabel: (item: any) => sourceLinkLabel(item),
-      sourceLinkText: (item: any) => sourceLinkText(item),
-      setArtistFilter: (artist: any) => {
+      sourceLinkLabel: (item) => sourceLinkLabel(item),
+      sourceLinkText: (item) => sourceLinkText(item),
+      setArtistFilter: (artist) => {
         setArtistFilter(artist);
       },
-      openStorylineMode: (storylineId: any) => {
+      openStorylineMode: (storylineId) => {
+        storylineReturnEl = null;
         storylineModeEl.open(storylineId);
       },
-      openSetOfWorksMode: (setOfWorkId: any) => {
+      openSetOfWorksMode: (setOfWorkId) => {
         setOfWorksModeEl.open(setOfWorkId);
       },
-      pushOverlayHistoryState: (name: any) => {
+      pushOverlayHistoryState: (name) => {
         pushOverlayHistoryState(name);
       },
-      requestOverlayClose: (closeFn: any) => {
+      requestOverlayClose: (closeFn) => {
         requestOverlayClose(closeFn);
       },
       reopenShelvesMode: () => {
-        shelvesModeEl.restore();
+        shelfReturnEl.restore();
       },
-      showToast: (msg: any) => {
+      showToast: (msg) => {
         showToast(msg);
       },
       printOffersFor: (item: any) => itemPrintOffers(item),
     };
     detailModalEl.app = detailModalHost;
-    detailModalEl.addEventListener("storyline-handoff-restore", (e: any) => {
+    detailModalEl.addEventListener("storyline-handoff-restore", (e) => {
+      const { id, position } = (
+        e as CustomEvent<{ id: string; position: number }>
+      ).detail;
       // Reopens at the last-read chapter, not the intro trailer.
-      storylineModeEl.open(e.detail.id, e.detail.position);
+      storylineModeEl.open(id, position);
     });
     const storylineModeHost: ITranquiloStorylineModeHost = {
-      getItem: (id: any) => itemsById[id],
-      resolveItemsByIds: (ids: any) => resolveItemsByIds(ids),
-      getStorylineDetail: (id: any) => storylineDetailById[id],
-      resolveStorylineDetail: (id: any) => resolveStorylineDetail(id),
-      applyNudityGate: (frame: any, item: any, compact: any) => {
+      getItem: (id) => itemsById[id],
+      getItemByKey: (key: string) => itemsByKey[key],
+      resolveItemsByIds: (ids) => resolveItemsByIds(ids),
+      resolveItemsByKeys: (keys: string[]) => resolveItemsByKeys(keys),
+      getStorylineDetail: (id) => storylineDetailById[id],
+      resolveStorylineDetail: (id) => resolveStorylineDetail(id),
+      applyNudityGate: (frame, item, compact) => {
         applyNudityGate(frame, item, compact);
       },
-      trackEvent: (name: any, props: any) => {
+      trackEvent: (name, props) => {
         trackEvent(name, props);
       },
-      openLightbox: (src: any, alt: any, item: any) => {
+      openLightbox: (src, alt, item) => {
         lightboxEl.open(src, alt, item);
       },
-      shareStoryline: (storyline: any) => {
+      shareStoryline: (storyline) => {
         shareStoryline(storyline);
       },
-      pushOverlayHistoryState: (name: any) => {
+      storylineClosed: () => {
+        const returnTo = storylineReturnEl;
+        storylineReturnEl = null;
+        returnTo?.restore();
+      },
+      pushOverlayHistoryState: (name) => {
         pushOverlayHistoryState(name);
       },
-      requestOverlayClose: (closeFn: any) => {
+      requestOverlayClose: (closeFn) => {
         requestOverlayClose(closeFn);
       },
     };
@@ -482,75 +537,120 @@ class TranquiloApp {
     // openDetailModal is direct since this mode closes itself first
     // instead of stacking under the detail panel.
     const setOfWorksModeHost: ITranquiloSetOfWorksModeHost = {
-      getItem: (id: any) => itemsById[id],
-      resolveItemsByIds: (ids: any) => resolveItemsByIds(ids),
-      getSetOfWorkDetail: (id: any) => setOfWorkDetailById[id],
-      resolveSetOfWorkDetail: (id: any) => resolveSetOfWorkDetail(id),
-      applyNudityGate: (frame: any, item: any, compact: any) => {
+      getItem: (id) => itemsById[id],
+      getItemByKey: (key: string) => itemsByKey[key],
+      resolveItemsByIds: (ids) => resolveItemsByIds(ids),
+      resolveItemsByKeys: (keys: string[]) => resolveItemsByKeys(keys),
+      getSetOfWorkDetail: (id) => setOfWorkDetailById[id],
+      resolveSetOfWorkDetail: (id) => resolveSetOfWorkDetail(id),
+      applyNudityGate: (frame, item, compact) => {
         applyNudityGate(frame, item, compact);
       },
-      trackEvent: (name: any, props: any) => {
+      trackEvent: (name, props) => {
         trackEvent(name, props);
       },
-      openLightbox: (src: any, alt: any, item: any) => {
+      openLightbox: (src, alt, item) => {
         lightboxEl.open(src, alt, item);
       },
-      openDetailModal: (item: any) => {
+      openDetailModal: (item) => {
         detailModalEl.open(item);
       },
-      pushOverlayHistoryState: (name: any) => {
+      pushOverlayHistoryState: (name) => {
         pushOverlayHistoryState(name);
       },
-      requestOverlayClose: (closeFn: any) => {
+      requestOverlayClose: (closeFn) => {
         requestOverlayClose(closeFn);
       },
     };
     setOfWorksModeEl.app = setOfWorksModeHost;
     // app.ts mediates between sibling components rather than letting
     // them reach into each other directly.
-    storylineModeEl.addEventListener("open-detail", (e: any) => {
+    storylineModeEl.addEventListener("open-detail", (e) => {
       detailModalEl.dispatchEvent(
         new CustomEvent("storyline-handoff-open", {
-          detail: e.detail,
+          detail: (e as CustomEvent).detail,
         }),
       );
     });
     shelvesModeEl.shelves = shelves;
     const shelvesModeHost: ITranquiloShelvesModeHost = {
-      apiUrl: (params: any) => apiUrl(params),
-      fetchJson: (url: any, what: any) => fetchJson(url, what),
-      absorbPage: (rows: any) => absorbPage(rows),
-      resolveItemsByIds: (ids: any) => resolveItemsByIds(ids),
-      hydrateItems: (items: any) => hydrateItems(items),
-      applyNudityGate: (frame: any, item: any, compact: any) => {
+      resolveItemsByKeys: (keys: string[]) => resolveItemsByKeys(keys),
+      apiUrl: (params) => apiUrl(params),
+      fetchJson: (url, what) => fetchJson(url, what),
+      absorbPage: (rows) =>
+        absorbPage(rows as Parameters<typeof absorbPage>[0]),
+      resolveItemsByIds: (ids) => resolveItemsByIds(ids),
+      hydrateItems: (items) => hydrateItems(items),
+      applyNudityGate: (frame, item, compact) => {
         applyNudityGate(frame, item, compact);
       },
-      storylineFor: (item: any) => storylineFor(item),
-      trackEvent: (name: any, props: any) => {
+      storylineIndex: () => storylineIndex,
+      openStoryline: (storylineId) => {
+        storylineReturnEl = shelvesModeEl;
+        storylineModeEl.open(storylineId);
+      },
+      trackEvent: (name, props) => {
         trackEvent(name, props);
       },
-      openDetailModal: (item: any, shelfContext: any) => {
+      openDetailModal: (item, shelfContext) => {
+        shelfReturnEl = shelvesModeEl;
         detailModalEl.open(item, shelfContext);
       },
-      pushOverlayHistoryState: (name: any) => {
+      shareShelf: (shelf) => {
+        shareService.shareShelf(shelf);
+      },
+      pushOverlayHistoryState: (name) => {
         pushOverlayHistoryState(name);
       },
-      requestOverlayClose: (closeFn: any) => {
+      requestOverlayClose: (closeFn) => {
         requestOverlayClose(closeFn);
       },
     };
     shelvesModeEl.app = shelvesModeHost;
-    const exportModalHost: ITranquiloExportModalHost = {
-      pushOverlayHistoryState: (name: any) => {
+    shelfModeEl.shelves = shelves;
+    const shelfModeHost: ITranquiloShelfModeHost = {
+      resolveItemsByKeys: (keys: string[]) => resolveItemsByKeys(keys),
+      apiUrl: (params) => apiUrl(params),
+      fetchJson: (url, what) => fetchJson(url, what),
+      absorbPage: (rows) =>
+        absorbPage(rows as Parameters<typeof absorbPage>[0]),
+      resolveItemsByIds: (ids) => resolveItemsByIds(ids),
+      hydrateItems: (items) => hydrateItems(items),
+      applyNudityGate: (frame, item, compact) => {
+        applyNudityGate(frame, item, compact);
+      },
+      trackEvent: (name, props) => {
+        trackEvent(name, props);
+      },
+      shareShelf: (shelf) => {
+        shareService.shareShelf(shelf);
+      },
+      openDetailModal: (item, shelfContext) => {
+        shelfReturnEl = shelfModeEl;
+        detailModalEl.open(item, shelfContext);
+      },
+      pushOverlayHistoryState: (name) => {
         pushOverlayHistoryState(name);
       },
-      requestOverlayClose: (closeFn: any) => {
+      requestOverlayClose: (closeFn) => {
+        requestOverlayClose(closeFn);
+      },
+      returnToDiscover: () => {
+        shelvesModeEl.open();
+      },
+    };
+    shelfModeEl.app = shelfModeHost;
+    const exportModalHost: ITranquiloExportModalHost = {
+      pushOverlayHistoryState: (name) => {
+        pushOverlayHistoryState(name);
+      },
+      requestOverlayClose: (closeFn) => {
         requestOverlayClose(closeFn);
       },
     };
     exportModalEl.app = exportModalHost;
     const topbarHost: ITopbarHost = {
-      onCategorySelect: (cat: any) => {
+      onCategorySelect: (cat) => {
         filterState.setCategory(cat);
         filterState.setArtist(null);
         filterState.setSearch(null);
@@ -682,6 +782,7 @@ class TranquiloApp {
           detailModalEl.open(item);
         },
         openStorylineMode: (storylineId: any) => {
+          storylineReturnEl = null;
           storylineModeEl.open(storylineId);
         },
         openSetOfWorksMode: (setOfWorkId: any) => {
@@ -786,6 +887,7 @@ class TranquiloApp {
       {
         fetchFeedPage: fetchFeedPage,
         fetchItemsByIds: fetchItemsByIds,
+        fetchItemsByKeys: fetchItemsByKeys,
         absorbPage: absorbPage,
         buildSlideContents: buildSlideContents,
         maybeLoadMoreSlides: () => {
@@ -808,6 +910,7 @@ class TranquiloApp {
     const loadNextPage = recycleWindow.loadNextPage;
     const fillFirstScreen = recycleWindow.fillFirstScreen;
     const resolveItemsByIds = recycleWindow.resolveItemsByIds;
+    const resolveItemsByKeys = recycleWindow.resolveItemsByKeys;
     const hydrateItems = recycleWindow.hydrateItems;
     const activeSlideIndex = recycleWindow.activeSlideIndex;
     const updateRecycleWindow = recycleWindow.updateRecycleWindow;
@@ -837,6 +940,21 @@ class TranquiloApp {
     });
     feedEl.addEventListener("scroll", () => {
       scrollTelemetry.onScroll();
+    });
+
+    const artworkViewTracker = new ArtworkViewTracker({
+      activeSlideIndex: () => activeSlideIndex(),
+      getSlideRecords: () => feedEl.slideRecords,
+      trackEvent: (name: string, props?: Record<string, unknown>) =>
+        trackEvent(name, props),
+      pageLoadId: PAGE_LOAD_ID,
+    });
+    feedEl.addEventListener("scroll", () => artworkViewTracker.check(), {
+      passive: true,
+    });
+    feedEl.addEventListener("feed-settled", () => artworkViewTracker.check());
+    document.addEventListener("visibilitychange", () => {
+      artworkViewTracker.setPageVisible(document.visibilityState !== "hidden");
     });
 
     // One rule for every banner mode, not just the artist filter: a search
@@ -1016,6 +1134,7 @@ class TranquiloApp {
     const overlayHistory = new OverlayHistoryManager({
       detailModalEl,
       shelvesModeEl,
+      shelfModeEl,
       storylineModeEl,
       setOfWorksModeEl,
       lightboxEl,
@@ -1106,7 +1225,9 @@ class TranquiloApp {
     if (hadDeepLinkArtwork) {
       pendingDeepLinkSlug = initialSlug;
     }
-    feedEl.render();
+    feedEl.render(
+      hadDeepLinkArtwork ? () => openDeepLinkedArtwork(initialSlug) : undefined,
+    );
 
     // Opens after the feed renders (not instead of), so closing the
     // storyline leaves a real feed behind rather than a blank page.
@@ -1114,6 +1235,12 @@ class TranquiloApp {
     if (initialStorylineId) {
       storylineModeEl.open(initialStorylineId);
     }
+    const initialShelfId = slugCodec.shelfIdFromLocation();
+    const openedShelf = initialShelfId
+      ? shelfModeEl.open(initialShelfId)
+      : false;
+    const openedDiscover = slugCodec.isDiscoverLocation();
+    if (openedDiscover) shelvesModeEl.open();
 
     // Either deep-link form means the same thing for this banner: the
     // intro slide (and its Mission/Connect/Support cards) was skipped,
@@ -1122,15 +1249,35 @@ class TranquiloApp {
     // so forking into two independently-tracked states would only invite
     // them drifting out of sync.
     const arrivedViaShareLink =
-      hadDeepLinkArtwork || Boolean(initialStorylineId);
+      hadDeepLinkArtwork ||
+      Boolean(initialStorylineId) ||
+      openedShelf ||
+      openedDiscover;
     if (
       arrivedViaShareLink &&
       !sessionStorage.getItem(SESSION_SHARE_BANNER_KEY)
     ) {
-      shareBannerSource = hadDeepLinkArtwork ? "artwork" : "storyline";
+      shareBannerSource = hadDeepLinkArtwork
+        ? "artwork"
+        : initialStorylineId
+          ? "storyline"
+          : openedDiscover
+            ? "discover"
+            : "shelf";
       topbarEl.showShareBanner();
       sessionStorage.setItem(SESSION_SHARE_BANNER_KEY, "1");
       trackEvent("share_banner_shown", { source: shareBannerSource });
+    }
+
+    function openDeepLinkedArtwork(slug: string) {
+      const cut = slug.indexOf("-");
+      resolveItemsByKeys([`${slug.slice(0, cut)}:${slug.slice(cut + 1)}`])
+        .then((found: any[]) => {
+          if (found[0]) detailModalEl.open(found[0]);
+        })
+        .catch((err: any) => {
+          console.error("deep link: detail open failed", err);
+        });
     }
 
     function slugFromLocation() {

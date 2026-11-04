@@ -22,6 +22,11 @@
 //
 // Renders into light DOM: every style already lives in css/style.css.
 
+import {
+  findCuratedItem,
+  renumberResolved,
+  resolveCuratedItems,
+} from "../feed/curatedEntries";
 import { escapeHtml, SHARE_SVG } from "../feed/slideBuilder";
 import { t } from "../i18n/index";
 import type { ITranquiloStorylineModeHost } from "../types/ITranquiloStorylineModeHost";
@@ -195,7 +200,10 @@ export class TranquiloStorylineMode extends HTMLElement {
     const host = this.requireApp();
     const page = document.createElement("div");
     page.className = "storyline-page storyline-intro-page";
-    const coverItem = host.getItem(String(storyline.cover_item_id));
+    const coverItem = findCuratedItem(host, {
+      id: storyline.cover_item_id,
+      source: storyline.cover_source,
+    });
     const stackDepth = Math.min(2, storyline.items.length - 1);
     let ghosts = "";
     for (let i = 1; i <= stackDepth; i++) {
@@ -235,7 +243,7 @@ export class TranquiloStorylineMode extends HTMLElement {
     storyItem: StorylineChapter,
   ): HTMLElement {
     const host = this.requireApp();
-    const item = host.getItem(String(storyItem.id));
+    const item = findCuratedItem(host, storyItem);
     const page = document.createElement("div");
     page.className = "storyline-page storyline-chapter-page";
     page.dataset.storylinePosition = String(storyItem.position);
@@ -290,7 +298,7 @@ export class TranquiloStorylineMode extends HTMLElement {
     storylineId: string,
     position: number,
   ): void {
-    this.close();
+    this.hide();
     this.dispatchEvent(
       new CustomEvent<OpenDetailEventDetail>("open-detail", {
         detail: { item, storylineId, position },
@@ -424,16 +432,16 @@ export class TranquiloStorylineMode extends HTMLElement {
 
   // `atPosition` opens straight to a chapter, used when returning from an
   // artwork's detail panel. Undefined everywhere else.
-  open(storylineId: string, atPosition?: number): void {
+  open(storylineId: string, atPosition?: number, resolved = false): void {
     const host = this.requireApp();
-    const storyline = host.getStorylineDetail(storylineId);
+    const detail = host.getStorylineDetail(storylineId);
 
     // Full storyline content is fetched lazily, one at a time, unlike the
     // lightweight index the feed chip already has. Not cached means not
     // fetched, so kick that off and show a loading skeleton meanwhile;
     // re-invoking open() once it resolves is the same self-recursion the
     // chapter-item resolution below uses.
-    if (!storyline) {
+    if (!detail) {
       this.pendingStorylineId = storylineId;
       this.currentStorylineId = storylineId;
       this.showLoadingSkeleton();
@@ -456,24 +464,36 @@ export class TranquiloStorylineMode extends HTMLElement {
       return;
     }
     this.pendingStorylineId = null;
+    let storyline = detail;
 
     // A storyline is a handful of items the feed's recycling window has
     // no reason to have hydrated -- fetch them first or every chapter
     // renders a blank frame. Deliberately silent, unlike the
     // storyline-detail fetch above.
-    const chapterIds = storyline.items.map((si) => String(si.id));
-    const chapterItems = chapterIds
-      .map((id) => host.getItem(id))
+    const chapterItems = storyline.items
+      .map((si) => findCuratedItem(host, si))
       .filter((i): i is Item => !!i);
     // "Do we have it" and "is it hydrated" are different questions;
-    // resolving by id covers both.
+    // resolving by id covers both. One pass only: a chapter the catalogue
+    // no longer serves would otherwise re-trigger this forever.
     if (
-      chapterItems.length !== chapterIds.length ||
-      chapterItems.some((i) => !i._full)
+      !resolved &&
+      (chapterItems.length !== storyline.items.length ||
+        chapterItems.some((i) => !i._full))
     ) {
-      host.resolveItemsByIds(chapterIds).then(() => {
-        this.open(storylineId, atPosition);
+      resolveCuratedItems(host, storyline.items).then(() => {
+        this.open(storylineId, atPosition, true);
       });
+      return;
+    }
+    if (resolved) {
+      storyline = {
+        ...detail,
+        items: renumberResolved(host, detail.items),
+      };
+    }
+    if (!storyline.items.length) {
+      this.close();
       return;
     }
     host.trackEvent("storyline_open", { storyline_id: storylineId });
@@ -507,13 +527,19 @@ export class TranquiloStorylineMode extends HTMLElement {
     if (atPosition) this.updateTimeline(atPosition);
   }
 
-  close(): void {
+  private hide(): boolean {
+    const wasOpen = this.classList.contains("open");
     this.classList.remove("open");
     this.setAttribute("aria-hidden", "true");
     this.observer?.disconnect();
     this.observer = null;
     // Invalidates any in-flight resolveStorylineDetail() via open()'s guard.
     this.pendingStorylineId = null;
+    return wasOpen;
+  }
+
+  close(): void {
+    if (this.hide()) this.requireApp().storylineClosed();
   }
 }
 

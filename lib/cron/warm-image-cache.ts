@@ -20,6 +20,7 @@
 // api/img's own S3 path already requires.
 
 import * as proxy from "../../api/img/[source]/[id]/[tier].ts";
+import type { CronRequest, CronResponse } from "../cron-types.ts";
 import { getSql } from "../db.ts";
 import * as objectKey from "../img-object-key.ts";
 import * as s3 from "../img-s3.ts";
@@ -53,8 +54,8 @@ function monitorConfig() {
   };
 }
 
-export default async function handler(req: any, res: any) {
-  const auth = req.headers.authorization || "";
+export default async function handler(req: CronRequest, res: CronResponse) {
+  const auth = req.headers?.authorization || "";
   if (
     !process.env.CRON_SECRET ||
     auth !== `Bearer ${process.env.CRON_SECRET}`
@@ -100,14 +101,14 @@ export default async function handler(req: any, res: any) {
     await Sentry.flush(2000);
     res.statusCode = 200;
     res.json({ ...result, log: lines });
-  } catch (err: any) {
-    console.error("warm-image-cache:", err?.message || err);
+  } catch (err) {
+    console.error("warm-image-cache:", (err as Error)?.message || err);
     Sentry.captureCheckIn(
       { checkInId, monitorSlug: MONITOR_SLUG, status: "error" },
       monitorConfig(),
     );
     await reportError(err); // awaits its own flush
     res.statusCode = 500;
-    res.json({ error: String(err?.message || err), log: lines });
+    res.json({ error: String((err as Error)?.message || err), log: lines });
   }
 }

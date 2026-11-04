@@ -70,7 +70,7 @@ describe("the counter never breaks image serving", () => {
     // Serving an image matters more than counting it.
     const ops = makeCountedBlobOps({
       put: async () => ({ url: "https://blob/ok" }),
-      head: async () => ({ url: "https://blob/ok" }),
+      head: async (_key: string) => ({ url: "https://blob/ok" }),
       record: async () => {
         throw new Error("neon down");
       },

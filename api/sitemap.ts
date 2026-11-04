@@ -22,7 +22,7 @@ import { renderStaticPageHreflangLinks } from "../lib/sitemap-hreflang.ts";
 // them -- Commons filenames are the realistic source, since they are arbitrary
 // user-chosen text. An unescaped & alone makes the whole document malformed,
 // and a malformed sitemap is rejected wholesale rather than partially.
-function escapeXml(value: any): string {
+function escapeXml(value: string): string {
   return String(value)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -40,6 +40,13 @@ const STATIC_PAGES = [
   { path: "/pages/terms.html", priority: "0.3" },
 ];
 
+interface SitemapRow {
+  source: string;
+  native_id: string;
+  harmonized_at: string | Date | null;
+  created_at: string | Date | null;
+}
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "GET") {
     res.statusCode = 405;
@@ -56,19 +63,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  let rows: any, origin: any, urls: any, xml: any;
   try {
     // Quarantined and rejected rows must not appear. Listing a URL that serves
     // a 404 is worse than omitting it: it spends crawl budget and it is
     // exactly the item we decided the public should not see.
-    rows = await client.query(
+    const rows = (await client.query(
       `SELECT source, native_id, harmonized_at, created_at FROM items ${
         LIVE_ITEMS_WHERE
       } ORDER BY created_at DESC, native_id`,
-    );
+    )) as SitemapRow[];
 
-    origin = getOrigin(req);
-    urls = rows.map((row: any) => {
+    const origin = getOrigin(req);
+    const urls = rows.map((row) => {
       // same transform as encodeSlugId() in src/app.ts (see that
       // file's comment, notably on why this is NOT encodeURI() -- it
       // percent-encodes non-ASCII bytes exactly like encodeURIComponent()
@@ -77,11 +83,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       // risk as a share link, and there is no reason its URLs should look
       // different from the ones the app itself hands out.
       let idPart = row.native_id;
-      let m: any;
       if (row.source === "commons" && idPart.slice(0, 5) === "File:") {
         idPart = idPart.slice(5);
       } else if (row.source === "europeana") {
-        m = /^\/([0-9]+)\/(.+)$/.exec(idPart);
+        const m = /^\/([0-9]+)\/(.+)$/.exec(idPart);
         if (m) idPart = `${m[1]}-${m[2]}`;
       }
       const slug = `${row.source}-${idPart.replace(/[%/#?\s]/g, encodeURIComponent)}`;
@@ -99,7 +104,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       );
     });
 
-    xml = `
+    const xml = `
       <?xml version="1.0" encoding="UTF-8"?>
       <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
         <url>
