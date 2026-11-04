@@ -85,20 +85,22 @@ export interface Item {
   subject_type: SubjectType | null;
   accentColor: string | null;
   contains_nudity: boolean | null;
-  caption_tea: string | null;
+  // The curated text (this and the five fields below) is absent from page
+  // rows; it arrives via ?shape=detail when the detail panel opens.
+  caption_tea?: string | null;
   caption_basic: string | null;
   tea_voice_status: string | null;
-  tea_voice_sources: TeaVoiceSource[] | null;
-  cast: CastMember[] | null;
-  cast_context: CastContext | null;
+  tea_voice_sources?: TeaVoiceSource[] | null;
+  cast?: CastMember[] | null;
+  cast_context?: CastContext | null;
   cast_tier: string | null;
   storyline_ids: string[] | null;
   // Single-membership, unlike storyline_ids.
   set_of_work_id: string | null;
   twist_category: string | null;
   twist_hook: string | null;
-  twist_story: string | null;
-  twist_source_url: string | null;
+  twist_story?: string | null;
+  twist_source_url?: string | null;
   shuffle_key: number;
   // Computed client-side after fetch, stashed onto the item -- never part
   // of the API response itself.

@@ -304,6 +304,20 @@ export async function stubBackend(
         String(a.id).localeCompare(String(b.id)),
     );
 
+  // Page rows carry no curated text; only the detail shape serves it.
+  const CURATED = [
+    "caption_tea",
+    "tea_voice_sources",
+    "cast",
+    "cast_context",
+    "twist_story",
+    "twist_source_url",
+  ];
+  const bulk = (item: Record<string, unknown>) =>
+    Object.fromEntries(
+      Object.entries(item).filter(([key]) => !CURATED.includes(key)),
+    );
+
   await page.route("**/api/items**", (route: Route) => {
     const url = new URL(route.request().url());
     const json = (body: unknown) =>
@@ -412,7 +426,7 @@ export async function stubBackend(
       );
       const foundKeys = new Set(found.map((i) => `${i.source}:${i.id}`));
       return json({
-        items: found,
+        items: found.map(bulk),
         missing: wantedKeys.filter((key) => !foundKeys.has(key)),
       });
     }
@@ -425,7 +439,7 @@ export async function stubBackend(
       const found = keyed.filter((i) => wanted.includes(String(i.id)));
       const foundIds = new Set(found.map((i) => String(i.id)));
       return json({
-        items: found,
+        items: found.map(bulk),
         missing: wanted.filter((id) => !foundIds.has(id)),
       });
     }
@@ -703,7 +717,7 @@ export async function stubBackend(
     }
 
     const limit = Number(url.searchParams.get("limit")) || 60;
-    return json({ items: rows.slice(0, limit), next_cursor: null });
+    return json({ items: rows.slice(0, limit).map(bulk), next_cursor: null });
   });
   await page.route("**/api/track**", (route: Route) =>
     route.fulfill({ status: 204, body: "" }),
