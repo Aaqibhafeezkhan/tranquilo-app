@@ -171,7 +171,7 @@ describe("the handler on a cache miss", () => {
 
   beforeEach(() => {
     fetched = [];
-    process.env.BLOB_READ_WRITE_TOKEN = "test-token";
+    vi.stubEnv("BLOB_READ_WRITE_TOKEN", "test-token");
     for (const k of [
       "S3_BUCKET",
       "S3_REGION",
@@ -179,7 +179,7 @@ describe("the handler on a cache miss", () => {
       "S3_SECRET_ACCESS_KEY",
       "IMG_CDN_BASE_URL",
     ]) {
-      delete process.env[k];
+      vi.stubEnv(k, undefined);
     }
     vi.stubGlobal(
       "fetch",
@@ -195,7 +195,7 @@ describe("the handler on a cache miss", () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
-    delete process.env.BLOB_READ_WRITE_TOKEN;
+    vi.unstubAllEnvs();
   });
 
   function call(
@@ -239,9 +239,15 @@ describe("the handler on a cache miss", () => {
   );
 
   it("ignores a repeated ?origin= too (an array in Vercel's req.query)", async () => {
-    await call("c1", "display", [HOSTILE, "https://example.com/x.jpg"]);
+    const res = await call("c1", "display", [
+      HOSTILE,
+      "https://example.com/x.jpg",
+    ]);
 
     expect(fetched).toEqual([ROW_IMG]);
+    expect(fetched).not.toContain(HOSTILE);
+    expect(res.statusCode).toBe(302);
+    expect(res.headers.location).toBe(stored.url);
   });
 
   it("takes the first value of a repeated ?id=", async () => {
