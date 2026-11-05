@@ -4,6 +4,35 @@ import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { makeSql } from "./helpers/pg.ts";
 
 const db: { sql: Awaited<ReturnType<typeof makeSql>> | null } = { sql: null };
+
+vi.mock("node:fs", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("node:fs")>();
+  const appHtml = `<!doctype html>
+<html lang="en">
+<head>
+  <title>Tranquilo</title>
+  <meta name="description" content="A calm digital museum">
+</head>
+<body><div id="app"></div></body>
+</html>`;
+  const readFileSync = vi.fn(
+    (...args: Parameters<typeof actual.readFileSync>) => {
+      const [file] = args;
+      if (
+        String(file).split(/[\\/]/).slice(-2).join("/") === "dist/index.html"
+      ) {
+        return appHtml;
+      }
+      return actual.readFileSync(...args);
+    },
+  );
+  return {
+    ...actual,
+    readFileSync,
+    default: { ...actual, readFileSync },
+  };
+});
+
 vi.mock("../lib/db.ts", () => ({ getSql: () => db.sql }));
 vi.mock("../lib/sentry.ts", () => ({ Sentry: {}, reportError: vi.fn() }));
 vi.mock("../lib/img-visitor-rate-limit.ts", () => ({
