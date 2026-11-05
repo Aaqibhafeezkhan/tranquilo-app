@@ -29,7 +29,7 @@ vi.mock("node:fs", async (importOriginal) => {
   return {
     ...actual,
     readFileSync,
-    default: { ...actual.default, readFileSync },
+    default: { ...actual, readFileSync },
   };
 });
 
