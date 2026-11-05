@@ -246,37 +246,30 @@ function serializeRow(row: ItemRow) {
     subject_type: row.subject_type,
     accentColor: row.accent_color,
     contains_nudity: row.contains_nudity,
-    caption_tea: row.caption_tea,
     caption_basic: row.caption_basic,
     tea_voice_status: row.tea_voice_status,
-    // Only grounded claims with a URL, trimmed to what the UI renders.
-    tea_voice_sources: teaVoiceSources(row.tea_voice_claims),
-    cast: castWithSafeLinks(row.cast),
-    cast_context: parseJsonbField(row.cast_context),
     cast_tier: row.cast_tier,
     storyline_ids: row.storyline_ids,
     set_of_work_id: row.set_of_work_id,
     twist_category: row.twist_category,
     twist_hook: row.twist_hook,
-    twist_story: row.twist_story,
-    twist_source_url: safeHttpUrl(row.twist_source_url),
     shuffle_key: row.shuffle_key,
   };
 }
 
-// The curated text the detail panel shows on open. Served one item at a
-// time by ?shape=detail, under its own visitor budget.
-const DETAIL_FIELDS = [
-  "caption_tea",
-  "tea_voice_sources",
-  "cast",
-  "cast_context",
-  "twist_story",
-  "twist_source_url",
-] as const;
-
-function pickDetail(item: Record<string, unknown>) {
-  return Object.fromEntries(DETAIL_FIELDS.map((field) => [field, item[field]]));
+// The curated text the detail panel shows on open, kept off every page row so
+// it is only reachable one item at a time, under its own visitor budget
+// (?shape=detail).
+function serializeCuratedText(row: ItemRow) {
+  return {
+    caption_tea: row.caption_tea,
+    // Only grounded claims with a URL, trimmed to what the UI renders.
+    tea_voice_sources: teaVoiceSources(row.tea_voice_claims),
+    cast: castWithSafeLinks(row.cast),
+    cast_context: parseJsonbField(row.cast_context),
+    twist_story: row.twist_story,
+    twist_source_url: safeHttpUrl(row.twist_source_url),
+  };
 }
 
 // The order manifest -- every live item, but only the fields needed
@@ -1077,18 +1070,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return;
     }
 
-    const items = itemRows.map(serializeRow);
-    if (locale) await translateItems(client, itemRows, items, locale);
-
     if (query.detail) {
-      if (!items.length) {
+      if (!itemRows.length) {
         res.statusCode = 404;
         res.json({ error: "No such item" });
         return;
       }
-      res.json({ item: pickDetail(items[0]) });
+      const curated = itemRows.map(serializeCuratedText);
+      if (locale) await translateItems(client, itemRows, curated, locale);
+      res.json({ item: curated[0] });
       return;
     }
+
+    const items = itemRows.map(serializeRow);
+    if (locale) await translateItems(client, itemRows, items, locale);
 
     // Bounded and ranked, not paginated -- no cursor, same shape as the
     // My Collection / storyline-chapter / set-of-works lookups, which are

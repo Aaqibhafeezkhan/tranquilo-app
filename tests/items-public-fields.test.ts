@@ -9,6 +9,20 @@ const ROW = {
   title: "Harbour",
   img: "https://images.example/1.jpg",
   caption_tea: "A caption",
+  tea_voice_claims: [
+    {
+      status: "grounded",
+      text: "A claim",
+      source_url: "https://example.org/c",
+    },
+  ],
+  cast: [{ name: "Sitter", tidbit: "A tidbit" }],
+  cast_context: { status: "grounded", text: "Context" },
+  cast_tier: "full",
+  twist_category: "forgery",
+  twist_hook: "A hook",
+  twist_story: "A story",
+  twist_source_url: "https://example.org/twist",
   vibe_tags: ["calm"],
   palette_hex: ["#112233"],
   palette_buckets: ["Blue"],
@@ -55,9 +69,22 @@ describe("full item rows", () => {
     expect(await lookup()).not.toHaveProperty(field);
   });
 
-  it("still include what the detail panel renders", async () => {
+  it.each([
+    "caption_tea",
+    "tea_voice_sources",
+    "cast",
+    "cast_context",
+    "twist_story",
+    "twist_source_url",
+  ])("leave %s to the detail shape", async (field) => {
+    expect(await lookup()).not.toHaveProperty(field);
+  });
+
+  it("keep what the feed and the panel's layout need", async () => {
     const item = await lookup();
     expect(item.title).toBe("Harbour");
-    expect(item.caption_tea).toBe("A caption");
+    expect(item.twist_category).toBe("forgery");
+    expect(item.twist_hook).toBe("A hook");
+    expect(item.cast_tier).toBe("full");
   });
 });

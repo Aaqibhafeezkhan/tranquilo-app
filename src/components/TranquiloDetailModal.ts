@@ -916,7 +916,12 @@ export class TranquiloDetailModal extends HTMLElement {
       this.requireApp()
         .fetchItemDetail(item)
         .then((detail) => {
-          Object.assign(item, detail);
+          item.caption_tea = detail.caption_tea;
+          item.tea_voice_sources = detail.tea_voice_sources;
+          item.cast = detail.cast;
+          item.cast_context = detail.cast_context;
+          item.twist_story = detail.twist_story;
+          item.twist_source_url = detail.twist_source_url;
           item._detail = true;
           const inner = page.querySelector<HTMLElement>(".detail-modal-inner");
           if (inner?.isConnected) this.refreshPage(inner, item);

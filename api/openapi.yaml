@@ -836,9 +836,29 @@ components:
         subject_type: { type: string, nullable: true }
         accentColor: { type: string, nullable: true }
         contains_nudity: { type: boolean }
-        caption_tea: { type: string, nullable: true }
         caption_basic: { type: string, nullable: true }
         tea_voice_status: { type: string, nullable: true }
+        cast_tier: { type: string, nullable: true }
+        storyline_ids: { type: array, items: { type: string } }
+        set_of_work_id: { type: string, nullable: true }
+        twist_category: { type: string, nullable: true }
+        twist_hook: { type: string, nullable: true }
+        shuffle_key: { type: number }
+    ItemDetailResult:
+      type: object
+      description: '`?shape=detail&key=...` -- the curated text for one item.'
+      required: [item]
+      properties:
+        item: { $ref: "#/components/schemas/ItemDetail" }
+    ItemDetail:
+      type: object
+      description: >-
+        The curated text of an item, served one item at a time and only by
+        `?shape=detail` -- item rows carry none of it, only `cast_tier`,
+        `twist_category` and `twist_hook`. `caption_tea` is translated under
+        `locale` like any item row.
+      properties:
+        caption_tea: { type: string, nullable: true }
         tea_voice_sources:
           type: array
           nullable: true
@@ -857,30 +877,6 @@ components:
                   year: { type: integer, nullable: true }
                   pages: { type: string, nullable: true }
                   url: { type: string, description: Publisher page if in print, otherwise a library catalogue record. }
-        cast: {}
-        cast_context: {}
-        cast_tier: { type: string, nullable: true }
-        storyline_ids: { type: array, items: { type: string } }
-        set_of_work_id: { type: string, nullable: true }
-        twist_category: { type: string, nullable: true }
-        twist_hook: { type: string, nullable: true }
-        twist_story: { type: string, nullable: true }
-        twist_source_url: { type: string, nullable: true }
-        shuffle_key: { type: number }
-    ItemDetailResult:
-      type: object
-      description: '`?shape=detail&key=...` -- the curated text for one item.'
-      required: [item]
-      properties:
-        item: { $ref: "#/components/schemas/ItemDetail" }
-    ItemDetail:
-      type: object
-      description: >-
-        The curated fields of an item, with the same meaning and shape as on
-        `Item`. `caption_tea` is translated under `locale` like any item row.
-      properties:
-        caption_tea: { type: string, nullable: true }
-        tea_voice_sources: { $ref: "#/components/schemas/Item/properties/tea_voice_sources" }
         cast: {}
         cast_context: {}
         twist_story: { type: string, nullable: true }

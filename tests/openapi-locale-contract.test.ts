@@ -35,8 +35,8 @@ describe("translatable fields", () => {
     expect([...listed()].sort()).toEqual([...ITEM_FIELDS].sort());
   });
 
-  it("are all properties of an item", () => {
-    const item = schemaBlock("Item");
+  it("are all properties of an item or its detail", () => {
+    const item = schemaBlock("Item") + schemaBlock("ItemDetail");
     for (const field of listed()) {
       expect(item).toMatch(new RegExp(`\\n {8}${field}:`));
     }
