@@ -4,7 +4,7 @@
 import { readFileSync } from "node:fs";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { generateApiKey, hashApiKey } from "../lib/api-keys.ts";
+import { hashAccessToken, mintAccessToken } from "../lib/api-keys.ts";
 
 const ROW = {
   id: "met:1",
@@ -21,7 +21,7 @@ const ROW = {
   caption_tea: "A caption",
 };
 
-const KEY = generateApiKey();
+const KEY = mintAccessToken();
 const state = {
   keyRows: [{ id: "5", tier: "partner" }] as unknown[],
   budgetRows: [{ tokens: 10 }] as unknown[],
@@ -37,7 +37,7 @@ vi.mock("../lib/db.ts", () => ({
       queries.push({ text, params });
       if (text.includes("FROM api_keys")) {
         if (state.failAuth) throw new Error("down");
-        return params[0] === hashApiKey(KEY) ? state.keyRows : [];
+        return params[0] === hashAccessToken(KEY) ? state.keyRows : [];
       }
       if (text.includes("INSERT INTO visitor_fetch_state")) {
         if (state.failBudget) throw new Error("down");
@@ -97,7 +97,7 @@ describe("keyed audience: authentication", () => {
 
   it("answers 401 for an unknown or revoked key", async () => {
     const res = await call(keyed, {
-      authorization: `Bearer ${generateApiKey()}`,
+      authorization: `Bearer ${mintAccessToken()}`,
     });
     expect(res.statusCode).toBe(401);
   });

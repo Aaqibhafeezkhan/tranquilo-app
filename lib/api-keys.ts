@@ -30,11 +30,11 @@ interface KeyResponse {
   json(body: unknown): unknown;
 }
 
-export function generateApiKey(): string {
+export function mintAccessToken(): string {
   return KEY_PREFIX + randomBytes(KEY_BYTES).toString("base64url");
 }
 
-export function hashApiKey(key: string): string {
+export function hashAccessToken(key: string): string {
   return createHash("sha256").update(key).digest("hex");
 }
 
@@ -60,7 +60,7 @@ export async function authenticateKey(
   if (!token) return null;
   const rows = (await sql.query(
     "SELECT id, tier FROM api_keys WHERE key_hash = $1 AND status = 'active'",
-    [hashApiKey(token)],
+    [hashAccessToken(token)],
   )) as { id: string | number; tier: KeyTier }[];
   if (!rows.length) return null;
   return { keyId: Number(rows[0].id), tier: rows[0].tier };
@@ -123,25 +123,25 @@ const PREFIX_LENGTH = KEY_PREFIX.length + 4;
 
 // The plaintext key is in the return value and nowhere else: only its hash
 // and a short prefix are stored.
-export async function issueApiKey(
+export async function issueAccessToken(
   sql: QuerySql,
   input: { email: string; tier: KeyTier; note?: string },
 ): Promise<{ id: number; key: string; prefix: string }> {
   if (!TIERS.includes(input.tier)) {
     throw new Error(`Unknown tier "${input.tier}" (use ${TIERS.join(", ")})`);
   }
-  const key = generateApiKey();
+  const key = mintAccessToken();
   const prefix = key.slice(0, PREFIX_LENGTH);
   const rows = (await sql.query(
     "INSERT INTO api_keys (key_hash, key_prefix, owner_email, tier, note) " +
       "VALUES ($1, $2, $3, $4, $5) RETURNING id",
-    [hashApiKey(key), prefix, input.email, input.tier, input.note ?? null],
+    [hashAccessToken(key), prefix, input.email, input.tier, input.note ?? null],
   )) as { id: string | number }[];
   return { id: Number(rows[0].id), key, prefix };
 }
 
 // Returns how many active keys were revoked.
-export async function revokeApiKey(
+export async function revokeAccessToken(
   sql: QuerySql,
   prefix: string,
 ): Promise<number> {

@@ -4,12 +4,12 @@ import { describe, expect, it } from "vitest";
 import {
   authenticateKey,
   bearerToken,
-  generateApiKey,
-  hashApiKey,
-  issueApiKey,
+  hashAccessToken,
+  issueAccessToken,
   keyBudgetOrRespond,
+  mintAccessToken,
   recordKeyUsage,
-  revokeApiKey,
+  revokeAccessToken,
 } from "../lib/api-keys.ts";
 import { makeSql } from "./helpers/pg.ts";
 
@@ -38,24 +38,24 @@ async function insertKey(
   const rows = (await sql.query(
     "INSERT INTO api_keys (key_hash, key_prefix, owner_email, tier, status) " +
       "VALUES ($1, $2, 'dev@example.org', $3, $4) RETURNING id",
-    [hashApiKey(key), key.slice(0, 12), tier, status],
+    [hashAccessToken(key), key.slice(0, 12), tier, status],
   )) as { id: string | number }[];
   return Number(rows[0].id);
 }
 
-describe("generateApiKey / hashApiKey", () => {
+describe("mintAccessToken / hashAccessToken", () => {
   it("makes a prefixed, high-entropy, unique key", () => {
-    const a = generateApiKey();
-    const b = generateApiKey();
+    const a = mintAccessToken();
+    const b = mintAccessToken();
     expect(a).toMatch(/^tq_live_[0-9A-Za-z_-]{43}$/);
     expect(a).not.toBe(b);
   });
 
   it("hashes deterministically and never returns the key", () => {
-    const key = generateApiKey();
-    expect(hashApiKey(key)).toBe(hashApiKey(key));
-    expect(hashApiKey(key)).toMatch(/^[0-9a-f]{64}$/);
-    expect(hashApiKey(key)).not.toContain(key);
+    const key = mintAccessToken();
+    expect(hashAccessToken(key)).toBe(hashAccessToken(key));
+    expect(hashAccessToken(key)).toMatch(/^[0-9a-f]{64}$/);
+    expect(hashAccessToken(key)).not.toContain(key);
   });
 });
 
@@ -78,7 +78,7 @@ describe("bearerToken", () => {
 describe("authenticateKey", () => {
   it("accepts an active key and returns its tier", async () => {
     const sql = await makeSql(FILES);
-    const key = generateApiKey();
+    const key = mintAccessToken();
     const id = await insertKey(sql, key, "partner");
     expect(await authenticateKey(sql, `Bearer ${key}`)).toEqual({
       keyId: id,
@@ -89,7 +89,7 @@ describe("authenticateKey", () => {
 
   it("stores only a hash, never the key", async () => {
     const sql = await makeSql(FILES);
-    const key = generateApiKey();
+    const key = mintAccessToken();
     await insertKey(sql, key);
     const rows = await sql.query("SELECT * FROM api_keys");
     expect(JSON.stringify(rows)).not.toContain(key);
@@ -98,9 +98,11 @@ describe("authenticateKey", () => {
 
   it("rejects an unknown key, a revoked key and a missing header alike", async () => {
     const sql = await makeSql(FILES);
-    const revoked = generateApiKey();
+    const revoked = mintAccessToken();
     await insertKey(sql, revoked, "community", "revoked");
-    expect(await authenticateKey(sql, `Bearer ${generateApiKey()}`)).toBeNull();
+    expect(
+      await authenticateKey(sql, `Bearer ${mintAccessToken()}`),
+    ).toBeNull();
     expect(await authenticateKey(sql, `Bearer ${revoked}`)).toBeNull();
     expect(await authenticateKey(sql, undefined)).toBeNull();
     await sql.$close();
@@ -166,7 +168,7 @@ describe("keyBudgetOrRespond", () => {
 describe("recordKeyUsage", () => {
   it("counts requests, rows and denials per key, day and shape", async () => {
     const sql = await makeSql(FILES);
-    const id = await insertKey(sql, generateApiKey());
+    const id = await insertKey(sql, mintAccessToken());
     await recordKeyUsage(sql, id, "feed", 60, false);
     await recordKeyUsage(sql, id, "feed", 40, true);
     await recordKeyUsage(sql, id, "detail", 1, false);
@@ -193,7 +195,7 @@ describe("recordKeyUsage", () => {
 
   it("keeps a key's usage rows after the key is revoked", async () => {
     const sql = await makeSql(FILES);
-    const id = await insertKey(sql, generateApiKey());
+    const id = await insertKey(sql, mintAccessToken());
     await recordKeyUsage(sql, id, "feed", 1, false);
     await sql.query(
       "UPDATE api_keys SET status = 'revoked', revoked_at = now() WHERE id = $1",
@@ -205,10 +207,10 @@ describe("recordKeyUsage", () => {
   });
 });
 
-describe("issueApiKey / revokeApiKey", () => {
+describe("issueAccessToken / revokeAccessToken", () => {
   it("issues a key that authenticates, storing only its hash", async () => {
     const sql = await makeSql(FILES);
-    const issued = await issueApiKey(sql, {
+    const issued = await issueAccessToken(sql, {
       email: "dev@example.org",
       tier: "community",
       note: "first developer",
@@ -227,19 +229,22 @@ describe("issueApiKey / revokeApiKey", () => {
   it("rejects a tier that does not exist", async () => {
     const sql = await makeSql(FILES);
     await expect(
-      issueApiKey(sql, { email: "dev@example.org", tier: "gold" as never }),
+      issueAccessToken(sql, {
+        email: "dev@example.org",
+        tier: "gold" as never,
+      }),
     ).rejects.toThrow(/tier/);
     await sql.$close();
   });
 
   it("revokes by prefix, keeping the row and its usage", async () => {
     const sql = await makeSql(FILES);
-    const issued = await issueApiKey(sql, {
+    const issued = await issueAccessToken(sql, {
       email: "dev@example.org",
       tier: "partner",
     });
     await recordKeyUsage(sql, issued.id, "feed", 1, false);
-    expect(await revokeApiKey(sql, issued.prefix)).toBe(1);
+    expect(await revokeAccessToken(sql, issued.prefix)).toBe(1);
     expect(await authenticateKey(sql, `Bearer ${issued.key}`)).toBeNull();
     const rows = await sql.query(
       "SELECT status, revoked_at IS NOT NULL AS stamped FROM api_keys",
@@ -251,7 +256,7 @@ describe("issueApiKey / revokeApiKey", () => {
 
   it("reports zero when no active key has that prefix", async () => {
     const sql = await makeSql(FILES);
-    expect(await revokeApiKey(sql, "tq_live_nope")).toBe(0);
+    expect(await revokeAccessToken(sql, "tq_live_nope")).toBe(0);
     await sql.$close();
   });
 });
