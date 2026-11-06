@@ -57,6 +57,11 @@ export const LIVE_SOURCES: Record<string, { image: string; page: string }> = {
   },
   // Taken from a dry run against the museum's own site, ahead of the first
   // ingestion, the same way nga was added.
+  aic: {
+    image:
+      "https://www.artic.edu/iiif/2/6644829f-f292-c5c4-a73c-0356a6fdbf0d/full/843,/0/default.jpg",
+    page: "https://www.artic.edu/artworks/129884",
+  },
   tainacan: {
     image:
       "https://acervo.margs.rs.gov.br/wp-content/uploads/tainacan-items/258341/447402/5366-Pedro-Weingartner_Sem-titulo-1885-Grande-799x1024.jpg",
