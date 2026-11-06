@@ -80,6 +80,11 @@ describe("sourceLinkLabel", () => {
     expect(sourceLinkLabel({ source: "wellcome" })).toBe("Wellcome Collection");
   });
 
+  it("maps aic to the institution's name, with 'at'", () => {
+    expect(sourceLinkLabel({ source: "aic" })).toBe("Art Institute of Chicago");
+    expect(sourceLinkPreposition({ source: "aic" })).toBe("at");
+  });
+
   it("maps nga to the institution's name, not a domain", () => {
     expect(sourceLinkLabel({ source: "nga" })).toBe("National Gallery of Art");
   });

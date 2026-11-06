@@ -67,6 +67,7 @@ const SOURCES = [
   "wellcome",
   "tepapa",
   "mia",
+  "aic",
   "tainacan",
 ];
 const IMAGE_FETCH_TIMEOUT_MS = 15000;

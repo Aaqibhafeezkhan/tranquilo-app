@@ -70,6 +70,14 @@ describe("imageFetchHeaders", () => {
     );
   });
 
+  it("adds AIC's own header for aic and for no other source", () => {
+    expect(identity.AIC_USER_AGENT).toContain("hello@tranquilo.art");
+    expect(identity.imageFetchHeaders("aic")["AIC-User-Agent"]).toBe(
+      identity.AIC_USER_AGENT,
+    );
+    expect(identity.imageFetchHeaders("met")["AIC-User-Agent"]).toBeUndefined();
+  });
+
   it("falls back to the base identity for an unknown source", () => {
     expect(identity.imageFetchHeaders("some-new-museum")["User-Agent"]).toBe(
       identity.USER_AGENT,

@@ -134,7 +134,7 @@ paths:
           in: query
           schema:
             type: string
-            enum: [met, smithsonian, cleveland, commons, europeana, npm, wellcome, nga, tepapa, mia, tainacan]
+            enum: [met, smithsonian, cleveland, commons, europeana, npm, wellcome, nga, tepapa, mia, aic, tainacan]
         - name: subject_type
           in: query
           schema: { type: string }
@@ -625,7 +625,7 @@ paths:
           required: true
           schema:
             type: string
-            enum: [met, smithsonian, cleveland, commons, europeana, npm, wellcome, nga, tepapa, mia, tainacan]
+            enum: [met, smithsonian, cleveland, commons, europeana, npm, wellcome, nga, tepapa, mia, aic, tainacan]
         - name: id
           in: path
           required: true
@@ -792,7 +792,7 @@ components:
       properties:
         id: { type: string, description: "native_id" }
         translated: { $ref: "#/components/schemas/Translated" }
-        source: { type: string, enum: [met, smithsonian, cleveland, commons, europeana, npm, wellcome, nga, tepapa, mia, tainacan] }
+        source: { type: string, enum: [met, smithsonian, cleveland, commons, europeana, npm, wellcome, nga, tepapa, mia, aic, tainacan] }
         title: { type: string, nullable: true }
         artist: { type: string, nullable: true }
         bio: { type: string, nullable: true }
@@ -1109,7 +1109,7 @@ components:
         session pick to full item data via `?ids=`.
       required: [source, native_id, media_type]
       properties:
-        source: { type: string, enum: [met, smithsonian, cleveland, commons, europeana, npm, wellcome, nga, tepapa, mia, tainacan] }
+        source: { type: string, enum: [met, smithsonian, cleveland, commons, europeana, npm, wellcome, nga, tepapa, mia, aic, tainacan] }
         native_id: { type: string }
         media_type:
           type: string

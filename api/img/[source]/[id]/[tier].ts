@@ -168,6 +168,9 @@ const ALLOWED_ORIGIN_HOSTS: Record<string, string[]> = {
   tepapa: ["media.tepapa.govt.nz"],
   // mia.py's image cache, which serves both the 800 and full renditions.
   mia: ["1.api.artsmia.org"],
+  // aic.py builds img/full from the IIIF host; only the allowlisted
+  // widths (843 and 1686 for public-domain works) are served.
+  aic: ["www.artic.edu"],
   // tainacan.py reads each museum's own WordPress site, which serves its
   // own uploads; one host per instance in the adapter's INSTANCES. Added
   // before the first ingestion run, as with wellcome above.

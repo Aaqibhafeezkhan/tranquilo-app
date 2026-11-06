@@ -31,6 +31,7 @@ const SOURCE_LINK_LABELS: Record<string, string> = {
   // (Museum of New Zealand Te Papa Tongarewa) is in the CSV export.
   tepapa: "Te Papa",
   mia: "Minneapolis Institute of Art",
+  aic: "Art Institute of Chicago",
 };
 
 // Every other source's label is a domain ("View on metmuseum.org"), where
@@ -45,6 +46,7 @@ const SOURCE_LINK_PREPOSITIONS: Record<string, string> = {
   nga: "at",
   tepapa: "at",
   mia: "at",
+  aic: "at",
   smithsonian: "at",
   tainacan: "at",
 };

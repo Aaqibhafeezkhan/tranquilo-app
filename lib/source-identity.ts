@@ -26,19 +26,25 @@ const WIKIMEDIA_USER_AGENT =
   `${PRODUCT}/${VERSION} (+${CONTACT_URL}; ${CONTACT_EMAIL}; ` +
   "art catalogue, CC0/CC-BY ingestion only) node-fetch/1";
 
+const AIC_USER_AGENT = `${PRODUCT} (${CONTACT_EMAIL})`;
+
 /* Headers for fetching an image from an origin.
  *
  * Accept is sent as well as User-Agent: some institutional WAFs treat a
  * request with no Accept as a scraper, and we genuinely do only want images.
  */
 function imageFetchHeaders(source?: string): Record<string, string> {
-  return {
+  const headers: Record<string, string> = {
     "User-Agent": source === "commons" ? WIKIMEDIA_USER_AGENT : USER_AGENT,
     "Accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
   };
+  // AIC's image server answers 403 without its own header.
+  if (source === "aic") headers["AIC-User-Agent"] = AIC_USER_AGENT;
+  return headers;
 }
 
 export {
+  AIC_USER_AGENT,
   CONTACT_EMAIL,
   CONTACT_URL,
   imageFetchHeaders,

@@ -93,6 +93,17 @@ describe("isAllowedOrigin", () => {
     ).toBe(true);
   });
 
+  it("allows AIC's IIIF host on both tiers, and no other host", () => {
+    const url =
+      "https://www.artic.edu/iiif/2/6644829f-f292-c5c4-a73c-0356a6fdbf0d/full/1686,/0/default.jpg";
+    for (const tier of ["display", "lightbox"] as const) {
+      expect(proxy.isAllowedOrigin("aic", tier, url)).toBe(true);
+    }
+    expect(
+      proxy.isAllowedOrigin("aic", "display", "https://evil.example/x.jpg"),
+    ).toBe(false);
+  });
+
   it("allows Te Papa's media host, on both tiers", () => {
     // Same gap as npm: tepapa went live with its display tier cached at
     // ingest, so the feed looked fine while every cache miss (the

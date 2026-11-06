@@ -27,6 +27,7 @@ export const COLLECTION_SOURCES = [
   "nga",
   "tepapa",
   "mia",
+  "aic",
   "tainacan",
 ];
 
