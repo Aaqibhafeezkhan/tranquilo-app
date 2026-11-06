@@ -4,7 +4,7 @@ import type { PrintQuote } from "./gelato-quote.ts";
 import type { QuerySql } from "./img-store.ts";
 import { quoteRateLimitOrRespond } from "./items-rate-limit.ts";
 import { LIVE_ITEMS_PREDICATE } from "./items-sql.ts";
-import { priceQuote } from "./print-pricing.ts";
+import { markupForRegion, priceQuote } from "./print-pricing.ts";
 import { gelatoProductUid, orientationOf } from "./print-products.ts";
 import { regionForCountry } from "./print-region.ts";
 import { createPrintRules } from "./print-rules.ts";
@@ -102,7 +102,7 @@ export async function handlePrintQuote(
   }
   res.json({
     available: true,
-    ...priceQuote(cost),
+    ...priceQuote(cost, markupForRegion(region)),
     currency: cost.currency,
     minDays: cost.minDays,
     maxDays: cost.maxDays,

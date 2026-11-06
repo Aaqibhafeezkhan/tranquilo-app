@@ -181,10 +181,15 @@ mug = "mug_product_msz_11-oz_mmat_ceramic-white_cl_4-0"
 br = "BRL"
 
 [print.pricing]
-# Share of the retail price kept as margin, and the card fee Stripe takes
-# from it. Retail is Gelato's item plus delivery cost divided by what is left.
+# Share of the retail price kept as margin. Retail is Gelato's item plus
+# delivery cost divided by what is left after the margin and the card fee.
 margin = 0.30
-card_fee = 0.05
+
+[print.card_fee]
+# Share of the retail price Stripe takes. Brazil is the domestic rate; the
+# default allows for currency conversion on other countries' payments.
+default = 0.07
+br = 0.05
 
 [print.import_tax]
 # Regions where the buyer pays import taxes on delivery.

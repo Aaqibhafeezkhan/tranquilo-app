@@ -2,6 +2,7 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import handler from "../api/items.ts";
 import type { PrintQuote } from "../lib/gelato-quote.ts";
+import { priceQuote } from "../lib/print-pricing.ts";
 import { handlePrintQuote } from "../lib/print-quote-api.ts";
 
 const ITEM = {
@@ -126,6 +127,17 @@ describe("?shape=print_quote", () => {
     await call({ ...GOOD, product: "mug", country: "BR" }, { quote });
     await call(GOOD, { quote });
     expect(seen).toEqual(["BRL", "USD"]);
+  });
+
+  it("prices Brazil at a 5% card fee and other countries at 7%", async () => {
+    const br = await call({ ...GOOD, product: "mug", country: "BR" });
+    const us = await call(GOOD);
+    expect(br.res.body.total).toBe(
+      priceQuote(GELATO, { margin: 0.3, cardFee: 0.05 }).total,
+    );
+    expect(us.res.body.total).toBe(
+      priceQuote(GELATO, { margin: 0.3, cardFee: 0.07 }).total,
+    );
   });
 
   it("picks the landscape product for a wide artwork", async () => {

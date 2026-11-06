@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { priceQuote } from "../lib/print-pricing.ts";
+import { markupForRegion, priceQuote } from "../lib/print-pricing.ts";
 
 const quote = { itemPrice: 12.13, delivery: 4.9 };
 
@@ -30,5 +30,20 @@ describe("pricing a print from its Gelato cost", () => {
 
   it("refuses a markup that leaves nothing to divide by", () => {
     expect(() => priceQuote(quote, { margin: 0.6, cardFee: 0.4 })).toThrow();
+  });
+});
+
+describe("the markup for a region", () => {
+  it("keeps a 30% margin everywhere", () => {
+    for (const region of ["br", "us", "uk", "eu", "ca", "au", null]) {
+      expect(markupForRegion(region).margin).toBe(0.3);
+    }
+  });
+
+  it("budgets a 5% card fee for Brazil and 7% elsewhere", () => {
+    expect(markupForRegion("br").cardFee).toBe(0.05);
+    for (const region of ["us", "uk", "eu", "ca", "au", null]) {
+      expect(markupForRegion(region).cardFee).toBe(0.07);
+    }
   });
 });
