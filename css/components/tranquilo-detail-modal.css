@@ -448,6 +448,12 @@
   flex-wrap:wrap;
   gap:8px;
 }
+@media (max-width:480px){
+  .detail-modal-inner .detail-actions-row{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+}
 /* The pill's border is its only line: no text underline on top of it
    (see tests/e2e/link-underlines.spec.mts). */
 .detail-modal-inner .detail-actions a.source-link,
