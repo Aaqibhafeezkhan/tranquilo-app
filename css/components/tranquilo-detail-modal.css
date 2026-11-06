@@ -679,9 +679,36 @@
   min-width:0;
 }
 .detail-modal-inner .print-name{ font-size:0.9rem; }
-.detail-modal-inner .print-price{
+.detail-modal-inner .print-quote{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:2px;
+  min-width:0;
+  max-width:11rem;
+  text-align:right;
+}
+.detail-modal-inner .print-price{ font-size:0.85rem; }
+.detail-modal-inner .print-delivery{
+  font-size:0.72rem;
+  color:rgba(255,255,255,0.6);
+}
+.detail-modal-inner .print-delivery:empty{ display:none; }
+.detail-modal-inner .print-ship-to{
+  display:flex;
+  align-items:center;
+  gap:8px;
   font-size:0.85rem;
-  white-space:nowrap;
+}
+.detail-modal-inner .print-ship-to select{
+  min-width:0;
+  flex:1;
+  font:inherit;
+  color:inherit;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:6px;
+  padding:4px 8px;
 }
 .detail-modal-inner .print-size{
   font-family:var(--sans);

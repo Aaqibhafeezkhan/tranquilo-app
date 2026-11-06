@@ -6,6 +6,7 @@ export interface PrintItem {
 }
 
 interface PrintRulesConfig {
+  "print.regions": Record<string, string>;
   "print.min_short_edge_px": Record<string, number>;
   "print.region_products": Record<string, string>;
   "print.eligible": { licenses: string; excluded_sources: string };
@@ -40,5 +41,18 @@ export function createPrintRules(config: PrintRulesConfig) {
     );
   }
 
-  return { mayBeSold, printOptionsFor };
+  const regions = Object.entries(config["print.regions"]).map(
+    ([region, codes]) => [region, csv(codes)] as const,
+  );
+  const countries = regions.flatMap(([, codes]) => codes);
+
+  function regionForCountry(country: unknown): string | null {
+    if (typeof country !== "string" || !/^[A-Za-z]{2}$/.test(country)) {
+      return null;
+    }
+    const code = country.toUpperCase();
+    return regions.find(([, codes]) => codes.includes(code))?.[0] ?? null;
+  }
+
+  return { mayBeSold, printOptionsFor, regionForCountry, countries };
 }
