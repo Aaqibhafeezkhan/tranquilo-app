@@ -2304,6 +2304,7 @@ html,body{
    a translated legal page's pointer to the English original. */
 .about-list a,
 .about-body a,
+.community-h3 a,
 .legal-meta a{
   color:var(--gold-soft);
   text-decoration:underline;
@@ -2313,9 +2314,10 @@ html,body{
 }
 .about-list a:hover,
 .about-body a:hover,
+.community-h3 a:hover,
 .legal-meta a:hover{ color:#fff; text-decoration-color:rgba(255,255,255,0.6); }
 @media (prefers-reduced-motion: reduce){
-  .about-list a, .about-body a, .legal-meta a{ transition:none; }
+  .about-list a, .about-body a, .community-h3 a, .legal-meta a{ transition:none; }
 }
 
 /* .meta-license-link: moved to css/components/tranquilo-detail-modal.css */
