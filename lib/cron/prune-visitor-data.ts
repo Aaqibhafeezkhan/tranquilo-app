@@ -1,6 +1,7 @@
 // Daily retention for visitor-keyed rows: denial counters are kept 30 days,
-// per-day bucket rows for the items, detail and image budgets two days (their key changes daily, so
-// older rows can never be read again).
+// per-day bucket rows for the items, detail and image budgets two days (their
+// key changes daily, so older rows can never be read again). API key usage
+// counters are kept 13 months; key buckets ("key:<id>") are never pruned.
 //
 // Required env vars: CRON_SECRET, DATABASE_URL.
 import * as Sentry from "@sentry/node";
@@ -10,6 +11,7 @@ import { reportError } from "../sentry.ts";
 
 const EVENT_RETENTION_DAYS = 30;
 const BUCKET_RETENTION_DAYS = 2;
+const USAGE_RETENTION_MONTHS = 13;
 
 const MONITOR_SLUG = "prune-visitor-data";
 const CRON_SCHEDULE = "37 4 * * *";
@@ -53,6 +55,12 @@ export default async function handler(req: CronRequest, res: CronResponse) {
       [BUCKET_RETENTION_DAYS],
     )) as unknown[];
 
+    const usage = (await sql.query(
+      "DELETE FROM api_usage " +
+        "WHERE day < (now() AT TIME ZONE 'UTC')::date - make_interval(months => $1::int) RETURNING 1",
+      [USAGE_RETENTION_MONTHS],
+    )) as unknown[];
+
     Sentry.captureCheckIn(
       { checkInId: checkInId, monitorSlug: MONITOR_SLUG, status: "ok" },
       monitorConfig(),
@@ -60,7 +68,11 @@ export default async function handler(req: CronRequest, res: CronResponse) {
     await Sentry.flush(2000);
 
     res.statusCode = 200;
-    res.json({ events: events.length, buckets: buckets.length });
+    res.json({
+      events: events.length,
+      buckets: buckets.length,
+      usage: usage.length,
+    });
   } catch (err) {
     Sentry.captureCheckIn(
       { checkInId: checkInId, monitorSlug: MONITOR_SLUG, status: "error" },

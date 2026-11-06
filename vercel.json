@@ -40,6 +40,10 @@
       "destination": "/api/og/:slug"
     },
     {
+      "source": "/v1/items",
+      "destination": "/api/items?audience=keyed"
+    },
+    {
       "source": "/img/:source/:id/:tier",
       "destination": "/api/img/:source/:id/:tier"
     }

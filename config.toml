@@ -93,6 +93,21 @@ capacity = 100
 refill_per_sec = 0.1
 enforce = false
 
+[api_tier_community]
+# Per-key token bucket for the keyed tier (/v1/items), charged per item
+# returned like the public budget -- see lib/api-keys.ts. Placeholder values:
+# the real numbers are decided and recorded outside the repository.
+capacity = 2000
+refill_per_sec = 0.5
+
+[api_tier_partner]
+capacity = 10000
+refill_per_sec = 2
+
+[api_tier_internal]
+capacity = 100000
+refill_per_sec = 20
+
 [img_cache_alerts]
 # A handful of shed requests is ordinary noise (one slow origin, one
 # coalesced burst); this is about SUSTAINED shedding, which is what
