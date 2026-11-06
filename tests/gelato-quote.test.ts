@@ -78,6 +78,23 @@ describe("quoting a print", () => {
     expect(body.products[0].quantity).toBe(1);
   });
 
+  it("asks Gelato for the currency it is given", async () => {
+    const { impl, calls } = fakeFetch(quoteResponse());
+    const quote = await quotePrint({
+      ...base,
+      currency: "BRL",
+      fetchImpl: impl,
+    });
+    expect(JSON.parse(String(calls[0].init.body)).currency).toBe("BRL");
+    expect(quote?.currency).toBe("BRL");
+  });
+
+  it("quotes in US dollars unless told otherwise", async () => {
+    const { impl, calls } = fakeFetch(quoteResponse());
+    await quotePrint({ ...base, fetchImpl: impl });
+    expect(JSON.parse(String(calls[0].init.body)).currency).toBe("USD");
+  });
+
   it("throws when Gelato errors, so a failure is not read as unavailable", async () => {
     const { impl } = fakeFetch({ message: "boom" }, 500);
     await expect(quotePrint({ ...base, fetchImpl: impl })).rejects.toThrow();

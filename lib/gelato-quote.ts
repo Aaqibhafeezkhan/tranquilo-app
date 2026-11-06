@@ -4,7 +4,7 @@ const USER_AGENT = "TranquiloBot/1.0 (+https://tranquilo.art)";
 export interface PrintQuote {
   itemPrice: number;
   delivery: number;
-  currency: "USD";
+  currency: string;
   minDays: number | null;
   maxDays: number | null;
   madeIn: string | null;
@@ -60,6 +60,7 @@ interface QuoteInput {
   productUid: string;
   country: string;
   apiKey: string;
+  currency?: string;
   fetchImpl?: typeof fetch;
 }
 
@@ -67,6 +68,7 @@ export async function quotePrint({
   productUid,
   country,
   apiKey,
+  currency = "USD",
   fetchImpl = fetch,
 }: QuoteInput): Promise<PrintQuote | null> {
   const address = quoteAddressFor(country);
@@ -81,7 +83,7 @@ export async function quotePrint({
     body: JSON.stringify({
       orderReferenceId: "quote-only",
       customerReferenceId: "quote-only",
-      currency: "USD",
+      currency,
       allowMultipleQuotes: true,
       recipient: {
         country: country.toUpperCase(),
@@ -122,7 +124,7 @@ export async function quotePrint({
   return {
     itemPrice,
     delivery: cheapest.price as number,
-    currency: "USD",
+    currency,
     minDays: cheapest.minDeliveryDays ?? null,
     maxDays: cheapest.maxDeliveryDays ?? null,
     madeIn: quote.productionCountry ?? null,

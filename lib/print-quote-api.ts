@@ -12,12 +12,17 @@ import { createPrintRules } from "./print-rules.ts";
 const rules = createPrintRules(TRANQUILO_CONFIG);
 const PRODUCTS = new Set(["mini_print", "poster", "framed", "tote", "mug"]);
 const COUNTRY = /^[A-Za-z]{2}$/;
+const QUOTE_CURRENCY = TRANQUILO_CONFIG["print.quote_currency"] as Record<
+  string,
+  string
+>;
 
 interface Deps {
   sql: QuerySql | null;
   quote: (args: {
     productUid: string;
     country: string;
+    currency: string;
   }) => Promise<PrintQuote | null>;
   apiKey: string | undefined;
 }
@@ -82,7 +87,11 @@ export async function handlePrintQuote(
 
   let cost: PrintQuote | null;
   try {
-    cost = await quote({ productUid, country: country.toUpperCase() });
+    cost = await quote({
+      productUid,
+      country: country.toUpperCase(),
+      currency: (region && QUOTE_CURRENCY[region]) || "USD",
+    });
   } catch (_err) {
     return fail(res, 502, "Could not get a delivery quote");
   }

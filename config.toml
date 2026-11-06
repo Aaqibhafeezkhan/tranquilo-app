@@ -175,6 +175,11 @@ mini_print_hor = "flat_130x180-mm-5r_250-gsm-100lb-uncoated-offwhite-archival_4-
 tote = "bag_product_bsc_tote-bag_bqa_clc_bsi_std-t_bco_natural_bpr_4-0"
 mug = "mug_product_msz_11-oz_mmat_ceramic-white_cl_4-0"
 
+[print.quote_currency]
+# Regions quoted in their own currency; every other region is quoted in
+# US dollars and converted by Stripe at checkout.
+br = "BRL"
+
 [print.pricing]
 # Share of the retail price kept as margin, and the card fee Stripe takes
 # from it. Retail is Gelato's item plus delivery cost divided by what is left.

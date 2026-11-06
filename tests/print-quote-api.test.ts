@@ -45,7 +45,7 @@ function mockRes() {
 const GELATO = {
   itemPrice: 12.13,
   delivery: 4.9,
-  currency: "USD" as const,
+  currency: "USD",
   minDays: 5,
   maxDays: 9,
   madeIn: "US",
@@ -59,15 +59,20 @@ async function call(
     quote?: (args: {
       productUid: string;
       country: string;
+      currency: string;
     }) => Promise<PrintQuote | null>;
     apiKey?: string | undefined;
   } = {},
 ) {
   const res = mockRes();
-  const calls: { productUid: string; country: string }[] = [];
+  const calls: { productUid: string; country: string; currency: string }[] = [];
   const quote =
     opts.quote ??
-    (async (args: { productUid: string; country: string }) => {
+    (async (args: {
+      productUid: string;
+      country: string;
+      currency: string;
+    }) => {
       calls.push(args);
       return GELATO;
     });
@@ -110,6 +115,17 @@ describe("?shape=print_quote", () => {
     expect(res.body.minDays).toBe(5);
     expect(calls[0].country).toBe("US");
     expect(calls[0].productUid).toMatch(/_ver$/);
+  });
+
+  it("quotes Brazil in reais and everywhere else in dollars", async () => {
+    const seen: string[] = [];
+    const quote = async (args: { currency: string }) => {
+      seen.push(args.currency);
+      return GELATO;
+    };
+    await call({ ...GOOD, product: "mug", country: "BR" }, { quote });
+    await call(GOOD, { quote });
+    expect(seen).toEqual(["BRL", "USD"]);
   });
 
   it("picks the landscape product for a wide artwork", async () => {
