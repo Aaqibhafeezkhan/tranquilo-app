@@ -22,17 +22,15 @@ describe("which print products an artwork qualifies for", () => {
     ]);
   });
 
-  it("offers the mini print only where it can be shipped", () => {
-    for (const region of ["us", "ca", "eu"]) {
-      expect(printOptionsFor(sized(3192, 4000), region)).not.toContain(
-        "mini_print",
-      );
-    }
-    for (const region of ["uk", "au"]) {
+  it("offers the mini print everywhere except Brazil", () => {
+    for (const region of ["us", "ca", "eu", "uk", "au"]) {
       expect(printOptionsFor(sized(3192, 4000), region)).toContain(
         "mini_print",
       );
     }
+    expect(printOptionsFor(sized(3192, 4000), "br")).not.toContain(
+      "mini_print",
+    );
   });
 
   it("judges by the short edge, whatever the orientation", () => {
@@ -48,7 +46,10 @@ describe("which print products an artwork qualifies for", () => {
     ]);
     expect(printOptionsFor(sized(1600, 4000), "uk")).toEqual(["mini_print"]);
     expect(printOptionsFor(sized(1000, 4000), "uk")).toEqual([]);
-    expect(printOptionsFor(sized(2000, 4000), "us")).toEqual(["tote"]);
+    expect(printOptionsFor(sized(2000, 4000), "us")).toEqual([
+      "mini_print",
+      "tote",
+    ]);
   });
 
   it("offers nothing outside a print region", () => {
@@ -100,7 +101,11 @@ describe("estimated prices", () => {
         buyerPaysImportTax: false,
       },
     ]);
-    expect(printOffersFor(sized(3192, 4000), "eu")[0]).toEqual({
+    expect(
+      printOffersFor(sized(3192, 4000), "eu").find(
+        (o) => o.product === "poster",
+      ),
+    ).toEqual({
       product: "poster",
       price: { amount: 48, currency: "EUR" },
       buyerPaysImportTax: false,

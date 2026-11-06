@@ -1,50 +1,15 @@
+import { createPrintRules, type PrintItem } from "../../lib/print-rules";
 import { TRANQUILO_CONFIG } from "../data/config.generated";
 
 export type PrintProduct = "mini_print" | "poster" | "framed" | "tote" | "mug";
 
-const MIN_SHORT_EDGE: Record<string, number> =
-  TRANQUILO_CONFIG["print.min_short_edge_px"];
-const REGION_PRODUCTS: Record<string, string> =
-  TRANQUILO_CONFIG["print.region_products"];
-
-const csv = (value: unknown): string[] =>
-  String(value)
-    .split(",")
-    .map((v) => v.trim());
-const ELIGIBLE_LICENSES = csv(TRANQUILO_CONFIG["print.eligible"].licenses);
-const EXCLUDED_SOURCES = csv(
-  TRANQUILO_CONFIG["print.eligible"].excluded_sources,
-);
-
-interface MasterSize {
-  master_width?: number | null;
-  master_height?: number | null;
-  license?: string | null;
-  source?: string | null;
-}
-
-function mayBeSold(item: MasterSize): boolean {
-  return (
-    !!item.license &&
-    ELIGIBLE_LICENSES.includes(item.license) &&
-    !(item.source && EXCLUDED_SOURCES.includes(item.source))
-  );
-}
+const rules = createPrintRules(TRANQUILO_CONFIG);
 
 export function printOptionsFor(
-  item: MasterSize,
+  item: PrintItem,
   region: string | null,
 ): PrintProduct[] {
-  const { master_width: w, master_height: h } = item;
-  if (!region || !w || !h || !(region in REGION_PRODUCTS)) return [];
-  if (!mayBeSold(item)) return [];
-  const shortEdge = Math.min(w, h);
-  return REGION_PRODUCTS[region]
-    .split(",")
-    .map((p) => p.trim())
-    .filter(
-      (p) => p in MIN_SHORT_EDGE && shortEdge >= MIN_SHORT_EDGE[p],
-    ) as PrintProduct[];
+  return rules.printOptionsFor(item, region) as PrintProduct[];
 }
 
 export interface PrintOffer {
@@ -66,7 +31,7 @@ const PRICES = TRANQUILO_CONFIG as unknown as Record<
 >;
 
 export function printOffersFor(
-  item: MasterSize,
+  item: PrintItem,
   region: string | null,
 ): PrintOffer[] {
   return printOptionsFor(item, region).map((product) => {
@@ -87,7 +52,7 @@ export function printOffersFor(
   });
 }
 
-export function hasMasterSize(item: MasterSize): boolean {
+export function hasMasterSize(item: PrintItem): boolean {
   return Boolean(item.master_width && item.master_height);
 }
 

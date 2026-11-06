@@ -93,6 +93,14 @@ capacity = 100
 refill_per_sec = 0.1
 enforce = false
 
+[quote_visitor_rate_limit]
+# Per-IP budget on /api/items?shape=print_quote, one token per Gelato quote.
+# 20 quotes of burst, then one every 10 seconds: a person comparing products
+# in a few countries, far below a script walking the catalogue.
+capacity = 20
+refill_per_sec = 0.1
+enforce = true
+
 [img_cache_alerts]
 # A handful of shed requests is ordinary noise (one slow origin, one
 # coalesced burst); this is about SUSTAINED shedding, which is what
@@ -142,10 +150,9 @@ mug = 1500
 
 [print.region_products]
 # Products offered per region, in display order.
-# The mini print is left out where Gelato cannot ship it.
-us = "poster,framed,tote"
-ca = "poster,framed,tote"
-eu = "poster,framed,tote"
+us = "mini_print,poster,framed,tote"
+ca = "mini_print,poster,framed,tote"
+eu = "mini_print,poster,framed,tote"
 uk = "mini_print,poster,framed,tote"
 au = "mini_print,poster,framed,tote"
 br = "mug,poster"
@@ -167,6 +174,12 @@ mini_print_ver = "flat_130x180-mm-5r_250-gsm-100lb-uncoated-offwhite-archival_4-
 mini_print_hor = "flat_130x180-mm-5r_250-gsm-100lb-uncoated-offwhite-archival_4-0_hor"
 tote = "bag_product_bsc_tote-bag_bqa_clc_bsi_std-t_bco_natural_bpr_4-0"
 mug = "mug_product_msz_11-oz_mmat_ceramic-white_cl_4-0"
+
+[print.pricing]
+# Share of the retail price kept as margin, and the card fee Stripe takes
+# from it. Retail is Gelato's item plus delivery cost divided by what is left.
+margin = 0.30
+card_fee = 0.05
 
 [print.import_tax]
 # Regions where the buyer pays import taxes on delivery.

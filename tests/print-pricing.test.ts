@@ -1,0 +1,34 @@
+import { describe, expect, it } from "vitest";
+import { priceQuote } from "../lib/print-pricing.ts";
+
+const quote = { itemPrice: 12.13, delivery: 4.9 };
+
+describe("pricing a print from its Gelato cost", () => {
+  it("adds the margin and card fee on top of item plus delivery", () => {
+    const priced = priceQuote(quote, { margin: 0.3, cardFee: 0.05 });
+    expect(priced.total).toBeCloseTo((12.13 + 4.9) / 0.65, 1);
+  });
+
+  it("keeps delivery at cost and puts the markup in the item price", () => {
+    const priced = priceQuote(quote, { margin: 0.3, cardFee: 0.05 });
+    expect(priced.delivery).toBe(4.9);
+    expect(priced.item + priced.delivery).toBeCloseTo(priced.total, 2);
+  });
+
+  it("rounds the total up to a whole cent", () => {
+    const priced = priceQuote(
+      { itemPrice: 10, delivery: 5 },
+      { margin: 0.3, cardFee: 0.05 },
+    );
+    expect(priced.total).toBe(23.08);
+  });
+
+  it("never returns a total below the Gelato cost", () => {
+    const priced = priceQuote(quote, { margin: 0, cardFee: 0 });
+    expect(priced.total).toBeGreaterThanOrEqual(17.03);
+  });
+
+  it("refuses a markup that leaves nothing to divide by", () => {
+    expect(() => priceQuote(quote, { margin: 0.6, cardFee: 0.4 })).toThrow();
+  });
+});
