@@ -279,6 +279,63 @@ paths:
           content:
             application/json: { schema: { $ref: "#/components/schemas/Error" } }
 
+  /v1/items:
+    get:
+      tags: [catalogue]
+      summary: Query the catalogue with an API key
+      operationId: getKeyedItems
+      security: [{ apiKey: [] }]
+      description: >-
+        The keyed tier of `/api/items`: the same query parameters and shapes
+        for catalogue queries (lookups, pages, manifest, facets, suggest,
+        correction, count, detail), answered under a per-key quota instead of
+        the per-visitor budget. Full item rows carry an extra `keyed` object.
+        Responses are never cached (`Cache-Control: private, no-store`).
+        Shapes that are not catalogue queries (`storylines`, `storyline`,
+        `set_of_works`, `set_of_work`, `shelves`, `music`, `heroes`,
+        `vocabulary`, `print_region`) are a 400; use `/api/items` for those.
+        Keys are issued by hand; send one as `Authorization: Bearer <key>`.
+      responses:
+        "200":
+          description: Same shapes as `/api/items`, with `keyed` on full item rows.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/KeyedItemLookupResult"
+                  - $ref: "#/components/schemas/ShuffledManifestPage"
+                  - $ref: "#/components/schemas/FacetsResult"
+                  - $ref: "#/components/schemas/SuggestResult"
+                  - $ref: "#/components/schemas/CorrectionResult"
+                  - $ref: "#/components/schemas/CountResult"
+                  - $ref: "#/components/schemas/ItemDetailResult"
+        "400":
+          description: Caller error, as for `/api/items`, or a shape with no keyed form.
+          content:
+            application/json: { schema: { $ref: "#/components/schemas/Error" } }
+        "401":
+          description: Missing, unknown or revoked key.
+          headers:
+            WWW-Authenticate: { schema: { type: string } }
+          content:
+            application/json: { schema: { $ref: "#/components/schemas/Error" } }
+        "404":
+          description: '`shape=detail` with a `key` that is not a live item.'
+          content:
+            application/json: { schema: { $ref: "#/components/schemas/Error" } }
+        "429":
+          description: The key's quota is spent. `Retry-After` gives seconds.
+          headers:
+            Retry-After: { schema: { type: integer } }
+          content:
+            application/json: { schema: { $ref: "#/components/schemas/Error" } }
+        "503":
+          description: >-
+            The key or its quota could not be checked. The keyed tier fails
+            closed rather than serving unmetered.
+          content:
+            application/json: { schema: { $ref: "#/components/schemas/Error" } }
+
   /api/track:
     post:
       tags: [engagement]
@@ -778,6 +835,12 @@ paths:
 
 components:
   securitySchemes:
+    apiKey:
+      type: http
+      scheme: bearer
+      description: >-
+        An API key for the keyed tier (`/v1/items`), issued by hand and shown
+        once. Only a hash is stored on our side.
     cronSecret:
       type: http
       scheme: bearer
@@ -861,6 +924,29 @@ components:
         twist_category: { type: string, nullable: true }
         twist_hook: { type: string, nullable: true }
         shuffle_key: { type: number }
+    KeyedItem:
+      description: An `Item` plus what the keyed tier adds.
+      allOf:
+        - $ref: "#/components/schemas/Item"
+        - type: object
+          properties:
+            keyed:
+              type: object
+              description: >-
+                Stored provenance values. More fields are added here over
+                time; adding one is not a breaking change.
+              properties:
+                source_verified_at: { type: string, format: date-time, nullable: true }
+                rules_version: { type: integer, nullable: true }
+    KeyedItemLookupResult:
+      type: object
+      properties:
+        items:
+          type: array
+          items: { $ref: "#/components/schemas/KeyedItem" }
+        missing:
+          type: array
+          items: { type: string }
     ItemDetailResult:
       type: object
       description: '`?shape=detail&key=...` -- the curated text for one item.'

@@ -22,6 +22,7 @@ beforeEach(async () => {
   sql = await makeSql([
     "035_visitor_rate_state.sql",
     "060_visitor_budget_events.sql",
+    "062_api_keys.sql",
   ]);
 });
 
@@ -50,7 +51,17 @@ describe("prune-visitor-data", () => {
         "('items:old', now() - interval '3 days'), ('items:new', now()), " +
         "('img:old', now() - interval '3 days'), ('img:new', now()), " +
         "('detail:old', now() - interval '3 days'), ('detail:new', now()), " +
+        "('key:5', now() - interval '400 days'), " +
         "('other-key', now() - interval '30 days')",
+    );
+    await sql.query(
+      "INSERT INTO api_keys (key_hash, key_prefix, owner_email, tier) " +
+        "VALUES ('h', 'tq_live_xxxx', 'dev@example.org', 'community')",
+    );
+    await sql.query(
+      "INSERT INTO api_usage (key_id, day, shape, requests) VALUES " +
+        "(1, (current_date - interval '14 months')::date, 'feed', 1), " +
+        "(1, (current_date - interval '12 months')::date, 'feed', 1)",
     );
     const { default: handler } = await import(
       "../lib/cron/prune-visitor-data.ts"
@@ -58,7 +69,7 @@ describe("prune-visitor-data", () => {
     const res = fakeRes();
     await handler(authed, res);
     expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual({ events: 1, buckets: 3 });
+    expect(res.body).toEqual({ events: 1, buckets: 3, usage: 1 });
     const left = await sql.query(
       "SELECT ip FROM visitor_fetch_state ORDER BY ip",
     );
@@ -66,8 +77,11 @@ describe("prune-visitor-data", () => {
       "detail:new",
       "img:new",
       "items:new",
+      "key:5",
       "other-key",
     ]);
+    const usage = await sql.query("SELECT count(*)::int AS n FROM api_usage");
+    expect(usage).toEqual([{ n: 1 }]);
   });
 });
 

@@ -17,6 +17,13 @@
 // Required env var: DATABASE_URL.
 
 import type { VercelRequest, VercelResponse } from "@vercel/node";
+import {
+  authenticateKey,
+  type KeyAuth,
+  keyBudgetOrRespond,
+  recordKeyUsage,
+  tierLimits,
+} from "../lib/api-keys.ts";
 import { TRANQUILO_CONFIG } from "../lib/config.generated.ts";
 import { signCursor, verifyCursor } from "../lib/cursor-signature.ts";
 import { getSql } from "../lib/db.ts";
@@ -272,6 +279,46 @@ function serializeCuratedText(row: ItemRow) {
     twist_story: row.twist_story,
     twist_source_url: safeHttpUrl(row.twist_source_url),
   };
+}
+
+// What the keyed tier adds to a full item row. Only fields that are stored
+// and trustworthy today; more arrive additively as the data does.
+function serializeKeyedExtras(row: ItemRow) {
+  return {
+    source_verified_at: row.source_verified_at,
+    rules_version: row.rules_version,
+  };
+}
+
+// Shapes that are not catalogue queries have no keyed form; they stay on the
+// public path.
+const PUBLIC_ONLY_SHAPES = new Set([
+  "storylines",
+  "storyline",
+  "set_of_works",
+  "set_of_work",
+  "shelves",
+  "music",
+  "heroes",
+  "vocabulary",
+  "print_region",
+]);
+
+function authorizationHeader(req: VercelRequest): string | undefined {
+  const header = req.headers?.authorization;
+  return typeof header === "string" ? header : undefined;
+}
+
+function keyedShapeName(query: BuiltQuery): string {
+  if (query.detail) return "detail";
+  if (query.manifest) return "manifest";
+  if (query.facets) return "facets";
+  if (query.suggest) return "suggest";
+  if (query.counting) return "count";
+  if (query.correction) return "correction";
+  if (query.vibeSearch) return "vibe";
+  if (query.lookup) return "lookup";
+  return "feed";
 }
 
 // The order manifest -- every live item, but only the fields needed
@@ -823,6 +870,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
+  const keyedAudience = req.query?.audience === "keyed";
+  if (keyedAudience) {
+    // Anything on the keyed URL is per-caller: never cached, even an error.
+    const setHeader = res.setHeader.bind(res);
+    res.setHeader = (
+      name: string,
+      value: string | number | readonly string[],
+    ) =>
+      setHeader(
+        name,
+        name.toLowerCase() === "cache-control" ? "private, no-store" : value,
+      );
+    res.setHeader("Cache-Control", "private, no-store");
+    if (PUBLIC_ONLY_SHAPES.has(scalar(req.query?.shape) ?? "")) {
+      res.statusCode = 400;
+      res.json({ error: "This shape is not available on the keyed endpoint" });
+      return;
+    }
+  }
+
   // Varies per visitor, so never shared at the edge.
   if (req.query?.shape === "print_region") {
     res.setHeader("Cache-Control", "private, no-store");
@@ -863,6 +930,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const params: QueryParams = req.query || {};
   const shape = scalar(params.shape);
+
+  let keyAuth: KeyAuth | null = null;
+  if (keyedAudience) {
+    try {
+      keyAuth = await authenticateKey(client, authorizationHeader(req));
+    } catch (err) {
+      await reportError(err);
+      res.statusCode = 503;
+      res.json({ error: "Key service unavailable" });
+      return;
+    }
+    if (!keyAuth) {
+      res.statusCode = 401;
+      res.setHeader("WWW-Authenticate", 'Bearer realm="tranquilo"');
+      res.json({ error: "A valid API key is required" });
+      return;
+    }
+  }
 
   // ?locale= asks for translated content; absent means source text only.
   let locale: string | null;
@@ -1001,9 +1086,28 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return;
     }
 
-    const limited = query.detail
-      ? await detailRateLimitOrRespond(client, req, res)
-      : await itemsRateLimitOrRespond(client, req, res, itemsCost(query));
+    let limited: boolean;
+    if (keyAuth) {
+      const cost = query.detail ? 1 : itemsCost(query);
+      limited = await keyBudgetOrRespond(
+        client,
+        keyAuth.keyId,
+        res,
+        cost,
+        tierLimits(keyAuth.tier),
+      );
+      await recordKeyUsage(
+        client,
+        keyAuth.keyId,
+        keyedShapeName(query),
+        cost,
+        limited,
+      );
+    } else {
+      limited = query.detail
+        ? await detailRateLimitOrRespond(client, req, res)
+        : await itemsRateLimitOrRespond(client, req, res, itemsCost(query));
+    }
     if (limited) return;
 
     const rows = await client.query(query.text, query.params);
@@ -1094,8 +1198,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return;
     }
 
-    const items = itemRows.map(serializeRow);
+    let items: Record<string, unknown>[] = itemRows.map(serializeRow);
     if (locale) await translateItems(client, itemRows, items, locale);
+    if (keyAuth) {
+      items = items.map((item, i) => ({
+        ...item,
+        keyed: serializeKeyedExtras(itemRows[i]),
+      }));
+    }
 
     // Bounded and ranked, not paginated -- no cursor, same shape as the
     // My Collection / storyline-chapter / set-of-works lookups, which are

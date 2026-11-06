@@ -45,7 +45,7 @@ interface Verdict {
   tokens: number | null;
 }
 
-const ACQUIRE_SQL =
+export const ACQUIRE_SQL =
   "INSERT INTO visitor_fetch_state (ip, tokens, capacity, refill_per_sec, last_refill, updated_at) " +
   "VALUES ($1, $3::real - $2::real, $3::real, $4::real, now(), now()) " +
   "ON CONFLICT (ip) DO UPDATE SET " +

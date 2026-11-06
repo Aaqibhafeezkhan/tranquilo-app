@@ -3,8 +3,10 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import type { Plugin } from "vite";
 import { getSql } from "../lib/db.ts";
+import { TRANQUILO_CONFIG } from "../lib/config.generated.ts";
 import { loadPatronGroups, type PatronGroup } from "../lib/patreon.ts";
 import { safeHttpUrl } from "../lib/safe-url.ts";
+import { patreonUrl } from "../src/components/patreonLink.ts";
 import { escapeHtml, fallbackChain, interpolate, lookup } from "../src/i18n/core.ts";
 import { DICTIONARIES } from "../src/i18n/dictionaries.ts";
 
@@ -12,6 +14,7 @@ export const COMMUNITY_MARKER = "<!-- COMMUNITY:SHARED -->";
 
 const CONTRIBUTORS_URL =
   "https://api.github.com/repos/tranquilo-art/tranquilo-app/contributors?per_page=100";
+const REPO_URL = "https://github.com/tranquilo-art/tranquilo-app";
 const FETCH_TIMEOUT_MS = 8000;
 const AVATAR_PX = 64;
 
@@ -31,6 +34,7 @@ export interface CommunityData {
   contributors: Contributor[] | null;
   donors: Donor[];
   patrons?: PatronGroup[];
+  patreonUrl?: string | null;
 }
 
 type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
@@ -111,6 +115,11 @@ function translator(html: string) {
     escapeHtml(interpolate(lookup(key, chain, DICTIONARIES), params));
 }
 
+function linkWord(heading: string, word: string, url: string | null): string {
+  if (!url) return heading;
+  return heading.replace(word, `<a href="${escapeHtml(url)}" rel="noopener">${word}</a>`);
+}
+
 function renderContributors(contributors: Contributor[], t: ReturnType<typeof translator>): string {
   const items = contributors.map((c) => {
     const login = escapeHtml(c.login);
@@ -121,7 +130,7 @@ function renderContributors(contributors: Contributor[], t: ReturnType<typeof tr
           <span aria-hidden="true">@${login}</span>
         </a></li>`;
   });
-  return `<h3 class="community-h3">${t("community.contributors")}</h3>
+  return `<h3 class="community-h3">${linkWord(t("community.contributors"), "GitHub", REPO_URL)}</h3>
       <ul class="community-contributors">
         ${items.join("\n        ")}
       </ul>`;
@@ -138,7 +147,11 @@ function renderDonors(donors: Donor[], t: ReturnType<typeof translator>): string
       </ul>`;
 }
 
-function renderPatrons(groups: PatronGroup[], t: ReturnType<typeof translator>): string {
+function renderPatrons(
+  groups: PatronGroup[],
+  t: ReturnType<typeof translator>,
+  campaignUrl: string | null,
+): string {
   const lists = groups.map(({ title, names }) => {
     const label = title ? `<p class="community-tier">${escapeHtml(title)}</p>\n      ` : "";
     const items = names.map((name) => `<li>${escapeHtml(name)}</li>`);
@@ -146,7 +159,7 @@ function renderPatrons(groups: PatronGroup[], t: ReturnType<typeof translator>):
         ${items.join("\n        ")}
       </ul>`;
   });
-  return `<h3 class="community-h3">${t("community.patrons")}</h3>
+  return `<h3 class="community-h3">${linkWord(t("community.patrons"), "Patreon", campaignUrl)}</h3>
       ${lists.join("\n      ")}`;
 }
 
@@ -156,7 +169,7 @@ export function expandCommunityPartial(html: string, data: CommunityData): strin
   const parts: string[] = [];
   if (data.contributors?.length) parts.push(renderContributors(data.contributors, t));
   const patrons = (data.patrons ?? []).filter((g) => g.names.length);
-  if (patrons.length) parts.push(renderPatrons(patrons, t));
+  if (patrons.length) parts.push(renderPatrons(patrons, t, data.patreonUrl ?? null));
   if (data.donors.length) parts.push(renderDonors(data.donors, t));
   if (!parts.length) return html.replace(COMMUNITY_MARKER, "");
 
@@ -175,7 +188,9 @@ export default function communityPartial(root: string): Plugin {
     if (contributors === null) {
       console.warn("[community] GitHub contributors unavailable; building without the grid");
     }
-    return { contributors, donors: loadSupporters(root).donors, patrons: await fetchPatrons() };
+    return { contributors, donors: loadSupporters(root).donors, patrons: await fetchPatrons(),
+      patreonUrl: patreonUrl(TRANQUILO_CONFIG.patreon.url),
+    };
   };
   return {
     name: "tranquilo-community-partial",
