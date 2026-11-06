@@ -157,13 +157,14 @@ licenses = "cc0,public-domain,public-domain-mark,public-domain-ibram"
 excluded_sources = "tepapa,npm"
 
 [print.gelato_products]
-# Gelato product UIDs. Posters and framed prints have one per orientation;
-# Gelato lists no portrait mini print.
+# Gelato product UIDs. Everything except the tote and mug has one per
+# orientation.
 poster_ver = "flat_product_pf_400x500-mm_pt_250-gsm-uncoated-offwhite-archival_cl_4-0_ct_none_prt_none_sft_none_set_none_ver"
 poster_hor = "flat_product_pf_400x500-mm_pt_250-gsm-uncoated-offwhite-archival_cl_4-0_ct_none_prt_none_sft_none_set_none_hor"
 framed_ver = "framed_fine_arts_poster_geo_simplified_product_12-0_black_aluminum_w10xt22-mm_plexiglass_ver_400x500-mm-16x20-inch_400x500-mm-16x20-inch_200-gsm-80lb-enhanced-uncoated"
 framed_hor = "framed_fine_arts_poster_geo_simplified_product_12-0_black_aluminum_w10xt22-mm_plexiglass_hor_400x500-mm-16x20-inch_400x500-mm-16x20-inch_200-gsm-80lb-enhanced-uncoated"
-mini_print_hor = "cards_pf_5r_pt_300-gsm-coated-silk_cl_4-4_ct_glossy-protection_hor"
+mini_print_ver = "flat_130x180-mm-5r_250-gsm-100lb-uncoated-offwhite-archival_4-0_ver"
+mini_print_hor = "flat_130x180-mm-5r_250-gsm-100lb-uncoated-offwhite-archival_4-0_hor"
 tote = "bag_product_bsc_tote-bag_bqa_clc_bsi_std-t_bco_natural_bpr_4-0"
 mug = "mug_product_msz_11-oz_mmat_ceramic-white_cl_4-0"
 

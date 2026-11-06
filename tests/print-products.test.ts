@@ -25,9 +25,9 @@ describe("the Gelato product for a print", () => {
     expect(gelatoProductUid("mug", "hor")).toMatch(/^mug_/);
   });
 
-  it("has no portrait mini print", () => {
-    expect(gelatoProductUid("mini_print", "hor")).toMatch(/^cards_/);
-    expect(gelatoProductUid("mini_print", "ver")).toBeNull();
+  it("follows the artwork's orientation for the mini print", () => {
+    expect(gelatoProductUid("mini_print", "ver")).toMatch(/_ver$/);
+    expect(gelatoProductUid("mini_print", "hor")).toMatch(/_hor$/);
   });
 
   it("is absent for an unknown product", () => {
