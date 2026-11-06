@@ -220,6 +220,38 @@ describe("expandCommunityPartial", () => {
     expect(html.match(/class="community-tier"/g)).toHaveLength(1);
   });
 
+  it("links GitHub in the contributors heading to the repository", () => {
+    const html = expandCommunityPartial(page, {
+      contributors: parseContributors([human]),
+      donors: [],
+    });
+    expect(html).toContain(
+      'Contributors on <a href="https://github.com/tranquilo-art/tranquilo-app" rel="noopener">GitHub</a>',
+    );
+  });
+
+  it("links Patreon in the patrons heading to the campaign", () => {
+    const html = expandCommunityPartial(page, {
+      contributors: null,
+      donors: [],
+      patrons: [{ title: null, names: ["Ana S."] }],
+      patreonUrl: "https://patreon.com/Tranquiloart",
+    });
+    expect(html).toContain(
+      'Patrons on <a href="https://patreon.com/Tranquiloart" rel="noopener">Patreon</a>',
+    );
+  });
+
+  it("leaves Patreon unlinked without a campaign URL", () => {
+    const html = expandCommunityPartial(page, {
+      contributors: null,
+      donors: [],
+      patrons: [{ title: null, names: ["Ana S."] }],
+    });
+    expect(html).toContain("Patrons on Patreon");
+    expect(html).not.toContain("patreon.com");
+  });
+
   it("shows no patrons heading while there are no patrons", () => {
     const html = expandCommunityPartial(page, {
       contributors: parseContributors([human]),
