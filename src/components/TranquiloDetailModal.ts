@@ -530,7 +530,7 @@ function wirePrint(
         days,
       ]
         .filter(Boolean)
-        .join(" · ");
+        .join("\n");
     }
   }
 

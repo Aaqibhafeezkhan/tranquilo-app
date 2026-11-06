@@ -692,6 +692,16 @@
 .detail-modal-inner .print-delivery{
   font-size:0.72rem;
   color:rgba(255,255,255,0.6);
+  white-space:pre-line;
+}
+@media (max-width:480px){
+  .detail-modal-inner .print-option{ grid-template-columns:56px 1fr; }
+  .detail-modal-inner .print-quote{
+    grid-column:2;
+    align-items:flex-start;
+    max-width:none;
+    text-align:left;
+  }
 }
 .detail-modal-inner .print-delivery:empty{ display:none; }
 .detail-modal-inner .print-ship-to{
