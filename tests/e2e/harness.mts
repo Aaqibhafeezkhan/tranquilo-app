@@ -312,6 +312,7 @@ export async function stubBackend(
     "cast_context",
     "twist_story",
     "twist_source_url",
+    "palette_buckets",
   ];
   const bulk = (item: Record<string, unknown>) =>
     Object.fromEntries(
@@ -414,6 +415,7 @@ export async function stubBackend(
           cast_context: found.cast_context ?? null,
           twist_story: found.twist_story ?? null,
           twist_source_url: found.twist_source_url ?? null,
+          palette_buckets: found.palette_buckets ?? [],
         },
       });
     }

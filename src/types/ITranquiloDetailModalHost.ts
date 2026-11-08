@@ -42,6 +42,7 @@ export interface ITranquiloDetailModalHost {
   sourceLinkLabel(item: Item): string;
   sourceLinkText(item: Item): string;
   setArtistFilter(artist: string): void;
+  applyPaletteFilter(bucket: string): void;
   openStorylineMode(storylineId: string): void;
   openSetOfWorksMode(setOfWorkId: string): void;
   // Every overlay pushes one history entry on open so the hardware back

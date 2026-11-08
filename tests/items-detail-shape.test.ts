@@ -28,6 +28,8 @@ const ROW = {
   twist_hook: "A hook",
   twist_story: "A story",
   twist_source_url: "https://example.org/twist",
+  palette_hex: ["#112233"],
+  palette_buckets: ["Blue", "Teal"],
 };
 
 const queries: { text: string; params: unknown[] }[] = [];
@@ -82,6 +84,7 @@ describe("shape=detail", () => {
     expect(item.cast_context).toEqual({ status: "grounded", text: "Context" });
     expect(item.twist_story).toBe("A story");
     expect(item.twist_source_url).toBe("https://example.org/twist");
+    expect(item.palette_buckets).toEqual(["Blue", "Teal"]);
   });
 
   it("carries only curated text, nothing the feed already has", async () => {
@@ -92,6 +95,7 @@ describe("shape=detail", () => {
         "caption_tea",
         "cast",
         "cast_context",
+        "palette_buckets",
         "tea_voice_sources",
         "twist_source_url",
         "twist_story",

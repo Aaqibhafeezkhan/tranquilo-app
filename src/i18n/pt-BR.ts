@@ -67,6 +67,7 @@ export const ptBR: Dictionary = {
   "detail.cast.noDetail": "Ainda sem detalhes verificados.",
   "detail.fact.didYouKnow": "Você sabia?",
   "detail.fact.basic": "Informações básicas",
+  "detail.palette.find": "Ver mais obras em {bucket}",
   "detail.meta.artist": "Artista",
   "detail.meta.created": "Criado em",
   "detail.meta.material": "Material",

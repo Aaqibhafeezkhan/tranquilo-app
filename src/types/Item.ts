@@ -103,6 +103,7 @@ export interface Item {
   twist_hook: string | null;
   twist_story?: string | null;
   twist_source_url?: string | null;
+  palette_buckets?: Palette[] | null;
   shuffle_key: number;
   // Computed client-side after fetch, stashed onto the item -- never part
   // of the API response itself.
@@ -129,4 +130,5 @@ export type ItemDetail = Pick<
   | "cast_context"
   | "twist_story"
   | "twist_source_url"
+  | "palette_buckets"
 >;
