@@ -278,6 +278,7 @@ function serializeCuratedText(row: ItemRow) {
     cast_context: parseJsonbField(row.cast_context),
     twist_story: row.twist_story,
     twist_source_url: safeHttpUrl(row.twist_source_url),
+    palette_buckets: row.palette_buckets ?? [],
   };
 }
 

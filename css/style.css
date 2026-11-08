@@ -677,6 +677,25 @@ body{ display:flow-root; }
 .set-of-works-chip:hover{ transform:scale(1.04); }
 .set-of-works-chip svg{ flex:none; }
 
+.detail-palette{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:12px 0 0;
+}
+.palette-dot{
+  flex:none;
+  width:20px; height:20px;
+  padding:0;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,0.35);
+  cursor:pointer;
+  transition:transform 0.15s ease, border-color 0.15s ease;
+}
+.palette-dot:hover{
+  transform:scale(1.15);
+  border-color:#fff;
+}
 .art-frame.loading img, .art-frame.failed img{ opacity:0; }
 .art-skeleton{
   position:absolute;

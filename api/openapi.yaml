@@ -956,9 +956,9 @@ components:
     ItemDetail:
       type: object
       description: >-
-        The curated text of an item, served one item at a time and only by
-        `?shape=detail` -- item rows carry none of it, only `cast_tier`,
-        `twist_category` and `twist_hook`. `caption_tea` is translated under
+        The curated text and palette buckets of an item, served one item at a
+        time and only by `?shape=detail` -- item rows carry none of it, only
+        `cast_tier`, `twist_category` and `twist_hook`. `caption_tea` is translated under
         `locale` like any item row.
       properties:
         caption_tea: { type: string, nullable: true }
@@ -984,6 +984,10 @@ components:
         cast_context: {}
         twist_story: { type: string, nullable: true }
         twist_source_url: { type: string, nullable: true }
+        palette_buckets:
+          type: array
+          description: The palette buckets the work was classified into, served only here and never on item rows.
+          items: { type: string }
     ManifestItem:
       type: object
       description: The lightweight order-manifest shape (`?shape=manifest`) -- identity and facets only, no heavy text/image fields.

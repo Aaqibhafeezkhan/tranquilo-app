@@ -28,6 +28,7 @@ import {
 import { licenseLabel } from "../app/licenseLabels";
 import { currentLocale, facetLabel, type MessageKey, t } from "../i18n/index";
 import { isNamedMaker } from "../logic/logic";
+import { PALETTE_BUCKET_SWATCH } from "../logic/paletteSwatches";
 import {
   importTaxApplies,
   PRINT_COUNTRIES,
@@ -171,6 +172,25 @@ function originRows(item: Item): string {
 // but unconfirmed), the intro switches to softened language and each
 // hedged name gets a "Possibly" prefix, so it's never presented with a
 // grounded identification's confidence.
+// One dot per palette bucket the work was classified into. Arrives with the
+// detail fetch, so it is absent until then.
+function buildPaletteDotsHtml(item: Item): string {
+  const buckets = (item.palette_buckets ?? []).filter(
+    (bucket) => PALETTE_BUCKET_SWATCH[bucket],
+  );
+  if (!buckets.length) return "";
+  const dots = buckets
+    .map((bucket) => {
+      const name = escapeHtml(facetLabel("palette", bucket));
+      const label = escapeHtml(
+        t("detail.palette.find", { bucket: facetLabel("palette", bucket) }),
+      );
+      return `<button class="palette-dot" type="button" data-bucket="${escapeHtml(bucket)}" style="background-color:${PALETTE_BUCKET_SWATCH[bucket]}" aria-label="${label}" title="${name}"></button>`;
+    })
+    .join("");
+  return `<div class="detail-palette" role="group" aria-label="${escapeHtml(t("filters.palette"))}">${dots}</div>`;
+}
+
 function buildCastSectionHtml(item: Item): string {
   if (!item.cast || (item.cast_tier !== "full" && item.cast_tier !== "partial"))
     return "";
@@ -874,7 +894,7 @@ export class TranquiloDetailModal extends HTMLElement {
               item,
             )}</div>`
           : ""
-      }${buildCastSectionHtml(item)}<div class="rule"></div>` +
+      }${buildPaletteDotsHtml(item)}${buildCastSectionHtml(item)}<div class="rule"></div>` +
       `<div class="d-body">${
         // Labelled rows. metaRow() renders nothing (not an empty <div>)
         // when the value is missing.
@@ -962,6 +982,15 @@ export class TranquiloDetailModal extends HTMLElement {
         host.setArtistFilter(item.artist ?? "");
       });
     }
+    container.querySelectorAll<HTMLElement>(".palette-dot").forEach((dot) => {
+      const bucket = dot.dataset.bucket;
+      if (!bucket) return;
+      on(dot, () => {
+        this.openedFromShelves = false;
+        this.close();
+        host.applyPaletteFilter(bucket);
+      });
+    });
     wireCastSection(container);
   }
 
@@ -987,6 +1016,7 @@ export class TranquiloDetailModal extends HTMLElement {
           item.cast_context = detail.cast_context;
           item.twist_story = detail.twist_story;
           item.twist_source_url = detail.twist_source_url;
+          item.palette_buckets = detail.palette_buckets;
           item._detail = true;
           const inner = page.querySelector<HTMLElement>(".detail-modal-inner");
           if (inner?.isConnected) this.refreshPage(inner, item);

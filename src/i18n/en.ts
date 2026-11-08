@@ -89,6 +89,7 @@ export const en = {
   "detail.cast.noDetail": "No verified detail available yet.",
   "detail.fact.didYouKnow": "Did you know?",
   "detail.fact.basic": "Basic Information",
+  "detail.palette.find": "Find more art in {bucket}",
   "detail.meta.artist": "Artist",
   "detail.meta.created": "Created",
   "detail.meta.material": "Material",
