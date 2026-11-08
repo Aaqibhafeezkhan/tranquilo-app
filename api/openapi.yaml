@@ -291,6 +291,26 @@ paths:
         correction, count, detail), answered under a per-key quota instead of
         the per-visitor budget. Full item rows carry an extra `keyed` object.
         Responses are never cached (`Cache-Control: private, no-store`).
+
+        `shape=listing` is the one shape that exists only here, for partner
+        and internal keys (a community key gets a 403). It returns one light
+        row per live item, `{key, updated_at}`, ordered by `updated_at` then
+        `key`, at most 100 per page; follow `next_cursor` until it is null.
+        Each `key` is the `source:native_id` form `?keys=` accepts, so a page
+        is exactly one full-row lookup. Quota is charged by page size.
+
+        To follow changes, pass `updated_since` (an ISO 8601 time with a
+        zone). The listing then also reports items that left the catalogue as
+        `{key, updated_at, removed: true}`, with no reason given. A client
+        that finishes a listing or a change feed SHOULD keep the last
+        `updated_at` it saw, and start the next change feed a few minutes
+        before it, applying rows idempotently by `key`: a write that is still
+        committing can carry a slightly earlier time than one already served.
+
+        `updated_at` moves when an item's content changes. It does not move
+        for pipeline bookkeeping: a feed reshuffle (`shuffle_key`), a rules
+        re-run (`rules_version`) or a source recheck (`source_verified_at`).
+
         Shapes that are not catalogue queries (`storylines`, `storyline`,
         `set_of_works`, `set_of_work`, `shelves`, `music`, `heroes`,
         `vocabulary`, `print_region`) are a 400; use `/api/items` for those.
@@ -309,6 +329,7 @@ paths:
                   - $ref: "#/components/schemas/CorrectionResult"
                   - $ref: "#/components/schemas/CountResult"
                   - $ref: "#/components/schemas/ItemDetailResult"
+                  - $ref: "#/components/schemas/ListingPage"
         "400":
           description: Caller error, as for `/api/items`, or a shape with no keyed form.
           content:
@@ -317,6 +338,10 @@ paths:
           description: Missing, unknown or revoked key.
           headers:
             WWW-Authenticate: { schema: { type: string } }
+          content:
+            application/json: { schema: { $ref: "#/components/schemas/Error" } }
+        "403":
+          description: '`shape=listing` with a community key.'
           content:
             application/json: { schema: { $ref: "#/components/schemas/Error" } }
         "404":
@@ -1023,6 +1048,30 @@ components:
           type: string
           nullable: true
           description: Null once the session has seen the whole live catalogue exactly once.
+    ListingPage:
+      type: object
+      description: '`/v1/items?shape=listing` -- a page of items by change time, partner and internal keys only.'
+      required: [items, next_cursor]
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required: [key, updated_at]
+            properties:
+              key: { type: string, description: 'source:native_id, as `?keys=` takes it.' }
+              updated_at:
+                type: string
+                format: date-time
+                description: UTC, always six fractional digits.
+              removed:
+                type: boolean
+                enum: [true]
+                description: Present only with `updated_since`, for an item that is no longer in the catalogue.
+        next_cursor:
+          type: string
+          nullable: true
+          description: Null on the last page.
     FacetsResult:
       type: object
       description: >-
