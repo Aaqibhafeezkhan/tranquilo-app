@@ -96,6 +96,8 @@ interface BuiltQuery {
   counting?: true;
   lookup?: true;
   detail?: true;
+  listing?: true;
+  includeRemoved?: boolean;
   requestedIds?: string[];
   byKey?: true;
   limit?: number;
@@ -311,6 +313,7 @@ function authorizationHeader(req: VercelRequest): string | undefined {
 
 function keyedShapeName(query: BuiltQuery): string {
   if (query.detail) return "detail";
+  if (query.listing) return "listing";
   if (query.manifest) return "manifest";
   if (query.facets) return "facets";
   if (query.suggest) return "suggest";
@@ -448,6 +451,98 @@ function parseStart(value: string | undefined): number {
     );
   }
   return start;
+}
+
+// ---------------------------------------------------------------------------
+// The keyed listing (?shape=listing): every item as a key plus the time it
+// last changed, ordered by (updated_at, id). The same order serves a full
+// enumeration and "what changed since". Only partner and internal keys.
+// ---------------------------------------------------------------------------
+
+// Fixed width, so clients never meet two formats and a cursor round-trips
+// the exact microsecond.
+const LISTING_TIME_FORMAT = `YYYY-MM-DD"T"HH24:MI:SS.US"Z"`;
+const LISTING_TIME = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}Z$/;
+const SINCE_TIME =
+  /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,6})?(Z|[+-]\d{2}:\d{2})$/;
+const LISTING_EPOCH = "1970-01-01T00:00:00.000000Z";
+
+interface ListingRow {
+  key: string;
+  updated_at: string;
+  removed: boolean;
+}
+
+function encodeListingCursor(
+  updatedAt: string,
+  key: string,
+  includeRemoved: boolean,
+): string {
+  const payload = Buffer.from(
+    [updatedAt, key, includeRemoved ? "1" : "0"].join("\u0000"),
+    "utf8",
+  ).toString("base64url");
+  return signCursor(payload, process.env.ITEMS_CURSOR_SECRET);
+}
+
+function decodeListingCursor(cursor: string) {
+  const bad = Object.assign(new Error("malformed cursor"), { status: 400 });
+  const payload = verifyCursor(String(cursor), process.env.ITEMS_CURSOR_SECRET);
+  if (payload === null) throw bad;
+  const parts = Buffer.from(payload, "base64url")
+    .toString("utf8")
+    .split("\u0000");
+  if (parts.length !== 3 || !LISTING_TIME.test(parts[0]) || !parts[1]) {
+    throw bad;
+  }
+  if (parts[2] !== "0" && parts[2] !== "1") throw bad;
+  return {
+    updatedAt: parts[0],
+    key: parts[1],
+    includeRemoved: parts[2] === "1",
+  };
+}
+
+function listingQuery(params: QueryParams): BuiltQuery {
+  const limit = Math.min(
+    Math.max(parseInt(scalar(params.limit) ?? "", 10) || MAX_IDS, 1),
+    MAX_IDS,
+  );
+  const cursor = scalar(params.cursor);
+  const since = scalar(params.updated_since);
+
+  let after = LISTING_EPOCH;
+  let afterKey = "";
+  let includeRemoved = false;
+  if (cursor) {
+    const c = decodeListingCursor(cursor);
+    after = c.updatedAt;
+    afterKey = c.key;
+    includeRemoved = c.includeRemoved;
+  } else if (since) {
+    if (!SINCE_TIME.test(since) || Number.isNaN(Date.parse(since))) {
+      throw Object.assign(
+        new Error("updated_since must be an ISO 8601 time with a zone"),
+        { status: 400 },
+      );
+    }
+    after = since;
+    includeRemoved = true;
+  }
+
+  const where = [`(updated_at, id) > ($1::timestamptz, $2)`];
+  if (!includeRemoved) where.push(LIVE_ITEMS_PREDICATE);
+  // items.updated_at, qualified: bare, ORDER BY sorts the output alias, not the index.
+  return {
+    text:
+      `SELECT id AS key, to_char(updated_at AT TIME ZONE 'UTC', '${LISTING_TIME_FORMAT}') AS updated_at,` +
+      ` COALESCE(NOT (${LIVE_ITEMS_PREDICATE}), true) AS removed` +
+      ` FROM items WHERE ${where.join(" AND ")} ORDER BY items.updated_at ASC, items.id ASC LIMIT $3`,
+    params: [after, afterKey, limit],
+    listing: true,
+    includeRemoved,
+    limit,
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -661,6 +756,7 @@ function buildQuery(params: QueryParams): BuiltQuery {
   if (shape === "vibe_search") return vibeSearchQuery(params);
 
   if (shape === "detail") return detailQuery(params);
+  if (shape === "listing") return listingQuery(params);
 
   const where = [LIVE_ITEMS_PREDICATE];
   const values: unknown[] = [];
@@ -949,6 +1045,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
   }
 
+  if (shape === "listing") {
+    if (!keyAuth) {
+      res.statusCode = 400;
+      res.json({ error: "shape=listing is only available on /v1/items" });
+      return;
+    }
+    if (keyAuth.tier === "community") {
+      res.statusCode = 403;
+      res.json({ error: "Listing requires a partner or internal key" });
+      return;
+    }
+  }
+
   // ?locale= asks for translated content; absent means source text only.
   let locale: string | null;
   try {
@@ -1157,6 +1266,27 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     if (query.correction) {
       res.json({ candidates: rows.map((row) => row.word as string) });
+      return;
+    }
+
+    if (query.listing) {
+      const page = rows as ListingRow[];
+      const last = page[page.length - 1];
+      res.json({
+        items: page.map((row) => ({
+          key: row.key,
+          updated_at: row.updated_at,
+          ...(row.removed && { removed: true }),
+        })),
+        next_cursor:
+          last && page.length === query.limit
+            ? encodeListingCursor(
+                last.updated_at,
+                last.key,
+                query.includeRemoved === true,
+              )
+            : null,
+      });
       return;
     }
 
