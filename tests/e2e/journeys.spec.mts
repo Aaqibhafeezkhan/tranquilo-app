@@ -62,14 +62,14 @@ test("Journey: category -> scroll -> details -> lightbox", async ({ page }) => {
         counts[cat] = (counts[cat] || 0) + 1;
       });
     const best = Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0];
-    return [...document.querySelectorAll("#chips button")].findIndex(
+    return [...document.querySelectorAll("#chips button.chip")].findIndex(
       (b) => b.textContent.trim() === best,
     );
   });
   // A category selection re-renders asynchronously; without waiting, the
   // count below races the fetch and can catch the feed mid-clear.
   await actAndSettle(page, () =>
-    page.locator("#chips button").nth(chipIndex).click(),
+    page.locator("#chips button.chip").nth(chipIndex).click(),
   );
 
   const count = await feed.locator(".slide").count();

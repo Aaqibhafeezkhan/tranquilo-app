@@ -143,8 +143,12 @@ test("the catalogue's shape is fetched once, not per view change", async ({
   // change can alter.
   const seen = recordRequests(page);
   await gotoFeed(page);
-  await actAndSettle(page, () => page.locator("#chips button").nth(1).click());
-  await actAndSettle(page, () => page.locator("#chips button").nth(0).click());
+  await actAndSettle(page, () =>
+    page.locator("#chips button.chip").nth(1).click(),
+  );
+  await actAndSettle(page, () =>
+    page.locator("#chips button.chip").nth(0).click(),
+  );
   await page.locator("#collectionToggle").click();
 
   const facets = seen.filter((p) => p.get("shape") === "facets");

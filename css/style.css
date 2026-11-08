@@ -25,6 +25,21 @@ html,body{
   font-family:var(--sans);
   -webkit-font-smoothing:antialiased;
 }
+/* Establishes body's own block formatting context so a normal-flow
+   child's margin-top can never collapse through it and push body itself
+   down inside <html> -- #feed is a normal-flow child (position:static)
+   and #feed.search-push/#feed.filter-push (below) give it a margin-top
+   equal to the panel/banner's own height. Without this, that margin
+   collapsed straight through body (no padding/border-top of its own),
+   inflating <html>'s scrollable height by exactly the panel's height and
+   making the page genuinely wheel-scrollable behind the still-fixed
+   topbar/search-bar -- invisible to #feed's own scroll-locked class,
+   since the extra scroll room lived on <html>, not on #feed. Confirmed
+   live: opening search (any state) shifted document.body's own rendered
+   position down by the panel's height with every other box-model
+   property reported unchanged, the textbook signature of a collapsed
+   margin escaping through an ancestor. */
+body{ display:flow-root; }
 
 /* ---------- Top bar ----------
    Mobile-first base: two rows -- row1 (wordmark + icon cluster) stays put,
@@ -102,7 +117,8 @@ html,body{
 }
 .chips::-webkit-scrollbar{ display:none; }
 
-.chip{
+.chip,
+.palette-trigger{
   flex:none;
   font-family:var(--sans);
   font-size:0.72rem;
@@ -117,13 +133,88 @@ html,body{
   transition:all 0.2s ease;
   backdrop-filter: blur(6px);
 }
-.chip:hover{ color:#fff; border-color:rgba(255,255,255,0.4); }
-.chip.active{
+.chip:hover,
+.palette-trigger:hover{ color:#fff; border-color:rgba(255,255,255,0.4); }
+.chip.active,
+.palette-trigger.active{
   background:var(--gold);
   border-color:var(--gold);
   color:#fff;
   font-weight:500;
 }
+
+/* Compact palette filter: a pie of the bucket colours until one is chosen.
+   Its listbox lives on the topbar host (see TranquiloTopbar.ts), because
+   .chips scrolls horizontally and would clip a panel inside it. */
+.palette-trigger{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding-right:10px;
+}
+.palette-trigger::after{
+  content:"";
+  border:3px solid transparent;
+  border-top-color:currentColor;
+  transform:translateY(2px);
+}
+.palette-pie{
+  flex:none;
+  width:14px; height:14px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,0.4);
+}
+.filter-dropdown-menu{
+  position:absolute;
+  top:100%;
+  left:0;
+  z-index:25;
+  min-width:180px;
+  max-width:min(80vw, 260px);
+  max-height:min(60vh, 420px);
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  padding:6px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.18);
+  background:rgba(10,9,8,0.96);
+  backdrop-filter: blur(8px);
+  box-shadow:0 18px 40px rgba(0,0,0,0.45);
+}
+.filter-dropdown-menu[hidden]{ display:none; }
+.filter-dropdown-option{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  width:100%;
+  text-align:left;
+  padding:7px 10px;
+  border:none;
+  border-radius:8px;
+  background:none;
+  color:var(--text);
+  font-family:var(--sans);
+  font-size:0.78rem;
+  white-space:nowrap;
+  cursor:pointer;
+}
+.filter-dropdown-option:hover{ background:rgba(255,255,255,0.08); }
+.filter-dropdown-option[aria-selected="true"]{
+  background:rgba(255,255,255,0.12);
+  font-weight:500;
+}
+.filter-dropdown-group-label{
+  padding:9px 10px 3px;
+  font-family:var(--sans);
+  font-size:0.64rem;
+  font-weight:500;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.45);
+}
+.filter-dropdown-group-label:first-child{ padding-top:4px; }
 
 /* Shown only while music is actually playing (updateMusicCredit() in
    app.js), so it never appears with nothing audible behind it. */
@@ -169,6 +260,18 @@ html,body{
    near the top and doesn't otherwise block touch/scroll on the feed
    still visible underneath it. */
 .feed.scroll-locked{ overflow:hidden; }
+
+/* Softens the render() gap (old slides cleared, new ones not appended
+   yet) into a dim-and-recover cross-fade instead of a hard cut to blank
+   -- added at the very top of render(), removed once real content has
+   settled (TranquiloFeed.ts's markFeedSettled()). Asymmetric timing:
+   dims fast so it reads as an immediate response to the action, recovers
+   slower so new content doesn't just pop in. */
+.feed{ transition:opacity 0.35s ease; }
+.feed.feed-transitioning{ opacity:0.4; transition:opacity 0.12s ease; }
+@media (prefers-reduced-motion: reduce){
+  .feed, .feed.feed-transitioning{ transition:none; }
+}
 
 /* Shown briefly while app.js awaits fetch('/api/items') on first load
    (see curio-static-to-postgres-migration-v1.md) -- feedEl.innerHTML is
@@ -573,6 +676,7 @@ html,body{
 }
 .set-of-works-chip:hover{ transform:scale(1.04); }
 .set-of-works-chip svg{ flex:none; }
+
 .art-frame.loading img, .art-frame.failed img{ opacity:0; }
 .art-skeleton{
   position:absolute;
@@ -1124,6 +1228,22 @@ html,body{
   text-align:center;
 }
 .filter-banner strong{ font-weight:500; color:var(--gold-soft); }
+
+/* The active filter reads as one pill -- label text and its own
+   "x" to clear fused together -- to draw a deliberate visual line to the
+   vibe-tag pills on each slide (same shape language: an outlined pill
+   naming what's active). #filterBannerLabel's own content (built by
+   SearchController's activeSearchLabel()) sits unstyled inside this;
+   only the pill and its × button carry the chip-like treatment. */
+.filter-banner-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.22);
+  border-radius:999px;
+  padding:4px 6px 4px 14px;
+}
 .filter-banner button{
   font-family:var(--sans);
   font-size:0.7rem;
@@ -1137,6 +1257,21 @@ html,body{
   white-space:nowrap;
 }
 .filter-banner button:hover{ color:#fff; border-color:var(--gold-soft); }
+/* The clear "x" lives inside the pill now, not as its own separate
+   outlined button -- a plain circular glyph matching the vibe-chip's own
+   restrained, unfilled look, not a second nested pill-in-a-pill. */
+#filterBannerClear{
+  border:none;
+  padding:0;
+  width:18px; height:18px;
+  border-radius:50%;
+  font-size:1rem;
+  line-height:1;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+#filterBannerClear:hover{ background:rgba(255,255,255,0.12); }
 
 /* Inline, always rendered when a profile resolves -- no toggle. A sibling
    of .filter-banner, not a child: it needs to render as its own full-width
@@ -1274,7 +1409,12 @@ html,body{
   align-items:center;
   gap:8px;
 }
-.search-bar input{
+/* Scoped to the text input specifically -- written before the
+   storyline-filter checkbox existed, and a bare `.search-bar input`
+   selector caught it too: appearance:none plus a pill-shaped background
+   turned it into an invisible, unstyled blob with no visible checked
+   state at all. */
+.search-bar input[type="search"]{
   flex:1;
   min-width:0;
   font-family:var(--sans);
@@ -1288,8 +1428,8 @@ html,body{
   -webkit-appearance:none;
   appearance:none;
 }
-.search-bar input::placeholder{ color:rgba(255,255,255,0.45); }
-.search-bar input:focus{ border-color:var(--gold-soft); }
+.search-bar input[type="search"]::placeholder{ color:rgba(255,255,255,0.45); }
+.search-bar input[type="search"]:focus{ border-color:var(--gold-soft); }
 
 /* Pushes the feed down below the search panel instead of letting it
    float on top of the artwork -- originally desktop-only (an overlay
@@ -1310,6 +1450,7 @@ html,body{
   height:calc(100svh - var(--search-bar-h, 0px));
 }
 .search-input-row button{
+  position:relative;
   flex:none;
   display:flex;
   align-items:center;
@@ -1325,6 +1466,57 @@ html,body{
 }
 .search-input-row button:hover{ border-color:var(--gold-soft); }
 #searchClose{ font-size:1.3rem; }
+
+/* Real processing feedback for the count/correction/concept-probe round
+   trip run() makes on submit. A spinning magnifying glass read as
+   strange (rotating the search icon itself looks like it's spinning to
+   look for something, not "working") -- a plain ring in its place is a
+   more legible "in progress" glyph. cursor:progress (not not-allowed):
+   this is normal, expected work finishing shortly, not a blocked action. */
+#searchSubmit.loading{ cursor:progress; }
+#searchSubmit.loading svg{ opacity:0; }
+#searchSubmit.loading::after{
+  content:"";
+  position:absolute;
+  /* Auto-margin centering, not top/left+transform:translate -- the spin
+     animation below needs transform:rotate() free for itself. */
+  inset:0;
+  margin:auto;
+  width:14px; height:14px;
+  border:2px solid rgba(255,255,255,0.3);
+  border-top-color:#fff;
+  border-radius:50%;
+  animation:search-submit-spin 0.7s linear infinite;
+}
+@keyframes search-submit-spin{ to{ transform:rotate(360deg); } }
+@media (prefers-reduced-motion: reduce){
+  #searchSubmit.loading::after{ animation:none; }
+}
+
+/* "Has storyline," moved here from a topbar chip -- see
+   TranquiloSearchBar.ts's header comment for why. A real modifier that
+   composes with a search rather than a category-like exclusive choice,
+   so it reads as a checkbox rather than another chip. */
+.storyline-filter-toggle{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:9px;
+  padding:0 5px;
+  font-family:var(--sans);
+  font-size:0.8rem;
+  font-weight:300;
+  color:rgba(255,255,255,0.75);
+  cursor:pointer;
+  width:fit-content;
+}
+.storyline-filter-toggle input{
+  width:15px; height:15px;
+  margin:0;
+  accent-color:var(--gold-soft);
+  cursor:pointer;
+}
+.storyline-filter-toggle:hover{ color:#fff; }
 
 /* Results / did-you-mean line -- lives *inside* the panel as a second
    line under the input, not a separate fixed strip, so the panel's
@@ -1975,6 +2167,11 @@ html,body{
        sets the spacing between the wordmark, chips and icon group. */
     gap:8px;
   }
+  /* .topbar-icons itself stays a real box (not display:contents) now --
+     it's one joined button group, and a group needs a box to draw its
+     own shared pill/border around. Only .topbar-row1 still flattens, so
+     the wordmark and the icon group can each take their own `order`
+     among .chips/.filter-banner as direct children of .topbar. */
   .topbar-row1{ display:contents; }
   /* Scoped to the top bar -- unscoped, this also reorders .mkt-nav
      .wordmark on the static pages, which has no order of its own. */
@@ -1989,7 +2186,8 @@ html,body{
      tests/e2e/chips-reachable.spec.mts. */
   .chips{ order:2; max-width:72vw; }
   /* Tightened to buy the row back some width. */
-  .chip{ font-size:0.68rem; letter-spacing:0.04em; padding:6px 11px; }
+  .chip,
+  .palette-trigger{ font-size:0.68rem; letter-spacing:0.04em; padding:6px 11px; }
   /* Same slot as the chips it replaces -- never both up. flex:1 absorbs
      the row's free space, keeping the icon group together. */
   .filter-banner{ order:2; flex:1; justify-content:flex-start; padding:0; }
@@ -2616,15 +2814,11 @@ html,body{
 /* Empty is a state, not a zero. Nothing saved means nothing to say. */
 .collection-toggle:not(.has-items) .collection-count{ display:none; }
 
-/* Active matches an active category chip exactly, because it is doing the same
-   job -- filtering the feed -- and looked like a different kind of control. */
+/* background/color for .active come from .topbar-icons button.active
+   (the shared button-group rule) -- this only adds what's unique to the
+   bookmark specifically. */
 .collection-toggle.active .collection-count{ text-shadow:none; }
-.collection-toggle.active{
-  background:var(--gold);
-  color:#fff;
-  border-color:var(--gold);
-  font-weight:500;
-}
+.collection-toggle.active{ font-weight:500; }
 
 /* Must come AFTER .intro-lockup-wrap's own --lockup-w: same specificity, so
    source order decides which value wins. */
@@ -2703,7 +2897,10 @@ html,body{
 /* The fourth top-bar icon fell off a narrow phone -- the wordmark's own
    growth (icon + letterspaced caps) took its space. Same collapse the bar
    already does on scroll, just also triggered by narrow width. Placed
-   after .topbar.compact so it wins in both directions. */
+   after .topbar.compact so it wins in both directions. The
+   .topbar-icons gap reduction this used to need is gone along with the
+   gap itself -- the button group's four buttons sit edge-to-edge now,
+   separated by a hairline divider instead of flex gap. */
 @media (max-width: 400px){
   .topbar .wordmark span{ max-width:0; opacity:0; }
   .topbar .wordmark{ gap:0; }

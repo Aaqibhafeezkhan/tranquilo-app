@@ -76,9 +76,11 @@ const topbarMarkup = () => `
 </div>
 <nav class="chips" id="chips"></nav>
 <div class="filter-banner" id="filterBanner" style="display:none;">
-  <span id="filterBannerLabel"></span>
+  <span class="filter-banner-pill">
+    <span id="filterBannerLabel"></span>
+    <button id="filterBannerClear" type="button" aria-label="${h(t("topbar.filter.clear"))}">&times;</button>
+  </span>
   <button id="filterBannerExport" type="button" style="display:none;">${h(t("topbar.filter.export"))}</button>
-  <button id="filterBannerClear" type="button">${h(t("topbar.filter.clear"))} &times;</button>
 </div>
 <div class="filter-banner-card" id="filterBannerCard" style="display:none;"></div>
 `;
@@ -131,6 +133,8 @@ export class TranquiloTopbar extends HTMLElement {
   private chipsMoreBtn: HTMLButtonElement | null = null;
   private chipsMoreMenu: HTMLDivElement | null = null;
   private chipsReflowTimer: ReturnType<typeof setTimeout> | null = null;
+  private paletteTrigger: HTMLButtonElement | null = null;
+  private paletteMenu: HTMLDivElement | null = null;
   private resizeObserver: ResizeObserver | null = null;
   private filterBannerResizeObserver: ResizeObserver | null = null;
 
@@ -242,6 +246,7 @@ export class TranquiloTopbar extends HTMLElement {
       this.chipsReflowTimer = setTimeout(() => {
         this.reflowChips();
         this.positionChipsMenu();
+        this.positionPaletteMenu();
       }, 120);
     });
   }
@@ -336,9 +341,15 @@ export class TranquiloTopbar extends HTMLElement {
   setChips(
     categories: readonly string[],
     activeCategory: string,
-    opts: { collectionActive: boolean; storylineActive: boolean },
+    opts: {
+      collectionActive: boolean;
+      paletteBuckets: readonly { value: string; swatch: string }[];
+      activePaletteBucket: string | null;
+    },
   ): void {
     this.chipsEl.innerHTML = "";
+    this.closePaletteMenu();
+    this.chipsEl.appendChild(this.buildPaletteTrigger(opts));
     // A full rebuild owns the More menu's contents too: chips parked there
     // by the previous build are stale, and reflowChips() would otherwise
     // move them back into the row next to their replacements. (reflowChips
@@ -358,21 +369,136 @@ export class TranquiloTopbar extends HTMLElement {
       this.chipsEl.appendChild(chip);
     });
 
-    // The Storyline toggle sits at the end of the same row, singular to
-    // match the item-level chip's wording.
-    const storylineChip = document.createElement("button");
-    storylineChip.id = "storylineChip";
-    // No bespoke class: .chip.active already reads as related to the
-    // item-level chip's own active color without inventing a variant.
-    storylineChip.className = `chip${opts.storylineActive ? " active" : ""}`;
-    storylineChip.textContent = t("chips.storyline");
-    storylineChip.setAttribute(
-      "aria-pressed",
-      opts.storylineActive ? "true" : "false",
-    );
-    on(storylineChip, () => this.app?.onStorylineFilterToggle());
-    this.chipsEl.appendChild(storylineChip);
     this.reflowChips();
+  }
+
+  // ---- Palette filter ----
+
+  private closePaletteMenu(): void {
+    if (this.paletteMenu) this.paletteMenu.hidden = true;
+    this.paletteTrigger?.setAttribute("aria-expanded", "false");
+  }
+
+  private positionPaletteMenu(): void {
+    const menu = this.paletteMenu;
+    const trigger = this.paletteTrigger;
+    if (!menu || !trigger || menu.hidden) return;
+    const btn = trigger.getBoundingClientRect();
+    const bar = this.getBoundingClientRect();
+    menu.style.top = `${btn.bottom - bar.top + 6}px`;
+    menu.style.left = `${btn.left - bar.left}px`;
+    const overflowRight =
+      menu.getBoundingClientRect().right - (window.innerWidth - 12);
+    if (overflowRight > 0) {
+      menu.style.left = `${btn.left - bar.left - overflowRight}px`;
+    }
+  }
+
+  // Created once. Lives on the host, not in .chips, which would clip it.
+  private ensurePaletteMenu(): HTMLDivElement {
+    if (this.paletteMenu) return this.paletteMenu;
+    const menu = document.createElement("div");
+    menu.id = "paletteMenu";
+    menu.className = "filter-dropdown-menu";
+    menu.setAttribute("role", "listbox");
+    menu.setAttribute("aria-label", t("filters.palette"));
+    menu.hidden = true;
+    this.appendChild(menu);
+    on(document, (e) => {
+      if (menu.hidden) return;
+      const target = e.target as Node;
+      if (menu.contains(target) || this.paletteTrigger?.contains(target))
+        return;
+      this.closePaletteMenu();
+    });
+    on(document, "keydown", (e) => {
+      if (e.key === "Escape") this.closePaletteMenu();
+    });
+    this.paletteMenu = menu;
+    return menu;
+  }
+
+  // A pie of the bucket colours, one equal slice each.
+  private static pieBackground(colors: readonly string[]): string {
+    if (!colors.length) return "rgba(255,255,255,0.2)";
+    const step = 360 / colors.length;
+    const stops = colors.map(
+      (c, i) =>
+        `${c} ${(i * step).toFixed(2)}deg ${((i + 1) * step).toFixed(2)}deg`,
+    );
+    return `conic-gradient(${stops.join(",")})`;
+  }
+
+  private buildPaletteTrigger(opts: {
+    collectionActive: boolean;
+    paletteBuckets: readonly { value: string; swatch: string }[];
+    activePaletteBucket: string | null;
+  }): HTMLButtonElement {
+    const active = opts.collectionActive
+      ? null
+      : opts.paletteBuckets.find((b) => b.value === opts.activePaletteBucket) ||
+        null;
+
+    const trigger = document.createElement("button");
+    trigger.id = "paletteTrigger";
+    trigger.type = "button";
+    trigger.className = `palette-trigger${active ? " active" : ""}`;
+    trigger.setAttribute("aria-haspopup", "listbox");
+    trigger.setAttribute("aria-expanded", "false");
+    trigger.setAttribute("aria-label", t("filters.palette"));
+
+    const pie = document.createElement("span");
+    pie.className = "palette-pie";
+    pie.style.background = active
+      ? active.swatch
+      : TranquiloTopbar.pieBackground(opts.paletteBuckets.map((b) => b.swatch));
+    trigger.appendChild(pie);
+    if (active) {
+      const label = document.createElement("span");
+      label.textContent = facetLabel("palette", active.value);
+      trigger.appendChild(label);
+    }
+    this.paletteTrigger = trigger;
+
+    const menu = this.ensurePaletteMenu();
+    menu.innerHTML = "";
+    const addOption = (value: string, text: string, swatch: string | null) => {
+      const option = document.createElement("button");
+      option.type = "button";
+      option.className = "filter-dropdown-option";
+      option.setAttribute("role", "option");
+      option.dataset.value = value;
+      option.setAttribute(
+        "aria-selected",
+        value === (active?.value || "") ? "true" : "false",
+      );
+      const dot = document.createElement("span");
+      dot.className = "palette-pie";
+      dot.style.background = swatch ?? "transparent";
+      const name = document.createElement("span");
+      name.textContent = text;
+      option.appendChild(dot);
+      option.appendChild(name);
+      on(option, () => {
+        this.closePaletteMenu();
+        this.app?.onPaletteSelect(value || null);
+      });
+      menu.appendChild(option);
+    };
+    addOption("", t("filters.allPalettes"), null);
+    opts.paletteBuckets.forEach((b) => {
+      addOption(b.value, facetLabel("palette", b.value), b.swatch);
+    });
+
+    on(trigger, (e) => {
+      e.stopPropagation();
+      const open = menu.hidden;
+      this.closeChipsMenu();
+      menu.hidden = !open;
+      trigger.setAttribute("aria-expanded", open ? "true" : "false");
+      if (open) this.positionPaletteMenu();
+    });
+    return trigger;
   }
 
   private chipsOverflowEnabled(): boolean {
@@ -413,6 +539,7 @@ export class TranquiloTopbar extends HTMLElement {
     on(btn, (e) => {
       e.stopPropagation();
       const open = menu.hidden;
+      this.closePaletteMenu();
       menu.hidden = !open;
       btn.setAttribute("aria-expanded", open ? "true" : "false");
       if (open) this.positionChipsMenu();
@@ -455,7 +582,7 @@ export class TranquiloTopbar extends HTMLElement {
 
   // Moves trailing category chips into the menu until the row fits on one
   // line. "All" stays put, since it's the reset, and so does the
-  // Storyline toggle, a different kind of control.
+  // palette trigger, a different kind of control.
   private reflowChips(): void {
     if (!this.chipsEl) return;
     // Put everything back in the row before measuring. Never clear the
@@ -465,9 +592,8 @@ export class TranquiloTopbar extends HTMLElement {
       const menu = this.chipsMoreMenu;
       if (!menu) return;
       const parked = Array.from(menu.children);
-      const anchor = this.querySelector("#storylineChip");
       for (const child of parked) {
-        this.chipsEl.insertBefore(child, anchor || this.chipsMoreBtn || null);
+        this.chipsEl.insertBefore(child, this.chipsMoreBtn || null);
       }
     };
 
@@ -491,7 +617,7 @@ export class TranquiloTopbar extends HTMLElement {
         // into it.
         return (
           c !== moreBtn &&
-          c.id !== "storylineChip" &&
+          c.id !== "paletteTrigger" &&
           (c as HTMLElement).dataset.category !== "All" &&
           !c.classList.contains("active")
         );
@@ -521,6 +647,7 @@ export class TranquiloTopbar extends HTMLElement {
   // whatever sits below moves up in the same frame.
   private setChipsHidden(hidden: boolean): void {
     this.chipsEl.style.display = hidden ? "none" : "";
+    if (hidden) this.closePaletteMenu();
     document.documentElement.style.setProperty(
       "--topbar-h",
       `${this.offsetHeight}px`,
