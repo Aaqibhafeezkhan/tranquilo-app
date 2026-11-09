@@ -41,6 +41,24 @@ test("tapping a dot closes the panel and filters the feed to that bucket", async
   await expect(page.locator("#paletteTrigger")).toContainText("Teal");
 });
 
+test("after tapping a dot the feed starts on an artwork, not the intro", async ({
+  page,
+}) => {
+  await openTarget(page);
+  await page.locator('#detailModal .palette-dot[data-bucket="Teal"]').click();
+
+  await expect(page.locator("#paletteTrigger")).toContainText("Teal");
+  await expect
+    .poll(() =>
+      page.evaluate(() => {
+        const feed = document.querySelector("#feed") as HTMLElement;
+        const first = feed.children[1] as HTMLElement;
+        return Math.abs(feed.scrollTop - first.offsetTop) < 2;
+      }),
+    )
+    .toBe(true);
+});
+
 test("page rows never carry the buckets", async ({ page }) => {
   await stubBackend(page, { items: [TARGET, ...ITEMS.slice(1)] });
   const rowBodies: string[] = [];

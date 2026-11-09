@@ -306,7 +306,10 @@ export class TranquiloFeed extends HTMLElement {
     // Derived, never set by a branch. An intro is skipped only when one
     // exists and the visitor asked for something specific.
     const skipIntroToFirstItem =
-      introAdded && (state.category !== "All" || state.storylineFilter);
+      introAdded &&
+      (state.category !== "All" ||
+        state.storylineFilter ||
+        !!state.paletteBucket);
 
     // Everything below settles the first screenful, then hands off to the
     // pager -- one promise chain so every mode finishes through the same

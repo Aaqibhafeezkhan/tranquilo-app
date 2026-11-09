@@ -82,6 +82,16 @@ test("selecting a Palette option closes the menu and applies the filter", async 
   const trigger = page.locator(TRIGGER);
   if (label) await expect(trigger).toContainText(label.trim());
   await expect(trigger).toHaveClass(/active/);
+
+  await expect
+    .poll(() =>
+      page.evaluate(() => {
+        const feed = document.querySelector("#feed") as HTMLElement;
+        const first = feed.children[1] as HTMLElement;
+        return Math.abs(feed.scrollTop - first.offsetTop) < 2;
+      }),
+    )
+    .toBe(true);
 });
 
 test("clicking outside closes an open Palette menu", async ({ page }) => {

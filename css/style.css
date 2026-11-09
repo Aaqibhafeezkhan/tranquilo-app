@@ -681,7 +681,7 @@ body{ display:flow-root; }
   display:flex;
   flex-wrap:wrap;
   gap:8px;
-  margin:12px 0 0;
+  margin:12px 0 16px;
 }
 .palette-dot{
   flex:none;
