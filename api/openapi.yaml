@@ -10,9 +10,28 @@ info:
     and translation contract (`x-supported-locales`,
     `x-translatable-fields`, `Translated`) is checked against the code by
     tests/openapi-locale-contract.test.ts.
+
+
+    **Versioning and deprecation.** `info.version` follows semantic
+    versioning, and the `/v1/` routes are the stable contract for keyed
+    integrators. Within a major version the API MAY add endpoints, optional
+    parameters, response fields, enum values, locales and translatable
+    fields, so clients MUST ignore fields they do not recognise. Removing or
+    renaming a documented field, parameter, shape or route, changing a
+    field's type or meaning, or making an optional parameter required is a
+    breaking change and MUST ship as a new major version (`/v2/`). Fixing
+    behaviour that contradicts this document is not a breaking change.
+
+
+    A feature slated for removal is deprecated first. From the day it is
+    announced, its responses SHOULD carry a `Deprecation` header and, once a
+    removal date is set, a `Sunset` header with that date. The notice period
+    between announcement and removal MUST be at least 90 days. The previous
+    major version MUST keep working for at least 90 days after its successor
+    is released. Each deprecation and removal is recorded in CHANGELOG.md.
   version: "1.0.0"
   license:
-    name: UNLICENSED
+    name: Private. Terms are provided with API access.
 servers:
   - url: https://tranquilo.art
     description: Production
