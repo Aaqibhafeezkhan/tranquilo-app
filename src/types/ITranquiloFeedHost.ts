@@ -25,6 +25,8 @@ export interface FeedFilterState {
   // per-item palette swatch -- composes with whichever mode above is
   // active, merged into the ordinary feed's params.
   paletteBucket: string | null;
+  // The search panel's institution dropdown; same composition as paletteBucket.
+  source: string | null;
 }
 
 export interface ITranquiloFeedHost {

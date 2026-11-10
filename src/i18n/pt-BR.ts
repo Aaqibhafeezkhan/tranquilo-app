@@ -130,11 +130,15 @@ export const ptBR: Dictionary = {
   "search.related": "Mostrando obras relacionadas a “{concept}”",
   "search.results.one": "{count} resultado para “{query}”",
   "search.results.other": "{count} resultados para “{query}”",
+  "search.sourceLabel": "Fonte",
+  "search.allSources": "Todas as fontes",
+  "search.inSource": "em {source}",
   "search.noResults": "Nenhum resultado para “{query}”.",
   "search.didYouMean":
     "Nenhum resultado para “{query}”. Você quis dizer {suggestion}?",
 
   "filter.moreBy": "Mais por {artist}",
+  "filter.fromSource": "Obras de {source}",
   "filter.collection": "{title} ({count})",
   "collection.toast.empty": "Nada salvo ainda",
 

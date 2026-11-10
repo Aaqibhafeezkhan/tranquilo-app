@@ -157,11 +157,15 @@ export const en = {
   "search.related": "Showing pieces related to “{concept}”",
   "search.results.one": "{count} result for “{query}”",
   "search.results.other": "{count} results for “{query}”",
+  "search.sourceLabel": "Source",
+  "search.allSources": "All sources",
+  "search.inSource": "in {source}",
   "search.noResults": "No results for “{query}.”",
   "search.didYouMean": "No results for “{query}.” Did you mean {suggestion}?",
 
   // Filter banner under the top bar.
   "filter.moreBy": "More by {artist}",
+  "filter.fromSource": "Works from {source}",
   "filter.collection": "{title} ({count})",
   "collection.toast.empty": "Nothing collected yet",
 

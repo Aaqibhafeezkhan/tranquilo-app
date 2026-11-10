@@ -30,6 +30,7 @@
 // creates inside the results line and wires up itself.
 
 import { type FacetField, facetLabel, t } from "../i18n/index";
+import type { InstitutionOption } from "../logic/institutions";
 import {
   findDidYouMean,
   isNamedMaker,
@@ -82,10 +83,15 @@ const searchBarMarkup = () => `
   </button>
   <button id="searchClose" type="button" aria-label="${escapeHtml(t("search.close"))}">&times;</button>
 </div>
-<label class="storyline-filter-toggle" id="storylineFilterToggle">
-  <input type="checkbox" id="storylineFilterCheckbox">
-  <span>Has storyline</span>
-</label>
+<div class="search-filter-row">
+  <select id="searchSourceSelect" class="search-source-select" aria-label="${escapeHtml(t("search.sourceLabel"))}" hidden>
+    <option value="">${escapeHtml(t("search.allSources"))}</option>
+  </select>
+  <label class="storyline-filter-toggle" id="storylineFilterToggle">
+    <input type="checkbox" id="storylineFilterCheckbox">
+    <span>Has storyline</span>
+  </label>
+</div>
 <div class="search-results-line" id="searchResultsLine" aria-live="polite"></div>
 <div class="search-suggestions" id="searchSuggestions"></div>
 `;
@@ -129,6 +135,7 @@ export class TranquiloSearchBar extends HTMLElement {
   private suggestionsEl!: HTMLElement;
   private submitBtnEl!: HTMLButtonElement;
   private storylineCheckboxEl!: HTMLInputElement;
+  private sourceSelectEl!: HTMLSelectElement;
 
   private history: string[] = [];
   private highlightIndex = -1;
@@ -161,6 +168,20 @@ export class TranquiloSearchBar extends HTMLElement {
     this.storylineCheckboxEl = this.requireEl<HTMLInputElement>(
       "#storylineFilterCheckbox",
     );
+    this.sourceSelectEl = this.requireEl<HTMLSelectElement>(
+      "#searchSourceSelect",
+    );
+    on(this.sourceSelectEl, "change", () => {
+      this.dispatchEvent(
+        new CustomEvent("source-change", {
+          detail: {
+            source: this.sourceSelectEl.value || null,
+            query: this.inputEl.value,
+          },
+          bubbles: true,
+        }),
+      );
+    });
     on(this.storylineCheckboxEl, "change", () => {
       this.dispatchEvent(
         new CustomEvent("storyline-filter-toggle", {
@@ -253,6 +274,29 @@ export class TranquiloSearchBar extends HTMLElement {
   // storyline filter off while the panel was closed.
   setStorylineActive(active: boolean): void {
     this.storylineCheckboxEl.checked = active;
+  }
+
+  // Called once by app.js after its startup facets fetch. With no
+  // institutions to offer, the dropdown stays hidden.
+  setSourceOptions(options: readonly InstitutionOption[]): void {
+    this.sourceSelectEl
+      .querySelectorAll("option:not([value=''])")
+      .forEach((el) => {
+        el.remove();
+      });
+    options.forEach(({ value, label }) => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = label;
+      this.sourceSelectEl.appendChild(option);
+    });
+    this.sourceSelectEl.hidden = options.length === 0;
+  }
+
+  // Kept in sync by app.js's renderChips(), like setStorylineActive().
+  setSourceActive(source: string | null): void {
+    this.sourceSelectEl.value = source ?? "";
+    this.sourceSelectEl.classList.toggle("active", source !== null);
   }
 
   // Called by app.js's runSearch() at the top of every submit, before it

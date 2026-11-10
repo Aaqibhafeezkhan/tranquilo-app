@@ -2,7 +2,7 @@ import type { ActiveConcept } from "./SearchController";
 
 // The feed's current filter. Exactly one of artist/search/concept/
 // collectionFilter is the "mode" driving renderFeed() at a time;
-// category/paletteBucket/storylineFilter each compose with whichever
+// category/paletteBucket/source/storylineFilter each compose with whichever
 // mode is active rather than replacing it -- category and paletteBucket
 // are what the Category/Palette dropdowns drive, each independently
 // settable. bannerHtml is the one-line summary of the active mode,
@@ -22,6 +22,9 @@ export class FilterState {
   // via a palette swatch) -- independent of category, composed into
   // the ordinary feed's palette_bucket facet.
   private paletteBucket: string | null = null;
+  // The search panel's institution dropdown -- composed into the ordinary
+  // feed's source facet, and into the search count.
+  private source: string | null = null;
 
   getCategory(): string {
     return this.category;
@@ -35,6 +38,13 @@ export class FilterState {
   }
   setPaletteBucket(v: string | null): void {
     this.paletteBucket = v;
+  }
+
+  getSource(): string | null {
+    return this.source;
+  }
+  setSource(v: string | null): void {
+    this.source = v;
   }
 
   getArtist(): string | null {
@@ -89,6 +99,7 @@ export class FilterState {
       collectionFilter: this.collectionFilter,
       storylineFilter: this.storylineFilter,
       paletteBucket: this.paletteBucket,
+      source: this.source,
     };
   }
 }
