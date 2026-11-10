@@ -124,9 +124,15 @@ describe("what leaves updated_at alone", () => {
     ["an accent colour status", "accent_color_status = 'checked'"],
     ["a perceptual hash", "phash = 'abc123'"],
     ["a curator boost", "curator_boost = 2"],
-    ["unserved contributors", `contributors = '[{"name": "A. Painter"}]'::jsonb`],
+    [
+      "unserved contributors",
+      `contributors = '[{"name": "A. Painter"}]'::jsonb`,
+    ],
     ["unserved external ids", `external_ids = '{"wikidata": "Q5598"}'::jsonb`],
-    ["unserved source metadata", `source_meta = '{"accession": "1937.1.1"}'::jsonb`],
+    [
+      "unserved source metadata",
+      `source_meta = '{"accession": "1937.1.1"}'::jsonb`,
+    ],
   ])("%s", async (_label, set) => {
     expect(await moved(await freshItem(), set)).toBe(false);
   });
@@ -188,7 +194,9 @@ describe("external_ids and source_meta", () => {
   });
 
   it("leave every other column counting as content", async () => {
-    expect(await moved(await freshItem(), "title = 'Another title'")).toBe(true);
+    expect(await moved(await freshItem(), "title = 'Another title'")).toBe(
+      true,
+    );
   });
 
   it("are safe to add again", async () => {
