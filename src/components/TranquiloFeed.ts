@@ -19,7 +19,9 @@
 // data-driven and only changes because app.ts called render();
 // index.html's "feed-loading" placeholder is left alone until then.
 
+import { TRANQUILO_CONFIG } from "../data/config.generated";
 import type { Pager } from "../feed/recycleWindow";
+import { sessionStart } from "../feed/sessionStart";
 import { HERO_COUNT, pickHeroes } from "../logic/logic";
 import type { HeroPoolEntry } from "../types/HeroPoolEntry";
 import type {
@@ -180,7 +182,11 @@ export class TranquiloFeed extends HTMLElement {
   private allModeStart: number | null = null;
 
   private getAllModeStart(): number {
-    if (this.allModeStart === null) this.allModeStart = Math.random();
+    if (this.allModeStart === null)
+      this.allModeStart = sessionStart(
+        Math.random(),
+        TRANQUILO_CONFIG.feed.start_buckets,
+      );
     return this.allModeStart;
   }
 

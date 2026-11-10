@@ -15,6 +15,7 @@
 // through the host object: this module owns paging and the hydrated
 // band, app.js owns the network layer and the feed-extension decision.
 
+import { TRANQUILO_CONFIG } from "../data/config.generated";
 import {
   declusterPageOrder,
   recycleDelta,
@@ -22,6 +23,7 @@ import {
 } from "../logic/logic";
 import type { Item } from "../types/Item";
 import type { SlideRecord } from "../types/SlideRecord";
+import { sessionStart } from "./sessionStart";
 import type { ImageState } from "./slideBuilder";
 
 export interface Pager {
@@ -94,7 +96,7 @@ export function createRecycleWindow(
       // The per-session start offset -- variety comes from this plus the
       // nightly re-keying of shuffle_key, not a per-request sort the
       // database can't index.
-      start: Math.random(),
+      start: sessionStart(Math.random(), TRANQUILO_CONFIG.feed.start_buckets),
       cursor: null,
       carry: null,
       exhausted: false,
@@ -235,6 +237,9 @@ export function createRecycleWindow(
   // enough ahead that scrolling never catches up. 30 either side is ~61
   // ids, inside one lookup.
   const HYDRATE_RADIUS = 30;
+  // First lookup covers only slides this close to the viewer.
+  const FIRST_HYDRATE_RADIUS = 3;
+  let firstHydrationSent = false;
   const hydrateInFlight: Record<string, boolean> = {};
 
   // Requests are coalesced before sending -- issuing a fetch per window
@@ -461,6 +466,14 @@ export function createRecycleWindow(
     });
     // Fetch a much wider band than we build, so scrolling rarely outruns data.
     const active = activeSlideIndex();
+    if (!firstHydrationSent) {
+      firstHydrationSent = true;
+      ensureHydrated(
+        active - FIRST_HYDRATE_RADIUS,
+        active + FIRST_HYDRATE_RADIUS,
+      );
+      flushHydrateQueue();
+    }
     ensureHydrated(active - HYDRATE_RADIUS, active + HYDRATE_RADIUS);
     // Extend the feed itself when the end comes into range -- cheap to
     // call per frame, returns immediately unless near the end.
@@ -473,6 +486,7 @@ export function createRecycleWindow(
     config.slideRecords.length = 0;
     hydratedLo = 0;
     hydratedHi = -1;
+    firstHydrationSent = false;
     // Deliberately not clearing hydrateInFlight: those requests are still
     // wanted regardless of which view is showing the items.
   }
