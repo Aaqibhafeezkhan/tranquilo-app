@@ -181,11 +181,17 @@ function buildPaletteDotsHtml(item: Item): string {
   if (!buckets.length) return "";
   const dots = buckets
     .map((bucket) => {
-      const name = escapeHtml(facetLabel("palette", bucket));
+      const bucketName = facetLabel("palette", bucket);
+      const tooltip = escapeHtml(
+        t("detail.palette.tooltip", {
+          bucket: bucketName,
+          bucketLower: bucketName.toLocaleLowerCase(),
+        }),
+      );
       const label = escapeHtml(
         t("detail.palette.find", { bucket: facetLabel("palette", bucket) }),
       );
-      return `<button class="palette-dot" type="button" data-bucket="${escapeHtml(bucket)}" style="background-color:${PALETTE_BUCKET_SWATCH[bucket]}" aria-label="${label}" title="${name}"></button>`;
+      return `<button class="palette-dot" type="button" data-bucket="${escapeHtml(bucket)}" style="background-color:${PALETTE_BUCKET_SWATCH[bucket]}" aria-label="${label}" title="${tooltip}"></button>`;
     })
     .join("");
   return `<div class="detail-palette" role="group" aria-label="${escapeHtml(t("filters.palette"))}">${dots}</div>`;

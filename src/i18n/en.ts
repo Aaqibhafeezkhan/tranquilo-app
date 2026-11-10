@@ -90,6 +90,8 @@ export const en = {
   "detail.fact.didYouKnow": "Did you know?",
   "detail.fact.basic": "Basic Information",
   "detail.palette.find": "Find more art in {bucket}",
+  "detail.palette.tooltip":
+    "{bucket}: click to see all works with a {bucketLower} palette",
   "detail.meta.artist": "Artist",
   "detail.meta.created": "Created",
   "detail.meta.material": "Material",

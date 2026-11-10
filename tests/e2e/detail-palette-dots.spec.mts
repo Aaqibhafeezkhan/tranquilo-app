@@ -28,6 +28,7 @@ test("the detail panel shows a dot for each of the work's palette buckets", asyn
     els.map((el) => (el as HTMLElement).style.backgroundColor),
   );
   expect(colors.every((c) => c && c !== "transparent")).toBe(true);
+  await expect(dots.first()).toHaveAttribute("title", /^Teal: .*teal palette/);
 });
 
 test("tapping a dot closes the panel and filters the feed to that bucket", async ({
