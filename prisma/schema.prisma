@@ -128,6 +128,14 @@ model items {
 
   shuffle_key Float @default(0)
 
+  // See sql/063_items_updated_at.sql. Maintained by a trigger.
+  updated_at DateTime @default(now()) @db.Timestamptz
+
+  // See sql/064_items_external_ids.sql. JSON objects, NULL until captured.
+  external_ids Json?
+  source_meta  Json?
+
+  @@index([updated_at, id], map: "items_updated_at_idx")
   @@index([search_text(ops: raw("gin_trgm_ops"))], type: Gin, map: "items_search_text_trgm_idx")
   @@unique([source, native_id], map: "items_source_native_id_idx")
 }

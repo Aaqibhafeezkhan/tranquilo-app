@@ -2,7 +2,7 @@
 // the API serves for an item changes, and holds still for pipeline
 // bookkeeping, so a feed reshuffle or a rules re-run does not make the whole
 // catalogue look changed. Against real Postgres (PGlite), using the same
-// sql/063 file that is run by hand against Neon.
+// sql/063 and sql/064 files that are run by hand against Neon.
 
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -11,6 +11,10 @@ import { makeSql } from "./helpers/pg.ts";
 
 const MIGRATION = readFileSync(
   join(import.meta.dirname, "..", "sql", "063_items_updated_at.sql"),
+  "utf8",
+);
+const EXTERNAL_IDS_MIGRATION = readFileSync(
+  join(import.meta.dirname, "..", "sql", "064_items_external_ids.sql"),
   "utf8",
 );
 const LONG_AGO = "2020-01-01T00:00:00.000Z";
@@ -30,6 +34,7 @@ beforeAll(async () => {
     "040_items_accent_color_status.sql",
     "042_items_source_verified_at.sql",
     "049_items_master_dims.sql",
+    "055_items_contributors.sql",
   ]);
   await sql.query(
     "INSERT INTO items (id, source, native_id, title, category, created_at) VALUES " +
@@ -37,6 +42,7 @@ beforeAll(async () => {
       "('met:old2', 'met', 'old2', 'Before', 'Painting', '2019-06-01T00:00:00Z')",
   );
   await sql.$db.exec(MIGRATION);
+  await sql.$db.exec(EXTERNAL_IDS_MIGRATION);
 });
 afterAll(async () => {
   if (sql) await sql.$close();
@@ -73,6 +79,7 @@ describe("the migration", () => {
 
   it("is safe to run again, and a re-run changes nothing", async () => {
     await sql.$db.exec(MIGRATION);
+    await sql.$db.exec(EXTERNAL_IDS_MIGRATION);
     expect(await updatedAt("met:old1")).toBe("2019-05-01T00:00:00.000Z");
   });
 
@@ -117,6 +124,9 @@ describe("what leaves updated_at alone", () => {
     ["an accent colour status", "accent_color_status = 'checked'"],
     ["a perceptual hash", "phash = 'abc123'"],
     ["a curator boost", "curator_boost = 2"],
+    ["unserved contributors", `contributors = '[{"name": "A. Painter"}]'::jsonb`],
+    ["unserved external ids", `external_ids = '{"wikidata": "Q5598"}'::jsonb`],
+    ["unserved source metadata", `source_meta = '{"accession": "1937.1.1"}'::jsonb`],
   ])("%s", async (_label, set) => {
     expect(await moved(await freshItem(), set)).toBe(false);
   });
@@ -134,5 +144,55 @@ describe("setting it by hand", () => {
       [id],
     );
     expect(await updatedAt(id)).toBe("2021-02-03T04:05:06.000Z");
+  });
+});
+
+describe("external_ids and source_meta", () => {
+  it("start empty, so a row that was never captured is not mistaken for {}", async () => {
+    const id = await freshItem();
+    const rows = await sql.query(
+      "SELECT external_ids, source_meta FROM items WHERE id = $1",
+      [id],
+    );
+    expect(rows[0]).toEqual({ external_ids: null, source_meta: null });
+  });
+
+  it("hold JSON objects, including non-Latin text", async () => {
+    const id = await freshItem();
+    await sql.query(
+      "UPDATE items SET external_ids = $2::jsonb, source_meta = $3::jsonb WHERE id = $1",
+      [
+        id,
+        JSON.stringify({ ulan: "500115", wikidata: "Q5598" }),
+        JSON.stringify({ title_original: "清明上河图", date: { start: 1085 } }),
+      ],
+    );
+    const rows = await sql.query(
+      "SELECT external_ids, source_meta FROM items WHERE id = $1",
+      [id],
+    );
+    expect(rows[0].external_ids).toEqual({ ulan: "500115", wikidata: "Q5598" });
+    expect(rows[0].source_meta.title_original).toBe("清明上河图");
+  });
+
+  it.each([
+    ["external_ids", `'["Q5598"]'::jsonb`],
+    ["external_ids", `'"Q5598"'::jsonb`],
+    ["source_meta", `'[1]'::jsonb`],
+    ["source_meta", "'7'::jsonb"],
+  ])("refuse a %s that is not an object: %s", async (column, value) => {
+    const id = await freshItem();
+    await expect(
+      sql.query(`UPDATE items SET ${column} = ${value} WHERE id = $1`, [id]),
+    ).rejects.toThrow();
+  });
+
+  it("leave every other column counting as content", async () => {
+    expect(await moved(await freshItem(), "title = 'Another title'")).toBe(true);
+  });
+
+  it("are safe to add again", async () => {
+    await sql.$db.exec(EXTERNAL_IDS_MIGRATION);
+    expect(await moved(await freshItem(), "category = 'Drawing'")).toBe(true);
   });
 });
