@@ -1516,11 +1516,33 @@ body{ display:flow-root; }
    TranquiloSearchBar.ts's header comment for why. A real modifier that
    composes with a search rather than a category-like exclusive choice,
    so it reads as a checkbox rather than another chip. */
+.search-filter-row{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:8px 14px;
+  margin-top:9px;
+}
+.search-source-select{
+  font-family:var(--sans);
+  font-size:0.76rem;
+  color:rgba(255,255,255,0.75);
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.18);
+  border-radius:999px;
+  padding:6px 13px;
+  max-width:100%;
+  cursor:pointer;
+}
+.search-source-select[hidden]{ display:none; }
+.search-source-select:hover,
+.search-source-select.active{ border-color:var(--gold-soft); color:#fff; }
+.search-source-select option{ color:#111; background:#fff; }
 .storyline-filter-toggle{
   display:flex;
   align-items:center;
   gap:8px;
-  margin-top:9px;
+  margin-top:0;
   padding:0 5px;
   font-family:var(--sans);
   font-size:0.8rem;

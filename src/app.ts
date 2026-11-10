@@ -40,6 +40,7 @@ import {
   t,
   tHtml,
 } from "./i18n/index";
+import { institutionOptions } from "./logic/institutions";
 import { hasMasterSize, printLinkEnabled } from "./logic/printOptions";
 import type { ITopbarHost } from "./types/ITopbarHost";
 import type { ITranquiloDetailModalHost } from "./types/ITranquiloDetailModalHost";
@@ -392,11 +393,20 @@ class TranquiloApp {
       "tranquilo-search-bar",
     ) as TranquiloSearchBar;
     searchBarEl.facets = facets;
+    searchBarEl.setSourceOptions(institutionOptions(facets.sources));
     searchBarEl.addEventListener("search-submit", (e) => {
       runSearch((e as CustomEvent<{ query: string }>).detail.query);
     });
     searchBarEl.addEventListener("search-close-request", () => {
       requestOverlayClose(closeSearch);
+    });
+    searchBarEl.addEventListener("source-change", (e) => {
+      const { source, query } = (
+        e as CustomEvent<{ source: string | null; query: string }>
+      ).detail;
+      filterState.setSource(source);
+      trackEvent("source_filter_select", { source });
+      runSearch(query);
     });
     searchBarEl.addEventListener("storyline-filter-toggle", () => {
       const on = filterState.toggleStorylineFilter();
@@ -683,6 +693,7 @@ class TranquiloApp {
     const topbarHost: ITopbarHost = {
       onCategorySelect: (cat) => {
         filterState.setCategory(cat);
+        filterState.setSource(null);
         filterState.setArtist(null);
         filterState.setSearch(null);
         filterState.setConcept(null);
@@ -720,6 +731,7 @@ class TranquiloApp {
         showCollectionView();
       },
       onFilterBannerClear: () => {
+        filterState.setSource(null);
         filterState.setArtist(null);
         filterState.setSearch(null);
         filterState.setConcept(null);
@@ -898,6 +910,7 @@ class TranquiloApp {
       // piggybacking the checkbox's sync here (rather than a second
       // call site) keeps it from ever drifting out of sync with reality.
       searchBarEl.setStorylineActive(filterState.getStorylineFilter());
+      searchBarEl.setSourceActive(filterState.getSource());
     }
 
     function applyPaletteFilter(bucket: string | null) {
@@ -1034,6 +1047,7 @@ class TranquiloApp {
     }
 
     function setArtistFilter(artist: any) {
+      filterState.setSource(null);
       filterState.setArtist(artist);
       filterState.setSearch(null);
       filterState.setConcept(null);
@@ -1051,6 +1065,7 @@ class TranquiloApp {
     }
 
     function showCollectionView() {
+      filterState.setSource(null);
       filterState.setArtist(null);
       filterState.setSearch(null);
       filterState.setConcept(null);
@@ -1112,6 +1127,7 @@ class TranquiloApp {
       setActiveCollectionFilter: (v: any) => {
         filterState.setCollectionFilter(v);
       },
+      getActiveSource: () => filterState.getSource(),
       getSearchResultCount: () => searchResultCount,
       setSearchResultCount: (v: any) => {
         searchResultCount = v;

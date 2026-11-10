@@ -285,7 +285,11 @@ export class TranquiloFeed extends HTMLElement {
         // since a returning visitor is returning whether or not they
         // closed the tab -- then memoized for this page load, so a later
         // category round-trip doesn't read the flag markFeedSeen() just set.
-        if (!state.storylineFilter && this.showHeroesThisSession())
+        if (
+          !state.storylineFilter &&
+          !state.source &&
+          this.showHeroesThisSession()
+        )
           leadingItems = [];
       } else {
         params.category = state.category;
@@ -302,6 +306,9 @@ export class TranquiloFeed extends HTMLElement {
     if (!fixedItems && state.paletteBucket) {
       params.palette_bucket = state.paletteBucket;
     }
+    if (!fixedItems && state.source) {
+      params.source = state.source;
+    }
 
     // Derived, never set by a branch. An intro is skipped only when one
     // exists and the visitor asked for something specific.
@@ -309,7 +316,8 @@ export class TranquiloFeed extends HTMLElement {
       introAdded &&
       (state.category !== "All" ||
         state.storylineFilter ||
-        !!state.paletteBucket);
+        !!state.paletteBucket ||
+        !!state.source);
 
     // Everything below settles the first screenful, then hands off to the
     // pager -- one promise chain so every mode finishes through the same

@@ -13,6 +13,7 @@ function makeHost(overrides: Partial<SearchControllerHost> = {}) {
   let activeSearch: string | null = null;
   let activeConcept: ActiveConcept | null = null;
   let searchResultCount = 0;
+  let activeSource: string | null = null;
   const filterBannerHtml: string | null = null;
 
   const host: SearchControllerHost = {
@@ -27,6 +28,7 @@ function makeHost(overrides: Partial<SearchControllerHost> = {}) {
     setActiveCategory: vi.fn(),
     setActiveArtist: vi.fn(),
     setActiveCollectionFilter: vi.fn(),
+    getActiveSource: vi.fn(() => activeSource),
     getSearchResultCount: vi.fn(() => searchResultCount),
     setSearchResultCount: vi.fn((v) => {
       searchResultCount = v;
@@ -61,7 +63,11 @@ function makeHost(overrides: Partial<SearchControllerHost> = {}) {
     countMatches: vi.fn(async () => 0),
     ...overrides,
   };
-  return host;
+  return Object.assign(host, {
+    setSourceForTest: (v: string | null) => {
+      activeSource = v;
+    },
+  });
 }
 
 let classListAdd: ReturnType<typeof vi.fn>;
@@ -164,6 +170,37 @@ describe("run", () => {
     expect(host.countMatches).not.toHaveBeenCalled();
     // The panel reopens over the feed, same as a fresh open().
     expect(host.setFeedScrollLocked).toHaveBeenCalledWith(true);
+  });
+
+  it("with an institution selected, a blank query shows that institution instead of clearing", async () => {
+    const host = makeHost();
+    host.setSourceForTest("met");
+    const controller = new SearchController(host);
+    await controller.run("");
+    expect(host.countMatches).not.toHaveBeenCalled();
+    expect(host.setActiveSearch).toHaveBeenCalledWith(null);
+    expect(host.renderFeed).toHaveBeenCalled();
+    expect(host.showFilterBanner).toHaveBeenCalled();
+    expect(host.openSearchBar).not.toHaveBeenCalled();
+    expect(host.setFeedScrollLocked).toHaveBeenCalledWith(false);
+  });
+
+  it("counts a search within the selected institution", async () => {
+    const host = makeHost({ countMatches: vi.fn(async () => 2) });
+    host.setSourceForTest("aic");
+    const controller = new SearchController(host);
+    await controller.run("wheat");
+    expect(host.countMatches).toHaveBeenCalledWith({
+      q: "wheat",
+      source: "aic",
+    });
+  });
+
+  it("counts an unscoped search without a source param", async () => {
+    const host = makeHost({ countMatches: vi.fn(async () => 2) });
+    const controller = new SearchController(host);
+    await controller.run("wheat");
+    expect(host.countMatches).toHaveBeenCalledWith({ q: "wheat" });
   });
 
   it("sets the active search and hands off to the filter banner on a literal match", async () => {

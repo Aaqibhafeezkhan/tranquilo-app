@@ -1,4 +1,5 @@
 import { formatNumber, tHtml, tnHtml } from "../i18n/index";
+import { institutionLabel } from "../logic/institutions";
 import { matchConcept } from "../logic/logic";
 
 export interface ActiveConcept {
@@ -60,6 +61,8 @@ export interface SearchControllerHost {
   setActiveCategory(v: string): void;
   setActiveArtist(v: string | null): void;
   setActiveCollectionFilter(v: boolean): void;
+  // The institution picked in the search panel, or null for all sources.
+  getActiveSource(): string | null;
   getSearchResultCount(): number;
   setSearchResultCount(v: number): void;
   getFilterBannerHtml(): string | null;
@@ -130,18 +133,32 @@ export class SearchController {
   // Both the panel's results line and the filter banner that outlives it
   // render this, so it's derived in one place rather than rebuilt per site.
   private activeSearchLabel(): string {
+    const source = this.host.getActiveSource();
+    const sourceName = source ? institutionLabel(source) : null;
+    const inSource = sourceName
+      ? tHtml("search.inSource", {
+          source: `<strong>${this.host.escapeHtml(sourceName)}</strong>`,
+        })
+      : "";
     const concept = this.host.getActiveConcept();
     if (concept) {
-      return tHtml("search.related", {
+      const label = tHtml("search.related", {
         concept: this.host.escapeHtml(concept.label),
       });
+      return inSource ? `${label} ${inSource}` : label;
     }
     const search = this.host.getActiveSearch();
     if (search) {
       const count = this.host.getSearchResultCount();
-      return tnHtml("search.results", count, {
+      const label = tnHtml("search.results", count, {
         count: `<strong>${formatNumber(count)}</strong>`,
         query: this.host.escapeHtml(search),
+      });
+      return inSource ? `${label} ${inSource}` : label;
+    }
+    if (sourceName) {
+      return tHtml("filter.fromSource", {
+        source: `<strong>${this.host.escapeHtml(sourceName)}</strong>`,
       });
     }
     return "";
@@ -243,6 +260,8 @@ export class SearchController {
     Object.keys(concept.filter).forEach((k) => {
       p[k] = concept.filter[k];
     });
+    const source = this.host.getActiveSource();
+    if (source) p.source = source;
     return this.host
       .fetchJson(this.host.apiUrl(p), "concept probe")
       .then((body) => !!body.items?.length)
@@ -272,6 +291,21 @@ export class SearchController {
   async run(rawQuery: string): Promise<void> {
     const q = rawQuery.trim();
     this.host.clearSuggestions();
+
+    if (!q && this.host.getActiveSource()) {
+      this.host.setActiveSearch(null);
+      this.host.setActiveConcept(null);
+      this.host.setActiveArtist(null);
+      this.host.setActiveCollectionFilter(false);
+      this.host.setActiveCategory("All");
+      this.host.setSearchResultCount(0);
+      this.renderPersistedSearchState();
+      this.host.renderChips();
+      this.host.renderFeed();
+      this.host.setFeedScrollLocked(false);
+      this.handOffToFilterBanner();
+      return;
+    }
 
     if (!q) {
       this.host.setActiveSearch(null);
@@ -312,7 +346,10 @@ export class SearchController {
   // wraps it without an extra indent level over the whole thing.
   private async runQuery(q: string): Promise<void> {
     // The count decides the branch; the feed fetches the rows itself.
-    const searchResultCount = await this.host.countMatches({ q });
+    const source = this.host.getActiveSource();
+    const searchResultCount = await this.host.countMatches(
+      source ? { q, source } : { q },
+    );
     this.host.setSearchResultCount(searchResultCount);
     this.host.setActiveArtist(null);
     this.host.setActiveCollectionFilter(false);

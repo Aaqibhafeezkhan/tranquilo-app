@@ -20,7 +20,7 @@ const MAX_IDS_PER_LOOKUP = TRANQUILO_CONFIG.feed.max_ids_per_lookup;
 type IdsLookup = { items?: Item[]; missing?: string[] };
 
 export type FacetsResponse = SearchFacets & {
-  sources?: unknown[];
+  sources?: { value: string; count: number }[];
   total?: number;
 };
 
