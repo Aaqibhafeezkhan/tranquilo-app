@@ -443,6 +443,7 @@ class TranquiloApp {
         collectionStore.isCollectionKey(entry),
       getFilterState: () => filterState.snapshot(),
       filterQueryString: () => filterQueryString(filterState.snapshot()),
+      clearFilterBanner: () => hideFilterBanner(),
       // Read-and-clear atomically, so a second render() never re-honours
       // a link already consumed.
       consumeDeepLinkSlug: () => {
@@ -1227,6 +1228,10 @@ class TranquiloApp {
     let hintHidden = false;
     function refreshScrollHint() {
       if (hintHidden) return;
+      if (feedEl.querySelector(".error-state")) {
+        scrollHint.classList.add("hidden");
+        return;
+      }
       const roomBelow =
         feedEl.scrollHeight - feedEl.clientHeight - feedEl.scrollTop;
       scrollHint.classList.toggle("hidden", roomBelow <= 40);
@@ -1388,6 +1393,7 @@ new TranquiloApp().start().catch((err: any) => {
   // Not feedEl -- that's declared inside start()'s own scope.
   const feedEl = document.getElementById("feed") as any;
   feedEl.innerHTML = "";
+  document.getElementById("scrollHint")?.classList.add("hidden");
   feedEl.appendChild(
     renderErrorState({
       detail:
@@ -1395,6 +1401,8 @@ new TranquiloApp().start().catch((err: any) => {
           ? "429 — Too many requests"
           : err?.message || "Tranquilo failed to load.",
       rateLimited: err instanceof RateLimitedError,
+      retryAfterSeconds:
+        err instanceof RateLimitedError ? err.retryAfterSeconds : null,
       onRetry: () => location.reload(),
     }),
   );

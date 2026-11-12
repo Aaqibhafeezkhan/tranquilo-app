@@ -147,7 +147,11 @@ export const ptBR: Dictionary = {
 
   "error.heading": "Estamos com um problema agora, mas voltaremos em breve.",
   "error.rateLimited":
-    "Estamos recebendo muitas solicitações agora! Atualize a página em instantes para tentar de novo.",
+    "Estamos recebendo muitas solicitações agora! Aguarde um ou dois minutos e atualize a página para tentar de novo.",
+  "error.rateLimitedWait.one":
+    "Estamos recebendo muitas solicitações agora! Aguarde cerca de {count} minuto e atualize a página para tentar de novo.",
+  "error.rateLimitedWait.other":
+    "Estamos recebendo muitas solicitações agora! Aguarde cerca de {count} minutos e atualize a página para tentar de novo.",
   "error.retry": "Tentar de novo",
   "error.home": "Voltar para Tranquilo",
 

@@ -175,7 +175,11 @@ export const en = {
   // Shown when the catalogue fails to load (src/errorState.ts).
   "error.heading": "We’re having a problem right now, but we’ll be back soon.",
   "error.rateLimited":
-    "We’re getting a lot of requests right now! Refresh in a moment to try again.",
+    "We’re getting a lot of requests right now! Please wait a minute or two, then refresh to try again.",
+  "error.rateLimitedWait.one":
+    "We’re getting a lot of requests right now! Please wait about {count} minute, then refresh to try again.",
+  "error.rateLimitedWait.other":
+    "We’re getting a lot of requests right now! Please wait about {count} minutes, then refresh to try again.",
   "error.retry": "Try again",
   "error.home": "Back to Tranquilo",
 

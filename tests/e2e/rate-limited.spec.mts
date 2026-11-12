@@ -21,6 +21,7 @@ test("a 429 while the app starts up shows the busy page", async ({ page }) => {
   await expect(page.locator(".error-state")).toBeVisible();
   await expect(page.locator(".error-heading")).toHaveText(MESSAGE);
   await expect(page.locator(".error-detail")).toContainText("429");
+  await expect(page.locator(".error-heading")).toContainText("about 1 minute");
   await expect(page.locator(".error-retry-btn")).toBeVisible();
 });
 
@@ -44,4 +45,41 @@ test("an ordinary failure keeps the generic message", async ({ page }) => {
   await expect(page.locator(".error-heading")).toContainText(
     "having a problem right now",
   );
+});
+
+test("the busy page clears the stale search banner and scroll cue", async ({
+  page,
+}) => {
+  await gotoFeed(page);
+  await page.route("**/api/items**", (route: Route) =>
+    route.request().url().includes("shape=manifest")
+      ? tooMany(route)
+      : route.fallback(),
+  );
+  await page.locator("#searchToggle").click();
+  await page.locator("#searchInput").fill("a");
+  await page.locator("#searchSubmit").click();
+  await expect(page.locator("#feed .error-state")).toBeVisible();
+  await expect(page.locator("#filterBanner")).toBeHidden();
+  await expect(page.locator("#filterBannerCard")).toBeHidden();
+  await expect(page.locator("#scrollHint")).toHaveClass(/hidden/);
+});
+
+test("the startup busy page has no scroll cue", async ({ page }) => {
+  await stubBackend(page);
+  await page.route("**/api/items**", tooMany);
+  await page.goto("/index.html");
+  await expect(page.locator(".error-state")).toBeVisible();
+  await expect(page.locator("#scrollHint")).toHaveClass(/hidden/);
+});
+
+test("without a Retry-After the page asks for a minute or two", async ({
+  page,
+}) => {
+  await stubBackend(page);
+  await page.route("**/api/items**", (route: Route) =>
+    route.fulfill({ status: 429, body: "{}" }),
+  );
+  await page.goto("/index.html");
+  await expect(page.locator(".error-heading")).toContainText("a minute or two");
 });
