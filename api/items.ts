@@ -293,6 +293,10 @@ function serializeKeyedExtras(row: ItemRow) {
   };
 }
 
+// Shared-cache policy for boot data and feed pages.
+const EDGE_LONG_CACHE =
+  "public, max-age=300, s-maxage=3600, stale-while-revalidate=86400";
+
 // Shapes that are not catalogue queries have no keyed form; they stay on the
 // public path.
 const PUBLIC_ONLY_SHAPES = new Set([
@@ -1082,7 +1086,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (shape === "storylines") {
     try {
       const index = await getStorylineIndex(client);
-      res.setHeader("Cache-Control", "public, max-age=60, s-maxage=300");
+      res.setHeader("Cache-Control", EDGE_LONG_CACHE);
       res.json(index);
     } catch (err) {
       console.error("items: storyline index query failed", err);
@@ -1115,7 +1119,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (shape === "set_of_works") {
     try {
       const setOfWorksIndex = await getSetOfWorksIndex(client);
-      res.setHeader("Cache-Control", "public, max-age=60, s-maxage=300");
+      res.setHeader("Cache-Control", EDGE_LONG_CACHE);
       res.json(setOfWorksIndex);
     } catch (err) {
       console.error("items: set_of_works index query failed", err);
@@ -1150,7 +1154,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     try {
       const shelves = await getShelves(client);
       if (locale) await translateShelves(client, shelves, locale);
-      res.setHeader("Cache-Control", "public, max-age=60, s-maxage=300");
+      res.setHeader("Cache-Control", EDGE_LONG_CACHE);
       res.json(shelves);
     } catch (err) {
       console.error("items: shelves query failed", err);
@@ -1163,7 +1167,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (shape === "music") {
     try {
       const buckets = await getMusicBuckets(client);
-      res.setHeader("Cache-Control", "public, max-age=60, s-maxage=300");
+      res.setHeader("Cache-Control", EDGE_LONG_CACHE);
       res.json(buckets);
     } catch (err) {
       console.error("items: music buckets query failed", err);
@@ -1176,7 +1180,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (shape === "heroes") {
     try {
       const heroes = await getHeroPool(client);
-      res.setHeader("Cache-Control", "public, max-age=60, s-maxage=300");
+      res.setHeader("Cache-Control", EDGE_LONG_CACHE);
       res.json(heroes);
     } catch (err) {
       console.error("items: hero pool query failed", err);
@@ -1222,7 +1226,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const rows = await client.query(query.text, query.params);
 
-    res.setHeader("Cache-Control", "public, max-age=60, s-maxage=300");
+    res.setHeader(
+      "Cache-Control",
+      query.manifest || shape === "facets"
+        ? EDGE_LONG_CACHE
+        : "public, max-age=60, s-maxage=300",
+    );
     res.statusCode = 200;
 
     if (query.counting) {

@@ -31,6 +31,9 @@
 # a page is the horizon now, not the whole catalogue.
 page_size = 60
 
+# Distinct session start offsets; fewer buckets means more CDN hits.
+start_buckets = 256
+
 # Most ids one ?ids= lookup accepts. api/items.ts rejects more, and the
 # client splits longer lists into lookups of this size.
 max_ids_per_lookup = 100
