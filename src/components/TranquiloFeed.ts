@@ -446,7 +446,18 @@ export class TranquiloFeed extends HTMLElement {
     // For page chrome that depends on how much feed there is (the scroll
     // cue in app.ts), which can only be judged once a render has landed.
     this.dispatchEvent(new Event("feed-settled"));
+    this.syncUrlForFilterChange();
     if (onSettled) onSettled();
+  }
+
+  // A filter change re-renders without scrolling, so the scroll-driven
+  // sync never fires. Limited to filters being applied or just cleared:
+  // syncing every settle would rewrite storyline, shelf and discover URLs.
+  private syncUrlForFilterChange(): void {
+    const wasFiltered = this.lastSyncedUrl?.startsWith("/?") ?? false;
+    if (wasFiltered || this.requireApp().filterQueryString()) {
+      this.scheduleUrlSync();
+    }
   }
 
   // Shown the instant render() clears the feed (any filter/category/search
@@ -560,14 +571,17 @@ export class TranquiloFeed extends HTMLElement {
   // Keeps the address bar pointing at whatever is on screen, so the URL is
   // a copyable reference to a specific artwork. replaceState, not
   // pushState: pushing an entry per slide would turn the back button into
-  // a slide-by-slide rewind.
+  // a slide-by-slide rewind. While filters are active the URL names the
+  // filters instead, so copying it shares the results, not one artwork.
   private syncUrlToActiveSlide(): void {
     const host = this.requireApp();
     if (!this.slideRecords.length) return;
     const rec = this.slideRecords[host.activeSlideIndex()];
+    const filters = host.filterQueryString();
     // The intro slide has no item; that is the top of the feed, which is "/".
-    const url =
-      rec?.item != null
+    const url = filters
+      ? `/${filters}`
+      : rec?.item != null
         ? `/v/${rec.item.source || "met"}-${encodeSlugId(rec.item.source || "met", rec.item.id)}`
         : "/";
     if (url === this.lastSyncedUrl) return;
