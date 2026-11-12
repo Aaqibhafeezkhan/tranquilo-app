@@ -178,9 +178,9 @@ describe("counters aggregate rather than accumulating rows (1a/A2)", () => {
   });
 });
 
-describe("standing holds are data, not code", () => {
+describe("held sources are data, not code", () => {
   it("refuses commons however full its bucket is", async () => {
-    // The standing rate-limit hold must outrank a full bucket.
+    // A held source must outrank a full bucket.
     await sql.query(
       "UPDATE source_fetch_state SET tokens = 100, refill_per_sec = 10 " +
         "WHERE source = 'commons'",

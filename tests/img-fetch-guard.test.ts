@@ -99,11 +99,11 @@ describe("acquireFetchToken -- per-source budget and cooldown", () => {
     expect(spent).toMatchObject({ allowed: false, reason: "no-tokens" });
   });
 
-  it("reports a standing hold as held, ahead of any other reason", async () => {
-    // The hold lives in hold_reason, not blocked_until (transient) or
+  it("reports a held source as held, ahead of any other reason", async () => {
+    // Held status lives in hold_reason, not blocked_until (transient) or
     // tokens=0 (a two-second delay once refill is non-zero). Reporting a
     // held source as merely "no-tokens" would invite raising its budget
-    // and quietly defeating the hold.
+    // and quietly defeating it.
     const r = await guard.acquireFetchToken(
       fakeSql([
         [],
@@ -111,14 +111,14 @@ describe("acquireFetchToken -- per-source budget and cooldown", () => {
           {
             blocked_until: null,
             tokens: 30,
-            hold_reason: "Wikimedia rate-limit hold",
+            hold_reason: "held by policy",
           },
         ],
       ]),
       "commons",
     );
     expect(r).toMatchObject({ allowed: false, reason: "held" });
-    expect(r.hold).toContain("Wikimedia");
+    expect(r.hold).toContain("policy");
   });
 
   it("excludes held sources in the acquiring statement itself, not only in the report", async () => {
@@ -316,7 +316,7 @@ describe("the per-host gate", () => {
   });
 
   it("blockHost never touches source_fetch_state", async () => {
-    // A transient host cooldown must not affect the standing policy hold.
+    // A transient host cooldown must not affect held status.
     let statement = "";
     const sql: any = async (q: string) => {
       statement = q;

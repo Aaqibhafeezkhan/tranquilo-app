@@ -1,7 +1,7 @@
 // Shared setup for the functional suite. Everything outbound is stubbed.
 // /img/** is not optional: unstubbed, a full run would pull hundreds of
 // images through the proxy to Commons, the Met, Cleveland and Smithsonian
-// on every CI run, and Commons is under a standing rate-limit hold.
+// on every CI run.
 // /api/track is not optional either: unstubbed, every run would write fake
 // events into the real events table and corrupt the numbers decisions are
 // made from. /api/items is served from a captured fixture so runs are
@@ -1013,7 +1013,7 @@ export function hydratedCount(page: Page) {
 // Makes the image stub return 503 for requests matching `predicate(url)`.
 // Deliberately a switch on the existing stub rather than removing it: an
 // unstubbed run would pull hundreds of images through the proxy on every
-// CI run against Commons's standing rate-limit hold, and a local 503 is a
+// CI run, and a local 503 is a
 // more reproducible simulation of a failure than a real outage anyway.
 // Call before gotoFeed(), since slides start loading immediately.
 export function failImages(page: Page, predicate: (url: string) => boolean) {

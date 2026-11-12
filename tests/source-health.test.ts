@@ -21,13 +21,13 @@ describe("classifySources", () => {
     expect(s.status).toBe("degraded");
   });
 
-  it("reports a standing hold as held, never as degraded", () => {
+  it("reports a held source as held, never as degraded", () => {
     // The hold is a decision we made; reporting it as a health problem
     // would page someone daily about their own choice.
     const [s] = health.classifySources([
       {
         source: "commons",
-        hold_reason: "rate-limit hold",
+        hold_reason: "held by policy",
         consecutive_failures: 99,
       },
     ]);
@@ -55,7 +55,7 @@ describe("classifySources", () => {
     const [s] = health.classifySources([
       {
         source: "commons",
-        hold_reason: "rate-limit hold",
+        hold_reason: "held by policy",
         blocked_until: soon(),
         consecutive_failures: 20,
       },
@@ -97,7 +97,7 @@ describe("healthAlerts", () => {
         health.classifySources([
           {
             source: "commons",
-            hold_reason: "rate-limit hold",
+            hold_reason: "held by policy",
             consecutive_failures: 40,
           },
         ]),
@@ -157,12 +157,10 @@ describe("heldSourceSet -- one definition of 'are we allowed to touch this'", ()
 
   it("returns the held sources with their reasons", async () => {
     const held = await health.heldSourceSet(
-      fakeSql([
-        { source: "commons", hold_reason: "Wikimedia rate-limit hold" },
-      ]),
+      fakeSql([{ source: "commons", hold_reason: "held by policy" }]),
       ["met", "commons"],
     );
-    expect(held.commons).toContain("Wikimedia");
+    expect(held.commons).toContain("policy");
     expect(held.met).toBeUndefined();
   });
 

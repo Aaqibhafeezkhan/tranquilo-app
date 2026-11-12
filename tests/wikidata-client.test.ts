@@ -1,9 +1,7 @@
 // Querying Wikidata for cluster research, conditioned on compliance with
 // their policy (a proper User-Agent, WDQS's rate limits) and on never
 // discarding what's fetched (results are CC0, stored and committed rather
-// than re-fetched). The error budget matters most: the rate-limit hold
-// was caused by a script running 628 consecutive failures with no
-// circuit breaker, and WDQS bans by user agent -- we have exactly one
+// than re-fetched). The error budget matters most: WDQS bans by user agent -- we have exactly one
 // Wikimedia identity, so an error storm here would cost Commons access too.
 import { describe, expect, it } from "vitest";
 import * as identity from "../lib/source-identity.ts";

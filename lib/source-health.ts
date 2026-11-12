@@ -27,9 +27,8 @@ const DEGRADED_AFTER_CONSECUTIVE_FAILURES =
  * database and cannot accidentally write anything.
  *
  * Status precedence, most permanent first:
- *   held      a standing policy decision (the Wikimedia rate-limit hold). Not a
- *             health problem and must never be reported as one -- alerting on
- *             it would page someone daily about a decision we made.
+ *   held      a deliberate policy decision. Not a health problem and must
+ *             never be reported as one -- alerting on it would page daily.
  *   cooling   inside a Retry-After window the source itself asked for.
  *   degraded  N consecutive failures with no standing reason for them.
  *   healthy   everything else.
@@ -106,10 +105,10 @@ function healthAlerts(
 }
 
 /**
- * The set of sources under a standing hold, as a plain object for O(1) lookup.
+ * The set of held sources, as a plain object for O(1) lookup.
  *
  * Exists because server-side paths (health-check, api/og/[slug]) fetch
- * source images directly from the raw origin URL on their own schedule, bypassing the Wikimedia hold honoured elsewhere.
+ * source images directly from the raw origin URL on their own schedule, bypassing the held-source check honoured elsewhere.
  *
  * Fails CLOSED: if the holds cannot be read, every source is reported held --
  * losing a latency sample is trivial; breaking a hold commitment is not.

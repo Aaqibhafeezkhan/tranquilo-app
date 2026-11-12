@@ -4,8 +4,7 @@
 // new write would produce today.
 //
 // Reads existing bytes back out of our own S3 bucket, never the source
-// institution -- load-bearing for Commons, which is under a standing hold
-// that rules out any server-side re-fetch.
+// institution -- load-bearing for Commons, which is never fetched server-side.
 //
 // Content-addressed like every write here: downscaled bytes land under a
 // new key, so nothing already browser/CDN-cached breaks -- it just keeps

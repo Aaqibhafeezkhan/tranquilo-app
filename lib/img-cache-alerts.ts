@@ -126,8 +126,7 @@ async function checkRateLimits(
     return rows.map(
       (r) =>
         `Image source '${r.source}' returned ${r.n} rate-limit ` +
-        `(429) response(s) yesterday. This is the failure mode that ` +
-        `produced the Wikimedia rate-limit hold -- check the per-host budgets before ` +
+        `(429) response(s) yesterday. Check the per-host budgets before ` +
         `it becomes a block.`,
     );
   } catch (_err) {

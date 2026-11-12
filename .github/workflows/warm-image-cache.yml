@@ -20,7 +20,7 @@ name: Warm image cache
 # backlog can't turn one sweep into an hours-long run colliding with the
 # next trigger -- it picks up where it left off next time (the script's
 # own header explains why it's resumable). Commons is refused inside the
-# script itself (the standing Wikimedia hold) regardless of what runs
+# script itself, regardless of what runs
 # here.
 #
 # Requires the same repository secrets the other credentialed workflows

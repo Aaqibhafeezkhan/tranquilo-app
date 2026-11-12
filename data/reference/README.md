@@ -65,8 +65,7 @@ The fetcher sends the Wikimedia-shaped User-Agent from `lib/source-identity.js`
 time with a 2s gap, honours `Retry-After`, and opens a circuit breaker after
 **3 consecutive errors** against a published budget of 30/minute. Network
 failures count against that budget too — an uncaught throw would skip the
-accounting entirely, which is the gap that allowed 628 consecutive failures
-during the August incident.
+accounting entirely.
 
 
 ## `ulan-artists.json`

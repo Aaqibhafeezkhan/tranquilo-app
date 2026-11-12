@@ -1,6 +1,6 @@
 // What a visitor sees when an image does not arrive. harness.mts stubs
 // /img/** to a 1x1 PNG so every image always succeeds elsewhere; the stub
-// isn't removed here (see its own header on the Commons rate-limit hold) --
+// isn't removed here (see its own header) --
 // it gains a failure switch instead.
 import { expect, type Page, test } from "@playwright/test";
 import { failImages, gotoFeed, ITEMS, scrollToSlide } from "./harness.mts";

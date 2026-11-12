@@ -182,12 +182,12 @@ console.log("\ncounters (1a/A2)");
   );
 }
 
-// --- the Commons hold, expressed as data -----------------------------------
-console.log("\nstanding holds");
+// --- held sources, expressed as data ---------------------------------------
+console.log("\nheld sources");
 {
   const r = await guard.acquireFetchToken(sql, "commons");
   check(
-    "commons cannot acquire a token (rate-limit hold seeded as zero tokens/refill)",
+    "commons cannot acquire a token (held, seeded with zero tokens/refill)",
     !r.allowed,
     `allowed=${r.allowed} reason=${r.reason}`,
   );

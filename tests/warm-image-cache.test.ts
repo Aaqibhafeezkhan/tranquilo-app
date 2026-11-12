@@ -10,14 +10,13 @@ import * as warm from "../scripts/warm_image_cache.mts";
 
 describe("which sources may be warmed", () => {
   it("refuses commons, whatever else is asked for", () => {
-    // The Wikimedia rate-limit hold is still in force -- a warming pass, a
-    // loop whose entire purpose is fetching images, is the easiest way to
-    // breach that by accident.
+    // A warming pass, a loop whose entire purpose is fetching images,
+    // is the easiest way to hit a held source by accident.
     expect(() => warm.assertSourceAllowed("commons")).toThrow(/commons/i);
     expect(() => warm.assertSourceAllowed("COMMONS")).toThrow(/commons/i);
   });
 
-  it("allows the sources with no standing hold", () => {
+  it("allows sources that are not held", () => {
     for (const s of ["met", "cleveland", "europeana", "smithsonian"]) {
       expect(() => warm.assertSourceAllowed(s)).not.toThrow();
     }
@@ -54,8 +53,7 @@ describe("pacing", () => {
 describe("the circuit breaker", () => {
   // Added after a live run failed on every item and kept going -- 12
   // requests reached Cleveland before it was killed by hand; without a
-  // breaker it would have walked all 7,921, the same shape as the
-  // incident that caused the Wikimedia hold.
+  // breaker it would have walked all 7,921.
 
   it("stops well before a run can become an incident", () => {
     expect(warm.ERROR_LIMIT).toBeLessThanOrEqual(10);

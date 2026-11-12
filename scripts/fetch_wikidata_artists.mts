@@ -2,14 +2,13 @@
 //
 // Fetch artist facts from Wikidata for the Tea Voice cluster worklist.
 //
-// Enforces the two conditions the Wikimedia hold was lifted under: every
+// Two conditions apply: every
 // response is written to data/reference/wikidata-artists.json (committed;
 // Wikidata is CC0) before the next request, with a miss recorded as an
 // answer too so nothing is re-asked; and full compliance with their
 // policy via a Wikimedia-shaped User-Agent, one query at a time with a 2s
 // gap, Retry-After honoured, and a breaker that opens after 3 consecutive
-// errors. The incident behind the hold was a script running 628 consecutive
-// failures with no breaker -- this one stops at 3.
+// errors.
 //
 //   node scripts/fetch_wikidata_artists.mts --names "Edgar Degas,Odilon Redon"
 //   node scripts/fetch_wikidata_artists.mts --clusters 5     # top 5 by size
@@ -76,8 +75,7 @@ async function runQuery(names: string[], breaker: any) {
   // POST, not a GET query string, per Wikimedia's own guidance for
   // anything substantial. A network failure must count against the
   // breaker too, caught here rather than left to bubble -- an uncaught
-  // throw skipping the error budget is exactly the accounting gap that let
-  // a script run 628 consecutive failures.
+  // throw would skip the error budget.
   let res: any;
   try {
     res = await fetch(wd.ENDPOINT, {
