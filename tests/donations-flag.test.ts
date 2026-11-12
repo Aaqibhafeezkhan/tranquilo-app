@@ -116,7 +116,10 @@ describe("what the gate has to cover", () => {
         return el;
       },
     });
-    const html = buildIntroSlide({ sources: ["met"], total: 100 }).innerHTML;
+    const html = buildIntroSlide({
+      sources: [{ value: "met", count: 1 }],
+      total: 100,
+    }).innerHTML;
     // Unmarked, a "Donate" affordance sits on the site's most-viewed screen.
     expect(html).toMatch(/<div class="action-card" data-donations>[\s\S]*Give/);
     vi.unstubAllGlobals();

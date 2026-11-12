@@ -15,11 +15,11 @@ export const ptBR: Dictionary = {
   "feed.scrollHint": "role para explorar",
 
   "intro.heading": "Um jeito mais calmo de navegar.",
-  // Portuguese treats 0 and 1 as singular ("0 acervo"), so .one covers both.
+  // Portuguese treats 0 and 1 as singular ("0 museu"), so .one covers both.
   "intro.tagline.one":
-    "Navegue com calma por {works} obras em domínio público de {count} acervo.",
+    "Navegue com calma por {works} obras em domínio público de {count} museu e mais.",
   "intro.tagline.other":
-    "Navegue com calma por {works} obras em domínio público de {count} acervos.",
+    "Navegue com calma por {works} obras em domínio público de {count} museus e mais.",
   "intro.mission.title": "Missão",
   "intro.mission.body": "Código aberto e sem anúncios.",
   "intro.mission.cta": "Participe",

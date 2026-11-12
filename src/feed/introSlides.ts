@@ -1,5 +1,6 @@
 import tranquiloIconLightUrl from "../../assets/tranquilo-icon-light.svg";
 import { pagePath, t, tn } from "../i18n/index";
+import { institutionOptions } from "../logic/institutions";
 import { roundedWorkCount } from "../logic/logic";
 import { escapeHtml } from "./slideBuilder";
 
@@ -47,12 +48,12 @@ const h = (s: string) => escapeHtml(s);
 // reads or builds an Item, so they live in their own module rather than
 // alongside slideBuilder.ts.
 export function buildIntroSlide(facets: {
-  sources?: unknown[];
+  sources?: { value: string; count: number }[];
   total?: number;
 }): HTMLElement {
   // Computed at render time from ?shape=facets, not by iterating `items`
   // (which now holds only scrolled-through pages, not the whole catalogue).
-  const sourceCount = (facets.sources || []).length;
+  const museumCount = institutionOptions(facets.sources).length;
   const liveCount = facets.total || 0;
   const el = document.createElement("section");
   el.className = "slide intro";
@@ -66,7 +67,7 @@ export function buildIntroSlide(facets: {
     `</div>` +
     `<h1 class="visually-hidden">${h(t("intro.heading"))}</h1>` +
     `<div class="intro-rule"></div>` +
-    `<p>${h(tn("intro.tagline", sourceCount, { works: roundedWorkCount(liveCount) }))}</p>` +
+    `<p>${h(tn("intro.tagline", museumCount, { works: roundedWorkCount(liveCount) }))}</p>` +
     `<div class="action-cards">` +
     actionCard({
       icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`,

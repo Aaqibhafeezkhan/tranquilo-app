@@ -33,22 +33,35 @@ beforeEach(() => {
 });
 
 describe("buildIntroSlide", () => {
-  it("renders the source and rounded work count from facets", () => {
-    const el = buildIntroSlide({ sources: ["met", "cleveland"], total: 4321 });
+  const src = (value: string) => ({ value, count: 10 });
+
+  it("renders the museum and rounded work count from facets", () => {
+    const el = buildIntroSlide({
+      sources: [src("met"), src("cleveland")],
+      total: 4321,
+    });
     expect(el.className).toBe("slide intro");
-    expect(el.innerHTML).toContain("2 sources");
+    expect(el.innerHTML).toContain("2 museums and more");
     expect(el.innerHTML).toContain("4k+ public-domain works");
   });
 
-  it("uses singular 'source' for exactly one", () => {
-    const el = buildIntroSlide({ sources: ["met"], total: 100 });
-    expect(el.innerHTML).toContain("1 source");
-    expect(el.innerHTML).not.toContain("1 sources");
+  it("counts only museums, not aggregators", () => {
+    const el = buildIntroSlide({
+      sources: [src("met"), src("europeana"), src("commons"), src("tainacan")],
+      total: 100,
+    });
+    expect(el.innerHTML).toContain("1 museum and more");
+  });
+
+  it("uses singular 'museum' for exactly one", () => {
+    const el = buildIntroSlide({ sources: [src("met")], total: 100 });
+    expect(el.innerHTML).toContain("1 museum and more");
+    expect(el.innerHTML).not.toContain("1 museums");
   });
 
   it("defaults to zero when facets carries no sources or total", () => {
     const el = buildIntroSlide({});
-    expect(el.innerHTML).toContain("0 sources");
+    expect(el.innerHTML).toContain("0 museums and more");
   });
 });
 
