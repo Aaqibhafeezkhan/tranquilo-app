@@ -55,7 +55,9 @@ test("markup in the URL is shown as text, never executed", async ({ page }) => {
   for (const key of ["q", "artist"]) {
     await gotoFeed(page, `?${key}=${encodeURIComponent(payload)}`);
     await page.waitForTimeout(1500);
-    expect(await page.evaluate(() => (window as any).__xss)).toBeUndefined();
+    expect(
+      await page.evaluate(() => (window as { __xss?: number }).__xss),
+    ).toBeUndefined();
     expect(await page.locator("img[src='x']").count()).toBe(0);
     await expect(page.locator("body")).toContainText("onerror");
   }
