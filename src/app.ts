@@ -1291,14 +1291,13 @@ class TranquiloApp {
     }
     // Filters are only restored on the bare feed URL: every other path
     // (artwork, storyline, shelf, discover) already names what to show.
-    const sharedFilters =
-      /^\/(index\.html)?$/.test(location.pathname)
-        ? parseFilterQuery(location.search, {
-            categories,
-            sources: (facets.sources ?? []).map((s) => s.value),
-            paletteBuckets: paletteBucketOptions.map((o) => o.value),
-          })
-        : null;
+    const sharedFilters = /^\/(index\.html)?$/.test(location.pathname)
+      ? parseFilterQuery(location.search, {
+          categories,
+          sources: (facets.sources ?? []).map((s) => s.value),
+          paletteBuckets: paletteBucketOptions.map((o) => o.value),
+        })
+      : null;
     if (sharedFilters) {
       filterState.setCategory(sharedFilters.category);
       filterState.setSource(sharedFilters.source);
