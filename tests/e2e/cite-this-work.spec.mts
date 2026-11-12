@@ -1,5 +1,4 @@
-// "Cite this work" in the detail panel: offered only where there's a Tea
-// caption, starts collapsed with a visible expand indicator, shows MLA, APA
+// "Cite this work" in the detail panel: offered on every item, starts collapsed with a visible expand indicator, shows MLA, APA
 // and ABNT citations, and copies the one asked for.
 // The citation text itself is unit-tested (tests/citation.test.ts); this
 // covers the visitor-facing behaviour.
@@ -81,8 +80,10 @@ test("Copy puts that style's citation on the clipboard", async ({
   );
 });
 
-test("an item without a Tea caption has no Cite button", async ({ page }) => {
+test("an item without a Tea caption still offers the Cite button", async ({
+  page,
+}) => {
   test.skip(!NO_TEA, "fixture has no item without caption_tea");
   await openDetailFor(page, NO_TEA);
-  await expect(page.locator("#detailModal .btn-cite")).toHaveCount(0);
+  await expect(page.locator("#detailModal .btn-cite")).toHaveCount(1);
 });

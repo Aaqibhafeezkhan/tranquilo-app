@@ -449,21 +449,18 @@ function sourceHostLabel(url: string): string {
 }
 
 // "Cite this work": MLA, APA and ABNT (the Brazilian standard), each with
-// its own Copy button. Collapsed until asked for. Offered only alongside a Tea caption, the reviewed tier whose
-// readers (educators, students) are the ones asking for citations.
+// its own Copy button. Collapsed until asked for.
 const CITATION_STYLES: { style: CitationStyle; label: string }[] = [
   { style: "mla", label: "MLA" },
   { style: "apa", label: "APA" },
   { style: "abnt", label: "ABNT" },
 ];
 
-function citeButtonHtml(item: Item): string {
-  if (!item.caption_tea) return "";
+function citeButtonHtml(): string {
   return `<button class="btn-cite" type="button" aria-expanded="false">${escapeHtml(t("detail.cite.button"))}</button>`;
 }
 
 function citePanelHtml(item: Item): string {
-  if (!item.caption_tea) return "";
   return `<div class="cite-panel" hidden>${CITATION_STYLES.map(
     ({ style, label }) =>
       `<div class="cite-row" data-style="${style}"><span class="cite-style">${label}</span>` +
@@ -922,7 +919,7 @@ export class TranquiloDetailModal extends HTMLElement {
         // Actions, not metadata: grouped after a divider (.detail-actions).
         // sourceLinkLabel() rather than an inline lookup, so this and the
         // lightbox's link can't drift into naming the institution two ways.
-      }<div class="detail-actions"><div class="detail-actions-row"><a class="source-link" href="${escapeHtml(item.url ?? "")}" target="_blank" rel="noopener"><span class="link-text">${escapeHtml(host.sourceLinkText(item))}</span><span class="link-arrow" aria-hidden="true">&rarr;</span></a>${citeButtonHtml(item)}<button class="btn-print" type="button" aria-expanded="false" hidden>${escapeHtml(t("detail.print.button"))}</button></div>${citePanelHtml(item)}<div class="print-panel" hidden></div></div>` +
+      }<div class="detail-actions"><div class="detail-actions-row"><a class="source-link" href="${escapeHtml(item.url ?? "")}" target="_blank" rel="noopener"><span class="link-text">${escapeHtml(host.sourceLinkText(item))}</span><span class="link-arrow" aria-hidden="true">&rarr;</span></a>${citeButtonHtml()}<button class="btn-print" type="button" aria-expanded="false" hidden>${escapeHtml(t("detail.print.button"))}</button></div>${citePanelHtml(item)}<div class="print-panel" hidden></div></div>` +
       `</div>`
     );
   }
