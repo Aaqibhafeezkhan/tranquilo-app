@@ -25,6 +25,9 @@ export interface ErrorStateOptions {
   // Shown only for the in-app fallback, which has something to retry;
   // the static 404 page has no retry action, just "Back to Tranquilo".
   onRetry?: () => void;
+  // The server asked visitors to slow down; swaps the heading for the
+  // "busy, try again" message.
+  rateLimited?: boolean;
 }
 
 // Returns a detached element (not innerHTML) so callers can attach the
@@ -37,7 +40,7 @@ export function renderErrorState(opts: ErrorStateOptions): HTMLElement {
   el.className = "error-state";
   el.innerHTML =
     `<div class="error-frame"><img src="${escapeHtml(art.img)}" alt="${escapeHtml(art.title)}" width="600" height="600"></div>` +
-    `<p class="error-heading">${escapeHtml(t("error.heading"))}</p>` +
+    `<p class="error-heading">${escapeHtml(t(opts.rateLimited ? "error.rateLimited" : "error.heading"))}</p>` +
     `<p class="error-detail">${escapeHtml(opts.detail)}</p>` +
     `<div class="error-art-caption">` +
     `<h2 class="art-title">${escapeHtml(art.title)}</h2>` +

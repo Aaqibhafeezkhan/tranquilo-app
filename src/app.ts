@@ -13,6 +13,7 @@ import { ExportService } from "./app/ExportService";
 import { FilterState } from "./app/FilterState";
 import { ItemsApiClient } from "./app/ItemsApiClient";
 import { OverlayHistoryManager } from "./app/OverlayHistoryManager";
+import { RateLimitedError } from "./app/RateLimitedError";
 import { ScrollDepthTracker } from "./app/ScrollDepthTracker";
 import { ScrollTelemetry } from "./app/ScrollTelemetry";
 import { SearchController } from "./app/SearchController";
@@ -1389,7 +1390,11 @@ new TranquiloApp().start().catch((err: any) => {
   feedEl.innerHTML = "";
   feedEl.appendChild(
     renderErrorState({
-      detail: err?.message || "Tranquilo failed to load.",
+      detail:
+        err instanceof RateLimitedError
+          ? "429 — Too many requests"
+          : err?.message || "Tranquilo failed to load.",
+      rateLimited: err instanceof RateLimitedError,
       onRetry: () => location.reload(),
     }),
   );
