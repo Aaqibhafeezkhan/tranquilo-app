@@ -272,6 +272,7 @@ describe("run", () => {
     expect(host.setActiveConcept).toHaveBeenCalledWith({
       label: "red tones",
       filter: { palette_bucket: "Red" },
+      query: "red",
     });
     expect(host.findCorrection).not.toHaveBeenCalled();
     expect(host.setResultsLine).not.toHaveBeenCalledWith(
@@ -304,6 +305,7 @@ describe("run", () => {
     expect(host.setActiveConcept).toHaveBeenCalledWith({
       label: "armor",
       filter: { category: "Arms & Armor" },
+      query: "armor",
     });
     expect(host.showFilterBanner).toHaveBeenCalled();
     expect(host.trackEvent).not.toHaveBeenCalledWith(
@@ -324,6 +326,7 @@ describe("run", () => {
     expect(host.setActiveConcept).toHaveBeenCalledWith({
       label: "blue tones",
       filter: { palette_bucket: "Blue" },
+      query: "blue",
     });
   });
 

@@ -394,6 +394,7 @@ export class SearchController {
         this.host.setActiveConcept({
           label: concept.label,
           filter: concept.filter,
+          query: q,
         });
         this.host.setActiveCategory("All");
         this.renderPersistedSearchState();

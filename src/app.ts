@@ -40,6 +40,7 @@ import {
   t,
   tHtml,
 } from "./i18n/index";
+import { filterQueryString, parseFilterQuery } from "./logic/filterUrl";
 import { institutionOptions } from "./logic/institutions";
 import { hasMasterSize, printLinkEnabled } from "./logic/printOptions";
 import type { ITopbarHost } from "./types/ITopbarHost";
@@ -440,6 +441,7 @@ class TranquiloApp {
       isCollectionKey: (entry: string) =>
         collectionStore.isCollectionKey(entry),
       getFilterState: () => filterState.snapshot(),
+      filterQueryString: () => filterQueryString(filterState.snapshot()),
       // Read-and-clear atomically, so a second render() never re-honours
       // a link already consumed.
       consumeDeepLinkSlug: () => {
@@ -1287,9 +1289,38 @@ class TranquiloApp {
     if (hadDeepLinkArtwork) {
       pendingDeepLinkSlug = initialSlug;
     }
-    feedEl.render(
-      hadDeepLinkArtwork ? () => openDeepLinkedArtwork(initialSlug) : undefined,
-    );
+    // Filters are only restored on the bare feed URL: every other path
+    // (artwork, storyline, shelf, discover) already names what to show.
+    const sharedFilters = /^\/(index\.html)?$/.test(location.pathname)
+      ? parseFilterQuery(location.search, {
+          categories,
+          sources: (facets.sources ?? []).map((s) => s.value),
+          paletteBuckets: paletteBucketOptions.map((o) => o.value),
+        })
+      : null;
+    if (sharedFilters) {
+      filterState.setCategory(sharedFilters.category);
+      filterState.setSource(sharedFilters.source);
+      filterState.setPaletteBucket(sharedFilters.paletteBucket);
+      if (sharedFilters.storylineFilter) filterState.toggleStorylineFilter();
+    }
+    const restoresSearch =
+      sharedFilters !== null &&
+      (sharedFilters.query !== null || sharedFilters.source !== null);
+    if (restoresSearch) {
+      renderChips();
+      runSearch(sharedFilters.query ?? "");
+    } else if (sharedFilters?.artist) {
+      renderChips();
+      setArtistFilter(sharedFilters.artist);
+    } else {
+      renderChips();
+      feedEl.render(
+        hadDeepLinkArtwork
+          ? () => openDeepLinkedArtwork(initialSlug)
+          : undefined,
+      );
+    }
 
     // Opens after the feed renders (not instead of), so closing the
     // storyline leaves a real feed behind rather than a blank page.

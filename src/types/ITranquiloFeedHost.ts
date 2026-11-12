@@ -18,6 +18,7 @@ export interface FeedFilterState {
   concept: {
     label: string;
     filter: Record<string, unknown>;
+    query?: string;
   } | null;
   collectionFilter: boolean;
   storylineFilter: boolean;
@@ -63,6 +64,8 @@ export interface ITranquiloFeedHost {
 
   // ---- Which mode is active right now.
   getFilterState(): FeedFilterState;
+  // "?q=sky&source=met"-style string for the active filters, "" when none.
+  filterQueryString(): string;
   // Read-and-clear atomically so a second render() never re-honours a
   // link already consumed.
   consumeDeepLinkSlug(): string | null;
