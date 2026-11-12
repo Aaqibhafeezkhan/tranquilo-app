@@ -22,6 +22,7 @@
 import { RateLimitedError } from "../app/RateLimitedError";
 import { TRANQUILO_CONFIG } from "../data/config.generated";
 import { renderErrorState } from "../errorState";
+import { loadOpening } from "../feed/opening";
 import type { Pager } from "../feed/recycleWindow";
 import { sessionStart } from "../feed/sessionStart";
 import { HERO_COUNT, pickHeroes } from "../logic/logic";
@@ -381,12 +382,13 @@ export class TranquiloFeed extends HTMLElement {
       const pager = host.createPager(params, checkCategory, heroExclusions);
       if (state.category === "All") pager.start = this.getAllModeStart();
       this.feedPager = pager;
-      firstBatch = (leadingItems ? this.fetchHeroItems() : Promise.resolve([]))
-        .then((heroes) => {
-          leadingItems = heroes;
-          return host.loadNextPage(pager);
-        })
-        .then((page) => host.fillFirstScreen(pager, page));
+      firstBatch = loadOpening(
+        leadingItems ? () => this.fetchHeroItems() : null,
+        () => host.loadNextPage(pager),
+      ).then(({ heroes, page }) => {
+        if (leadingItems) leadingItems = heroes;
+        return host.fillFirstScreen(pager, page);
+      });
     }
 
     firstBatch
