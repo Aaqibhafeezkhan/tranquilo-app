@@ -49,3 +49,16 @@ test("unknown filter values are ignored", async ({ page }) => {
   await expect(page.locator("#filterBanner")).toBeHidden();
   expect(await page.locator("#feed .slide").count()).toBeGreaterThan(0);
 });
+
+test("markup in the URL is shown as text, never executed", async ({ page }) => {
+  const payload = `<img src=x onerror="window.__xss=1">`;
+  for (const key of ["q", "artist"]) {
+    await gotoFeed(page, `?${key}=${encodeURIComponent(payload)}`);
+    await page.waitForTimeout(1500);
+    expect(
+      await page.evaluate(() => (window as { __xss?: number }).__xss),
+    ).toBeUndefined();
+    expect(await page.locator("img[src='x']").count()).toBe(0);
+    await expect(page.locator("body")).toContainText("onerror");
+  }
+});

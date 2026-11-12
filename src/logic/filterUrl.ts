@@ -1,3 +1,4 @@
+import { MAX_QUERY_CHARS } from "../../lib/query-limits";
 import type { ActiveConcept } from "../app/SearchController";
 
 export interface FilterUrlSource {
@@ -52,7 +53,7 @@ export function parseFilterQuery(
 ): ParsedFilters {
   const params = new URLSearchParams(search);
   const text = (key: string): string | null => {
-    const value = params.get(key)?.trim();
+    const value = params.get(key)?.trim().slice(0, MAX_QUERY_CHARS);
     return value ? value : null;
   };
   const oneOf = (value: string | null, options: readonly string[]) =>
