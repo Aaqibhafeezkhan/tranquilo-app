@@ -3,11 +3,22 @@
 // this suite, so fetch is stubbed directly.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ItemsApiClient } from "../src/app/ItemsApiClient";
+import { RateLimitedError } from "../src/app/RateLimitedError";
 
 let fetchMock: ReturnType<typeof vi.fn>;
 
-function jsonResponse(body: unknown, ok = true, status = 200) {
-  return { ok, status, json: () => Promise.resolve(body) };
+function jsonResponse(
+  body: unknown,
+  ok = true,
+  status = 200,
+  headers: Record<string, string> = {},
+) {
+  return {
+    ok,
+    status,
+    headers: { get: (name: string) => headers[name.toLowerCase()] ?? null },
+    json: () => Promise.resolve(body),
+  };
 }
 
 beforeEach(() => {
@@ -224,5 +235,46 @@ describe("fetchItemDetail", () => {
     fetchMock.mockResolvedValueOnce(jsonResponse({}, false, 404));
     const client = new ItemsApiClient(7, 40);
     await expect(client.fetchItemDetail("met:404")).rejects.toThrow(/404/);
+  });
+});
+
+describe("rate limiting", () => {
+  it("rejects a 429 with RateLimitedError carrying Retry-After", async () => {
+    fetchMock.mockResolvedValueOnce(
+      jsonResponse({}, false, 429, { "retry-after": "12" }),
+    );
+    const client = new ItemsApiClient(1, 40);
+    const err = (await client
+      .fetchJson("/api/items?x=1", "feed page")
+      .catch((e: unknown) => e)) as RateLimitedError;
+    expect(err).toBeInstanceOf(RateLimitedError);
+    expect(err.retryAfterSeconds).toBe(12);
+  });
+
+  it("tolerates a 429 without a usable Retry-After", async () => {
+    fetchMock.mockResolvedValueOnce(jsonResponse({}, false, 429));
+    const client = new ItemsApiClient(1, 40);
+    const err = (await client
+      .fetchJson("/api/items?x=1", "feed page")
+      .catch((e: unknown) => e)) as RateLimitedError;
+    expect(err).toBeInstanceOf(RateLimitedError);
+    expect(err.retryAfterSeconds).toBeNull();
+  });
+
+  it("rejects a 429 on an ids lookup the same way", async () => {
+    fetchMock.mockResolvedValueOnce(jsonResponse({}, false, 429));
+    const client = new ItemsApiClient(1, 40);
+    await expect(client.fetchItemsByIds(["1"])).rejects.toBeInstanceOf(
+      RateLimitedError,
+    );
+  });
+
+  it("keeps other failures as plain labeled errors", async () => {
+    fetchMock.mockResolvedValueOnce(jsonResponse({}, false, 500));
+    const client = new ItemsApiClient(1, 40);
+    const err = await client
+      .fetchJson("/api/items?x=1", "feed page")
+      .catch((e) => e);
+    expect(err).not.toBeInstanceOf(RateLimitedError);
   });
 });

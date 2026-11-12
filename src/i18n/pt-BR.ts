@@ -146,6 +146,8 @@ export const ptBR: Dictionary = {
   "share.failed": "Não foi possível copiar o link",
 
   "error.heading": "Estamos com um problema agora, mas voltaremos em breve.",
+  "error.rateLimited":
+    "Estamos recebendo muitas solicitações agora! Atualize a página em instantes para tentar de novo.",
   "error.retry": "Tentar de novo",
   "error.home": "Voltar para Tranquilo",
 

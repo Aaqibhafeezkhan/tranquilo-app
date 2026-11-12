@@ -19,7 +19,9 @@
 // data-driven and only changes because app.ts called render();
 // index.html's "feed-loading" placeholder is left alone until then.
 
+import { RateLimitedError } from "../app/RateLimitedError";
 import { TRANQUILO_CONFIG } from "../data/config.generated";
+import { renderErrorState } from "../errorState";
 import type { Pager } from "../feed/recycleWindow";
 import { sessionStart } from "../feed/sessionStart";
 import { HERO_COUNT, pickHeroes } from "../logic/logic";
@@ -400,6 +402,12 @@ export class TranquiloFeed extends HTMLElement {
         // render start would burn the first impression on a failed load.
         if (initial.length) markFeedSeen();
 
+        if (!initial.length && this.feedPager?.rateLimited) {
+          this.showRateLimited();
+          this.markFeedSettled(onSettled);
+          return;
+        }
+
         if (!initial.length && state.collectionFilter) {
           const emptyEl = host.buildEmptyCollectionSlide();
           this.appendChild(emptyEl);
@@ -435,8 +443,28 @@ export class TranquiloFeed extends HTMLElement {
         // skeleton, which would otherwise shimmer forever over nothing.
         console.error("items: feed render failed", err);
         this.clearLoadingSkeleton();
+        if (
+          err instanceof RateLimitedError &&
+          renderToken === this.activeRenderToken
+        ) {
+          this.showRateLimited();
+        }
         this.markFeedSettled(onSettled);
       });
+  }
+
+  // Replaces whatever the failed render left behind; the next render()
+  // clears this like any other content.
+  private showRateLimited(): void {
+    this.innerHTML = "";
+    this.requireApp().resetRecycleWindow();
+    this.appendChild(
+      renderErrorState({
+        detail: "429 — Too many requests",
+        rateLimited: true,
+        onRetry: () => location.reload(),
+      }),
+    );
   }
 
   private markFeedSettled(onSettled?: () => void): void {

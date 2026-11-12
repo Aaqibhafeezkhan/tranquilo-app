@@ -15,6 +15,7 @@
 // through the host object: this module owns paging and the hydrated
 // band, app.js owns the network layer and the feed-extension decision.
 
+import { RateLimitedError } from "../app/RateLimitedError";
 import { TRANQUILO_CONFIG } from "../data/config.generated";
 import {
   declusterPageOrder,
@@ -38,6 +39,9 @@ export interface Pager {
   exhausted: boolean;
   inFlight: Promise<Item[]> | null;
   checkCategory: boolean;
+  // Set when a page request was refused with 429, so a caller that gets an
+  // empty first page can tell "busy" from "nothing matches".
+  rateLimited?: boolean;
 }
 
 export interface FeedPageResponse {
@@ -149,6 +153,7 @@ export function createRecycleWindow(
         // Stop paging rather than retrying forever -- the feed keeps
         // whatever it has, a short feed rather than a broken one.
         pager.exhausted = true;
+        if (err instanceof RateLimitedError) pager.rateLimited = true;
         console.error("items: feed page failed", err);
         return [];
       });

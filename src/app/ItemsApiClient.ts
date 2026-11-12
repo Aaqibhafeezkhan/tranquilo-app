@@ -8,6 +8,7 @@ import type { PrintQuoteResult } from "../types/PrintQuote";
 import type { SetOfWork, SetOfWorkIndexEntry } from "../types/SetOfWork";
 import type { Shelf } from "../types/Shelf";
 import type { Storyline, StorylineIndexEntry } from "../types/Storyline";
+import { assertOk } from "./RateLimitedError";
 
 // All fetches against api/items -- the catalogue is server-paged and
 // server-aggregated now, not a single manifest read once at startup.
@@ -56,9 +57,7 @@ export class ItemsApiClient {
 
   fetchJson<T = unknown>(url: string, what: string): Promise<T> {
     return fetch(url).then((res) => {
-      if (!res.ok) {
-        throw new Error(`api/items ${what} responded with ${res.status}`);
-      }
+      assertOk(res, what);
       return res.json();
     });
   }
@@ -241,9 +240,7 @@ export class ItemsApiClient {
       .map((value) => `${param}=${encodeURIComponent(value)}`)
       .join("&");
     return fetch(`/api/items?${query}${this.suffix()}`).then((res) => {
-      if (!res.ok) {
-        throw new Error(`api/items lookup responded with ${res.status}`);
-      }
+      assertOk(res, "lookup");
       return res.json() as Promise<IdsLookup>;
     });
   }
