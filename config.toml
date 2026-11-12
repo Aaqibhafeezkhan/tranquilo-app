@@ -80,11 +80,11 @@ refill_per_sec = 1
 # Per-IP budget on /api/items, charged per item returned (an aggregate answer
 # costs 1) -- see lib/items-rate-limit.ts. 2000 items of burst is about 33
 # feed pages (page_size = 60); 0.5/sec refills 1,800 an hour, well above a
-# person scrolling and far below a catalogue scrape. While enforce is false a
-# denial is only logged, so retune against real traffic before turning it on.
+# person scrolling and far below a catalogue scrape. With enforce true a
+# denial answers 429, which the app shows as a busy page; false only logs it.
 capacity = 2000
 refill_per_sec = 0.5
-enforce = false
+enforce = true
 
 [detail_visitor_rate_limit]
 # Per-IP budget on /api/items?shape=detail, one token per item's curated text
