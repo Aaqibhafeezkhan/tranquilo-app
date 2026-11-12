@@ -74,7 +74,7 @@ test("on a phone, the actions stay inside the panel", async ({ page }) => {
   expect(l.cite!.right).toBeLessThanOrEqual(l.boxRight! + 0.5);
 });
 
-test("an item without a Tea caption still gets the source action", async ({
+test("an item without a Tea caption still gets the source and cite actions", async ({
   page,
 }) => {
   test.skip(!NO_TEA, "fixture has no item without caption_tea");
@@ -82,5 +82,5 @@ test("an item without a Tea caption still gets the source action", async ({
   const l = await layout(page);
   expect(l.hasActions).toBe(true);
   expect(l.link).not.toBeNull();
-  expect(l.cite).toBeNull();
+  expect(l.cite).not.toBeNull();
 });
