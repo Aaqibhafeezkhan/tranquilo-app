@@ -64,6 +64,8 @@ export interface ITranquiloFeedHost {
 
   // ---- Which mode is active right now.
   getFilterState(): FeedFilterState;
+  // Removes the filter banner and artist card, e.g. when results failed to load.
+  clearFilterBanner(): void;
   // "?q=sky&source=met"-style string for the active filters, "" when none.
   filterQueryString(): string;
   // Read-and-clear atomically so a second render() never re-honours a

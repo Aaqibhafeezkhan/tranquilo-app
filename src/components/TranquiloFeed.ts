@@ -403,7 +403,7 @@ export class TranquiloFeed extends HTMLElement {
         if (initial.length) markFeedSeen();
 
         if (!initial.length && this.feedPager?.rateLimited) {
-          this.showRateLimited();
+          this.showRateLimited(this.feedPager.rateLimited.retryAfterSeconds);
           this.markFeedSettled(onSettled);
           return;
         }
@@ -447,7 +447,7 @@ export class TranquiloFeed extends HTMLElement {
           err instanceof RateLimitedError &&
           renderToken === this.activeRenderToken
         ) {
-          this.showRateLimited();
+          this.showRateLimited(err.retryAfterSeconds);
         }
         this.markFeedSettled(onSettled);
       });
@@ -455,13 +455,17 @@ export class TranquiloFeed extends HTMLElement {
 
   // Replaces whatever the failed render left behind; the next render()
   // clears this like any other content.
-  private showRateLimited(): void {
+  private showRateLimited(retryAfterSeconds: number | null): void {
     this.innerHTML = "";
-    this.requireApp().resetRecycleWindow();
+    const host = this.requireApp();
+    host.resetRecycleWindow();
+    // The search banner and artist card describe results that never loaded.
+    host.clearFilterBanner();
     this.appendChild(
       renderErrorState({
         detail: "429 — Too many requests",
         rateLimited: true,
+        retryAfterSeconds,
         onRetry: () => location.reload(),
       }),
     );
