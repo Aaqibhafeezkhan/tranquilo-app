@@ -23,12 +23,12 @@ export const en = {
   "feed.scrollHint": "scroll to explore",
 
   // Intro slide (src/feed/introSlides.ts). {works} is a rounded count like
-  // "10k+"; {count} is the number of sources.
+  // "10k+"; {count} is the number of museums.
   "intro.heading": "A calmer way to scroll.",
   "intro.tagline.one":
-    "Enjoy calm scrolling with {works} public-domain works across {count} source.",
+    "Enjoy calm scrolling with {works} public-domain works across {count} museum and more.",
   "intro.tagline.other":
-    "Enjoy calm scrolling with {works} public-domain works across {count} sources.",
+    "Enjoy calm scrolling with {works} public-domain works across {count} museums and more.",
   "intro.mission.title": "Mission",
   "intro.mission.body": "Open source & ad‑free.",
   "intro.mission.cta": "Get involved",
