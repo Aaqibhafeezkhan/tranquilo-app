@@ -78,12 +78,13 @@ refill_per_sec = 1
 
 [items_visitor_rate_limit]
 # Per-IP budget on /api/items, charged per item returned (an aggregate answer
-# costs 1) -- see lib/items-rate-limit.ts. 2000 items of burst is about 33
-# feed pages (page_size = 60); 0.5/sec refills 1,800 an hour, well above a
-# person scrolling and far below a catalogue scrape. With enforce true a
-# denial answers 429, which the app shows as a busy page; false only logs it.
-capacity = 2000
-refill_per_sec = 0.5
+# costs 1) -- see lib/items-rate-limit.ts. A filter or search change loads
+# two feed pages (page_size = 60), about 120 items, so 6000 items of burst is
+# about 49 changes; 1/sec refills 3,600 an hour, which would take one IP
+# about 34 hours to read the whole catalogue. With enforce true a denial
+# answers 429, which the app shows as a busy page; false only logs it.
+capacity = 6000
+refill_per_sec = 1.0
 enforce = true
 
 [detail_visitor_rate_limit]
