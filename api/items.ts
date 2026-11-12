@@ -39,6 +39,7 @@ import { LIVE_ITEMS_PREDICATE } from "../lib/items-sql.ts";
 import { getMusicBuckets } from "../lib/music.ts";
 import { handlePrintQuote } from "../lib/print-quote-api.ts";
 import { printRegionFromHeaders } from "../lib/print-region.ts";
+import { MAX_QUERY_CHARS } from "../lib/query-limits.ts";
 import { safeHttpUrl } from "../lib/safe-url.ts";
 import { reportError } from "../lib/sentry.ts";
 import { getSetOfWork, getSetOfWorksIndex } from "../lib/setOfWorks.ts";
@@ -61,6 +62,10 @@ type QueryParams = Record<string, string | string[] | undefined>;
 // Only ?ids= and ?keys= may repeat; any other repeated param takes its first value.
 function scalar(value: string | string[] | undefined): string | undefined {
   return Array.isArray(value) ? value[0] : value;
+}
+
+function queryText(params: QueryParams): string {
+  return (scalar(params.q) ?? "").trim().slice(0, MAX_QUERY_CHARS);
 }
 
 interface ItemRow {
@@ -612,7 +617,7 @@ const SUGGEST_LIMIT = 8;
 const SUGGEST_MIN_CHARS = 2;
 
 function suggestQuery(params: QueryParams): BuiltQuery {
-  const q = (scalar(params.q) ?? "").trim();
+  const q = queryText(params);
   if (q.length < SUGGEST_MIN_CHARS) {
     return { suggest: true, empty: true, text: null, params: [] };
   }
@@ -661,7 +666,7 @@ function vocabLocale(params: QueryParams): string | null {
 // (fuzzystrmatch's levenshtein() isn't installed on this database);
 // the client still scores candidates with its own findDidYouMean().
 function correctionQuery(params: QueryParams): BuiltQuery {
-  const q = (scalar(params.q) || "").trim();
+  const q = queryText(params);
   const locale = vocabLocale(params);
   const words = locale
     ? "(SELECT word FROM items_vocab_words" +
@@ -845,7 +850,7 @@ function buildQuery(params: QueryParams): BuiltQuery {
   // lowercased substring test across search_text, OR'd with the
   // century rule from matchesTimeframe(). Checked live by
   // scripts/verify_feed_fixtures.mts.
-  const q = (scalar(params.q) || "").trim();
+  const q = queryText(params);
   if (q) {
     const needle = `immutable_unaccent(lower(${bind(q)}))`;
     const locale = parseLocaleParam(params.locale);

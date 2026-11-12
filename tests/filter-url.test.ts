@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { MAX_QUERY_CHARS } from "../lib/query-limits";
 import { FilterState } from "../src/app/FilterState";
 import { filterQueryString, parseFilterQuery } from "../src/logic/filterUrl";
 
@@ -146,5 +147,14 @@ describe("parseFilterQuery", () => {
       query: "sky",
       artist: null,
     });
+  });
+
+  it("caps the length of text values", () => {
+    const long = "x".repeat(MAX_QUERY_CHARS * 3);
+    const parsed = parseFilterQuery(`?q=${long}`, allowed);
+    expect(parsed.query).toBe("x".repeat(MAX_QUERY_CHARS));
+    expect(parseFilterQuery(`?artist=${long}`, allowed).artist).toBe(
+      "x".repeat(MAX_QUERY_CHARS),
+    );
   });
 });
