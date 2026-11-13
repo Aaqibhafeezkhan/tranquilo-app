@@ -27,6 +27,8 @@ export default defineConfig({
   test: {
     // PGlite's WASM boot is slow on loaded CI runners under coverage.
     testTimeout: 20_000,
+    hookTimeout: 60_000,
+    globalSetup: ["tests/global-setup.ts"],
     include: ["tests/**/*.test.ts"],
     exclude: ["tests/e2e/**", "node_modules/**"],
     env: Object.fromEntries(PRODUCTION_ONLY_ENV.map((name) => [name, ""])),
