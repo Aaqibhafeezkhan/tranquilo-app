@@ -28,6 +28,10 @@
       "destination": "/api/v/discover"
     },
     {
+      "source": "/category/:slug",
+      "destination": "/api/v/category-:slug"
+    },
+    {
       "source": "/shelf/:id",
       "destination": "/api/v/shelf-:id"
     },

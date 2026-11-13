@@ -1,7 +1,6 @@
-# Every artwork has a real crawlable URL at /v/{slug}. Nothing
-# on the site links to one -- the feed is a scroll container built in
-# JavaScript, so a crawler that does not execute JS sees a single page -- which
-# makes the sitemap the only route by which these are discovered.
+# The sitemap lists the site's own pages: home, static pages, /discover,
+# category landing pages, shelves and storylines. Individual artworks
+# (/v/{slug}) are deliberately not listed.
 User-agent: *
 Allow: /
 
@@ -56,8 +55,8 @@ Disallow: /og/
 # DELIBERATELY NOT BLOCKED, and each for a reason:
 #
 #   Googlebot, Bingbot, DuckDuckBot, Applebot   ordinary search. We want to be
-#                                               findable; the sitemap exists
-#                                               precisely to help them.
+#                                               findable; the sitemap helps
+#                                               them find our pages.
 #   OAI-SearchBot, Claude-SearchBot             AI search indexing. These make
 #                                               us appear in answers WITH a
 #                                               citation and a link.

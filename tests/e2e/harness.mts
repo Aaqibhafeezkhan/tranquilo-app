@@ -260,6 +260,11 @@ export async function stubBackend(
     route.fulfill({ status: 200, contentType: "text/html", body: appHtml }),
   );
 
+  // /category/{slug} too, same rewrite into the same handler.
+  await page.route(/\/category\/[^/]+$/, (route: Route) =>
+    route.fulfill({ status: 200, contentType: "text/html", body: appHtml }),
+  );
+
   // The stub emulates the endpoint's shapes, not just its data: the client
   // makes three different requests against /api/items, each structurally
   // different, so a stub answering all three with the same array would
@@ -872,6 +877,16 @@ export async function gotoDiscover(page: Page) {
   );
   await page.waitForSelector("#shelvesMode.open .shelf");
   return page.locator("#shelvesMode");
+}
+
+// Cold load of /category/{slug}; waits for the feed to render.
+export async function gotoCategory(page: Page, slug: string) {
+  await stubBackend(page);
+  await page.goto(`/category/${encodeURIComponent(slug)}`);
+  await page.waitForFunction(
+    () => document.querySelectorAll("#feed .slide").length > 1,
+  );
+  return page.locator("#feed");
 }
 
 // Cold load of /shelf/{id}; waits for feed, then overlay.

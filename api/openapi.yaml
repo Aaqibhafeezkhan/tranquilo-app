@@ -705,12 +705,14 @@ paths:
   /sitemap.xml:
     get:
       tags: [sharing]
-      summary: Sitemap of every live artwork and static page
+      summary: Sitemap of site pages, categories, shelves and storylines
       operationId: getSitemap
       description: >-
         Generated per-request (rewritten from `/sitemap.xml` to
-        `/api/sitemap`) rather than checked in, since the catalogue changes
-        without a deploy. Quarantined/rejected items are never listed.
+        `/api/sitemap`) rather than checked in, since shelves and storylines
+        change without a deploy. Lists the home page, static pages,
+        `/discover`, category landing pages, shelves and storylines.
+        Individual artworks are not listed.
       responses:
         "200":
           description: Sitemap XML.

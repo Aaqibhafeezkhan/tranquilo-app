@@ -10,6 +10,10 @@
 
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import type { ImageResponse as OgImageResponse } from "@vercel/og";
+import {
+  CATEGORY_COVERS,
+  categoryFromPageSlug,
+} from "../../lib/category-pages.ts";
 import { getSql } from "../../lib/db.ts";
 import { rateLimitOrRespond } from "../../lib/img-visitor-rate-limit.ts";
 import { LIVE_ITEMS_AND } from "../../lib/items-sql.ts";
@@ -401,6 +405,21 @@ function buildShelfCard(
   });
 }
 
+function buildCategoryCard(
+  name: string,
+  imageDataUri: string | null,
+  accentColor: string | null | undefined,
+): CardNode {
+  return buildShareCard({
+    eyebrow: "Tranquilo",
+    title: name,
+    caption: "A calm scroll of public-domain art",
+    captionStyle: { fontWeight: 300, fontSize: 25 },
+    imageDataUri: imageDataUri,
+    accentColor: accentColor,
+  });
+}
+
 function buildDiscoverCard(
   imageDataUri: string | null,
   accentColor: string | null | undefined,
@@ -572,6 +591,42 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       res.setHeader("Content-Type", "image/png");
       res.setHeader("Cache-Control", "public, max-age=3600, s-maxage=86400");
       res.end(Buffer.from(await discoverImage.arrayBuffer()));
+      return;
+    }
+
+    if (slug.startsWith("category-")) {
+      const name = categoryFromPageSlug(slug.slice("category-".length));
+      let categoryTree = buildFallbackCard("Tranquilo");
+      if (name) {
+        categoryTree = buildCategoryCard(name, null, null);
+        const coverRef = CATEGORY_COVERS[name];
+        if (client && coverRef) {
+          try {
+            const rows = (await client.query(
+              `SELECT * FROM items WHERE source = $1 AND native_id = $2 ${LIVE_ITEMS_AND} LIMIT 1`,
+              [coverRef.source, coverRef.nativeId],
+            )) as ItemRow[];
+            const cover = rows[0] || null;
+            categoryTree = buildCategoryCard(
+              name,
+              await coverDataUriFor(client, cover),
+              cover?.accent_color,
+            );
+          } catch (err) {
+            console.error("og/[slug]: category cover failed", err);
+            await reportError(err);
+          }
+        }
+      }
+      const categoryImage = new ImageResponse(categoryTree, {
+        width: 1200,
+        height: 630,
+        fonts: await loadFonts(),
+      });
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "image/png");
+      res.setHeader("Cache-Control", "public, max-age=3600, s-maxage=86400");
+      res.end(Buffer.from(await categoryImage.arrayBuffer()));
       return;
     }
 
