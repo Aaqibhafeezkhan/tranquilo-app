@@ -30,7 +30,6 @@
 // Same real-site/not-opted-out gate as the Cloudflare beacon; calls
 // syncInternalTrafficFlag() itself so it's correct regardless of script order.
 
-import posthog from "posthog-js";
 import { isRealExternalTraffic, syncInternalTrafficFlag } from "./trafficGate";
 
 declare global {
@@ -43,31 +42,70 @@ declare global {
 
 syncInternalTrafficFlag();
 
+export interface PosthogHandle {
+  capture(name: string, props?: Record<string, unknown>): void;
+  ready: Promise<void>;
+}
+
+function whenIdle(run: () => void): void {
+  if (typeof requestIdleCallback === "function") {
+    requestIdleCallback(run, { timeout: 2000 });
+  } else {
+    setTimeout(run, 0);
+  }
+}
+
 // Returns null rather than throwing when disabled (no token, internal
 // traffic, or a non-production host): every dev/preview/test/CI load hits
 // this path, and a thrown Error here would abort app.ts's entire module
 // graph, since this is a bare side-effect import with nothing to catch it.
-export function initPosthog() {
+// posthog-js loads in its own chunk once the browser is idle; events
+// captured before then are queued and replayed in order.
+export function initPosthog(): PosthogHandle | null {
   const POSTHOG_TOKEN = import.meta.env.VITE_POSTHOG_TOKEN;
 
-  if (isRealExternalTraffic() && POSTHOG_TOKEN) {
-    posthog.init(POSTHOG_TOKEN, {
-      api_host: "https://us.i.posthog.com",
-      person_profiles: "never",
-      autocapture: { dom_event_allowlist: ["click"] },
-      capture_pageview: true,
-      capture_pageleave: true,
-      persistence: "memory",
-      disable_session_recording: true,
-      capture_heatmaps: false,
-      disable_surveys: true,
-      disable_web_experiments: true,
-      capture_performance: { web_vitals: true, network_timing: false },
-    });
-    return posthog;
-  }
+  if (!(isRealExternalTraffic() && POSTHOG_TOKEN)) return null;
 
-  return null;
+  type Client = {
+    capture(name: string, props?: Record<string, unknown>): void;
+  };
+  const queued: Array<[string, Record<string, unknown> | undefined]> = [];
+  let client: Client | null = null;
+
+  const ready = new Promise<void>((resolve) => {
+    whenIdle(() => {
+      import("posthog-js")
+        .then(({ default: posthog }) => {
+          posthog.init(POSTHOG_TOKEN, {
+            api_host: "https://us.i.posthog.com",
+            person_profiles: "never",
+            autocapture: { dom_event_allowlist: ["click"] },
+            capture_pageview: true,
+            capture_pageleave: true,
+            persistence: "memory",
+            disable_session_recording: true,
+            capture_heatmaps: false,
+            disable_surveys: true,
+            disable_web_experiments: true,
+            capture_performance: { web_vitals: true, network_timing: false },
+          });
+          client = posthog;
+          for (const [name, props] of queued.splice(0)) {
+            posthog.capture(name, props);
+          }
+        })
+        .catch(() => {})
+        .finally(resolve);
+    });
+  });
+
+  return {
+    capture(name, props) {
+      if (client) client.capture(name, props);
+      else queued.push([name, props]);
+    },
+    ready,
+  };
 }
 
 const posthogInstance = initPosthog();

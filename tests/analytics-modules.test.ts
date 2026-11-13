@@ -86,6 +86,7 @@ describe("initPosthog", () => {
     vi.doMock("posthog-js", () => ({ default: { init } }));
 
     const { default: instance } = await import("../src/analytics/posthog");
+    await instance?.ready;
 
     expect(init).toHaveBeenCalledOnce();
     const [token, config] = init.mock.calls[0];
@@ -114,13 +115,47 @@ describe("initPosthog", () => {
     const init = vi.fn();
     vi.doMock("posthog-js", () => ({ default: { init } }));
 
-    await import("../src/analytics/posthog");
+    const { default: instance } = await import("../src/analytics/posthog");
+    await instance?.ready;
 
     const [, config] = init.mock.calls[0];
     expect(config.capture_performance).toMatchObject({
       web_vitals: true,
       network_timing: false,
     });
+  });
+
+  it("does not initialize posthog-js during the import itself", async () => {
+    stubProductionSite();
+    vi.stubEnv("VITE_POSTHOG_TOKEN", "test-token");
+    const init = vi.fn();
+    vi.doMock("posthog-js", () => ({ default: { init, capture: vi.fn() } }));
+
+    const { default: instance } = await import("../src/analytics/posthog");
+
+    expect(init).not.toHaveBeenCalled();
+    await instance?.ready;
+    expect(init).toHaveBeenCalledOnce();
+  });
+
+  it("replays events captured before it loaded, in order, after init", async () => {
+    stubProductionSite();
+    vi.stubEnv("VITE_POSTHOG_TOKEN", "test-token");
+    const calls: string[] = [];
+    vi.doMock("posthog-js", () => ({
+      default: {
+        init: () => calls.push("init"),
+        capture: (name: string) => calls.push(name),
+      },
+    }));
+
+    const { default: instance } = await import("../src/analytics/posthog");
+    instance?.capture("first");
+    instance?.capture("second");
+    await instance?.ready;
+    instance?.capture("third");
+
+    expect(calls).toEqual(["init", "first", "second", "third"]);
   });
 });
 
