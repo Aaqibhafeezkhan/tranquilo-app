@@ -1297,13 +1297,24 @@ class TranquiloApp {
     }
     // Filters are only restored on the bare feed URL: every other path
     // (artwork, storyline, shelf, discover) already names what to show.
+    // A category landing page names exactly one filter.
+    const categoryPage = slugCodec.categoryFromLocation();
     const sharedFilters = /^\/(index\.html)?$/.test(location.pathname)
       ? parseFilterQuery(location.search, {
           categories,
           sources: (facets.sources ?? []).map((s) => s.value),
           paletteBuckets: paletteBucketOptions.map((o) => o.value),
         })
-      : null;
+      : categoryPage && categories.includes(categoryPage)
+        ? {
+            query: null,
+            artist: null,
+            category: categoryPage,
+            source: null,
+            paletteBucket: null,
+            storylineFilter: false,
+          }
+        : null;
     if (sharedFilters) {
       filterState.setCategory(sharedFilters.category);
       filterState.setSource(sharedFilters.source);

@@ -13,6 +13,9 @@
 // Only the id half goes through this; the raw unencoded identity
 // (source-nativeId) is a separate contract owned by slideBuilder.ts's
 // slugFor(), which this class never re-derives.
+import { categoryFromPageSlug } from "../../lib/category-pages";
+import type { Category } from "../types/Item";
+
 export class SlugCodec {
   encodeId(source: string, rawId: string): string {
     let idPart = rawId;
@@ -71,6 +74,11 @@ export class SlugCodec {
 
   isDiscoverLocation(): boolean {
     return /^\/discover\/?$/.test(location.pathname);
+  }
+
+  categoryFromLocation(): Category | null {
+    const m = location.pathname.match(/^\/category\/([^/]+)\/?$/);
+    return m ? categoryFromPageSlug(decodeURIComponent(m[1])) : null;
   }
 
   shelfIdFromLocation(): string {

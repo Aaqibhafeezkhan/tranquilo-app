@@ -13,6 +13,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import type { VercelRequest, VercelResponse } from "@vercel/node";
+import { categoryFromPageSlug } from "../../lib/category-pages.ts";
 import type { Sql } from "../../lib/db.ts";
 import { getSql } from "../../lib/db.ts";
 import { escapeHtml } from "../../lib/html-escape.ts";
@@ -323,6 +324,47 @@ async function sendShelfPage(
   res.end(appHtml ? renderAppPage(appHtml, meta) : renderPage(meta));
 }
 
+const CATEGORY_SLUG_PREFIX = "category-";
+
+function sendCategoryPage(res: VercelResponse, origin: string, slug: string) {
+  const name = categoryFromPageSlug(slug.slice(CATEGORY_SLUG_PREFIX.length));
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
+  if (!name) {
+    res.statusCode = 404;
+    res.setHeader("Cache-Control", "public, max-age=3600, s-maxage=86400");
+    res.end(
+      renderPage({
+        title: "Tranquilo",
+        description:
+          "A calm, ad-free digital museum and open-source art platform.",
+        ogTitle: "Tranquilo",
+        ogImage: null,
+        canonicalUrl: `${origin}/`,
+        redirectUrl: `${origin}/index.html`,
+        statusNote: "That category couldn't be found.",
+      }),
+    );
+    return;
+  }
+
+  const meta: PageMeta = {
+    title: `${escapeHtml(name)} · Tranquilo`,
+    description: escapeHtml(
+      `Scroll ${name.toLowerCase()} from public-domain collections on Tranquilo, a calm, ad-free scroll of art.`,
+    ),
+    ogTitle: `${escapeHtml(name)} · Tranquilo`,
+    ogImage: `${origin}/og/${encodeURIComponent(slug)}.png`,
+    canonicalUrl: `${origin}/category/${slug.slice(CATEGORY_SLUG_PREFIX.length)}`,
+    redirectUrl: `${origin}/index.html`,
+    statusNote: "Opening Tranquilo…",
+  };
+
+  res.statusCode = 200;
+  res.setHeader("Cache-Control", "public, max-age=3600, s-maxage=86400");
+  const appHtml = getAppHtml();
+  res.end(appHtml ? renderAppPage(appHtml, meta) : renderPage(meta));
+}
+
 function sendDiscoverPage(res: VercelResponse, origin: string) {
   const meta: PageMeta = {
     title: "Discover · Tranquilo",
@@ -348,6 +390,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const slug = (Array.isArray(raw) ? raw[0] : raw) || "";
   const origin = getOrigin(req);
   if (slug === "discover") return sendDiscoverPage(res, origin);
+  if (slug.startsWith(CATEGORY_SLUG_PREFIX))
+    return sendCategoryPage(res, origin, slug);
   const client = getSql();
 
   const storylineId = parseStorylineSlug(slug);
