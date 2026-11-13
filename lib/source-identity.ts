@@ -2,8 +2,7 @@
  * half of the ingestion pipeline's source_identity.py. The proxy used to
  * fetch with no headers at all, and bvpb.mcu.es 429'd a single lightbox
  * request over it (2026-08-15) -- an unidentified request is one an
- * operator can only throttle or block, the same class of problem behind the
- * Wikimedia rate-limit hold.
+ * operator can only throttle or block.
  *
  * Values below are duplicated by hand from source_identity.py, since the
  * two runtimes can't share a module; a test asserts them against a
@@ -19,9 +18,8 @@ const CONTACT_EMAIL = "hello@tranquilo.art";
 // since meeting the strictest published policy everywhere costs nothing.
 const USER_AGENT = `${PRODUCT}/${VERSION} (+${CONTACT_URL}; ${CONTACT_EMAIL}) node-fetch/1`;
 
-// Wikimedia asks for the tool's purpose alongside the contact. Unused while
-// the rate-limit hold stands; present so lifting the hold won't also
-// require remembering this.
+// Wikimedia asks for the tool's purpose alongside the contact. Unused
+// while commons is never fetched; kept ready for when it is.
 const WIKIMEDIA_USER_AGENT =
   `${PRODUCT}/${VERSION} (+${CONTACT_URL}; ${CONTACT_EMAIL}; ` +
   "art catalogue, CC0/CC-BY ingestion only) node-fetch/1";

@@ -9,8 +9,7 @@
 // Safe against live traffic via content-addressing: the re-encoded bytes
 // hash differently, landing on a new key while the old one stays in place,
 // so every immutable browser-cached response keeps resolving. Reads only
-// from our own S3 bucket, never Commons, so the Wikimedia rate-limit hold
-// stays untouched.
+// from our own S3 bucket, never Commons.
 //
 //   node scripts/reencode_oversized_images.mts                  # dry run
 //   node scripts/reencode_oversized_images.mts --commit

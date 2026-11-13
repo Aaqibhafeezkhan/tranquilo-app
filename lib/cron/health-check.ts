@@ -118,8 +118,7 @@ async function checkBlobOperations(client: Sql) {
 
 async function checkSourceReachability(client: Sql) {
   const alerts: string[] = [];
-  // Skips sources under a standing hold -- pinging a source through a
-  // rate-limit hold just repeats the request we said we'd stop making.
+  // Skips held sources: pinging them repeats a request we stopped making.
   // One shared definition of "held" (source_fetch_state.hold_reason),
   // so this can't drift from what other routes believe.
   const held = await sourceHealth.heldSourceSet(client, SOURCES);

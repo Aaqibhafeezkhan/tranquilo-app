@@ -70,7 +70,7 @@ describe("token bucket exhaustion", () => {
   });
 
   it("does NOT report a held source", async () => {
-    // commons has zero effective budget by design while the hold stands.
+    // commons has zero effective budget by design.
     await sql.query(
       "UPDATE source_fetch_state SET tokens = 0 WHERE source = 'commons'",
     );

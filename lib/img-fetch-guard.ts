@@ -7,7 +7,7 @@
 // All of them FAIL TOWARD SHEDDING: if the guard is broken or
 // unreachable, the answer is "do not fetch, redirect the visitor
 // instead" -- the safe direction, since an unguarded fetch is what
-// produced the Wikimedia rate-limit hold.
+// risks a source block.
 
 interface GuardRow {
   tokens?: number | string;
@@ -164,7 +164,7 @@ function parseRetryAfter(
 }
 
 /* The host half of the gate: acquireFetchToken() answers "is this
- * SOURCE allowed at all" (policy, the Wikimedia hold); this answers
+ * SOURCE allowed at all" (policy); this answers
  * "does this SERVER have budget right now" (behaviour). Both must pass.
  * The split exists because Europeana is 26 institutions behind one
  * source key, so a source-level budget alone could let one small

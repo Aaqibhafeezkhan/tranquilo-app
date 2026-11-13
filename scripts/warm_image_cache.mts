@@ -13,9 +13,8 @@
 // Pacing comes from host_fetch_state.refill_per_sec -- the same sanctioned
 // rate visitors share, with a floor so a capacity edit meant for visitor
 // bursts can't turn this into a fast crawl. Commons is refused in code,
-// since the Wikimedia rate-limit hold is still in force and a loop whose
-// whole purpose is fetching images is the easiest way to breach it by
-// accident.
+// since a loop whose whole purpose is fetching images is the easiest
+// way to hit it by accident.
 //
 //   node scripts/warm_image_cache.mts                      # dry run, all sources
 //   node scripts/warm_image_cache.mts --source met --limit 50

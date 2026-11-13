@@ -3,8 +3,7 @@
  * The proxy's failure handling (503s, 429s with and without Retry-After,
  * odd content types) couldn't be tested at all, since the only way to
  * produce those responses was to ask a real museum for them -- not
- * something to do casually with a Wikimedia rate-limit hold outstanding,
- * and exactly the behaviour that produced the hold in the first place. So
+ * something to do casually. So
  * instead: a real HTTP server on an ephemeral port that answers however
  * the test needs. `fetchOriginOnce` performs a genuine fetch against it,
  * exercising the whole path (headers out, status and headers back, body

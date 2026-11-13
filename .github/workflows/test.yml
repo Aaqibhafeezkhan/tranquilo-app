@@ -83,8 +83,7 @@ jobs:
   #
   # Fully offline: /api/items comes from tests/fixtures/e2e-items.json and
   # /img/** is stubbed, so this never touches Neon, Commons, the Met,
-  # Cleveland or Smithsonian -- deliberate, given we are holding off Commons
-  # entirely and moderating every other source. A test suite that hammers the
+  # Cleveland or Smithsonian -- deliberate. A test suite that hammers the
   # institutions on every push is not acceptable regardless of whether it
   # passes.
   #

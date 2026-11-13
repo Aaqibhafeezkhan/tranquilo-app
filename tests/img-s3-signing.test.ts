@@ -161,7 +161,7 @@ describe("putObject", () => {
 describe("getObject", () => {
   // Reads an already-stored object back out of S3, to downscale oversized
   // display-tier objects without touching the origin -- load-bearing for
-  // Commons, which is under a standing NOC hold ruling out any re-fetch.
+  // Commons, which is never fetched server-side.
   const config = {
     bucket: "cdn.tranquilo.art",
     region: "us-east-1",

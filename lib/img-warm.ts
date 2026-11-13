@@ -79,15 +79,12 @@ export function coldItemsSql(): string {
     ORDER BY i.source, i.native_id`;
 }
 
-export const HELD_SOURCES = ["commons"]; // Wikimedia rate-limit hold
+export const HELD_SOURCES = ["commons"];
 export const ALL_SOURCES = ["met", "cleveland", "europeana", "smithsonian"];
 export const MIN_INTERVAL_MS = 1000;
 export const DEFAULT_INTERVAL_MS = 5000; // matches refill_per_sec 0.2
 
-// A loop that fetches from an institution must not fail silently at length
-// -- added after a live run failed on every item and kept going, reaching
-// Cleveland 12 times before being killed by hand. Same shape of incident as
-// the Wikimedia hold (628 consecutive failures with no breaker).
+// A loop fetching from an institution must stop on repeated failures.
 // Consecutive, not lifetime: a few bad images shouldn't stop a healthy run.
 export const ERROR_LIMIT = 3;
 
@@ -121,8 +118,8 @@ export function bufferFrom(out: unknown): Buffer {
 export function assertSourceAllowed(source: string | null | undefined) {
   if (HELD_SOURCES.indexOf(String(source || "").toLowerCase()) !== -1) {
     throw new Error(
-      `refusing to warm '${source}': the Wikimedia/Commons hold is in force. ` +
-        `Remove it from HELD_SOURCES only once that changes.`,
+      `refusing to warm '${source}': it is in HELD_SOURCES. ` +
+        `Remove it from HELD_SOURCES to allow warming.`,
     );
   }
 }
